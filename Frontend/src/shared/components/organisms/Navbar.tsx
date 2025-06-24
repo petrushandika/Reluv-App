@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { Search, Heart, ShoppingBag, User, Menu, X } from "lucide-react";
 
+// Interface untuk mendefinisikan struktur data menu
 interface SubMenuSection {
   title: string;
   items: string[];
@@ -15,10 +16,12 @@ interface DropdownContent {
 }
 
 const Navbar = () => {
+  // State untuk Desktop
   const [activeMainMenu, setActiveMainMenu] = useState<string | null>(null);
   const [activeSubMenu, setActiveSubMenu] = useState<string | null>(null);
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
 
+  // State untuk Mobile
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [mobileActiveMainMenu, setMobileActiveMainMenu] = useState<
     string | null
@@ -27,6 +30,7 @@ const Navbar = () => {
     null
   );
 
+  // Data untuk semua menu dropdown (struktur tidak berubah)
   const dropdownData: { [key: string]: DropdownContent } = {
     Women: {
       categories: [
@@ -394,6 +398,7 @@ const Navbar = () => {
     },
   ];
 
+  // Semua fungsi logic tidak berubah
   useEffect(() => {
     if (activeMainMenu) {
       const timer = setInterval(() => {
@@ -438,67 +443,68 @@ const Navbar = () => {
 
   return (
     <div className="relative" onMouseLeave={handleNavbarLeave}>
-      <div className="w-full bg-green-700 text-white">
+      {/* ================= NAVBAR UTAMA - Skema Warna Putih ================= */}
+      <div className="w-full bg-white text-gray-800 shadow-md">
         <div className="flex items-center justify-between px-4 lg:px-6 py-4">
-          <div className="flex items-center gap-20">
-            <div className="text-xl lg:text-2xl font-bold">voila.id</div>
-            <nav className="hidden lg:flex items-center space-x-8">
-              {Object.keys(dropdownData).map((menu) => (
-                <button
-                  key={menu}
-                  onMouseEnter={() => handleMainMenuEnter(menu)}
-                  className={`py-4 font-semibold hover:text-green-200 transition-colors duration-200 ${
-                    activeMainMenu === menu ? "text-green-200" : ""
-                  }`}
-                >
-                  {menu}
-                </button>
-              ))}
-            </nav>
+          <div className="text-xl lg:text-2xl font-bold text-green-700">
+            reluv.id
           </div>
+          <nav className="hidden lg:flex items-center space-x-8">
+            {Object.keys(dropdownData).map((menu) => (
+              <button
+                key={menu}
+                onMouseEnter={() => handleMainMenuEnter(menu)}
+                className={`py-4 font-semibold hover:text-green-600 transition-colors duration-200 ${
+                  activeMainMenu === menu ? "text-green-600" : ""
+                }`}
+              >
+                {menu}
+              </button>
+            ))}
+          </nav>
           <div className="hidden lg:flex items-center space-x-4">
             <div className="relative">
               <input
                 type="text"
                 placeholder="Search for products or brands"
-                className="w-60 xl:w-80 px-4 py-2 rounded-md text-gray-800 bg-white focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-60 xl:w-80 px-4 py-2 rounded-md text-gray-700 bg-gray-100 border border-transparent focus:outline-none focus:ring-2 focus:ring-green-500"
               />
               <Search className="absolute right-3 top-2.5 w-5 h-5 text-gray-400" />
             </div>
-            <Heart className="w-6 h-6 hover:text-green-200 cursor-pointer transition-colors" />
-            <ShoppingBag className="w-6 h-6 hover:text-green-200 cursor-pointer transition-colors" />
+            <Heart className="w-6 h-6 text-gray-600 hover:text-green-600 cursor-pointer transition-colors" />
+            <ShoppingBag className="w-6 h-6 text-gray-600 hover:text-green-600 cursor-pointer transition-colors" />
             <div className="flex items-center space-x-2 text-sm cursor-pointer">
-              <User className="w-5 h-5" />
-              <span className="hover:text-green-200 font-semibold">
+              <User className="w-5 h-5 text-gray-600" />
+              <span className="font-semibold hover:text-green-600">
                 Sign In
               </span>
-              <span className="hover:text-green-200 font-semibold">|</span>
-              <span className="hover:text-green-200 font-semibold">
+              <span className="text-gray-300">|</span>
+              <span className="font-semibold hover:text-green-600">
                 Register
               </span>
             </div>
           </div>
           <div className="flex lg:hidden items-center space-x-3">
-            <Search className="w-6 h-6 hover:text-green-200 cursor-pointer" />
-            <Heart className="w-6 h-6 hover:text-green-200 cursor-pointer" />
-            <ShoppingBag className="w-6 h-6 hover:text-green-200 cursor-pointer" />
+            <Search className="w-6 h-6 text-gray-600 hover:text-green-600 cursor-pointer" />
+            <Heart className="w-6 h-6 text-gray-600 hover:text-green-600 cursor-pointer" />
+            <ShoppingBag className="w-6 h-6 text-gray-600 hover:text-green-600 cursor-pointer" />
             <button onClick={toggleMobileMenu} className="p-1">
               {isMobileMenuOpen ? (
-                <X className="w-6 h-6" />
+                <X className="w-6 h-6 text-gray-800" />
               ) : (
-                <Menu className="w-6 h-6" />
+                <Menu className="w-6 h-6 text-gray-800" />
               )}
             </button>
           </div>
         </div>
       </div>
 
+      {/* ================= MENU MOBILE - Skema Warna Putih ================= */}
       {isMobileMenuOpen && (
-        <div className="lg:hidden bg-green-800 text-white border-t border-green-600">
+        <div className="lg:hidden bg-white text-gray-800 border-t border-gray-200">
           <div className="p-4 space-y-1">
             {Object.keys(dropdownData).map((menu) => (
-              <div key={menu} className="border-b border-green-700">
-                {/* --- Level 1: Main Menu (Women, Men, etc.) --- */}
+              <div key={menu} className="border-b border-gray-200">
                 <button
                   onClick={() => toggleMobileMainMenu(menu)}
                   className="w-full flex justify-between items-center py-3 text-left font-semibold"
@@ -515,11 +521,11 @@ const Navbar = () => {
                     {dropdownData[menu].categories.map((category) => (
                       <div
                         key={category}
-                        className="border-b border-green-700 last:border-b-0"
+                        className="border-b border-gray-200 last:border-b-0"
                       >
                         <button
                           onClick={() => toggleMobileSubMenu(category)}
-                          className="w-full flex justify-between items-center py-3 text-left text-sm"
+                          className="w-full flex justify-between items-center py-3 text-left text-sm text-gray-700"
                         >
                           <span>{category}</span>
                           <X
@@ -531,11 +537,11 @@ const Navbar = () => {
                           />
                         </button>
                         {mobileActiveSubMenu === category && (
-                          <div className="pl-4 py-2 space-y-2 bg-green-900">
+                          <div className="pl-4 py-2 space-y-3 bg-gray-50 rounded-md my-2">
                             {dropdownData[menu].subMenus[category]?.map(
                               (section) => (
                                 <div key={section.title}>
-                                  <h4 className="font-bold text-green-200 text-xs uppercase tracking-wider mb-2">
+                                  <h4 className="font-bold text-green-700 text-xs uppercase tracking-wider mb-2">
                                     {section.title}
                                   </h4>
                                   <ul className="space-y-2">
@@ -543,7 +549,7 @@ const Navbar = () => {
                                       <li key={itemIndex}>
                                         <a
                                           href="#"
-                                          className="block text-xs hover:text-white"
+                                          className="block text-xs text-gray-600 hover:text-green-600"
                                         >
                                           {item}
                                         </a>
@@ -561,11 +567,11 @@ const Navbar = () => {
                 )}
               </div>
             ))}
-            <div className="pt-4 mt-4 md:border-t md:border-green-600">
-              <div className="flex items-center space-x-2 text-sm cursor-pointer p-2">
+            <div className="pt-4 mt-4 border-t border-gray-200">
+              <div className="flex items-center space-x-2 text-sm cursor-pointer p-2 font-semibold">
                 <User className="w-5 h-5" />
                 <span>Sign In</span>
-                <span className="text-green-200">|</span>
+                <span className="text-gray-300">|</span>
                 <span>Register</span>
               </div>
             </div>
@@ -573,14 +579,15 @@ const Navbar = () => {
         </div>
       )}
 
+      {/* ================= DROPDOWN DESKTOP - Skema Warna Putih ================= */}
       {activeMainMenu && (
         <div className="hidden lg:block absolute top-full left-0 w-full z-50">
-          <div className="bg-green-800">
+          <div className="bg-gray-100 border-b border-gray-200">
             <div className="flex items-center justify-center space-x-6 xl:space-x-8 py-3 px-4">
               {dropdownData[activeMainMenu]?.categories.map((category) => (
                 <button
                   key={category}
-                  className={`text-white hover:text-green-200 transition-colors duration-200 px-3 py-2 text-sm xl:text-base whitespace-nowrap`}
+                  className={`text-gray-600 font-semibold hover:text-green-600 transition-colors duration-200 px-3 py-2 text-sm xl:text-base whitespace-nowrap`}
                   onMouseEnter={() => handleSubMenuEnter(category)}
                 >
                   {category}
@@ -590,7 +597,7 @@ const Navbar = () => {
           </div>
 
           {activeSubMenu && (
-            <div className="w-full bg-white text-gray-800 shadow-xl border-t-2 border-green-500">
+            <div className="w-full bg-white text-gray-800 shadow-lg">
               <div className="container mx-auto px-6 py-8">
                 <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 xl:gap-12">
                   {dropdownData[activeMainMenu]?.subMenus[activeSubMenu]?.map(
@@ -598,7 +605,7 @@ const Navbar = () => {
                       if (section.title === "Perfect Picks for Beloved Ones") {
                         return (
                           <div key={section.title}>
-                            <h3 className="font-bold text-lg mb-4 text-green-700 border-b border-green-200 pb-2">
+                            <h3 className="font-bold text-lg mb-4 text-green-700 border-b border-gray-200 pb-2">
                               {section.title}
                             </h3>
                             <div className="relative mt-4 overflow-hidden w-full">
@@ -615,9 +622,9 @@ const Navbar = () => {
                                     key={cardIndex}
                                     className="w-full flex-shrink-0 px-1"
                                   >
-                                    <div className="bg-green-700 text-white p-6 rounded-lg relative hover:bg-green-800 transition-colors cursor-pointer group">
+                                    <div className="bg-green-600 text-white p-6 rounded-lg relative hover:bg-green-700 transition-colors cursor-pointer group">
                                       <div className="absolute top-3 left-3 text-sm font-medium opacity-90">
-                                        voila.id
+                                        reluv.id
                                       </div>
                                       <div className="absolute top-3 right-3">
                                         <div className="w-10 h-10 border-2 border-white rounded-full opacity-30"></div>
@@ -654,7 +661,7 @@ const Navbar = () => {
                                     }
                                     className={`h-2 w-2 rounded-full transition-colors ${
                                       currentCardIndex === dotIndex
-                                        ? "bg-green-700"
+                                        ? "bg-green-600"
                                         : "bg-gray-300"
                                     }`}
                                     aria-label={`Go to slide ${dotIndex + 1}`}
@@ -667,7 +674,7 @@ const Navbar = () => {
                       } else {
                         return (
                           <div key={section.title}>
-                            <h3 className="font-bold text-lg mb-4 text-green-700 border-b border-green-200 pb-2">
+                            <h3 className="font-bold text-lg mb-4 text-green-700 border-b border-gray-200 pb-2">
                               {section.title}
                             </h3>
                             <ul className="space-y-3">
