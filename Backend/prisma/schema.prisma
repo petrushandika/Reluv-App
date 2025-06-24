@@ -1,15 +1,410 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
-  output   = "../generated/prisma"
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
+enum Condition {
+  NEW
+  LIKE_NEW
+  GOOD
+  FAIR
+  POOR
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  SHIPPED
+  DELIVERED
+  COMPLETED
+  CANCELLED
+  REFUNDED
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+  REFUNDED
+  EXPIRED
+  CANCELLED
+}
+
+enum ShipmentStatus {
+  AWAITING_PICKUP
+  PICKED_UP
+  IN_TRANSIT
+  DELIVERED
+  RETURNED
+  CANCELLED
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  name      String
+  password  String?
+  phone     String?
+  role      UserRole @default(USER)
+  isActive  Boolean  @default(true)
+
+  googleId   String? @unique
+  facebookId String? @unique
+  isVerified Boolean @default(false)
+
+  verificationToken       String?
+  verificationTokenExpiry DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  addresses     Address[]      @relation("UserAddresses")
+  products      Product[]      @relation("SellerProducts")
+  reviews       Review[]       @relation("UserReviews")
+  orders        Order[]        @relation("UserOrders")
+  cart          Cart?
+  profile       Profile?
+  wishlist      Wishlist[]
+  notifications Notification[]
+  stores        Store[]
+
+  @@index([email])
+  @@map("users")
+}
+
+model Profile {
+  id     Int     @id @default(autoincrement())
+  bio    String?
+  avatar String?
+
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId Int  @unique
+
+  @@map("profiles")
+}
+
+model Address {
+  id            Int     @id @default(autoincrement())
+  label         String
+  recipientName String
+  phone         String
+  province      String
+  city          String
+  district      String
+  subDistrict   String
+  postalCode    String
+  fullAddress   String  @db.Text
+  isDefault     Boolean @default(false)
+
+  latitude         Float?
+  longitude        Float?
+  biteship_area_id String?
+
+  user    User?   @relation("UserAddresses", fields: [userId], references: [id], onDelete: Cascade)
+  userId  Int?
+  
+  store   Store?
+
+  orders  Order[]
+
+  @@map("addresses")
+}
+
+model Category {
+  id   Int    @id @default(autoincrement())
+  name String @unique
+  slug String @unique
+  icon String?
+
+  products Product[] @relation("ProductCategory")
+
+  parentId        Int?
+  parentCategory  Category?  @relation("SubCategories", fields: [parentId], references: [id])
+  childCategories Category[] @relation("SubCategories")
+
+  @@map("categories")
+}
+
+model Product {
+  id          Int      @id @default(autoincrement())
+  name        String
+  slug        String   @unique
+  description String   @db.Text
+  images      String[]
+  isPublished Boolean  @default(true)
+  isPreloved  Boolean  @default(true)
+  isActive    Boolean  @default(true)
+  viewCount   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  weight Int? // gram
+  length Int? // cm
+  width  Int? // cm
+  height Int? // cm
+
+  seller     User     @relation("SellerProducts", fields: [sellerId], references: [id])
+  sellerId   Int
+  category   Category @relation("ProductCategory", fields: [categoryId], references: [id])
+  categoryId Int
+  store      Store?   @relation(fields: [storeId], references: [id])
+  storeId    Int?
+
+  variants Variant[]
+  reviews  Review[]     @relation("ProductReviews")
+  wishlist Wishlist[]
+
+  @@index([sellerId, isPublished, isActive])
+  @@index([categoryId])
+  @@map("products")
+}
+
+model Variant {
+  id        Int     @id @default(autoincrement())
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId Int
+
+  name      String?
+  sku       String? @unique
+  image     String?
+
+  price          Int
+  compareAtPrice Int?
+
+  stock         Int       @default(1)
+  condition     Condition
+  conditionNote String?
+
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  orderItems OrderItem[]
+  cartItems  CartItem[]
+
+  @@map("variants")
+}
+
+model Review {
+  id      Int    @id @default(autoincrement())
+  rating  Int    @db.SmallInt
+  comment String? @db.Text
+  images  String[]
+
+  product   Product @relation("ProductReviews", fields: [productId], references: [id], onDelete: Cascade)
+  productId Int
+  author    User    @relation("UserReviews", fields: [authorId], references: [id])
+  authorId  Int
+
+  createdAt DateTime @default(now())
+
+  @@unique([productId, authorId])
+  @@index([productId, rating])
+  @@map("reviews")
+}
+
+model Order {
+  id           Int         @id @default(autoincrement())
+  orderNumber  String      @unique
+  totalAmount  Int
+  itemsAmount  Int
+  shippingCost Int         @default(0)
+  status       OrderStatus @default(PENDING)
+  notes        String?     @db.Text
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+  buyer     User    @relation("UserOrders", fields: [buyerId], references: [id])
+  buyerId   Int
+  address   Address @relation(fields: [addressId], references: [id])
+  addressId Int
+
+  items    OrderItem[]
+  payment  Payment?
+  shipment Shipment?
+
+  @@index([buyerId, status])
+  @@index([createdAt])
+  @@map("orders")
+}
+
+model OrderItem {
+  id       Int @id @default(autoincrement())
+  quantity Int
+  price    Int
+  total    Int
+
+  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId   Int
+  variant   Variant @relation(fields: [variantId], references: [id], onDelete: Restrict)
+  variantId Int
+
+  @@map("order_items")
+}
+
+model Payment {
+  id     Int           @id @default(autoincrement())
+  method String?
+  amount Int
+  status PaymentStatus @default(PENDING)
+
+  snap_token          String? @unique
+  snap_redirect_url   String?
+  midtrans_order_id   String  @unique
+  midtrans_tx_id      String? @unique @map("midtrans_transaction_id")
+  midtrans_payment_type String?
+  midtrans_va_number    String?
+  midtrans_bank         String?
+  midtrans_tx_status    String? @map("midtrans_transaction_status")
+  midtrans_fraud_status String?
+  
+  gatewayResponse Json?
+
+  paidAt    DateTime?
+  expiresAt DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  order   Order @relation(fields: [orderId], references: [id])
+  orderId Int   @unique
+
+  @@index([status])
+  @@index([midtrans_order_id])
+  @@map("payments")
+}
+
+model Cart {
+  id     Int        @id @default(autoincrement())
+  user   User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId Int        @unique
+  items  CartItem[]
+
+  @@map("carts")
+}
+
+model CartItem {
+  id        Int     @id @default(autoincrement())
+  cart      Cart    @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  cartId    Int
+  variant   Variant @relation(fields: [variantId], references: [id], onDelete: Cascade)
+  variantId Int
+  quantity  Int
+  createdAt DateTime @default(now())
+
+  @@unique([cartId, variantId])
+  @@map("cart_items")
+}
+
+model Wishlist {
+  id        Int      @id @default(autoincrement())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    Int
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId Int
+  createdAt DateTime @default(now())
+
+  @@unique([userId, productId])
+  @@map("wishlists")
+}
+
+model Notification {
+  id      Int      @id @default(autoincrement())
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId  Int
+  title   String
+  body    String   @db.Text
+  type    String?
+  data    Json?
+  isRead  Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([userId, isRead])
+  @@map("notifications")
+}
+
+model Shipment {
+  id             Int            @id @default(autoincrement())
+  courier        String
+  service        String
+  trackingNumber String?        @unique
+  status         ShipmentStatus @default(AWAITING_PICKUP)
+
+  biteship_order_id     String? @unique
+  biteship_courier_code String?
+  biteship_service_code String?
+  
+  estimatedDays  String?
+  shippingCost   Int?    @map("shipping_cost")
+  insuranceCost  Int?    @default(0) @map("insurance_cost")
+
+  biteshipResponse Json?
+  trackingHistory  Json[]
+
+  shippedAt   DateTime?
+  deliveredAt DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  order   Order @relation(fields: [orderId], references: [id])
+  orderId Int   @unique
+
+  @@index([trackingNumber])
+  @@index([status])
+  @@map("shipments")
+}
+
+model Store {
+  id          Int     @id @default(autoincrement())
+  name        String
+  slug        String  @unique
+  description String? @db.Text
+  logo        String?
+  banner      String?
+  isActive    Boolean @default(true)
+  isVerified  Boolean @default(false)
+
+  totalProducts Int    @default(0)
+  totalSales    Int    @default(0)
+  rating        Float? @db.Real
+
+  owner     User     @relation(fields: [ownerId], references: [id])
+  ownerId   Int
+  products  Product[]
+  
+  address   Address? @relation(fields: [addressId], references: [id])
+  addressId Int?     @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([ownerId])
+  @@index([slug])
+  @@map("stores")
+}
+
+model ShippingRate {
+  id                Int      @id @default(autoincrement())
+  originAreaId      String
+  destinationAreaId String
+  courierCode       String
+  serviceCode       String
+  serviceName       String
+  price             Int
+  minWeight         Int
+  maxWeight         Int
+  estimatedDays     String
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@unique([originAreaId, destinationAreaId, courierCode, serviceCode])
+  @@map("shipping_rates")
 }
