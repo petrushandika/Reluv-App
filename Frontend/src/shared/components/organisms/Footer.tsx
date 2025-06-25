@@ -64,14 +64,14 @@ const MasterCardIcon = () => (
 
 const Footer = () => {
   const navLinkClass =
-    "relative w-fit block text-gray-600 after:block after:content-[''] after:absolute after:h-[1px] after:bg-green-600 after:w-full after:scale-x-0 after:hover:scale-x-100 after:transition after:duration-300 after:origin-left";
+    "relative w-fit block text-gray-600 after:block after:content-[''] after:absolute after:h-[1px] after:bg-sky-600 after:w-full after:scale-x-0 after:hover:scale-x-100 after:transition after:duration-300 after:origin-left";
 
   return (
     <footer className="bg-white">
       <div className="bg-gray-50 border-t border-b border-gray-200">
-        <div className="container mx-auto px-6 py-8 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+        <div className="container mx-auto px-6 md:px-20 lg:px-40 py-8 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
           <div className="flex flex-col items-center space-y-2">
-            <ShieldCheck className="w-8 h-8 text-green-600" />
+            <ShieldCheck className="w-8 h-8 text-sky-600" />
             <h4 className="font-semibold text-gray-800">
               Authenticity Guaranteed
             </h4>
@@ -80,7 +80,7 @@ const Footer = () => {
             </p>
           </div>
           <div className="flex flex-col items-center space-y-2">
-            <Truck className="w-8 h-8 text-green-600" />
+            <Truck className="w-8 h-8 text-sky-600" />
             <h4 className="font-semibold text-gray-800">
               Fast & Free Shipping
             </h4>
@@ -89,14 +89,14 @@ const Footer = () => {
             </p>
           </div>
           <div className="flex flex-col items-center space-y-2">
-            <Lock className="w-8 h-8 text-green-600" />
+            <Lock className="w-8 h-8 text-sky-600" />
             <h4 className="font-semibold text-gray-800">Secure Payments</h4>
             <p className="text-xs text-gray-500">
               Your information is protected with us.
             </p>
           </div>
           <div className="flex flex-col items-center space-y-2">
-            <Mail className="w-8 h-8 text-green-600" />
+            <Mail className="w-8 h-8 text-sky-600" />
             <h4 className="font-semibold text-gray-800">24/7 Support</h4>
             <p className="text-xs text-gray-500">
               We are here to help you anytime.
@@ -105,31 +105,29 @@ const Footer = () => {
         </div>
       </div>
 
-      {/* Bagian Tengah - Links & Newsletter */}
-      <div className="container mx-auto px-6 py-16">
+      <div className="container mx-auto px-6 md:px-20 lg:px-40 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
-          {/* Kolom 1: Tentang Brand */}
           <div className="space-y-4">
-            <h3 className="text-2xl font-bold text-green-700">reluv.id</h3>
+            <h3 className="text-2xl font-bold text-sky-700">reluv.id</h3>
             <p className="text-sm text-gray-600">
               Your premier destination for authentic, pre-loved luxury fashion.
             </p>
             <div className="flex space-x-3 pt-2">
               <a
                 href="#"
-                className="p-2 border border-gray-200 rounded-full text-gray-500 hover:bg-green-600 hover:text-white hover:border-green-600 transition-all duration-300"
+                className="p-2 border border-gray-200 rounded-full text-gray-500 hover:bg-sky-600 hover:text-white hover:border-sky-600 transition-all duration-300"
               >
                 <Facebook size={18} />
               </a>
               <a
                 href="#"
-                className="p-2 border border-gray-200 rounded-full text-gray-500 hover:bg-green-600 hover:text-white hover:border-green-600 transition-all duration-300"
+                className="p-2 border border-gray-200 rounded-full text-gray-500 hover:bg-sky-600 hover:text-white hover:border-sky-600 transition-all duration-300"
               >
                 <Instagram size={18} />
               </a>
               <a
                 href="#"
-                className="p-2 border border-gray-200 rounded-full text-gray-500 hover:bg-green-600 hover:text-white hover:border-green-600 transition-all duration-300"
+                className="p-2 border border-gray-200 rounded-full text-gray-500 hover:bg-sky-600 hover:text-white hover:border-sky-600 transition-all duration-300"
               >
                 <Twitter size={18} />
               </a>
@@ -204,11 +202,11 @@ const Footer = () => {
                 <input
                   type="email"
                   placeholder="Your email address"
-                  className="w-full bg-gray-100 text-gray-800 placeholder-gray-500 pl-4 pr-24 py-3 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all"
+                  className="w-full bg-gray-100 text-gray-800 placeholder-gray-500 pl-4 pr-24 py-3 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent transition-all"
                 />
                 <button
                   type="submit"
-                  className="absolute right-1.5 bg-green-600 text-white font-semibold px-4 py-2 rounded-md hover:bg-green-700 transition-colors"
+                  className="absolute right-1.5 bg-sky-600 text-white font-semibold px-4 py-2 rounded-md hover:bg-sky-700 transition-colors"
                 >
                   Join
                 </button>
@@ -219,7 +217,7 @@ const Footer = () => {
       </div>
 
       <div className="bg-white border-t border-gray-100">
-        <div className="container mx-auto px-6 py-6 flex flex-col sm:flex-row justify-between items-center text-sm">
+        <div className="container mx-auto px-6 md:px-20 lg:px-40 py-6 flex flex-col sm:flex-row justify-between items-center text-sm">
           <p className="text-gray-500 mb-4 sm:mb-0">
             &copy; {new Date().getFullYear()} reluv.id. All Rights Reserved.
           </p>

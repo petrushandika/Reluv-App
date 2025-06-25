@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from "react";
 import { Search, Heart, ShoppingBag, User, Menu, X } from "lucide-react";
 
-// Interface untuk mendefinisikan struktur data menu
 interface SubMenuSection {
   title: string;
   items: string[];
@@ -398,7 +397,6 @@ const Navbar = () => {
     },
   ];
 
-  // Semua fungsi logic tidak berubah
   useEffect(() => {
     if (activeMainMenu) {
       const timer = setInterval(() => {
@@ -443,10 +441,9 @@ const Navbar = () => {
 
   return (
     <div className="relative" onMouseLeave={handleNavbarLeave}>
-      {/* ================= NAVBAR UTAMA - Skema Warna Putih ================= */}
       <div className="w-full bg-white text-gray-800 shadow-md">
-        <div className="flex items-center justify-between px-4 lg:px-6 py-4">
-          <div className="text-xl lg:text-2xl font-bold text-green-700">
+        <div className="container mx-auto flex items-center justify-between px-6 md:px-20 xl:px-40 py-4">
+          <div className="text-xl lg:text-2xl font-bold text-sky-700">
             reluv.id
           </div>
           <nav className="hidden lg:flex items-center space-x-8">
@@ -454,8 +451,8 @@ const Navbar = () => {
               <button
                 key={menu}
                 onMouseEnter={() => handleMainMenuEnter(menu)}
-                className={`py-4 font-semibold hover:text-green-600 transition-colors duration-200 ${
-                  activeMainMenu === menu ? "text-green-600" : ""
+                className={`py-4 font-semibold hover:text-sky-600 transition-colors duration-200 ${
+                  activeMainMenu === menu ? "text-sky-600" : ""
                 }`}
               >
                 {menu}
@@ -467,27 +464,23 @@ const Navbar = () => {
               <input
                 type="text"
                 placeholder="Search for products or brands"
-                className="w-60 xl:w-80 px-4 py-2 rounded-md text-gray-700 bg-gray-100 border border-transparent focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-60 xl:w-80 px-4 py-2 rounded-md text-gray-700 bg-gray-100 border border-transparent focus:outline-none focus:ring-2 focus:ring-sky-500"
               />
               <Search className="absolute right-3 top-2.5 w-5 h-5 text-gray-400" />
             </div>
-            <Heart className="w-6 h-6 text-gray-600 hover:text-green-600 cursor-pointer transition-colors" />
-            <ShoppingBag className="w-6 h-6 text-gray-600 hover:text-green-600 cursor-pointer transition-colors" />
+            <Heart className="w-6 h-6 text-sky-600 hover:text-sky-600 cursor-pointer transition-colors" />
+            <ShoppingBag className="w-6 h-6 text-sky-600 hover:text-sky-600 cursor-pointer transition-colors" />
             <div className="flex items-center space-x-2 text-sm cursor-pointer">
-              <User className="w-5 h-5 text-gray-600" />
-              <span className="font-semibold hover:text-green-600">
-                Sign In
-              </span>
-              <span className="text-gray-300">|</span>
-              <span className="font-semibold hover:text-green-600">
-                Register
-              </span>
+              <User className="w-5 h-5 text-sky-600" />
+              <span className="font-semibold hover:text-sky-600">Sign In</span>
+              <span className="font-semibold hover:text-sky-600">|</span>
+              <span className="font-semibold hover:text-sky-600">Register</span>
             </div>
           </div>
           <div className="flex lg:hidden items-center space-x-3">
-            <Search className="w-6 h-6 text-gray-600 hover:text-green-600 cursor-pointer" />
-            <Heart className="w-6 h-6 text-gray-600 hover:text-green-600 cursor-pointer" />
-            <ShoppingBag className="w-6 h-6 text-gray-600 hover:text-green-600 cursor-pointer" />
+            <Search className="w-6 h-6 text-gray-600 hover:text-sky-600 cursor-pointer" />
+            <Heart className="w-6 h-6 text-gray-600 hover:text-sky-600 cursor-pointer" />
+            <ShoppingBag className="w-6 h-6 text-gray-600 hover:text-sky-600 cursor-pointer" />
             <button onClick={toggleMobileMenu} className="p-1">
               {isMobileMenuOpen ? (
                 <X className="w-6 h-6 text-gray-800" />
@@ -499,7 +492,6 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* ================= MENU MOBILE - Skema Warna Putih ================= */}
       {isMobileMenuOpen && (
         <div className="lg:hidden bg-white text-gray-800 border-t border-gray-200">
           <div className="p-4 space-y-1">
@@ -541,7 +533,7 @@ const Navbar = () => {
                             {dropdownData[menu].subMenus[category]?.map(
                               (section) => (
                                 <div key={section.title}>
-                                  <h4 className="font-bold text-green-700 text-xs uppercase tracking-wider mb-2">
+                                  <h4 className="font-bold text-sky-700 text-xs uppercase tracking-wider mb-2">
                                     {section.title}
                                   </h4>
                                   <ul className="space-y-2">
@@ -549,7 +541,7 @@ const Navbar = () => {
                                       <li key={itemIndex}>
                                         <a
                                           href="#"
-                                          className="block text-xs text-gray-600 hover:text-green-600"
+                                          className="block text-xs text-gray-600 hover:text-sky-600"
                                         >
                                           {item}
                                         </a>
@@ -579,7 +571,6 @@ const Navbar = () => {
         </div>
       )}
 
-      {/* ================= DROPDOWN DESKTOP - Skema Warna Putih ================= */}
       {activeMainMenu && (
         <div className="hidden lg:block absolute top-full left-0 w-full z-50">
           <div className="bg-gray-100 border-b border-gray-200">
@@ -587,7 +578,7 @@ const Navbar = () => {
               {dropdownData[activeMainMenu]?.categories.map((category) => (
                 <button
                   key={category}
-                  className={`text-gray-600 font-semibold hover:text-green-600 transition-colors duration-200 px-3 py-2 text-sm xl:text-base whitespace-nowrap`}
+                  className={`text-gray-600 font-semibold hover:text-sky-600 transition-colors duration-200 px-3 py-2 text-sm xl:text-base whitespace-nowrap`}
                   onMouseEnter={() => handleSubMenuEnter(category)}
                 >
                   {category}
@@ -605,7 +596,7 @@ const Navbar = () => {
                       if (section.title === "Perfect Picks for Beloved Ones") {
                         return (
                           <div key={section.title}>
-                            <h3 className="font-bold text-lg mb-4 text-green-700 border-b border-gray-200 pb-2">
+                            <h3 className="font-bold text-lg mb-4 text-sky-700 border-b border-gray-200 pb-2">
                               {section.title}
                             </h3>
                             <div className="relative mt-4 overflow-hidden w-full">
@@ -622,7 +613,7 @@ const Navbar = () => {
                                     key={cardIndex}
                                     className="w-full flex-shrink-0 px-1"
                                   >
-                                    <div className="bg-green-600 text-white p-6 rounded-lg relative hover:bg-green-700 transition-colors cursor-pointer group">
+                                    <div className="bg-sky-600 text-white p-6 rounded-lg relative hover:bg-sky-700 transition-colors cursor-pointer group">
                                       <div className="absolute top-3 left-3 text-sm font-medium opacity-90">
                                         reluv.id
                                       </div>
@@ -661,7 +652,7 @@ const Navbar = () => {
                                     }
                                     className={`h-2 w-2 rounded-full transition-colors ${
                                       currentCardIndex === dotIndex
-                                        ? "bg-green-600"
+                                        ? "bg-sky-600"
                                         : "bg-gray-300"
                                     }`}
                                     aria-label={`Go to slide ${dotIndex + 1}`}
@@ -674,7 +665,7 @@ const Navbar = () => {
                       } else {
                         return (
                           <div key={section.title}>
-                            <h3 className="font-bold text-lg mb-4 text-green-700 border-b border-gray-200 pb-2">
+                            <h3 className="font-bold text-lg mb-4 text-sky-700 border-b border-gray-200 pb-2">
                               {section.title}
                             </h3>
                             <ul className="space-y-3">
@@ -682,7 +673,7 @@ const Navbar = () => {
                                 <li key={itemIndex}>
                                   <a
                                     href="#"
-                                    className="text-gray-600 hover:text-green-600 transition-colors duration-200 text-sm leading-relaxed block py-1"
+                                    className="text-gray-600 hover:text-sky-600 transition-colors duration-200 text-sm leading-relaxed block py-1"
                                   >
                                     {item}
                                   </a>

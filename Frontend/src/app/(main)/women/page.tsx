@@ -1,3 +1,3 @@
-const page = () => {
-  return <div>page</div>;
+const Women = () => {
+  return <div>Women</div>;
 };
