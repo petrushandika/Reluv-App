@@ -4,6 +4,7 @@ import ProductList from "@/features/products/components/ProductList";
 import { trendingNow } from "@/features/products/data/trendingNow";
 import { slashedPrices } from "@/features/products/data/slashedPrices";
 import { recommended } from "@/features/products/data/recommended";
+import ReviewList from "@/features/reviews/components/ReviewList";
 
 export default function Home() {
   return (
@@ -13,6 +14,7 @@ export default function Home() {
       <ProductList title="Trending Now" products={trendingNow} />
       <ProductList title="Slashed Prices" products={slashedPrices} />
       <ProductList title="Recommended" products={recommended} />
+      <ReviewList />
     </div>
   );
 }
