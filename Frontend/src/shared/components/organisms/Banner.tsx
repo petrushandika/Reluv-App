@@ -111,9 +111,8 @@ const Banner = () => {
           <div className="embla__container flex">
             {slides.map((slide) => (
               <div key={slide.id} className="embla__slide flex-none w-full">
-                <div className="container mx-auto px-6 md:px-20 xl:px-40 py-4">
+                <div className="container mx-auto px-6 md:px-20 xl:px-40 py-5">
                   <div className="relative">
-                    {/* Tombol Chevron telah dipindahkan dari sini */}
                     <div className="grid lg:grid-cols-2 gap-6 lg:gap-8 items-center py-8 lg:py-12 min-h-[380px]">
                       <div className="space-y-4 lg:space-y-6 order-2 lg:order-1">
                         <div className="flex flex-col sm:flex-row sm:items-center gap-3">
@@ -214,7 +213,6 @@ const Banner = () => {
           </div>
         </div>
 
-        {/* Tombol Chevron dipindahkan ke sini agar statis */}
         <div className="container mx-auto px-6 md:px-20 xl:px-40 absolute inset-0 pointer-events-none">
           <div className="relative w-full h-full">
             <button
