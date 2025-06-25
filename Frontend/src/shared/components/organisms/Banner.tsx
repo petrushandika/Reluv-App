@@ -112,92 +112,95 @@ const Banner = () => {
             {slides.map((slide) => (
               <div key={slide.id} className="embla__slide flex-none w-full">
                 <div className="container mx-auto px-6 md:px-20 xl:px-40 py-4">
-                  <div className="grid lg:grid-cols-2 gap-6 lg:gap-8 items-center py-8 lg:py-12 min-h-[380px]">
-                    <div className="space-y-4 lg:space-y-6 order-2 lg:order-1">
-                      <div className="flex flex-col sm:flex-row sm:items-center gap-3">
-                        <div className="inline-flex items-center space-x-2 bg-sky-50 text-sky-700 px-3 py-1.5 rounded-full text-sm font-medium">
-                          <span>{slide.badge}</span>
-                        </div>
-                        <div className="inline-flex items-center space-x-2 bg-red-50 text-red-600 px-3 py-1.5 rounded-full text-sm font-bold">
-                          <Percent className="w-4 h-4" />
-                          <span>{slide.discount}</span>
-                        </div>
-                      </div>
-
-                      <div className="space-y-2">
-                        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight">
-                          {slide.title}
-                          <span className="block text-sky-600 mt-1">
-                            {slide.subtitle}
-                          </span>
-                        </h1>
-                      </div>
-
-                      <p className="text-base sm:text-lg text-gray-600 leading-relaxed">
-                        {slide.description}
-                      </p>
-
-                      <div className="flex flex-col sm:flex-row gap-3 pt-2">
-                        <button className="inline-flex items-center justify-center px-6 py-3 bg-sky-600 text-white font-semibold rounded-xl hover:bg-sky-700 transition-all duration-200 shadow-lg hover:shadow-xl">
-                          <ShoppingBag className="mr-2 w-5 h-5" />
-                          <span>{slide.cta}</span>
-                        </button>
-
-                        <button className="inline-flex items-center justify-center px-6 py-3 bg-white text-gray-700 font-semibold rounded-xl border border-gray-200 hover:border-gray-300 transition-all duration-200 hover:bg-gray-50">
-                          <Heart className="mr-2 w-5 h-5" />
-                          <span>Wishlist</span>
-                        </button>
-                      </div>
-
-                      <div className="flex items-center gap-6 pt-4 text-sm text-gray-600">
-                        <div className="flex items-center gap-1">
-                          <Star className="w-4 h-4 text-yellow-400 fill-current" />
-                          <span className="font-medium">4.8/5</span>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <Clock className="w-4 h-4 text-gray-400" />
-                          <span>Fast Shipping</span>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <Tag className="w-4 h-4 text-green-500" />
-                          <span>Quality Guarantee</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="order-1 lg:order-2 relative">
-                      <div className="relative">
-                        <div className="relative overflow-hidden rounded-2xl shadow-xl">
-                          <img
-                            src={slide.image}
-                            alt={slide.title}
-                            className="w-full h-64 lg:h-80 object-cover"
-                          />
-
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
-
-                          <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm rounded-lg px-3 py-1.5">
-                            <span className="text-sm font-medium text-gray-800">
-                              {slide.category}
-                            </span>
+                  <div className="relative">
+                    {/* Tombol Chevron telah dipindahkan dari sini */}
+                    <div className="grid lg:grid-cols-2 gap-6 lg:gap-8 items-center py-8 lg:py-12 min-h-[380px]">
+                      <div className="space-y-4 lg:space-y-6 order-2 lg:order-1">
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+                          <div className="inline-flex items-center space-x-2 bg-sky-50 text-sky-700 px-3 py-1.5 rounded-full text-sm font-medium">
+                            <span>{slide.badge}</span>
                           </div>
-
-                          <div className="absolute top-4 right-4 bg-red-500 text-white rounded-lg px-3 py-1.5">
-                            <span className="text-sm font-bold">
-                              {slide.discount}
-                            </span>
+                          <div className="inline-flex items-center space-x-2 bg-red-50 text-red-600 px-3 py-1.5 rounded-full text-sm font-bold">
+                            <Percent className="w-4 h-4" />
+                            <span>{slide.discount}</span>
                           </div>
                         </div>
 
-                        <div className="absolute -bottom-4 -right-4 bg-white rounded-xl shadow-lg p-3 border border-gray-100">
-                          <div className="flex items-center gap-2">
-                            <ShoppingBag className="w-5 h-5 text-sky-600" />
-                            <div>
-                              <div className="text-xs text-gray-500">
-                                Sold Today
-                              </div>
-                              <div className="text-sm font-bold text-gray-900">
-                                150+ Items
+                        <div className="space-y-2">
+                          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight">
+                            {slide.title}
+                            <span className="block text-sky-600 mt-1">
+                              {slide.subtitle}
+                            </span>
+                          </h1>
+                        </div>
+
+                        <p className="text-base sm:text-lg text-gray-600 leading-relaxed">
+                          {slide.description}
+                        </p>
+
+                        <div className="flex flex-col sm:flex-row gap-3 pt-2">
+                          <button className="inline-flex items-center justify-center px-6 py-3 bg-sky-600 text-white font-semibold rounded-xl hover:bg-sky-700 transition-all duration-200 shadow-lg hover:shadow-xl">
+                            <ShoppingBag className="mr-2 w-5 h-5" />
+                            <span>{slide.cta}</span>
+                          </button>
+
+                          <button className="inline-flex items-center justify-center px-6 py-3 bg-white text-gray-700 font-semibold rounded-xl border border-gray-200 hover:border-gray-300 transition-all duration-200 hover:bg-gray-50">
+                            <Heart className="mr-2 w-5 h-5" />
+                            <span>Wishlist</span>
+                          </button>
+                        </div>
+
+                        <div className="flex items-center gap-6 pt-4 text-sm text-gray-600">
+                          <div className="flex items-center gap-1">
+                            <Star className="w-4 h-4 text-yellow-400 fill-current" />
+                            <span className="font-medium">4.8/5</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <Clock className="w-4 h-4 text-gray-400" />
+                            <span>Fast Shipping</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <Tag className="w-4 h-4 text-green-500" />
+                            <span>Quality Guarantee</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="order-1 lg:order-2 relative">
+                        <div className="relative">
+                          <div className="relative overflow-hidden rounded-2xl shadow-xl">
+                            <img
+                              src={slide.image}
+                              alt={slide.title}
+                              className="w-full h-64 lg:h-80 object-cover"
+                            />
+
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+
+                            <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm rounded-lg px-3 py-1.5">
+                              <span className="text-sm font-medium text-gray-800">
+                                {slide.category}
+                              </span>
+                            </div>
+
+                            <div className="absolute top-4 right-4 bg-red-500 text-white rounded-lg px-3 py-1.5">
+                              <span className="text-sm font-bold">
+                                {slide.discount}
+                              </span>
+                            </div>
+                          </div>
+
+                          <div className="absolute -bottom-4 -right-4 bg-white rounded-xl shadow-lg p-3 border border-gray-100">
+                            <div className="flex items-center gap-2">
+                              <ShoppingBag className="w-5 h-5 text-sky-600" />
+                              <div>
+                                <div className="text-xs text-gray-500">
+                                  Sold Today
+                                </div>
+                                <div className="text-sm font-bold text-gray-900">
+                                  150+ Items
+                                </div>
                               </div>
                             </div>
                           </div>
@@ -211,22 +214,29 @@ const Banner = () => {
           </div>
         </div>
 
-        <div className="absolute inset-y-0 left-5 md:left-20 hidden sm:flex items-center">
-          <button
-            onClick={scrollPrev}
-            className="text-sky-600 p-2.5 rounded-full transition-all duration-200"
-          >
-            <ChevronLeft className="w-5 h-5" />
-          </button>
-        </div>
+        {/* Tombol Chevron dipindahkan ke sini agar statis */}
+        <div className="container mx-auto px-6 md:px-20 xl:px-40 absolute inset-0 pointer-events-none">
+          <div className="relative w-full h-full">
+            <button
+              onClick={scrollPrev}
+              className="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 -translate-x-6 z-20  
+                    text-sky-600 p-2.5 rounded-full transition-all duration-200 
+                    items-center justify-center hover:scale-105 group pointer-events-auto"
+              aria-label="Previous slide"
+            >
+              <ChevronLeft className="w-5 h-5 text-sky-600 group-hover:text-sky-600 transition-colors" />
+            </button>
 
-        <div className="absolute inset-y-0 right-5 md:right-20 hidden sm:flex items-center">
-          <button
-            onClick={scrollNext}
-            className="text-sky-600 p-2.5 rounded-full transition-all duration-200"
-          >
-            <ChevronRight className="w-5 h-5" />
-          </button>
+            <button
+              onClick={scrollNext}
+              className="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 translate-x-6 z-20  
+                    text-sky-600 p-2.5 rounded-full transition-all duration-200 
+                    items-center justify-center hover:scale-105 group pointer-events-auto"
+              aria-label="Next slide"
+            >
+              <ChevronRight className="w-5 h-5 text-sky-600 group-hover:text-sky-600 transition-colors" />
+            </button>
+          </div>
         </div>
 
         <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2">

@@ -15,12 +15,10 @@ interface DropdownContent {
 }
 
 const Navbar = () => {
-  // State untuk Desktop
   const [activeMainMenu, setActiveMainMenu] = useState<string | null>(null);
   const [activeSubMenu, setActiveSubMenu] = useState<string | null>(null);
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
 
-  // State untuk Mobile
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [mobileActiveMainMenu, setMobileActiveMainMenu] = useState<
     string | null
@@ -29,7 +27,6 @@ const Navbar = () => {
     null
   );
 
-  // Data untuk semua menu dropdown (struktur tidak berubah)
   const dropdownData: { [key: string]: DropdownContent } = {
     Women: {
       categories: [
@@ -39,9 +36,7 @@ const Navbar = () => {
         "Shoes",
         "Clothing",
         "Accessories",
-        "Hermes",
         "Watches",
-        "Preorder",
         "Preloved",
       ],
       subMenus: {
@@ -207,89 +202,6 @@ const Navbar = () => {
             ],
           },
         ],
-        Hermes: [
-          {
-            title: "Crafted for You",
-            items: [
-              "Birkin Collection",
-              "Kelly Collection",
-              "Constance Series",
-            ],
-          },
-          {
-            title: "Shop by Category",
-            items: [
-              "Hermès Bags",
-              "Hermès Scarves",
-              "Hermès Belts",
-              "Hermès Jewelry",
-              "Hermès Watches",
-              "Hermès Home",
-            ],
-          },
-          {
-            title: "Perfect Picks for Beloved Ones",
-            items: [
-              "Gift Card IDR 1.000.000",
-              "Gift Card IDR 500.000",
-              "Gift Card IDR 250.000",
-            ],
-          },
-        ],
-        Watches: [
-          {
-            title: "Crafted for You",
-            items: [
-              "Swiss Masterpieces",
-              "Diamond Collection",
-              "Vintage Inspired",
-            ],
-          },
-          {
-            title: "Shop by Category",
-            items: [
-              "Luxury Timepieces",
-              "Sport Watches",
-              "Dress Watches",
-              "Smart Watches",
-              "Vintage Watches",
-              "Limited Editions",
-            ],
-          },
-          {
-            title: "Perfect Picks for Beloved Ones",
-            items: [
-              "Gift Card IDR 1.000.000",
-              "Gift Card IDR 500.000",
-              "Gift Card IDR 250.000",
-            ],
-          },
-        ],
-        Preorder: [
-          {
-            title: "Crafted for You",
-            items: ["Exclusive Preview", "VIP Access", "Early Bird Special"],
-          },
-          {
-            title: "Shop by Category",
-            items: [
-              "Coming Soon Bags",
-              "Upcoming Shoes",
-              "New Season Clothing",
-              "Future Releases",
-              "Designer Previews",
-              "Limited Drops",
-            ],
-          },
-          {
-            title: "Perfect Picks for Beloved Ones",
-            items: [
-              "Gift Card IDR 1.000.000",
-              "Gift Card IDR 500.000",
-              "Gift Card IDR 250.000",
-            ],
-          },
-        ],
         Preloved: [
           {
             title: "Crafted for You",
@@ -330,7 +242,6 @@ const Navbar = () => {
         "Clothing",
         "Accessories",
         "Watches",
-        "Preorder",
         "Preloved",
       ],
       subMenus: {
@@ -559,7 +470,7 @@ const Navbar = () => {
                 )}
               </div>
             ))}
-            <div className="pt-4 mt-4 border-t border-gray-200">
+            <div className="py-3 md:border-t md:border-gray-200">
               <div className="flex items-center space-x-2 text-sm cursor-pointer p-2 font-semibold">
                 <User className="w-5 h-5" />
                 <span>Sign In</span>
@@ -589,7 +500,7 @@ const Navbar = () => {
 
           {activeSubMenu && (
             <div className="w-full bg-white text-gray-800 shadow-lg">
-              <div className="container mx-auto px-6 py-8">
+              <div className="container mx-auto px-6 md:px-20 lg:px-40 py-8">
                 <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 xl:gap-12">
                   {dropdownData[activeMainMenu]?.subMenus[activeSubMenu]?.map(
                     (section) => {
