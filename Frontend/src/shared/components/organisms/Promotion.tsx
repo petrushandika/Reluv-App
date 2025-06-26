@@ -65,7 +65,6 @@ const Promotion = () => {
               today!
             </motion.p>
 
-            {/* --- PERUBAHAN LAYOUT UNTUK MOBILE --- */}
             <motion.div
               variants={{
                 hidden: { opacity: 0, y: 30 },
@@ -102,7 +101,6 @@ const Promotion = () => {
                 </motion.a>
               </div>
 
-              {/* QR Code di samping kolom tombol */}
               <div className="bg-white p-2 rounded-lg shadow-lg">
                 <img
                   src="https://res.cloudinary.com/dqcyabvc2/image/upload/v1750843661/QR_Code_vhilof.webp"
