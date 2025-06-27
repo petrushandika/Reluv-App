@@ -54,7 +54,7 @@ export function AuthOnlyRoute({ children }: RouteGuardProps) {
 
   useEffect(() => {
     if (!isLoading && isAuthenticated) {
-      router.replace("/women");
+      router.replace("/main/women");
     }
   }, [isAuthenticated, isLoading, router]);
 

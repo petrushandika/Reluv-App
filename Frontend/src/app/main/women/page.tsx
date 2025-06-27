@@ -5,11 +5,11 @@ import ReviewList from "@/features/reviews/components/ReviewList";
 import Banner from "@/shared/components/organisms/Banner";
 import Categories from "@/shared/components/organisms/Categories";
 import Promotion from "@/shared/components/organisms/Promotion";
-import { trendingNow } from "@/features/products/data/trendingNow";
-import { slashedPrices } from "@/features/products/data/slashedPrices";
-import { recommended } from "@/features/products/data/recommended";
+import { trendingNow } from "@/features/products/data/women";
+import { slashedPrices } from "@/features/products/data/women";
+import { recommended } from "@/features/products/data/women";
 
-export default function WomenPage() {
+export default function Women() {
   return (
     <div>
       <Banner />
