@@ -65,7 +65,7 @@ const ReviewList = () => {
 
   return (
     <div className="w-full bg-white py-8 md:py-12 lg:py-16">
-      <div className="container mx-auto px-6 md:px-20 lg:px-40">
+      <div className="container mx-auto px-6 md:px-20 xl:px-40">
         <div className="mb-10 md:mb-12">
           <h2 className="text-3xl md:text-4xl font-semibold text-sky-600">
             What{" "}

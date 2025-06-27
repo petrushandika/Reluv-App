@@ -163,7 +163,7 @@ const Categories: React.FC = () => {
 
   return (
     <div className="w-full bg-white py-8 md:py-12 lg:py-16">
-      <div className="container mx-auto px-6 md:px-20 lg:px-40">
+      <div className="container mx-auto px-6 md:px-20 xl:px-40">
         <div className="flex items-center justify-between mb-8 md:mb-10">
           <div>
             <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-sky-600 mb-1">

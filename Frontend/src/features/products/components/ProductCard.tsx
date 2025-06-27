@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Link from "next/link";
 import { Heart } from "lucide-react";
 import { Product } from "../types";
 
@@ -16,13 +17,15 @@ const ProductCard = ({ product }: ProductCardProps) => {
   return (
     <div className="flex-grow-0 flex-shrink-0 w-1/2 md:w-1/3 lg:w-1/5 pl-4">
       <div className="relative group/card">
-        <div className="bg-gray-50 rounded overflow-hidden">
-          <img
-            src={product.imageUrl}
-            alt={product.name}
-            className="w-full h-auto object-cover rounded group-hover/card:scale-105 transition-transform duration-300"
-          />
-        </div>
+        <Link href={`/main/product/${product.id}`}>
+          <div className="bg-gray-50 rounded overflow-hidden cursor-pointer">
+            <img
+              src={product.imageUrl}
+              alt={product.name}
+              className="w-full h-auto object-cover rounded group-hover/card:scale-105 transition-transform duration-300"
+            />
+          </div>
+        </Link>
 
         {product.isNew && (
           <span className="absolute top-3 left-3 bg-black text-white text-[10px] px-2 py-1 rounded-sm z-10">
@@ -48,24 +51,26 @@ const ProductCard = ({ product }: ProductCardProps) => {
           </div>
         )}
       </div>
-      <div className="pt-4 text-left">
-        <p className="font-bold text-sm text-gray-800">{product.brand}</p>
-        <p className="text-sm text-gray-600 truncate">{product.name}</p>
-        {product.originalPrice ? (
-          <div className="mt-1 flex items-baseline flex-wrap gap-x-2">
-            <p className="font-bold text-red-600 text-base">
+      <Link href={`/main/product/${product.id}`}>
+        <div className="pt-4 text-left cursor-pointer">
+          <p className="font-bold text-sm text-gray-800">{product.brand}</p>
+          <p className="text-sm text-gray-600 truncate">{product.name}</p>
+          {product.originalPrice ? (
+            <div className="mt-1 flex items-baseline flex-wrap gap-x-2">
+              <p className="font-bold text-red-600 text-base">
+                {formatPrice(product.price)}
+              </p>
+              <p className="text-sm text-gray-400 line-through">
+                {formatPrice(product.originalPrice)}
+              </p>
+            </div>
+          ) : (
+            <p className="font-bold text-gray-900 mt-1 text-base">
               {formatPrice(product.price)}
             </p>
-            <p className="text-sm text-gray-400 line-through">
-              {formatPrice(product.originalPrice)}
-            </p>
-          </div>
-        ) : (
-          <p className="font-bold text-gray-900 mt-1 text-base">
-            {formatPrice(product.price)}
-          </p>
-        )}
-      </div>
+          )}
+        </div>
+      </Link>
     </div>
   );
 };

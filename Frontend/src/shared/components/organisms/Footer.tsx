@@ -5,7 +5,6 @@ import {
   Facebook,
   Twitter,
   Instagram,
-  Youtube,
   Mail,
   ShieldCheck,
   Truck,
@@ -69,7 +68,7 @@ const Footer = () => {
   return (
     <footer className="bg-white">
       <div className="bg-gray-50 border-t border-b border-gray-200">
-        <div className="container mx-auto px-6 md:px-20 lg:px-40 py-8 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+        <div className="container mx-auto px-6 md:px-20 xl:px-40 py-8 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
           <div className="flex flex-col items-center space-y-2">
             <ShieldCheck className="w-8 h-8 text-sky-600" />
             <h4 className="font-semibold text-gray-800">
@@ -105,7 +104,7 @@ const Footer = () => {
         </div>
       </div>
 
-      <div className="container mx-auto px-6 md:px-20 lg:px-40 py-16">
+      <div className="container mx-auto px-6 md:px-20 xl:px-40 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
           <div className="space-y-4">
             <h3 className="text-2xl font-bold text-sky-700">reluv.id</h3>
@@ -217,7 +216,7 @@ const Footer = () => {
       </div>
 
       <div className="bg-white border-t border-gray-100">
-        <div className="container mx-auto px-6 md:px-20 lg:px-40 py-6 flex flex-col sm:flex-row justify-between items-center text-sm">
+        <div className="container mx-auto px-6 md:px-20 xl:px-40 py-6 flex flex-col sm:flex-row justify-between items-center text-sm">
           <p className="text-gray-500 mb-4 sm:mb-0">
             &copy; {new Date().getFullYear()} reluv.id. All Rights Reserved.
           </p>

@@ -81,7 +81,7 @@ const ProductList = ({ title, products }: ProductListProps) => {
 
   return (
     <div className="w-full bg-white py-8 md:py-12 lg:py-5">
-      <div className="container mx-auto px-6 md:px-20 lg:px-40">
+      <div className="container mx-auto px-6 md:px-20 xl:px-40">
         <div className="flex flex-col justify-between mb-8 md:mb-10">
           <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-sky-600 mb-1">
             {title}

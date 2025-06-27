@@ -333,6 +333,11 @@ const Navbar = () => {
     setActiveSubMenu(null);
   };
 
+  const handleMainMenuClick = (menu: string) => {
+    const menuPath = menu.toLowerCase();
+    window.location.href = `/main/${menuPath}`;
+  };
+
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
     if (isMobileMenuOpen) {
@@ -350,9 +355,14 @@ const Navbar = () => {
     setMobileActiveSubMenu((prev) => (prev === subMenu ? null : subMenu));
   };
 
+  const handleMobileMainMenuClick = (menu: string) => {
+    const menuPath = menu.toLowerCase();
+    window.location.href = `/main/${menuPath}`;
+  };
+
   return (
     <div className="relative" onMouseLeave={handleNavbarLeave}>
-      <div className="w-full bg-white text-gray-800 shadow-md">
+      <div className="w-full bg-white text-gray-800 shadow">
         <div className="container mx-auto flex items-center justify-between px-6 md:px-20 xl:px-40 py-4">
           <div className="text-xl lg:text-2xl font-bold text-sky-700">
             reluv.id
@@ -362,6 +372,7 @@ const Navbar = () => {
               <button
                 key={menu}
                 onMouseEnter={() => handleMainMenuEnter(menu)}
+                onClick={() => handleMainMenuClick(menu)}
                 className={`py-4 font-semibold hover:text-sky-600 transition-colors duration-200 ${
                   activeMainMenu === menu ? "text-sky-600" : ""
                 }`}
@@ -412,7 +423,9 @@ const Navbar = () => {
                   onClick={() => toggleMobileMainMenu(menu)}
                   className="w-full flex justify-between items-center py-3 text-left font-semibold"
                 >
-                  <span>{menu}</span>
+                  <span onClick={() => handleMobileMainMenuClick(menu)}>
+                    {menu}
+                  </span>
                   <X
                     className={`w-4 h-4 transition-transform duration-300 ${
                       mobileActiveMainMenu === menu ? "rotate-45" : ""
@@ -499,7 +512,7 @@ const Navbar = () => {
           </div>
 
           {activeSubMenu && (
-            <div className="w-full bg-white text-gray-800 shadow-lg">
+            <div className="w-full bg-white text-gray-800 shadow">
               <div className="container mx-auto px-6 md:px-20 lg:px-40 py-8">
                 <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 xl:gap-12">
                   {dropdownData[activeMainMenu]?.subMenus[activeSubMenu]?.map(
