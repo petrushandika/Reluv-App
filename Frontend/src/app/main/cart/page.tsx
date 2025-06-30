@@ -150,7 +150,7 @@ const Cart = () => {
     return (
       <div className="min-h-screen bg-white">
         <div className="container mx-auto px-6 md:px-20 xl:px-40 py-4 md:py-8">
-          <h1 className="text-lg md:text-xl font-bold text-black mb-6 md:mb-8">
+          <h1 className="text-xl md:text-2xl font-bold text-black mb-6 md:mb-8">
             Shopping Cart
           </h1>
           <div className="bg-white rounded-lg shadow-sm p-8 md:p-12 text-center border border-gray-200">
@@ -182,8 +182,8 @@ const Cart = () => {
         itemName={itemToRemove?.name || ""}
       />
 
-      <div className="container mx-auto px-6 md:px-20 xl:px-40 py-4 md:py-8">
-        <h1 className="text-lg md:text-xl font-bold text-black mb-6 md:mb-8">
+      <div className="container mx-auto px-6 md:px-20 xl:px-40 py-8">
+        <h1 className="text-xl md:text-2xl font-bold text-black mb-6 md:mb-8">
           Shopping Cart
         </h1>
 
@@ -191,8 +191,8 @@ const Cart = () => {
           <div className="lg:col-span-2">
             <div className="bg-white rounded-lg shadow-sm border border-gray-200">
               <div className="p-4 md:p-6 border-b border-gray-200">
-                <h2 className="text-base md:text-lg font-semibold text-black">
-                  Cart Items ({cartItems.length})
+                <h2 className="text-xl font-semibold text-sky-600 flex items-center gap-3">
+                  <ShoppingBag size={22} /> Cart Items ({cartItems.length})
                 </h2>
               </div>
 
