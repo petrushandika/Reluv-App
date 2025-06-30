@@ -1,4 +1,9 @@
-import { Module } from '@nestjs/common';
+import {
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+  RequestMethod,
+} from '@nestjs/common';
 import { AppController } from './app.controller';
 import { UsersModule } from './users/users.module';
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
@@ -18,6 +23,7 @@ import { ShippingRatesModule } from './shipping-rates/shipping-rates.module';
 import { StoresModule } from './stores/stores.module';
 import { VariantsModule } from './variants/variants.module';
 import { WishlistModule } from './wishlist/wishlist.module';
+import { AuthMiddleware } from './middlewares/auth.middleware';
 
 @Module({
   imports: [
@@ -42,4 +48,20 @@ import { WishlistModule } from './wishlist/wishlist.module';
   ],
   controllers: [AppController],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(AuthMiddleware)
+      .exclude(
+        { path: '/auth/login', method: RequestMethod.POST },
+        { path: '/auth/register', method: RequestMethod.POST },
+        { path: '/auth/google', method: RequestMethod.GET },
+        { path: '/auth/google/callback', method: RequestMethod.GET },
+        { path: '/auth/facebook', method: RequestMethod.GET },
+        { path: '/auth/facebook/callback', method: RequestMethod.GET },
+        { path: '/auth/forgot', method: RequestMethod.POST },
+        { path: '/auth/reset', method: RequestMethod.POST },
+      )
+      .forRoutes({ path: '*', method: RequestMethod.ALL });
+  }
+}

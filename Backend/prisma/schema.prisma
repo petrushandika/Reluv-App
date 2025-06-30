@@ -50,9 +50,10 @@ enum ShipmentStatus {
 
 model User {
   id        Int      @id @default(autoincrement())
+  firstName String
+  lastName  String
   email     String   @unique
-  name      String
-  password  String?
+  password  String
   phone     String?
   role      UserRole @default(USER)
   isActive  Boolean  @default(true)
@@ -85,9 +86,12 @@ model Profile {
   id     Int     @id @default(autoincrement())
   bio    String?
   avatar String?
+  banner String?
 
   user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId Int  @unique
+  store Store @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  storeId Int @unique
 
   @@map("profiles")
 }
@@ -95,7 +99,7 @@ model Profile {
 model Address {
   id            Int     @id @default(autoincrement())
   label         String
-  recipientName String
+  recipient     String
   phone         String
   province      String
   city          String
@@ -123,7 +127,6 @@ model Category {
   id   Int    @id @default(autoincrement())
   name String @unique
   slug String @unique
-  icon String?
 
   products Product[] @relation("ProductCategory")
 
@@ -366,9 +369,6 @@ model Store {
   id          Int     @id @default(autoincrement())
   name        String
   slug        String  @unique
-  description String? @db.Text
-  logo        String?
-  banner      String?
   isActive    Boolean @default(true)
   isVerified  Boolean @default(false)
 
@@ -376,6 +376,7 @@ model Store {
   totalSales    Int    @default(0)
   rating        Float? @db.Real
 
+  profile   Profile?
   owner     User     @relation(fields: [ownerId], references: [id])
   ownerId   Int
   products  Product[]
