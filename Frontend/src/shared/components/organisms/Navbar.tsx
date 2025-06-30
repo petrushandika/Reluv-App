@@ -392,11 +392,21 @@ const Navbar = () => {
             </div>
             <Heart className="w-6 h-6 text-sky-600 hover:text-sky-600 cursor-pointer transition-colors" />
             <ShoppingBag className="w-6 h-6 text-sky-600 hover:text-sky-600 cursor-pointer transition-colors" />
-            <div className="flex items-center space-x-2 text-sm cursor-pointer">
+            <div className="flex items-center space-x-2 text-sm">
               <User className="w-5 h-5 text-sky-600" />
-              <span className="font-semibold hover:text-sky-600">Sign In</span>
-              <span className="font-semibold hover:text-sky-600">|</span>
-              <span className="font-semibold hover:text-sky-600">Register</span>
+              <a
+                href="/auth/login"
+                className="font-semibold hover:text-sky-600 transition-colors"
+              >
+                Sign In
+              </a>
+              <span className="text-gray-400">|</span>
+              <a
+                href="/auth/register"
+                className="font-semibold hover:text-sky-600 transition-colors"
+              >
+                Register
+              </a>
             </div>
           </div>
           <div className="flex lg:hidden items-center space-x-3">
@@ -483,14 +493,20 @@ const Navbar = () => {
                 )}
               </div>
             ))}
-            <div className="py-3 md:border-t md:border-gray-200">
-              <div className="flex items-center space-x-2 text-sm cursor-pointer p-2 font-semibold">
+            {/* === PERUBAHAN MOBILE VIEW DIMULAI DI SINI === */}
+            <div className="py-3 border-t border-gray-200">
+              <div className="flex items-center space-x-2 text-sm p-2 font-semibold">
                 <User className="w-5 h-5" />
-                <span>Sign In</span>
+                <a href="/auth/login" className="hover:text-sky-600">
+                  Sign In
+                </a>
                 <span className="text-gray-300">|</span>
-                <span>Register</span>
+                <a href="/auth/register" className="hover:text-sky-600">
+                  Register
+                </a>
               </div>
             </div>
+            {/* === PERUBAHAN MOBILE VIEW SELESAI DI SINI === */}
           </div>
         </div>
       )}

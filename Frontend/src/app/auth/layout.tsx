@@ -9,8 +9,8 @@ export default function AuthLayout({
 }) {
   return (
     <PublicRoute>
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="max-w-md w-full space-y-8 p-8">{children}</div>
+      <div className="min-h-screen flex flex-col">
+        <main className="flex-1">{children}</main>
       </div>
     </PublicRoute>
   );
