@@ -257,27 +257,27 @@ const ProductDetail = () => {
             </div>
 
             <div className="flex flex-col sm:flex-row gap-3 pt-4">
-              <button className="w-full sm:w-auto flex-1 bg-white border-2 border-sky-600 text-sky-600 font-semibold py-3 px-6 rounded-lg transition-colors hover:bg-sky-50 text-base">
+              <button className="w-full sm:w-auto flex-1 bg-white border-2 border-sky-600 text-sky-600 font-semibold py-3 px-6 rounded-lg transition-colors hover:bg-sky-50 text-base cursor-pointer">
                 Add To Cart
               </button>
-              <button className="w-full sm:w-auto flex-1 bg-sky-600 hover:bg-sky-700 text-white font-semibold py-3 px-6 rounded-lg transition-transform hover:scale-105 text-base">
+              <button className="w-full sm:w-auto flex-1 bg-sky-600 hover:bg-sky-700 text-white font-semibold py-3 px-6 rounded-lg transition-transform text-base cursor-pointer">
                 Buy Now
               </button>
             </div>
 
             <div className="flex flex-col gap-3 md:flex-row">
-              <button className="flex items-center justify-center w-full md:w-1/3 border border-gray-300 hover:bg-gray-100 text-gray-700 font-medium py-3 px-4 rounded-lg transition-colors duration-200">
+              <button className="flex items-center justify-center w-full md:w-1/3 border border-gray-300 hover:bg-gray-100 text-gray-700 font-medium py-3 px-4 rounded-lg transition-colors duration-200 cursor-pointer">
                 <Heart className="w-5 h-5 mr-2" />
                 <span>Wishlist</span>
               </button>
 
               <div className="flex gap-3 w-full md:w-2/3">
-                <button className="flex items-center justify-center w-1/2 border border-gray-300 hover:bg-gray-100 text-gray-700 font-medium py-3 px-4 rounded-lg transition-colors duration-200">
+                <button className="flex items-center justify-center w-1/2 border border-gray-300 hover:bg-gray-100 text-gray-700 font-medium py-3 px-4 rounded-lg transition-colors duration-200 cursor-pointer">
                   <MessageCircle className="w-5 h-5 mr-2" />
                   <span>Chat CS</span>
                 </button>
 
-                <button className="flex items-center justify-center w-1/2 border border-gray-300 hover:bg-gray-100 text-gray-700 font-medium py-3 px-4 rounded-lg transition-colors duration-200">
+                <button className="flex items-center justify-center w-1/2 border border-gray-300 hover:bg-gray-100 text-gray-700 font-medium py-3 px-4 rounded-lg transition-colors duration-200 cursor-pointer">
                   <Share className="w-5 h-5 mr-2" />
                   <span>Share</span>
                 </button>
@@ -371,7 +371,7 @@ const ProductDetail = () => {
                     </p>
                   </div>
                 </div>
-                <button className="mt-3 w-full bg-white  text-sky-600 border border-sky-600 font-semibold py-2 px-4 rounded-lg hover:bg-white transition-colors text-sm">
+                <button className="mt-3 w-full bg-white  text-sky-600 border border-sky-600 font-semibold py-2 px-4 rounded-lg hover:bg-white transition-colors text-sm cursor-pointer">
                   See All Products
                 </button>
               </div>
