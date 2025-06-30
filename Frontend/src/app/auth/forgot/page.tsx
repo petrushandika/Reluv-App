@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import {
   Mail,
-  ArrowLeft,
   Tag,
   Truck,
   Gift,
@@ -195,7 +194,6 @@ const Forgot = () => {
                     onClick={handleBackToLogin}
                     className="inline-flex items-center text-sm text-gray-600 hover:text-sky-600 transition-colors duration-200"
                   >
-                    <ArrowLeft className="h-4 w-4 mr-2" />
                     Back to Sign In
                   </button>
                 </div>
@@ -235,7 +233,6 @@ const Forgot = () => {
                     onClick={handleBackToLogin}
                     className="inline-flex items-center text-sm text-gray-600 hover:text-sky-600 transition-colors duration-200"
                   >
-                    <ArrowLeft className="h-4 w-4 mr-2" />
                     Back to Sign In
                   </button>
                 </div>

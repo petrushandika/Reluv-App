@@ -6,7 +6,6 @@ import {
   EyeOff,
   Lock,
   CheckCircle,
-  ArrowLeft,
   Tag,
   Truck,
   Gift,
@@ -396,7 +395,6 @@ const Reset = () => {
                     onClick={handleBackToLogin}
                     className="inline-flex items-center text-sm text-gray-600 hover:text-sky-600 transition-colors duration-200"
                   >
-                    <ArrowLeft className="h-4 w-4 mr-2" />
                     Back to Sign In
                   </button>
                 </div>

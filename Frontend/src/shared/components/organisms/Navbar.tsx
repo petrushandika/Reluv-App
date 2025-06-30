@@ -1,7 +1,15 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Search, Heart, ShoppingBag, User, Menu, X } from "lucide-react";
+import {
+  Search,
+  Heart,
+  ShoppingBag,
+  User,
+  Menu,
+  X,
+  ChevronDown,
+} from "lucide-react";
 import Link from "next/link";
 
 interface SubMenuSection {
@@ -341,11 +349,20 @@ const Navbar = () => {
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
-    if (isMobileMenuOpen) {
+    if (!isMobileMenuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
       setMobileActiveMainMenu(null);
       setMobileActiveSubMenu(null);
     }
   };
+
+  useEffect(() => {
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, []);
 
   const toggleMobileMainMenu = (menu: string) => {
     setMobileActiveMainMenu((prev) => (prev === menu ? null : menu));
@@ -356,14 +373,15 @@ const Navbar = () => {
     setMobileActiveSubMenu((prev) => (prev === subMenu ? null : subMenu));
   };
 
-  const handleMobileMainMenuClick = (menu: string) => {
+  const handleMobileMainMenuClick = (e: React.MouseEvent, menu: string) => {
+    e.stopPropagation();
     const menuPath = menu.toLowerCase();
     window.location.href = `/main/${menuPath}`;
   };
 
   return (
     <div className="relative" onMouseLeave={handleNavbarLeave}>
-      <div className="w-full bg-white text-gray-800 shadow">
+      <div className="w-full bg-white text-gray-800 shadow z-20 relative">
         <div className="container mx-auto flex items-center justify-between px-6 md:px-20 xl:px-40 py-4">
           <div className="text-xl lg:text-2xl font-bold text-sky-700">
             reluv
@@ -432,23 +450,29 @@ const Navbar = () => {
       </div>
 
       {isMobileMenuOpen && (
-        <div className="lg:hidden bg-white text-gray-800 border-t border-gray-200">
-          <div className="p-4 space-y-1">
+        <div className="absolute top-full left-0 w-full z-10 lg:hidden bg-white text-gray-800 border-t border-gray-200 max-h-[calc(100vh-4.5rem)] overflow-y-auto">
+          <div className="py-4 px-6 space-y-1">
             {Object.keys(dropdownData).map((menu) => (
-              <div key={menu} className="border-b border-gray-200">
-                <button
+              <div
+                key={menu}
+                className="border-b border-gray-200 last:border-b-0"
+              >
+                <div
                   onClick={() => toggleMobileMainMenu(menu)}
-                  className="w-full flex justify-between items-center py-3 text-left font-semibold"
+                  className="w-full flex justify-between items-center py-3 text-left font-semibold cursor-pointer"
                 >
-                  <span onClick={() => handleMobileMainMenuClick(menu)}>
+                  <span
+                    onClick={(e) => handleMobileMainMenuClick(e, menu)}
+                    className="hover:text-sky-600"
+                  >
                     {menu}
                   </span>
-                  <X
-                    className={`w-4 h-4 transition-transform duration-300 ${
-                      mobileActiveMainMenu === menu ? "rotate-45" : ""
+                  <ChevronDown
+                    className={`w-5 h-5 transition-transform duration-300 ${
+                      mobileActiveMainMenu === menu ? "rotate-180" : ""
                     }`}
                   />
-                </button>
+                </div>
                 {mobileActiveMainMenu === menu && (
                   <div className="pl-4 pb-2">
                     {dropdownData[menu].categories.map((category) => (
@@ -456,19 +480,19 @@ const Navbar = () => {
                         key={category}
                         className="border-b border-gray-200 last:border-b-0"
                       >
-                        <button
+                        <div
                           onClick={() => toggleMobileSubMenu(category)}
-                          className="w-full flex justify-between items-center py-3 text-left text-sm text-gray-700"
+                          className="w-full flex justify-between items-center py-3 text-left text-sm text-gray-700 cursor-pointer"
                         >
                           <span>{category}</span>
-                          <X
-                            className={`w-4 h-4 transition-transform duration-300 ${
+                          <ChevronDown
+                            className={`w-5 h-5 transition-transform duration-300 ${
                               mobileActiveSubMenu === category
-                                ? "rotate-45"
+                                ? "rotate-180"
                                 : ""
                             }`}
                           />
-                        </button>
+                        </div>
                         {mobileActiveSubMenu === category && (
                           <div className="pl-4 py-2 space-y-3 bg-gray-50 rounded-md my-2">
                             {dropdownData[menu].subMenus[category]?.map(
@@ -500,17 +524,15 @@ const Navbar = () => {
                 )}
               </div>
             ))}
-            <div className="py-3 border-t border-gray-200">
-              <div className="flex items-center space-x-2 text-sm p-2 font-semibold">
-                <User className="w-5 h-5" />
-                <Link href="/auth/login" className="hover:text-sky-600">
-                  Sign In
-                </Link>
-                <span className="text-gray-300">|</span>
-                <Link href="/auth/register" className="hover:text-sky-600">
-                  Register
-                </Link>
-              </div>
+            <div className="flex items-center space-x-2 text-sm py-3 font-semibold">
+              <User className="w-5 h-5" />
+              <Link href="/auth/login" className="hover:text-sky-600">
+                Sign In
+              </Link>
+              <span className="text-gray-300">|</span>
+              <Link href="/auth/register" className="hover:text-sky-600">
+                Register
+              </Link>
             </div>
           </div>
         </div>
