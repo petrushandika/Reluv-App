@@ -74,7 +74,7 @@ const ReviewList = () => {
               <span className="absolute left-0 bottom-0 w-full h-2 bg-sky-200/70 -z-0 -mb-1"></span>
             </span>{" "}
             is Saying About{" "}
-            <span className="text-sky-600 font-bold">reluv.id</span>
+            <span className="text-sky-600 font-bold">reluv</span>
           </h2>
         </div>
 
@@ -92,7 +92,7 @@ const ReviewList = () => {
 
         <div className="text-center mt-12">
           <button className="bg-white text-sky-600 font-semibold py-3 px-8 border border-sky-600 rounded-md hover:bg-sky-600 hover:text-white transition-all duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-opacity-50">
-            More About reluv.id
+            More About reluv
           </button>
         </div>
       </div>

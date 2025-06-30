@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { Search, Heart, ShoppingBag, User, Menu, X } from "lucide-react";
+import Link from "next/link";
 
 interface SubMenuSection {
   title: string;
@@ -365,7 +366,7 @@ const Navbar = () => {
       <div className="w-full bg-white text-gray-800 shadow">
         <div className="container mx-auto flex items-center justify-between px-6 md:px-20 xl:px-40 py-4">
           <div className="text-xl lg:text-2xl font-bold text-sky-700">
-            reluv.id
+            reluv
           </div>
           <nav className="hidden lg:flex items-center space-x-8">
             {Object.keys(dropdownData).map((menu) => (
@@ -390,23 +391,29 @@ const Navbar = () => {
               />
               <Search className="absolute right-3 top-2.5 w-5 h-5 text-gray-400" />
             </div>
-            <Heart className="w-6 h-6 text-sky-600 hover:text-sky-600 cursor-pointer transition-colors" />
-            <ShoppingBag className="w-6 h-6 text-sky-600 hover:text-sky-600 cursor-pointer transition-colors" />
+            <Link href="/main/wishlist" aria-label="Wishlist">
+              <Heart className="w-6 h-6 text-sky-600 hover:text-sky-700 cursor-pointer transition-colors" />
+            </Link>
+            <Link href="/main/cart" aria-label="Cart">
+              <ShoppingBag className="w-6 h-6 text-sky-600 hover:text-sky-700 cursor-pointer transition-colors" />
+            </Link>
             <div className="flex items-center space-x-2 text-sm">
               <User className="w-5 h-5 text-sky-600" />
-              <a
+              <Link
                 href="/auth/login"
+                aria-label="Sign In"
                 className="font-semibold hover:text-sky-600 transition-colors"
               >
                 Sign In
-              </a>
+              </Link>
               <span className="text-gray-400">|</span>
-              <a
+              <Link
                 href="/auth/register"
+                aria-label="Register"
                 className="font-semibold hover:text-sky-600 transition-colors"
               >
                 Register
-              </a>
+              </Link>
             </div>
           </div>
           <div className="flex lg:hidden items-center space-x-3">
@@ -493,20 +500,18 @@ const Navbar = () => {
                 )}
               </div>
             ))}
-            {/* === PERUBAHAN MOBILE VIEW DIMULAI DI SINI === */}
             <div className="py-3 border-t border-gray-200">
               <div className="flex items-center space-x-2 text-sm p-2 font-semibold">
                 <User className="w-5 h-5" />
-                <a href="/auth/login" className="hover:text-sky-600">
+                <Link href="/auth/login" className="hover:text-sky-600">
                   Sign In
-                </a>
+                </Link>
                 <span className="text-gray-300">|</span>
-                <a href="/auth/register" className="hover:text-sky-600">
+                <Link href="/auth/register" className="hover:text-sky-600">
                   Register
-                </a>
+                </Link>
               </div>
             </div>
-            {/* === PERUBAHAN MOBILE VIEW SELESAI DI SINI === */}
           </div>
         </div>
       )}
@@ -555,7 +560,7 @@ const Navbar = () => {
                                   >
                                     <div className="bg-sky-600 text-white p-6 rounded-lg relative hover:bg-sky-700 transition-colors cursor-pointer group">
                                       <div className="absolute top-3 left-3 text-sm font-medium opacity-90">
-                                        reluv.id
+                                        reluv
                                       </div>
                                       <div className="absolute top-3 right-3">
                                         <div className="w-10 h-10 border-2 border-white rounded-full opacity-30"></div>

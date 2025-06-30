@@ -46,8 +46,8 @@ export default function Sidebar() {
     <div className="w-64 bg-white border-r border-gray-200 flex flex-col">
       <div className="p-6 border-b">
         <Link href="/" className="flex items-center space-x-2">
-          <img src="/logo.png" alt="Reluv.id" className="h-8 w-8" />
-          <span className="font-bold text-xl">Reluv.id</span>
+          <img src="/logo.png" alt="reluv" className="h-8 w-8" />
+          <span className="font-bold text-xl">reluv</span>
         </Link>
       </div>
 

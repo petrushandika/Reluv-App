@@ -10,6 +10,7 @@ import {
   Truck,
   Lock,
 } from "lucide-react";
+import Link from "next/link";
 
 const VisaIcon = () => (
   <svg
@@ -107,7 +108,7 @@ const Footer = () => {
       <div className="container mx-auto px-6 md:px-20 xl:px-40 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
           <div className="space-y-4">
-            <h3 className="text-2xl font-bold text-sky-700">reluv.id</h3>
+            <h3 className="text-2xl font-bold text-sky-700">reluv</h3>
             <p className="text-sm text-gray-600">
               Your premier destination for authentic, pre-loved luxury fashion.
             </p>
@@ -139,24 +140,24 @@ const Footer = () => {
             </h4>
             <ul className="space-y-3 text-sm">
               <li>
-                <a href="#" className={navLinkClass}>
+                <Link href="#" className={navLinkClass}>
                   FAQ
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className={navLinkClass}>
+                <Link href="#" className={navLinkClass}>
                   Contact Us
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className={navLinkClass}>
+                <Link href="#" className={navLinkClass}>
                   Shipping Info
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className={navLinkClass}>
+                <Link href="#" className={navLinkClass}>
                   Return Policy
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
@@ -167,24 +168,24 @@ const Footer = () => {
             </h4>
             <ul className="space-y-3 text-sm">
               <li>
-                <a href="#" className={navLinkClass}>
+                <Link href="#" className={navLinkClass}>
                   Our Story
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className={navLinkClass}>
+                <Link href="#" className={navLinkClass}>
                   Authenticity
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className={navLinkClass}>
+                <Link href="#" className={navLinkClass}>
                   Store Locations
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className={navLinkClass}>
+                <Link href="#" className={navLinkClass}>
                   Careers
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
@@ -218,7 +219,7 @@ const Footer = () => {
       <div className="bg-white border-t border-gray-100">
         <div className="container mx-auto px-6 md:px-20 xl:px-40 py-6 flex flex-col sm:flex-row justify-between items-center text-sm">
           <p className="text-gray-500 mb-4 sm:mb-0">
-            &copy; {new Date().getFullYear()} reluv.id. All Rights Reserved.
+            &copy; {new Date().getFullYear()} reluv. All Rights Reserved.
           </p>
           <div className="flex items-center space-x-4">
             <VisaIcon />

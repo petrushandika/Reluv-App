@@ -37,7 +37,7 @@ const Promotion = () => {
           >
             <img
               src="https://res.cloudinary.com/dqcyabvc2/image/upload/v1750843653/Mobile_ccclv1.png"
-              alt="reluv.id App Promotion"
+              alt="reluv App Promotion"
               className="max-w-[280px] md:max-w-xs lg:max-w-sm drop-shadow-2xl"
             />
           </motion.div>
@@ -51,7 +51,7 @@ const Promotion = () => {
               transition={{ duration: 0.5 }}
               className="text-3xl lg:text-5xl font-extrabold text-white leading-tight tracking-tight"
             >
-              Everyone Wins on <span className="block">reluv.id</span>
+              Everyone Wins on <span className="block">reluv</span>
             </motion.h2>
             <motion.p
               variants={{
@@ -61,8 +61,7 @@ const Promotion = () => {
               transition={{ duration: 0.5, delay: 0.2 }}
               className="mt-4 text-sky-100 text-lg max-w-md mx-auto md:mx-0"
             >
-              Unlock exclusive features when you download the reluv.id app
-              today!
+              Unlock exclusive features when you download the reluv app today!
             </motion.p>
 
             <motion.div

@@ -32,9 +32,16 @@ const NextButton = (props: { onClick: () => void; enabled: boolean }) => (
 interface ProductListProps {
   title: string;
   products: Product[];
+  showSeeMoreButton?: boolean;
+  onSeeMoreClick?: () => void;
 }
 
-const ProductList = ({ title, products }: ProductListProps) => {
+const ProductList = ({
+  title,
+  products,
+  showSeeMoreButton = true,
+  onSeeMoreClick,
+}: ProductListProps) => {
   const [emblaRef, emblaApi] = useEmblaCarousel({
     align: "start",
     containScroll: "trimSnaps",
@@ -110,11 +117,16 @@ const ProductList = ({ title, products }: ProductListProps) => {
           </div>
         </div>
 
-        <div className="text-center mt-4 md:mt-10">
-          <button className="bg-white text-sky-600 font-semibold py-3 px-8 border border-sky-600 rounded-md hover:bg-sky-600 hover:text-white transition-all duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-opacity-50">
-            See More
-          </button>
-        </div>
+        {showSeeMoreButton && (
+          <div className="text-center mt-4 md:mt-10">
+            <button
+              onClick={onSeeMoreClick}
+              className="bg-white text-sky-600 font-semibold py-3 px-8 border border-sky-600 rounded-md hover:bg-sky-600 hover:text-white transition-all duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-opacity-50"
+            >
+              See More
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

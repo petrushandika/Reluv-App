@@ -12,6 +12,7 @@ import {
   Search,
 } from "lucide-react";
 import { recommended, slashedPrices, trendingNow } from "../data/men";
+import ProductList from "./ProductList";
 
 const formatPrice = (price: number) => {
   return `Rp${new Intl.NumberFormat("id-ID").format(price)}`;
@@ -60,6 +61,11 @@ const ProductDetail = () => {
   const variants = [
     { name: "Nude", color: "#D4B896", available: true, stock: "Limited Stock" },
   ];
+
+  // Get recommended products (exclude current product)
+  const recommendedProducts = recommended
+    .filter((p) => p.id !== productId)
+    .slice(0, 10);
 
   const nextImage = () => {
     setSelectedImageIndex((prev) => (prev + 1) % productImages.length);
@@ -373,6 +379,12 @@ const ProductDetail = () => {
           </div>
         </div>
       </div>
+
+      <ProductList
+        title="You May Also Like"
+        products={recommendedProducts}
+        showSeeMoreButton={false}
+      />
     </div>
   );
 };
