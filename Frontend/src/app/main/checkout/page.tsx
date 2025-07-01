@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import dynamic from "next/dynamic";
 import {
   User,
   Mail,
@@ -12,6 +13,19 @@ import {
   BookText,
   Clock,
 } from "lucide-react";
+import type { LatLngExpression } from "leaflet";
+
+const MapPicker = dynamic(
+  () => import("../../../shared/components/organisms/MapPicker"),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="h-80 w-full bg-gray-200 flex justify-center items-center rounded-lg">
+        <p className="text-gray-500">Loading Map...</p>
+      </div>
+    ),
+  }
+);
 
 const locationData = {
   countries: [{ value: "ID", label: "Indonesia" }],
@@ -146,6 +160,10 @@ const Checkout = () => {
     zip: "",
   });
 
+  const [mapPosition, setMapPosition] = useState<LatLngExpression>([
+    -6.2088, 106.8456,
+  ]);
+
   const [selectedCourier, setSelectedCourier] = useState("");
   const [selectedService, setSelectedService] = useState<{
     id: string;
@@ -154,8 +172,7 @@ const Checkout = () => {
     price: number;
   } | null>(null);
   const [orderNotes, setOrderNotes] = useState("");
-
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isVoucherModalOpen, setIsVoucherModalOpen] = useState(false);
   const [selectedVoucher, setSelectedVoucher] = useState<
     (typeof voucherData)[0] | null
   >(null);
@@ -186,7 +203,7 @@ const Checkout = () => {
 
   const handleVoucherSelect = (voucher: (typeof voucherData)[0]) => {
     setSelectedVoucher(voucher);
-    setIsModalOpen(false);
+    setIsVoucherModalOpen(false);
   };
 
   const subtotal = checkoutItems.reduce(
@@ -412,6 +429,16 @@ const Checkout = () => {
                       onChange={handleInputChange}
                     />
                   </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                      Pinpoint Location
+                    </label>
+                    <MapPicker
+                      position={mapPosition}
+                      setPosition={setMapPosition}
+                    />
+                  </div>
                 </div>
 
                 <div className="space-y-6">
@@ -532,7 +559,7 @@ const Checkout = () => {
                       </div>
                     ) : (
                       <button
-                        onClick={() => setIsModalOpen(true)}
+                        onClick={() => setIsVoucherModalOpen(true)}
                         className="w-full flex items-center justify-center gap-2 border-2 border-dashed border-gray-300 text-gray-500 hover:border-sky-500 hover:text-sky-600 transition-colors p-3 rounded-lg"
                       >
                         <Ticket size={18} />
@@ -620,13 +647,13 @@ const Checkout = () => {
         </div>
       </div>
 
-      {isModalOpen && (
+      {isVoucherModalOpen && (
         <div
           className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50 p-4"
-          onClick={() => setIsModalOpen(false)}
+          onClick={() => setIsVoucherModalOpen(false)}
         >
           <div
-            className="bg-white rounded-xl w-full max-w-lg shadow-xl"
+            className="bg-white rounded-xl w-full max-w-lg shadow border border-gray-200"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex justify-between items-center p-5 border-b border-gray-200">
@@ -634,7 +661,7 @@ const Checkout = () => {
                 Select Voucher
               </h3>
               <button
-                onClick={() => setIsModalOpen(false)}
+                onClick={() => setIsVoucherModalOpen(false)}
                 className="p-2 -m-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full"
               >
                 <X size={20} />
