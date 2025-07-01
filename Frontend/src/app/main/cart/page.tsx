@@ -163,7 +163,7 @@ const Cart = () => {
             </p>
             <Link
               href="/"
-              className="bg-black text-white px-6 py-3 rounded-md hover:bg-gray-800 transition-colors w-full sm:w-auto inline-block text-center cursor-pointer"
+              className="bg-sky-500 text-white px-6 py-3 rounded-md hover:bg-sky-600 transition-colors w-full sm:w-auto inline-block text-center cursor-pointer"
             >
               Continue Shopping
             </Link>

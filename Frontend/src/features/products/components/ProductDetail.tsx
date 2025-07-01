@@ -380,11 +380,7 @@ const ProductDetail = () => {
         </div>
       </div>
 
-      <ProductList
-        title="You May Also Like"
-        products={recommendedProducts}
-        showSeeMoreButton={false}
-      />
+      <ProductList title="You May Also Like" products={recommendedProducts} />
     </div>
   );
 };
