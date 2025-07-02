@@ -1,38 +1,34 @@
+import { UserRole } from '@prisma/client';
 import {
   IsEmail,
   IsString,
-  IsNotEmpty,
-  MinLength,
   IsOptional,
+  IsEnum,
+  IsBoolean,
 } from 'class-validator';
 
 export class CreateUserDto {
-  @IsString()
-  @IsNotEmpty()
-  firstName: string;
-
-  @IsString()
-  @IsNotEmpty()
-  lastName: string;
-
-  @IsEmail()
-  @IsNotEmpty()
-  email: string;
-
-  @IsString()
-  @IsNotEmpty()
-  @MinLength(8, { message: 'Password must be at least 8 characters long' })
-  password: string;
-
-  @IsString()
   @IsOptional()
+  @IsString()
+  firstName?: string;
+
+  @IsOptional()
+  @IsString()
+  lastName?: string;
+
+  @IsOptional()
+  @IsEmail()
+  email?: string;
+
+  @IsOptional()
+  @IsString()
   phone?: string;
 
-  @IsString()
-  @IsNotEmpty()
-  role: string;
+  @IsOptional()
+  @IsEnum(UserRole)
+  role?: UserRole;
 
-  @IsString()
-  @IsNotEmpty()
-  profileId: string;
+  @IsOptional()
+  @IsBoolean()
+  isActive?: boolean;
 }

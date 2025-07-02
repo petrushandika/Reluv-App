@@ -22,8 +22,8 @@ import { ShipmentsModule } from './shipments/shipments.module';
 import { ShippingRatesModule } from './shipping-rates/shipping-rates.module';
 import { StoresModule } from './stores/stores.module';
 import { VariantsModule } from './variants/variants.module';
+import { AuthMiddleware } from './common/middlewares/auth.middleware';
 import { WishlistModule } from './wishlist/wishlist.module';
-import { AuthMiddleware } from './middlewares/auth.middleware';
 
 @Module({
   imports: [
