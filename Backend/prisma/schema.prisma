@@ -68,7 +68,7 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  addresses     Address[]      @relation("UserAddresses")
+  locations     Location[]      @relation("UserLocations")
   products      Product[]      @relation("SellerProducts")
   reviews       Review[]       @relation("UserReviews")
   orders        Order[]        @relation("UserOrders")
@@ -96,7 +96,7 @@ model Profile {
   @@map("profiles")
 }
 
-model Address {
+model Location {
   id            Int     @id @default(autoincrement())
   label         String
   recipient     String
@@ -106,21 +106,21 @@ model Address {
   district      String
   subDistrict   String
   postalCode    String
-  fullAddress   String  @db.Text
+  address   String  @db.Text
   isDefault     Boolean @default(false)
 
   latitude         Float?
   longitude        Float?
   biteship_area_id String?
 
-  user    User?   @relation("UserAddresses", fields: [userId], references: [id], onDelete: Cascade)
+  user    User?   @relation("UserLocations", fields: [userId], references: [id], onDelete: Cascade)
   userId  Int?
   
   store   Store?
 
   orders  Order[]
 
-  @@map("addresses")
+  @@map("locations")
 }
 
 model Category {
@@ -228,8 +228,8 @@ model Order {
 
   buyer     User    @relation("UserOrders", fields: [buyerId], references: [id])
   buyerId   Int
-  address   Address @relation(fields: [addressId], references: [id])
-  addressId Int
+  location   Location @relation(fields: [locationId], references: [id])
+  locationId Int
 
   items    OrderItem[]
   payment  Payment?
@@ -381,8 +381,8 @@ model Store {
   ownerId   Int
   products  Product[]
   
-  address   Address? @relation(fields: [addressId], references: [id])
-  addressId Int?     @unique
+  location   Location? @relation(fields: [locationId], references: [id])
+  locationId Int?     @unique
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
