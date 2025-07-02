@@ -12,6 +12,7 @@ import {
   Tag,
   Clock,
 } from "lucide-react";
+import Link from "next/link";
 
 const Banner = () => {
   const [emblaRef, emblaApi] = useEmblaCarousel({
@@ -139,15 +140,19 @@ const Banner = () => {
                         </p>
 
                         <div className="flex flex-col sm:flex-row gap-3 pt-2">
-                          <button className="inline-flex items-center justify-center px-6 py-3 bg-sky-600 text-white font-semibold rounded-xl hover:bg-sky-700 transition-all duration-200 shadow-lg hover:shadow-xl">
-                            <ShoppingBag className="mr-2 w-5 h-5" />
-                            <span>{slide.cta}</span>
-                          </button>
+                          <Link href="/main/cart" aria-label="Wishlist">
+                            <button className="inline-flex items-center justify-center px-6 py-3 bg-sky-600 text-white font-semibold rounded-xl hover:bg-sky-700 transition-all duration-200 shadow-lg hover:shadow-xl cursor-pointer">
+                              <ShoppingBag className="mr-2 w-5 h-5" />
+                              <span>{slide.cta}</span>
+                            </button>
+                          </Link>
 
-                          <button className="inline-flex items-center justify-center px-6 py-3 bg-white text-gray-700 font-semibold rounded-xl border border-gray-200 hover:border-gray-300 transition-all duration-200 hover:bg-gray-50">
-                            <Heart className="mr-2 w-5 h-5" />
-                            <span>Wishlist</span>
-                          </button>
+                          <Link href="/main/wishlist" aria-label="Wishlist">
+                            <button className="inline-flex items-center justify-center px-6 py-3 bg-white text-gray-700 font-semibold rounded-xl border border-gray-200 hover:border-gray-300 transition-all duration-200 hover:bg-gray-50 cursor-pointer">
+                              <Heart className="mr-2 w-5 h-5" />
+                              <span>Wishlist</span>
+                            </button>
+                          </Link>
                         </div>
 
                         <div className="flex items-center gap-6 pt-4 text-sm text-gray-600">

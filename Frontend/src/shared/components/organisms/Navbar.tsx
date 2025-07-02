@@ -380,12 +380,17 @@ const Navbar = () => {
   };
 
   return (
-    <div className="relative" onMouseLeave={handleNavbarLeave}>
-      <div className="w-full bg-white text-gray-800 shadow z-20 relative">
+    <header
+      onMouseLeave={handleNavbarLeave}
+      className="fixed top-0 left-0 right-0 w-full z-50 bg-white shadow transition-all duration-300"
+    >
+      <div className="w-full text-gray-800 relative">
         <div className="container mx-auto flex items-center justify-between px-6 md:px-20 xl:px-40 py-4">
-          <div className="text-xl lg:text-2xl font-bold text-sky-700">
-            reluv
-          </div>
+          <Link href="/">
+            <div className="text-xl lg:text-2xl font-bold text-sky-700">
+              reluv
+            </div>
+          </Link>
           <nav className="hidden lg:flex items-center space-x-8">
             {Object.keys(dropdownData).map((menu) => (
               <button
@@ -436,8 +441,13 @@ const Navbar = () => {
           </div>
           <div className="flex lg:hidden items-center space-x-3">
             <Search className="w-6 h-6 text-gray-600 hover:text-sky-600 cursor-pointer" />
-            <Heart className="w-6 h-6 text-gray-600 hover:text-sky-600 cursor-pointer" />
-            <ShoppingBag className="w-6 h-6 text-gray-600 hover:text-sky-600 cursor-pointer" />
+            <Link href="/main/wishlist" aria-label="Cart">
+              <Heart className="w-6 h-6 text-gray-600 hover:text-sky-600 cursor-pointer" />
+            </Link>
+
+            <Link href="/main/cart" aria-label="Cart">
+              <ShoppingBag className="w-6 h-6 text-gray-600 hover:text-sky-600 cursor-pointer" />
+            </Link>
             <button onClick={toggleMobileMenu} className="p-1">
               {isMobileMenuOpen ? (
                 <X className="w-6 h-6 text-gray-800" />
@@ -539,7 +549,10 @@ const Navbar = () => {
       )}
 
       {activeMainMenu && (
-        <div className="hidden lg:block absolute top-full left-0 w-full z-50">
+        <div
+          className="hidden lg:block absolute top-full left-0 w-full"
+          onMouseLeave={handleNavbarLeave}
+        >
           <div className="bg-gray-100 border-b border-gray-200">
             <div className="flex items-center justify-center space-x-6 xl:space-x-8 py-3 px-4">
               {dropdownData[activeMainMenu]?.categories.map((category) => (
@@ -581,9 +594,11 @@ const Navbar = () => {
                                     className="w-full flex-shrink-0 px-1"
                                   >
                                     <div className="bg-sky-600 text-white p-6 rounded-lg relative hover:bg-sky-700 transition-colors cursor-pointer group">
-                                      <div className="absolute top-3 left-3 text-sm font-medium opacity-90">
-                                        reluv
-                                      </div>
+                                      <Link href="/">
+                                        <div className="absolute top-3 left-3 text-sm font-medium opacity-90">
+                                          reluv
+                                        </div>
+                                      </Link>
                                       <div className="absolute top-3 right-3">
                                         <div className="w-10 h-10 border-2 border-white rounded-full opacity-30"></div>
                                       </div>
@@ -658,7 +673,7 @@ const Navbar = () => {
           )}
         </div>
       )}
-    </div>
+    </header>
   );
 };
 
