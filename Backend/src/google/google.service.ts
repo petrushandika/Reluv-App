@@ -1,26 +1,53 @@
 import { Injectable } from '@nestjs/common';
-import { CreateGoogleDto } from './dto/create-google.dto';
-import { UpdateGoogleDto } from './dto/update-google.dto';
+import { PrismaService } from '../prisma/prisma.service';
+import { JwtService } from '@nestjs/jwt';
+import { GoogleDto } from './dto/google.dto';
+import { Prisma, User } from '@prisma/client';
 
 @Injectable()
 export class GoogleService {
-  create(createGoogleDto: CreateGoogleDto) {
-    return 'This action adds a new google';
+  constructor(
+    private prisma: PrismaService,
+    private jwtService: JwtService,
+  ) {}
+
+  async validateUser(payload: GoogleDto): Promise<User> {
+    const user = await this.prisma.user.findUnique({
+      where: { googleId: payload.googleId },
+    });
+    if (user) {
+      return user;
+    }
+
+    const userByEmail = await this.prisma.user.findUnique({
+      where: { email: payload.email },
+    });
+    if (userByEmail) {
+      return this.prisma.user.update({
+        where: { email: payload.email },
+        data: { googleId: payload.googleId },
+      });
+    }
+
+    const dataToCreate: Prisma.UserCreateInput = {
+      email: payload.email,
+      googleId: payload.googleId,
+      firstName: payload.firstName,
+      lastName: payload.lastName,
+      isVerified: true,
+      password: null,
+    };
+
+    const newUser = await this.prisma.user.create({
+      data: dataToCreate,
+    });
+    return newUser;
   }
 
-  findAll() {
-    return `This action returns all google`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} google`;
-  }
-
-  update(id: number, updateGoogleDto: UpdateGoogleDto) {
-    return `This action updates a #${id} google`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} google`;
+  login(user: User) {
+    const payload = { sub: user.id, email: user.email };
+    return {
+      access_token: this.jwtService.sign(payload),
+    };
   }
 }
