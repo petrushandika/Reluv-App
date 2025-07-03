@@ -19,7 +19,6 @@ export class FacebookService {
       return user;
     }
 
-    // If email exists, link the account
     if (payload.email) {
       const userByEmail = await this.prisma.user.findUnique({
         where: { email: payload.email },
@@ -32,7 +31,6 @@ export class FacebookService {
       }
     }
 
-    // If email is not provided by Facebook, we cannot create an account
     if (!payload.email) {
       throw new UnauthorizedException(
         'Email not provided by Facebook. Cannot create an account.',
@@ -55,7 +53,7 @@ export class FacebookService {
   login(user: User) {
     const payload = { sub: user.id, email: user.email };
     return {
-      access_token: this.jwtService.sign(payload),
+      token: this.jwtService.sign(payload),
     };
   }
 }

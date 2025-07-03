@@ -14,9 +14,7 @@ export class FacebookController {
 
   @Get()
   @UseGuards(AuthGuard('facebook'))
-  facebookAuth() {
-    // Triggers the Facebook OAuth flow
-  }
+  facebookAuth() {}
 
   @Get('callback')
   @UseGuards(AuthGuard('facebook'))
