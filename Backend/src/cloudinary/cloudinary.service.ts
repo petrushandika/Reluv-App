@@ -1,26 +1,36 @@
 import { Injectable } from '@nestjs/common';
-import { CreateCloudinaryDto } from './dto/create-cloudinary.dto';
-import { UpdateCloudinaryDto } from './dto/update-cloudinary.dto';
+import {
+  UploadApiErrorResponse,
+  UploadApiResponse,
+  v2 as cloudinary,
+} from 'cloudinary';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class CloudinaryService {
-  create(createCloudinaryDto: CreateCloudinaryDto) {
-    return 'This action adds a new cloudinary';
+  constructor(private configService: ConfigService) {
+    cloudinary.config({
+      cloud_name: this.configService.get<string>('CLOUDINARY_CLOUD_NAME'),
+      api_key: this.configService.get<string>('CLOUDINARY_API_KEY'),
+      api_secret: this.configService.get<string>('CLOUDINARY_API_SECRET'),
+    });
   }
 
-  findAll() {
-    return `This action returns all cloudinary`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} cloudinary`;
-  }
-
-  update(id: number, updateCloudinaryDto: UpdateCloudinaryDto) {
-    return `This action updates a #${id} cloudinary`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} cloudinary`;
+  async uploadFile(
+    file: Express.Multer.File,
+    folder: string,
+  ): Promise<UploadApiResponse> {
+    return new Promise((resolve, reject) => {
+      const upload = cloudinary.uploader.upload_stream(
+        { folder: folder },
+        (error: UploadApiErrorResponse, result: UploadApiResponse) => {
+          if (error) {
+            return reject(new Error(error.message));
+          }
+          resolve(result);
+        },
+      );
+      upload.end(file.buffer);
+    });
   }
 }

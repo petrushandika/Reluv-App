@@ -24,6 +24,7 @@ import { StoresModule } from './stores/stores.module';
 import { AuthMiddleware } from './common/middlewares/auth.middleware';
 import { WishlistModule } from './wishlist/wishlist.module';
 import { LocationsModule } from './locations/locations.module';
+import { UploadModule } from './upload/upload.module';
 
 @Module({
   imports: [
@@ -45,6 +46,7 @@ import { LocationsModule } from './locations/locations.module';
     StoresModule,
     WishlistModule,
     LocationsModule,
+    UploadModule,
   ],
   controllers: [AppController],
 })
