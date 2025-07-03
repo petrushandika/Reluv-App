@@ -1,34 +1,26 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Req, UseGuards } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+import { User } from '@prisma/client';
+import { Request } from 'express';
 import { FacebookService } from './facebook.service';
-import { CreateFacebookDto } from './dto/create-facebook.dto';
-import { UpdateFacebookDto } from './dto/update-facebook.dto';
 
-@Controller('facebook')
+interface RequestWithUser extends Request {
+  user: User;
+}
+
+@Controller('auth/facebook')
 export class FacebookController {
   constructor(private readonly facebookService: FacebookService) {}
 
-  @Post()
-  create(@Body() createFacebookDto: CreateFacebookDto) {
-    return this.facebookService.create(createFacebookDto);
-  }
-
   @Get()
-  findAll() {
-    return this.facebookService.findAll();
+  @UseGuards(AuthGuard('facebook'))
+  facebookAuth() {
+    // Triggers the Facebook OAuth flow
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.facebookService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateFacebookDto: UpdateFacebookDto) {
-    return this.facebookService.update(+id, updateFacebookDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.facebookService.remove(+id);
+  @Get('callback')
+  @UseGuards(AuthGuard('facebook'))
+  facebookAuthRedirect(@Req() req: RequestWithUser) {
+    return this.facebookService.login(req.user);
   }
 }
