@@ -1,26 +1,78 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { PrismaService } from '../prisma/prisma.service';
 import { CreateLocationDto } from './dto/create-location.dto';
 import { UpdateLocationDto } from './dto/update-location.dto';
 
 @Injectable()
 export class LocationsService {
-  create(createLocationDto: CreateLocationDto) {
-    return 'This action adds a new location';
+  constructor(private prisma: PrismaService) {}
+
+  async create(userId: number, createLocationDto: CreateLocationDto) {
+    if (createLocationDto.isDefault) {
+      await this.prisma.location.updateMany({
+        where: { userId, isDefault: true },
+        data: { isDefault: false },
+      });
+    }
+
+    return this.prisma.location.create({
+      data: {
+        ...createLocationDto,
+        userId: userId,
+      },
+    });
   }
 
-  findAll() {
-    return `This action returns all locations`;
+  async findAllForUser(userId: number) {
+    return this.prisma.location.findMany({
+      where: { userId },
+      orderBy: { isDefault: 'desc' },
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} location`;
+  async findOne(id: number, userId: number) {
+    const location = await this.prisma.location.findUnique({
+      where: { id, userId },
+    });
+
+    if (!location) {
+      throw new NotFoundException(`Location with ID ${id} not found`);
+    }
+    return location;
   }
 
-  update(id: number, updateLocationDto: UpdateLocationDto) {
-    return `This action updates a #${id} location`;
+  async update(
+    id: number,
+    userId: number,
+    updateLocationDto: UpdateLocationDto,
+  ) {
+    await this.findOne(id, userId);
+
+    if (updateLocationDto.isDefault) {
+      await this.prisma.$transaction([
+        this.prisma.location.updateMany({
+          where: { userId, isDefault: true },
+          data: { isDefault: false },
+        }),
+        this.prisma.location.update({
+          where: { id },
+          data: updateLocationDto,
+        }),
+      ]);
+      return this.findOne(id, userId);
+    }
+
+    return this.prisma.location.update({
+      where: { id },
+      data: updateLocationDto,
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} location`;
+  async remove(id: number, userId: number) {
+    await this.findOne(id, userId);
+    await this.prisma.location.delete({
+      where: { id },
+    });
+    return { message: `Location with ID ${id} successfully deleted.` };
   }
 }
