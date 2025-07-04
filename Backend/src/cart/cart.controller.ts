@@ -1,34 +1,58 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseGuards,
+  ParseIntPipe,
+  ValidationPipe,
+} from '@nestjs/common';
 import { CartService } from './cart.service';
-import { CreateCartDto } from './dto/create-cart.dto';
-import { UpdateCartDto } from './dto/update-cart.dto';
+import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
+import { GetUser } from '../common/decorators/get-user.decorator';
+import { User } from '@prisma/client';
+import { AddToCartDto } from './dto/add-to-cart.dto';
+import { UpdateCartItemDto } from './dto/update-cart-item.dto';
 
+@UseGuards(JwtAuthGuard)
 @Controller('cart')
 export class CartController {
   constructor(private readonly cartService: CartService) {}
 
-  @Post()
-  create(@Body() createCartDto: CreateCartDto) {
-    return this.cartService.create(createCartDto);
-  }
-
   @Get()
-  findAll() {
-    return this.cartService.findAll();
+  getMyCart(@GetUser() user: User) {
+    return this.cartService.getMyCart(user.id);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.cartService.findOne(+id);
+  @Post('items')
+  addItem(
+    @GetUser() user: User,
+    @Body(new ValidationPipe()) addToCartDto: AddToCartDto,
+  ) {
+    return this.cartService.addItem(user.id, addToCartDto);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCartDto: UpdateCartDto) {
-    return this.cartService.update(+id, updateCartDto);
+  @Patch('items/:id')
+  updateItemQuantity(
+    @GetUser() user: User,
+    @Param('id', ParseIntPipe) cartItemId: number,
+    @Body(new ValidationPipe()) updateCartItemDto: UpdateCartItemDto,
+  ) {
+    return this.cartService.updateItemQuantity(
+      user.id,
+      cartItemId,
+      updateCartItemDto,
+    );
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.cartService.remove(+id);
+  @Delete('items/:id')
+  removeItem(
+    @GetUser() user: User,
+    @Param('id', ParseIntPipe) cartItemId: number,
+  ) {
+    return this.cartService.removeItem(user.id, cartItemId);
   }
 }
