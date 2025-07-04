@@ -1,26 +1,81 @@
-import { Injectable } from '@nestjs/common';
-import { CreateWishlistDto } from './dto/create-wishlist.dto';
-import { UpdateWishlistDto } from './dto/update-wishlist.dto';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import { Prisma } from '@prisma/client';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class WishlistService {
-  create(createWishlistDto: CreateWishlistDto) {
-    return 'This action adds a new wishlist';
+  constructor(private prisma: PrismaService) {}
+
+  async getMyWishlist(userId: number) {
+    return this.prisma.wishlist.findMany({
+      where: { userId },
+      include: {
+        product: {
+          include: {
+            variants: {
+              where: { isActive: true },
+              orderBy: { price: 'asc' },
+            },
+          },
+        },
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
   }
 
-  findAll() {
-    return `This action returns all wishlist`;
+  async addToWishlist(userId: number, productId: number) {
+    const product = await this.prisma.product.findUnique({
+      where: { id: productId },
+    });
+    if (!product) {
+      throw new NotFoundException(`Product with ID ${productId} not found.`);
+    }
+
+    const existingWishlistItem = await this.prisma.wishlist.findUnique({
+      where: {
+        userId_productId: {
+          userId,
+          productId,
+        },
+      },
+    });
+    if (existingWishlistItem) {
+      throw new ConflictException('This product is already in your wishlist.');
+    }
+
+    return this.prisma.wishlist.create({
+      data: {
+        userId,
+        productId,
+      },
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} wishlist`;
-  }
-
-  update(id: number, updateWishlistDto: UpdateWishlistDto) {
-    return `This action updates a #${id} wishlist`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} wishlist`;
+  async removeFromWishlist(userId: number, productId: number) {
+    try {
+      await this.prisma.wishlist.delete({
+        where: {
+          userId_productId: {
+            userId,
+            productId,
+          },
+        },
+      });
+      return { message: 'Product removed from wishlist successfully.' };
+    } catch (error) {
+      if (
+        error instanceof Prisma.PrismaClientKnownRequestError &&
+        error.code === 'P2025'
+      ) {
+        throw new NotFoundException('This product is not in your wishlist.');
+      }
+      throw error;
+    }
   }
 }

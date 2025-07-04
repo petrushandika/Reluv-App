@@ -1,34 +1,46 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Delete,
+  Param,
+  UseGuards,
+  ParseIntPipe,
+  ValidationPipe,
+} from '@nestjs/common';
 import { WishlistService } from './wishlist.service';
 import { CreateWishlistDto } from './dto/create-wishlist.dto';
-import { UpdateWishlistDto } from './dto/update-wishlist.dto';
+import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
+import { GetUser } from '../common/decorators/get-user.decorator';
+import { User } from '@prisma/client';
 
+@UseGuards(JwtAuthGuard)
 @Controller('wishlist')
 export class WishlistController {
   constructor(private readonly wishlistService: WishlistService) {}
 
   @Post()
-  create(@Body() createWishlistDto: CreateWishlistDto) {
-    return this.wishlistService.create(createWishlistDto);
+  addToWishlist(
+    @GetUser() user: User,
+    @Body(new ValidationPipe()) createWishlistDto: CreateWishlistDto,
+  ) {
+    return this.wishlistService.addToWishlist(
+      user.id,
+      createWishlistDto.productId,
+    );
   }
 
   @Get()
-  findAll() {
-    return this.wishlistService.findAll();
+  getMyWishlist(@GetUser() user: User) {
+    return this.wishlistService.getMyWishlist(user.id);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.wishlistService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateWishlistDto: UpdateWishlistDto) {
-    return this.wishlistService.update(+id, updateWishlistDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.wishlistService.remove(+id);
+  @Delete(':productId')
+  removeFromWishlist(
+    @GetUser() user: User,
+    @Param('productId', ParseIntPipe) productId: number,
+  ) {
+    return this.wishlistService.removeFromWishlist(user.id, productId);
   }
 }
