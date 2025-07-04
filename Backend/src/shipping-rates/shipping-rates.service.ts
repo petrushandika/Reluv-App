@@ -1,26 +1,56 @@
-import { Injectable } from '@nestjs/common';
-import { CreateShippingRateDto } from './dto/create-shipping-rate.dto';
-import { UpdateShippingRateDto } from './dto/update-shipping-rate.dto';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { PrismaService } from '../prisma/prisma.service';
+import { GetShippingRatesDto } from './dto/get-shipping-rates.dto';
+import { UpsertShippingRateDto } from './dto/upsert-shipping-rate.dto';
 
 @Injectable()
 export class ShippingRatesService {
-  create(createShippingRateDto: CreateShippingRateDto) {
-    return 'This action adds a new shippingRate';
+  constructor(private prisma: PrismaService) {}
+
+  findAvailableRates(query: GetShippingRatesDto) {
+    const { originAreaId, destinationAreaId, weight } = query;
+    return this.prisma.shippingRate.findMany({
+      where: {
+        originAreaId,
+        destinationAreaId,
+        minWeight: { lte: weight },
+        maxWeight: { gte: weight },
+      },
+      orderBy: {
+        price: 'asc',
+      },
+    });
   }
 
-  findAll() {
-    return `This action returns all shippingRates`;
+  upsertRate(dto: UpsertShippingRateDto) {
+    const {
+      originAreaId,
+      destinationAreaId,
+      courierCode,
+      serviceCode,
+      ...updateData
+    } = dto;
+
+    return this.prisma.shippingRate.upsert({
+      where: {
+        originAreaId_destinationAreaId_courierCode_serviceCode: {
+          originAreaId,
+          destinationAreaId,
+          courierCode,
+          serviceCode,
+        },
+      },
+      update: updateData,
+      create: dto,
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} shippingRate`;
-  }
-
-  update(id: number, updateShippingRateDto: UpdateShippingRateDto) {
-    return `This action updates a #${id} shippingRate`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} shippingRate`;
+  async removeRate(id: number) {
+    const rate = await this.prisma.shippingRate.findUnique({ where: { id } });
+    if (!rate) {
+      throw new NotFoundException(`Shipping rate with ID ${id} not found.`);
+    }
+    await this.prisma.shippingRate.delete({ where: { id } });
+    return { message: `Shipping rate with ID ${id} has been deleted.` };
   }
 }
