@@ -6,9 +6,12 @@ import { UpdateUserDto } from './dto/update-user.dto';
 export class UsersService {
   constructor(private prisma: PrismaService) {}
 
-  async findById(id: number) {
+  async findMe(userId: number) {
     const user = await this.prisma.user.findUnique({
-      where: { id },
+      where: { id: userId },
+      include: {
+        profile: true,
+      },
     });
 
     if (!user) {
@@ -20,11 +23,26 @@ export class UsersService {
     return result;
   }
 
-  async update(userId: number, updateUserDto: UpdateUserDto) {
+  async updateMe(userId: number, updateUserDto: UpdateUserDto) {
     const user = await this.prisma.user.update({
       where: { id: userId },
       data: updateUserDto,
     });
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password, ...result } = user;
+    return result;
+  }
+
+  async findById(id: number) {
+    const user = await this.prisma.user.findUnique({
+      where: { id },
+      include: { profile: true },
+    });
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password, ...result } = user;
