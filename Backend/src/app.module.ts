@@ -25,6 +25,7 @@ import { AuthMiddleware } from './common/middlewares/auth.middleware';
 import { WishlistModule } from './wishlist/wishlist.module';
 import { LocationsModule } from './locations/locations.module';
 import { UploadModule } from './upload/upload.module';
+import { ProfilesModule } from './profiles/profiles.module';
 
 @Module({
   imports: [
@@ -47,6 +48,7 @@ import { UploadModule } from './upload/upload.module';
     WishlistModule,
     LocationsModule,
     UploadModule,
+    ProfilesModule,
   ],
   controllers: [AppController],
 })

@@ -11,13 +11,14 @@ import { UpdateStoreDto } from './dto/update-store.dto';
 export class StoresService {
   constructor(private prisma: PrismaService) {}
 
-  async create(ownerId: number, createStoreDto: CreateStoreDto) {
-    const existingStore = await this.prisma.store.findFirst({
-      where: { ownerId },
+  async create(userId: number, createStoreDto: CreateStoreDto) {
+    const existingStore = await this.prisma.store.findUnique({
+      where: { userId },
     });
     if (existingStore) {
       throw new ConflictException('User already owns a store.');
     }
+
     const storeWithSameNameOrSlug = await this.prisma.store.findFirst({
       where: {
         OR: [{ name: createStoreDto.name }, { slug: createStoreDto.slug }],
@@ -26,7 +27,17 @@ export class StoresService {
     if (storeWithSameNameOrSlug) {
       throw new ConflictException('Store name or slug is already taken.');
     }
-    return this.prisma.store.create({ data: { ...createStoreDto, ownerId } });
+
+    return this.prisma.store.create({
+      data: {
+        ...createStoreDto,
+        user: {
+          connect: {
+            id: userId,
+          },
+        },
+      },
+    });
   }
 
   async findBySlug(slug: string) {
@@ -37,16 +48,16 @@ export class StoresService {
     return store;
   }
 
-  async findMyStore(ownerId: number) {
-    const store = await this.prisma.store.findFirst({ where: { ownerId } });
+  async findMyStore(userId: number) {
+    const store = await this.prisma.store.findUnique({ where: { userId } });
     if (!store) {
       throw new NotFoundException(`You do not have a store yet.`);
     }
     return store;
   }
 
-  async update(ownerId: number, updateStoreDto: UpdateStoreDto) {
-    const myStore = await this.findMyStore(ownerId);
+  async update(userId: number, updateStoreDto: UpdateStoreDto) {
+    const myStore = await this.findMyStore(userId);
     if (updateStoreDto.name || updateStoreDto.slug) {
       const conflictStore = await this.prisma.store.findFirst({
         where: {

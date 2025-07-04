@@ -126,9 +126,17 @@ async function main() {
       data: {
         name: "John's Preloved Goods",
         slug: 'johns-preloved-goods',
-        ownerId: user1.id,
         isVerified: true,
-        locationId: store1Location.id,
+        user: {
+          connect: {
+            id: user1.id,
+          },
+        },
+        location: {
+          connect: {
+            id: store1Location.id,
+          },
+        },
       },
     });
 
@@ -136,8 +144,12 @@ async function main() {
       data: {
         name: "Jane's Corner",
         slug: 'janes-corner',
-        ownerId: user2.id,
         isVerified: true,
+        user: {
+          connect: {
+            id: user2.id,
+          },
+        },
       },
     });
 

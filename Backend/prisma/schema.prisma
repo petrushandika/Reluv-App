@@ -50,6 +50,8 @@ enum ShipmentStatus {
 
 model User {
   id        Int      @id @default(autoincrement())
+  googleId   String? @unique
+  facebookId String? @unique
   firstName String?
   lastName  String?
   email     String   @unique
@@ -58,8 +60,6 @@ model User {
   role      UserRole @default(USER)
   isActive  Boolean  @default(true)
 
-  googleId   String? @unique
-  facebookId String? @unique
   isVerified Boolean @default(false)
 
   verificationToken       String?
@@ -76,7 +76,7 @@ model User {
   profile       Profile?
   wishlist      Wishlist[]
   notifications Notification[]
-  stores        Store[]
+  stores        Store?
 
   @@index([email])
   @@map("users")
@@ -84,9 +84,9 @@ model User {
 
 model Profile {
   id     Int     @id @default(autoincrement())
-  bio    String?
   avatar String?
   banner String?
+  bio    String?
 
   user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId Int  @unique
@@ -106,7 +106,7 @@ model Location {
   district      String
   subDistrict   String
   postalCode    String
-  address   String  @db.Text
+  address       String  @db.Text
   isDefault     Boolean @default(false)
 
   latitude         Float?
@@ -147,13 +147,14 @@ model Product {
   isPreloved  Boolean  @default(true)
   isActive    Boolean  @default(true)
   viewCount   Int      @default(0)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
 
   weight Int? // gram
   length Int? // cm
   width  Int? // cm
   height Int? // cm
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   seller     User     @relation("SellerProducts", fields: [sellerId], references: [id])
   sellerId   Int
@@ -377,8 +378,8 @@ model Store {
   rating        Float? @db.Real
 
   profile   Profile?
-  owner     User     @relation(fields: [ownerId], references: [id])
-  ownerId   Int
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId Int  @unique
   products  Product[]
   
   location   Location? @relation(fields: [locationId], references: [id])
@@ -387,7 +388,6 @@ model Store {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@index([ownerId])
   @@index([slug])
   @@map("stores")
 }
