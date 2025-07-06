@@ -5,10 +5,14 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateOrderDto } from './dto/create-order.dto';
+import { PaymentsService } from '../payments/payments.service';
 
 @Injectable()
 export class OrdersService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private paymentsService: PaymentsService,
+  ) {}
 
   async createOrder(userId: number, createOrderDto: CreateOrderDto) {
     const { locationId, shippingCost, notes } = createOrderDto;
@@ -43,7 +47,7 @@ export class OrdersService {
     const totalAmount = itemsAmount + shippingCost;
     const orderNumber = `ORD-${Date.now()}-${userId}`;
 
-    return this.prisma.$transaction(async (tx) => {
+    const createdOrder = await this.prisma.$transaction(async (tx) => {
       const order = await tx.order.create({
         data: {
           orderNumber,
@@ -80,6 +84,11 @@ export class OrdersService {
 
       return order;
     });
+
+    const paymentTransaction =
+      await this.paymentsService.createPayment(createdOrder);
+
+    return { order: createdOrder, payment: paymentTransaction };
   }
 
   async findAllForUser(userId: number) {
