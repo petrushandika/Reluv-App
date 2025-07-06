@@ -13,6 +13,7 @@ const CONFIG = {
   MIDTRANS_CLIENT_KEY: process.env.MIDTRANS_CLIENT_KEY,
   MIDTRANS_ENDPOINT: 'https://app.sandbox.midtrans.com/snap/v1/transactions',
   BITESHIP_API_KEY: process.env.BITESHIP_API_KEY,
+  BITESHIP_BASE_URL: process.env.BITESHIP_BASE_URL,
 };
 
 export default CONFIG;

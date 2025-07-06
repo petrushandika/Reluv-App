@@ -8,6 +8,7 @@ import { Order, PaymentStatus, Prisma } from '@prisma/client';
 import { createHash } from 'crypto';
 import * as midtransClient from 'midtrans-client';
 import { PrismaService } from '../prisma/prisma.service';
+import { ShipmentsService } from '../shipments/shipments.service';
 import { MidtransNotificationDto } from './dto/midtrans-notification.dto';
 import { MidtransTransaction } from './dto/midtrans-transaction.dto';
 
@@ -18,6 +19,7 @@ export class PaymentsService {
   constructor(
     private configService: ConfigService,
     private prisma: PrismaService,
+    private shipmentsService: ShipmentsService,
   ) {
     const serverKey = this.configService.get<string>('MIDTRANS_SERVER_KEY');
     const clientKey = this.configService.get<string>('MIDTRANS_CLIENT_KEY');
@@ -137,7 +139,7 @@ export class PaymentsService {
     }
 
     if (payment.status !== paymentStatus) {
-      await this.prisma.$transaction([
+      const [, updatedOrder] = await this.prisma.$transaction([
         this.prisma.payment.update({
           where: { id: payment.id },
           data: {
@@ -152,6 +154,17 @@ export class PaymentsService {
           data: { status: orderStatus },
         }),
       ]);
+
+      if (updatedOrder.status === 'PAID') {
+        try {
+          await this.shipmentsService.createShipment(updatedOrder.id);
+        } catch (error) {
+          console.error(
+            `Failed to create shipment for paid order ${updatedOrder.id}:`,
+            error,
+          );
+        }
+      }
     }
   }
 }
