@@ -1,16 +1,16 @@
 import {
-  Body,
   Controller,
   Post,
-  UseGuards,
+  Body,
   ValidationPipe,
+  UseGuards,
 } from '@nestjs/common';
-import { User } from '@prisma/client';
+import { ShippingRatesService } from './shipping-rates.service';
+import { CheckRatesDto } from './dto/check-rates.dto';
 import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
 import { GetUser } from '../common/decorators/get-user.decorator';
-import { CheckRatesDto } from './dto/check-rates.dto';
+import { User } from '@prisma/client';
 import { CheckRatesFromCartDto } from './dto/check-rates-from-cart.dto';
-import { ShippingRatesService } from './shipping-rates.service';
 
 @Controller('shipping-rates')
 export class ShippingRatesController {

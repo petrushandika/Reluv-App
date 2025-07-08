@@ -4,7 +4,6 @@ import {
   InternalServerErrorException,
   NotFoundException,
   BadGatewayException,
-  BadRequestException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { firstValueFrom } from 'rxjs';
@@ -43,7 +42,13 @@ export class ShippingRatesService {
       where: { userId },
       include: {
         items: {
-          include: { variant: { include: { product: true } } },
+          include: {
+            variant: {
+              include: {
+                product: true,
+              },
+            },
+          },
         },
       },
     });
@@ -55,12 +60,9 @@ export class ShippingRatesService {
     const destinationLocation = await this.prisma.location.findUnique({
       where: { id: checkRatesDto.destinationLocationId, userId },
     });
-    if (!destinationLocation) {
-      throw new NotFoundException('Destination address not found.');
-    }
-    if (!destinationLocation.biteship_area_id) {
-      throw new BadRequestException(
-        'The destination address does not have a valid shipping area ID.',
+    if (!destinationLocation || !destinationLocation.biteship_area_id) {
+      throw new NotFoundException(
+        'Destination address not found or does not have a valid shipping area ID.',
       );
     }
 
@@ -69,14 +71,9 @@ export class ShippingRatesService {
     const originLocation = await this.prisma.location.findFirst({
       where: { store: { userId: sellerId } },
     });
-    if (!originLocation) {
+    if (!originLocation || !originLocation.biteship_area_id) {
       throw new NotFoundException(
-        "Seller's origin address could not be found.",
-      );
-    }
-    if (!originLocation.biteship_area_id) {
-      throw new BadRequestException(
-        "The seller's address does not have a valid shipping area ID.",
+        "Seller's origin address could not be found or does not have a valid shipping area ID.",
       );
     }
 
@@ -84,7 +81,7 @@ export class ShippingRatesService {
       name: item.variant.product.name,
       description: item.variant.name || 'Product Variant',
       value: item.variant.price,
-      weight: item.variant.product.weight || 500,
+      weight: item.variant.product.weight,
       quantity: item.quantity,
     }));
 

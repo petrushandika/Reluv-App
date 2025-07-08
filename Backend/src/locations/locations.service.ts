@@ -18,7 +18,9 @@ export class LocationsService {
     return this.prisma.location.create({
       data: {
         ...createLocationDto,
-        userId: userId,
+        user: {
+          connect: { id: userId },
+        },
       },
     });
   }
@@ -31,7 +33,7 @@ export class LocationsService {
   }
 
   async findOne(id: number, userId: number) {
-    const location = await this.prisma.location.findUnique({
+    const location = await this.prisma.location.findFirst({
       where: { id, userId },
     });
 
@@ -48,10 +50,10 @@ export class LocationsService {
   ) {
     await this.findOne(id, userId);
 
-    if (updateLocationDto.isDefault) {
+    if (updateLocationDto.isDefault === true) {
       await this.prisma.$transaction([
         this.prisma.location.updateMany({
-          where: { userId, isDefault: true },
+          where: { userId, isDefault: true, id: { not: id } },
           data: { isDefault: false },
         }),
         this.prisma.location.update({

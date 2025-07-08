@@ -238,6 +238,40 @@ model Variant {
   @@map("variants")
 }
 
+model Wishlist {
+  id        Int      @id @default(autoincrement())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    Int
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId Int
+  createdAt DateTime @default(now())
+
+  @@unique([userId, productId])
+  @@map("wishlists")
+}
+
+model Cart {
+  id     Int        @id @default(autoincrement())
+  user   User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId Int        @unique
+  items  CartItem[]
+
+  @@map("carts")
+}
+
+model CartItem {
+  id        Int     @id @default(autoincrement())
+  cart      Cart    @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  cartId    Int
+  variant   Variant @relation(fields: [variantId], references: [id], onDelete: Cascade)
+  variantId Int
+  quantity  Int
+  createdAt DateTime @default(now())
+
+  @@unique([cartId, variantId])
+  @@map("cart_items")
+}
+
 model Review {
   id      Int    @id @default(autoincrement())
   rating  Int    @db.SmallInt
@@ -326,39 +360,9 @@ model Payment {
   @@map("payments")
 }
 
-model Cart {
-  id     Int        @id @default(autoincrement())
-  user   User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId Int        @unique
-  items  CartItem[]
 
-  @@map("carts")
-}
 
-model CartItem {
-  id        Int     @id @default(autoincrement())
-  cart      Cart    @relation(fields: [cartId], references: [id], onDelete: Cascade)
-  cartId    Int
-  variant   Variant @relation(fields: [variantId], references: [id], onDelete: Cascade)
-  variantId Int
-  quantity  Int
-  createdAt DateTime @default(now())
 
-  @@unique([cartId, variantId])
-  @@map("cart_items")
-}
-
-model Wishlist {
-  id        Int      @id @default(autoincrement())
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    Int
-  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
-  productId Int
-  createdAt DateTime @default(now())
-
-  @@unique([userId, productId])
-  @@map("wishlists")
-}
 
 model Notification {
   id      Int      @id @default(autoincrement())

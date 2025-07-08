@@ -1,4 +1,10 @@
-import { IsBoolean, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import {
+  IsBoolean,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 export class CreateLocationDto {
   @IsString()
@@ -40,4 +46,16 @@ export class CreateLocationDto {
   @IsBoolean()
   @IsOptional()
   isDefault?: boolean = false;
+
+  @IsString()
+  @IsNotEmpty()
+  biteship_area_id: string;
+
+  @IsNumber()
+  @IsOptional()
+  latitude?: number;
+
+  @IsNumber()
+  @IsOptional()
+  longitude?: number;
 }

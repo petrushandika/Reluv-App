@@ -25,6 +25,7 @@ import { WishlistModule } from './wishlist/wishlist.module';
 import { LocationsModule } from './locations/locations.module';
 import { UploadModule } from './upload/upload.module';
 import { StoreModule } from './store/store.module';
+import { MapsModule } from './maps/maps.module';
 
 @Module({
   imports: [
@@ -47,6 +48,7 @@ import { StoreModule } from './store/store.module';
     LocationsModule,
     UploadModule,
     StoreModule,
+    MapsModule,
   ],
   controllers: [AppController],
 })
