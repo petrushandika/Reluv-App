@@ -7,7 +7,7 @@ export class CreateCategoryDto {
 
   @IsString()
   @IsNotEmpty()
-  slug?: string;
+  slug: string;
 
   @IsInt()
   @IsOptional()

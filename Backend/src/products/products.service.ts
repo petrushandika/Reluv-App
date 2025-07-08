@@ -2,20 +2,29 @@ import {
   Injectable,
   NotFoundException,
   ConflictException,
+  ForbiddenException,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { QueryProductDto } from './dto/query-product.dto';
-import { Prisma } from '@prisma/client';
+import { Prisma, User } from '@prisma/client';
 
 @Injectable()
 export class ProductsService {
   constructor(private prisma: PrismaService) {}
 
-  async create(createProductDto: CreateProductDto) {
-    const { variants, sellerId, categoryId, storeId, ...productData } =
-      createProductDto;
+  async create(user: User, createProductDto: CreateProductDto) {
+    const { variants, categoryId, ...productData } = createProductDto;
+
+    const store = await this.prisma.store.findUnique({
+      where: { userId: user.id },
+    });
+    if (!store) {
+      throw new ForbiddenException(
+        'You do not own a store to add products to.',
+      );
+    }
 
     const existingProduct = await this.prisma.product.findUnique({
       where: { slug: productData.slug },
@@ -28,13 +37,12 @@ export class ProductsService {
 
     const dataToCreate: Prisma.ProductCreateInput = {
       ...productData,
-      seller: { connect: { id: sellerId } },
+      seller: { connect: { id: user.id } }, // Ambil sellerId dari token
+      store: { connect: { id: store.id } }, // Ambil storeId dari toko milik user
       category: { connect: { id: categoryId } },
-      store: { connect: { id: storeId } },
       variants: {
         create: variants,
       },
-      ...(storeId && { store: { connect: { id: storeId } } }),
     };
 
     return this.prisma.product.create({
@@ -70,6 +78,7 @@ export class ProductsService {
           orderBy: { price: 'asc' },
         },
         category: true,
+        store: { select: { name: true, slug: true } },
       },
       orderBy: {
         createdAt: 'desc',
@@ -83,8 +92,9 @@ export class ProductsService {
     const product = await this.prisma.product.findUnique({
       where: { id },
       include: {
-        seller: { select: { id: true, firstName: true, lastName: true } },
+        seller: { select: { id: true, firstName: true } },
         category: true,
+        store: true,
         variants: { where: { isActive: true } },
         reviews: true,
       },
@@ -106,16 +116,30 @@ export class ProductsService {
     return product;
   }
 
-  async update(id: number, updateProductDto: UpdateProductDto) {
-    await this.findOne(id);
+  async update(user: User, id: number, updateProductDto: UpdateProductDto) {
+    const product = await this.findOne(id);
+
+    if (product.sellerId !== user.id) {
+      throw new ForbiddenException(
+        'You are not authorized to update this product.',
+      );
+    }
+
     return this.prisma.product.update({
       where: { id },
       data: updateProductDto,
     });
   }
 
-  async remove(id: number) {
-    await this.findOne(id);
+  async remove(user: User, id: number) {
+    const product = await this.findOne(id);
+
+    if (product.sellerId !== user.id) {
+      throw new ForbiddenException(
+        'You are not authorized to delete this product.',
+      );
+    }
+
     await this.prisma.product.delete({
       where: { id },
     });

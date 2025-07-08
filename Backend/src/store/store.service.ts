@@ -92,9 +92,6 @@ export class StoreService {
     });
   }
 
-  /**
-   * Memperbarui profil toko milik pengguna.
-   */
   async updateMyStoreProfile(
     userId: number,
     updateStoreProfileDto: UpdateStoreProfileDto,

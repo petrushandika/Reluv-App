@@ -131,8 +131,6 @@ export class ShipmentsService {
       data: {
         status: newStatus,
         trackingNumber: courier_tracking_number || shipment.trackingNumber,
-        // **FIX:** Gunakan 'as any' untuk melewati pemeriksaan tipe yang terlalu ketat.
-        // Ini aman karena kita tahu 'history' memiliki struktur JSON yang valid.
         trackingHistory: history as any,
       },
     });

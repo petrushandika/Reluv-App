@@ -7,6 +7,7 @@ import {
   IsOptional,
   IsString,
   ValidateNested,
+  Min,
 } from 'class-validator';
 import { CreateVariantDto } from './create-variant.dto';
 
@@ -30,19 +31,35 @@ export class CreateProductDto {
 
   @IsBoolean()
   @IsOptional()
-  isPublished?: boolean;
+  isPublished?: boolean = true;
 
-  @IsInt()
-  @IsNotEmpty()
-  sellerId: number;
+  @IsBoolean()
+  @IsOptional()
+  isPreloved?: boolean = true;
 
   @IsInt()
   @IsNotEmpty()
   categoryId: number;
 
   @IsInt()
-  @IsOptional()
-  storeId?: number;
+  @IsNotEmpty()
+  @Min(0)
+  weight: number;
+
+  @IsInt()
+  @IsNotEmpty()
+  @Min(0)
+  length: number;
+
+  @IsInt()
+  @IsNotEmpty()
+  @Min(0)
+  width: number;
+
+  @IsInt()
+  @IsNotEmpty()
+  @Min(0)
+  height: number;
 
   @IsArray()
   @ValidateNested({ each: true })

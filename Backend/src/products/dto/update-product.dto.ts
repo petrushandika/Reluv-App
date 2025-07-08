@@ -4,6 +4,7 @@ import {
   IsInt,
   IsOptional,
   IsString,
+  Min,
 } from 'class-validator';
 
 export class UpdateProductDto {
@@ -28,7 +29,31 @@ export class UpdateProductDto {
   @IsOptional()
   isPublished?: boolean;
 
+  @IsBoolean()
+  @IsOptional()
+  isPreloved?: boolean;
+
   @IsInt()
   @IsOptional()
   categoryId?: number;
+
+  @IsInt()
+  @IsOptional()
+  @Min(0)
+  weight?: number;
+
+  @IsInt()
+  @IsOptional()
+  @Min(0)
+  length?: number;
+
+  @IsInt()
+  @IsOptional()
+  @Min(0)
+  width?: number;
+
+  @IsInt()
+  @IsOptional()
+  @Min(0)
+  height?: number;
 }
