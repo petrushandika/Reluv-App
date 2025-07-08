@@ -1,56 +1,119 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { HttpService } from '@nestjs/axios';
+import {
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+  BadGatewayException,
+  BadRequestException,
+} from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { firstValueFrom } from 'rxjs';
 import { PrismaService } from '../prisma/prisma.service';
-import { GetShippingRatesDto } from './dto/get-shipping-rates.dto';
-import { UpsertShippingRateDto } from './dto/upsert-shipping-rate.dto';
+import { CheckRatesDto } from './dto/check-rates.dto';
+import { CheckRatesFromCartDto } from './dto/check-rates-from-cart.dto';
 
 @Injectable()
 export class ShippingRatesService {
-  constructor(private prisma: PrismaService) {}
+  private readonly biteshipApiKey: string;
+  private readonly biteshipBaseUrl: string;
 
-  findAvailableRates(query: GetShippingRatesDto) {
-    const { originAreaId, destinationAreaId, weight } = query;
-    return this.prisma.shippingRate.findMany({
-      where: {
-        originAreaId,
-        destinationAreaId,
-        minWeight: { lte: weight },
-        maxWeight: { gte: weight },
-      },
-      orderBy: {
-        price: 'asc',
-      },
-    });
+  constructor(
+    private readonly httpService: HttpService,
+    private readonly configService: ConfigService,
+    private readonly prisma: PrismaService,
+  ) {
+    const apiKey = this.configService.get<string>('BITESHIP_API_KEY');
+    const baseUrl = this.configService.get<string>('BITESHIP_BASE_URL');
+
+    if (!apiKey || !baseUrl) {
+      throw new InternalServerErrorException(
+        'Biteship configuration is missing.',
+      );
+    }
+
+    this.biteshipApiKey = apiKey;
+    this.biteshipBaseUrl = baseUrl;
   }
 
-  upsertRate(dto: UpsertShippingRateDto) {
-    const {
-      originAreaId,
-      destinationAreaId,
-      courierCode,
-      serviceCode,
-      ...updateData
-    } = dto;
-
-    return this.prisma.shippingRate.upsert({
-      where: {
-        originAreaId_destinationAreaId_courierCode_serviceCode: {
-          originAreaId,
-          destinationAreaId,
-          courierCode,
-          serviceCode,
+  async checkRatesFromCart(
+    userId: number,
+    checkRatesDto: CheckRatesFromCartDto,
+  ) {
+    const cart = await this.prisma.cart.findUnique({
+      where: { userId },
+      include: {
+        items: {
+          include: { variant: { include: { product: true } } },
         },
       },
-      update: updateData,
-      create: dto,
+    });
+
+    if (!cart || cart.items.length === 0) {
+      throw new NotFoundException('Your cart is empty.');
+    }
+
+    const destinationLocation = await this.prisma.location.findUnique({
+      where: { id: checkRatesDto.destinationLocationId, userId },
+    });
+    if (!destinationLocation) {
+      throw new NotFoundException('Destination address not found.');
+    }
+    if (!destinationLocation.biteship_area_id) {
+      throw new BadRequestException(
+        'The destination address does not have a valid shipping area ID.',
+      );
+    }
+
+    const firstItem = cart.items[0];
+    const sellerId = firstItem.variant.product.sellerId;
+    const originLocation = await this.prisma.location.findFirst({
+      where: { store: { userId: sellerId } },
+    });
+    if (!originLocation) {
+      throw new NotFoundException(
+        "Seller's origin address could not be found.",
+      );
+    }
+    if (!originLocation.biteship_area_id) {
+      throw new BadRequestException(
+        "The seller's address does not have a valid shipping area ID.",
+      );
+    }
+
+    const itemsForBiteship = cart.items.map((item) => ({
+      name: item.variant.product.name,
+      description: item.variant.name || 'Product Variant',
+      value: item.variant.price,
+      weight: item.variant.product.weight || 500,
+      quantity: item.quantity,
+    }));
+
+    return this.checkRates({
+      origin_area_id: originLocation.biteship_area_id,
+      destination_area_id: destinationLocation.biteship_area_id,
+      items: itemsForBiteship,
     });
   }
 
-  async removeRate(id: number) {
-    const rate = await this.prisma.shippingRate.findUnique({ where: { id } });
-    if (!rate) {
-      throw new NotFoundException(`Shipping rate with ID ${id} not found.`);
+  async checkRates(checkRatesDto: CheckRatesDto) {
+    const headers = { Authorization: this.biteshipApiKey };
+    try {
+      const response = await firstValueFrom(
+        this.httpService.post(
+          `${this.biteshipBaseUrl}/v1/rates/couriers`,
+          checkRatesDto,
+          { headers },
+        ),
+      );
+      return response.data.pricing;
+    } catch (error) {
+      console.error(
+        'Biteship Rate Check Error:',
+        error.response?.data || error.message,
+      );
+      throw new BadGatewayException(
+        'Failed to retrieve shipping rates from provider.',
+      );
     }
-    await this.prisma.shippingRate.delete({ where: { id } });
-    return { message: `Shipping rate with ID ${id} has been deleted.` };
   }
 }

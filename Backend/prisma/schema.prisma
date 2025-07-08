@@ -59,7 +59,6 @@ model User {
   phone     String?
   role      UserRole @default(USER)
   isActive  Boolean  @default(true)
-
   isVerified Boolean @default(false)
 
   verificationToken       String?
@@ -73,27 +72,68 @@ model User {
   reviews       Review[]       @relation("UserReviews")
   orders        Order[]        @relation("UserOrders")
   cart          Cart?
-  profile       Profile?
+  profile       UserProfile?
   wishlist      Wishlist[]
   notifications Notification[]
-  stores        Store?
+  store         Store?
 
   @@index([email])
   @@map("users")
 }
 
-model Profile {
+model UserProfile {
   id     Int     @id @default(autoincrement())
   avatar String?
   banner String?
   bio    String?
+  birth DateTime?
+  gender String?
 
   user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId Int  @unique
-  store Store @relation(fields: [storeId], references: [id], onDelete: Cascade)
-  storeId Int @unique
 
-  @@map("profiles")
+  @@map("user_profiles")
+}
+
+model Store {
+  id          Int     @id @default(autoincrement())
+  name        String
+  slug        String  @unique
+  isActive    Boolean @default(true)
+  isVerified  Boolean @default(false)
+
+  totalProducts Int    @default(0)
+  totalSales    Int    @default(0)
+  rating        Float? @db.Real
+
+  profile   StoreProfile?
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId Int  @unique
+  products  Product[]
+  
+  location   Location? @relation(fields: [locationId], references: [id])
+  locationId Int?     @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([slug])
+  @@map("store")
+}
+
+model StoreProfile {
+  id     Int     @id @default(autoincrement())
+  avatar String?
+  banner String?
+  bio    String?
+  operational String?
+  
+
+  store   Store @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  storeId Int   @unique
+
+  @@map("store_profiles")
 }
 
 model Location {
@@ -126,7 +166,7 @@ model Location {
 model Category {
   id   Int    @id @default(autoincrement())
   name String @unique
-  slug String? @unique
+  slug String @unique
 
   products Product[] @relation("ProductCategory")
 
@@ -160,8 +200,8 @@ model Product {
   sellerId   Int
   category   Category @relation("ProductCategory", fields: [categoryId], references: [id])
   categoryId Int
-  store      Store?   @relation(fields: [storeId], references: [id])
-  storeId    Int?
+  store      Store   @relation(fields: [storeId], references: [id])
+  storeId    Int
 
   variants Variant[]
   reviews  Review[]     @relation("ProductReviews")
@@ -364,32 +404,6 @@ model Shipment {
   @@index([trackingNumber])
   @@index([status])
   @@map("shipments")
-}
-
-model Store {
-  id          Int     @id @default(autoincrement())
-  name        String
-  slug        String  @unique
-  isActive    Boolean @default(true)
-  isVerified  Boolean @default(false)
-
-  totalProducts Int    @default(0)
-  totalSales    Int    @default(0)
-  rating        Float? @db.Real
-
-  profile   Profile?
-  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId Int  @unique
-  products  Product[]
-  
-  location   Location? @relation(fields: [locationId], references: [id])
-  locationId Int?     @unique
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([slug])
-  @@map("stores")
 }
 
 model ShippingRate {

@@ -20,12 +20,11 @@ import { PrismaModule } from './prisma/prisma.module';
 import { ReviewsModule } from './reviews/reviews.module';
 import { ShipmentsModule } from './shipments/shipments.module';
 import { ShippingRatesModule } from './shipping-rates/shipping-rates.module';
-import { StoresModule } from './stores/stores.module';
 import { AuthMiddleware } from './common/middlewares/auth.middleware';
 import { WishlistModule } from './wishlist/wishlist.module';
 import { LocationsModule } from './locations/locations.module';
 import { UploadModule } from './upload/upload.module';
-import { ProfilesModule } from './profiles/profiles.module';
+import { StoreModule } from './store/store.module';
 
 @Module({
   imports: [
@@ -44,11 +43,10 @@ import { ProfilesModule } from './profiles/profiles.module';
     ReviewsModule,
     ShipmentsModule,
     ShippingRatesModule,
-    StoresModule,
     WishlistModule,
     LocationsModule,
     UploadModule,
-    ProfilesModule,
+    StoreModule,
   ],
   controllers: [AppController],
 })

@@ -1,15 +1,19 @@
 import { IsOptional, IsString, IsUrl } from 'class-validator';
 
-export class CreateProfileDto {
+export class UpdateStoreProfileDto {
   @IsUrl()
   @IsOptional()
   avatar?: string;
+
+  @IsUrl()
+  @IsOptional()
+  banner?: string;
 
   @IsString()
   @IsOptional()
   bio?: string;
 
-  @IsUrl()
+  @IsString()
   @IsOptional()
-  banner?: string;
+  operational?: string;
 }

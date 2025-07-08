@@ -30,6 +30,7 @@ export class ProductsService {
       ...productData,
       seller: { connect: { id: sellerId } },
       category: { connect: { id: categoryId } },
+      store: { connect: { id: storeId } },
       variants: {
         create: variants,
       },

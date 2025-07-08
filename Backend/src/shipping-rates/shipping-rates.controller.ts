@@ -1,41 +1,32 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Delete,
-  Param,
-  Query,
+  Controller,
+  Post,
   UseGuards,
-  ParseIntPipe,
   ValidationPipe,
 } from '@nestjs/common';
-import { ShippingRatesService } from './shipping-rates.service';
-import { GetShippingRatesDto } from './dto/get-shipping-rates.dto';
-import { UpsertShippingRateDto } from './dto/upsert-shipping-rate.dto';
+import { User } from '@prisma/client';
 import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
-// import { AdminGuard } from '../common/gurads/admin.guard';
+import { GetUser } from '../common/decorators/get-user.decorator';
+import { CheckRatesDto } from './dto/check-rates.dto';
+import { CheckRatesFromCartDto } from './dto/check-rates-from-cart.dto';
+import { ShippingRatesService } from './shipping-rates.service';
 
 @Controller('shipping-rates')
 export class ShippingRatesController {
   constructor(private readonly shippingRatesService: ShippingRatesService) {}
 
-  @Get()
-  findAvailableRates(
-    @Query(new ValidationPipe({ transform: true })) query: GetShippingRatesDto,
+  @UseGuards(JwtAuthGuard)
+  @Post('check-from-cart')
+  checkRatesFromCart(
+    @GetUser() user: User,
+    @Body(new ValidationPipe()) checkRatesDto: CheckRatesFromCartDto,
   ) {
-    return this.shippingRatesService.findAvailableRates(query);
+    return this.shippingRatesService.checkRatesFromCart(user.id, checkRatesDto);
   }
 
-  @Post('upsert')
-  @UseGuards(JwtAuthGuard)
-  upsertRate(@Body(new ValidationPipe()) dto: UpsertShippingRateDto) {
-    return this.shippingRatesService.upsertRate(dto);
-  }
-
-  @Delete(':id')
-  @UseGuards(JwtAuthGuard)
-  removeRate(@Param('id', ParseIntPipe) id: number) {
-    return this.shippingRatesService.removeRate(id);
+  @Post('check')
+  checkRates(@Body(new ValidationPipe()) checkRatesDto: CheckRatesDto) {
+    return this.shippingRatesService.checkRates(checkRatesDto);
   }
 }

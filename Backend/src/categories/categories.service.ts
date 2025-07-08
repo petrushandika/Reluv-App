@@ -2,20 +2,26 @@ import {
   Injectable,
   NotFoundException,
   ConflictException,
+  BadRequestException,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class CategoriesService {
   constructor(private prisma: PrismaService) {}
 
   async create(createCategoryDto: CreateCategoryDto) {
-    const { slug } = createCategoryDto;
+    const { parentId, name, slug } = createCategoryDto;
+
+    if (!slug) {
+      throw new BadRequestException('Slug is a required field.');
+    }
 
     const existingCategory = await this.prisma.category.findUnique({
-      where: { slug },
+      where: { slug: slug },
     });
     if (existingCategory) {
       throw new ConflictException(
@@ -23,8 +29,18 @@ export class CategoriesService {
       );
     }
 
+    const dataToCreate: Prisma.CategoryCreateInput = {
+      name: name,
+      slug: slug,
+      ...(parentId && {
+        parentCategory: {
+          connect: { id: parentId },
+        },
+      }),
+    };
+
     return this.prisma.category.create({
-      data: createCategoryDto,
+      data: dataToCreate,
     });
   }
 
@@ -67,9 +83,25 @@ export class CategoriesService {
       }
     }
 
+    const { parentId, name, slug } = updateCategoryDto;
+
+    const dataToUpdate: Prisma.CategoryUpdateInput = {};
+
+    if (name) {
+      dataToUpdate.name = name;
+    }
+    if (slug) {
+      dataToUpdate.slug = slug;
+    }
+    if (parentId) {
+      dataToUpdate.parentCategory = {
+        connect: { id: parentId },
+      };
+    }
+
     return this.prisma.category.update({
       where: { id },
-      data: updateCategoryDto,
+      data: dataToUpdate,
     });
   }
 
