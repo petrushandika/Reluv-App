@@ -1,335 +1,228 @@
-// import { PrismaClient, UserRole, Condition } from '@prisma/client';
+import {
+  PrismaClient,
+  UserRole,
+  Condition,
+  User,
+  Category,
+} from '@prisma/client';
+import * as bcrypt from 'bcrypt';
+import * as fs from 'fs';
+import * as path from 'path';
 
-// const prisma = new PrismaClient();
+function loadJsonData<T>(filename: string): T {
+  const jsonPath = path.join(__dirname, 'data', filename);
+  const fileContent = fs.readFileSync(jsonPath, 'utf-8');
+  return JSON.parse(fileContent) as T;
+}
 
-// async function cleanup() {
-//   console.log('🧹 Cleaning up the database...');
-//   await prisma.orderItem.deleteMany();
-//   await prisma.cartItem.deleteMany();
-//   await prisma.review.deleteMany();
-//   await prisma.wishlist.deleteMany();
-//   await prisma.notification.deleteMany();
-//   await prisma.payment.deleteMany();
-//   await prisma.shipment.deleteMany();
-//   await prisma.order.deleteMany();
-//   await prisma.variant.deleteMany();
-//   await prisma.product.deleteMany();
-//   await prisma.profile.deleteMany();
-//   await prisma.store.deleteMany();
-//   await prisma.location.deleteMany();
-//   await prisma.cart.deleteMany();
-//   await prisma.category.deleteMany();
-//   await prisma.user.deleteMany();
-//   await prisma.shippingRate.deleteMany();
-//   console.log('✅ Database cleaned.');
-// }
+interface UserSeed {
+  email: string;
+  firstName: string;
+  lastName: string;
+  password: string;
+  phone: string;
+  role: keyof typeof UserRole;
+  isVerified: boolean;
+  profileBio: string;
+}
 
-// async function main() {
-//   console.log(`🚀 Starting to seed...`);
+interface CategorySeed {
+  name: string;
+  slug: string;
+  children: { name: string; slug: string }[];
+}
 
-//   try {
-//     await cleanup();
+interface StoreSeed {
+  name: string;
+  slug: string;
+  isVerified: boolean;
+  profile: { bio: string; banner: string };
+}
 
-//     const user1 = await prisma.user.create({
-//       data: {
-//         email: 'john.doe@example.com',
-//         firstName: 'John',
-//         lastName: 'Doe',
-//         password: 'password123',
-//         role: UserRole.USER,
-//         isVerified: true,
-//       },
-//     });
+interface LocationSeed {
+  ownerEmail: string;
+  label: string;
+  recipient: string;
+  phone: string;
+  province: string;
+  city: string;
+  district: string;
+  subDistrict: string;
+  postalCode: string;
+  address: string;
+  isDefault: boolean;
+  biteship_area_id: string;
+}
 
-//     const user2 = await prisma.user.create({
-//       data: {
-//         email: 'jane.smith@example.com',
-//         firstName: 'Jane',
-//         lastName: 'Smith',
-//         password: 'password123',
-//         role: UserRole.USER,
-//         isVerified: true,
-//       },
-//     });
+interface ProductSeed {
+  name: string;
+  slug: string;
+  description: string;
+  isForMen: boolean;
+  images: string[];
+}
 
-//     const adminUser = await prisma.user.create({
-//       data: {
-//         email: 'admin@example.com',
-//         firstName: 'Admin',
-//         lastName: 'User',
-//         password: 'adminpassword',
-//         role: UserRole.ADMIN,
-//         isVerified: true,
-//       },
-//     });
+const usersData = loadJsonData<UserSeed[]>('users.json');
+const categoriesData = loadJsonData<CategorySeed[]>('categories.json');
+const storeData = loadJsonData<StoreSeed>('store.json');
+const productSeedData = loadJsonData<ProductSeed[]>('products.json');
+const locationsData = loadJsonData<LocationSeed[]>('locations.json');
 
-//     console.log(
-//       `👤 Created users: ${user1.firstName}, ${user2.firstName}, and ${adminUser.firstName}`,
-//     );
+const prisma = new PrismaClient();
 
-//     const parentCategory = await prisma.category.create({
-//       data: {
-//         name: 'Fashion',
-//         slug: 'fashion',
-//         childCategories: {
-//           create: [
-//             { name: "Men's Clothing", slug: 'mens-clothing' },
-//             { name: "Women's Clothing", slug: 'womens-clothing' },
-//           ],
-//         },
-//       },
-//       include: { childCategories: true },
-//     });
+async function cleanup() {
+  await prisma.orderItem.deleteMany();
+  await prisma.cartItem.deleteMany();
+  await prisma.review.deleteMany();
+  await prisma.wishlist.deleteMany();
+  await prisma.notification.deleteMany();
+  await prisma.payment.deleteMany();
+  await prisma.shipment.deleteMany();
+  await prisma.order.deleteMany();
+  await prisma.variant.deleteMany();
+  await prisma.product.deleteMany();
+  await prisma.userProfile.deleteMany();
+  await prisma.storeProfile.deleteMany();
+  await prisma.store.deleteMany();
+  await prisma.location.deleteMany();
+  await prisma.cart.deleteMany();
+  await prisma.category.deleteMany();
+  await prisma.user.deleteMany();
+  await prisma.shippingRate.deleteMany();
+}
 
-//     const electronicsCategory = await prisma.category.create({
-//       data: { name: 'Electronics', slug: 'electronics' },
-//     });
+async function main() {
+  try {
+    await cleanup();
 
-//     console.log(
-//       `📚 Created categories: ${parentCategory.name} and ${electronicsCategory.name}`,
-//     );
+    const hashPassword = (pw: string) => bcrypt.hash(pw, 10);
 
-//     const user2Location = await prisma.location.create({
-//       data: {
-//         userId: user2.id,
-//         label: "Jane's Home",
-//         recipient: 'Jane Smith',
-//         phone: '089876543210',
-//         province: 'Banten',
-//         city: 'South Tangerang',
-//         district: 'Serpong',
-//         subDistrict: 'BSD',
-//         postalCode: '15310',
-//         address: 'Jl. Boulevard BSD No. 42',
-//         isDefault: true,
-//       },
-//     });
+    console.log('Creating users from users.json...');
+    const createdUsers: User[] = [];
+    for (const userData of usersData) {
+      const user = await prisma.user.create({
+        data: {
+          email: userData.email,
+          firstName: userData.firstName,
+          lastName: userData.lastName,
+          password: await hashPassword(userData.password),
+          phone: userData.phone,
+          role: userData.role as UserRole,
+          isVerified: userData.isVerified,
+          profile: { create: { bio: userData.profileBio } },
+          cart: { create: {} },
+        },
+      });
+      createdUsers.push(user);
+      console.log(`👤 Created user: ${user.email}`);
+    }
+    const levinUser = createdUsers.find((u) => u.email === 'user@gmail.com');
+    if (!levinUser) throw new Error('Levin user not found in seed data.');
 
-//     const store1Location = await prisma.location.create({
-//       data: {
-//         label: "John's Store Warehouse",
-//         recipient: 'John Store',
-//         phone: '081234567891',
-//         province: 'West Java',
-//         city: 'Bandung',
-//         district: 'Sukajadi',
-//         subDistrict: 'Pasteur',
-//         postalCode: '40161',
-//         address: 'Jl. Dr. Djunjunan No. 169',
-//         isDefault: true,
-//       },
-//     });
+    console.log('Creating categories from categories.json...');
+    type CategoryWithChildren = Category & { childCategories: Category[] };
+    const createdCategories: Record<string, CategoryWithChildren> = {};
+    for (const categoryData of categoriesData) {
+      const parent = await prisma.category.create({
+        data: {
+          name: categoryData.name,
+          slug: categoryData.slug,
+          childCategories: { create: categoryData.children },
+        },
+        include: { childCategories: true },
+      });
+      createdCategories[parent.slug] = parent;
+    }
+    const mensCategory = createdCategories['fashion'].childCategories.find(
+      (c) => c.slug === 'mens-fashion',
+    );
+    const womensCategory = createdCategories['fashion'].childCategories.find(
+      (c) => c.slug === 'womens-fashion',
+    );
+    if (!mensCategory || !womensCategory)
+      throw new Error('Could not find fashion child categories.');
 
-//     console.log(`📍 Created user and store locations.`);
+    console.log('Creating locations from locations.json...');
+    const createdLocations: Record<string, number> = {};
+    for (const locData of locationsData) {
+      const user = createdUsers.find((u) => u.email === locData.ownerEmail);
+      if (!user) {
+        console.warn(
+          `User with email ${locData.ownerEmail} not found for location. Skipping.`,
+        );
+        continue;
+      }
+      const location = await prisma.location.create({
+        data: {
+          label: locData.label,
+          recipient: locData.recipient,
+          phone: locData.phone,
+          province: locData.province,
+          city: locData.city,
+          district: locData.district,
+          subDistrict: locData.subDistrict,
+          postalCode: locData.postalCode,
+          address: locData.address,
+          isDefault: locData.isDefault,
+          biteship_area_id: locData.biteship_area_id,
+          user: { connect: { id: user.id } },
+        },
+      });
+      createdLocations[locData.label] = location.id;
+      console.log(
+        `📍 Created location: "${locData.label}" for ${locData.ownerEmail}`,
+      );
+    }
+    const levinShopLocationId = createdLocations['Kantor'];
+    if (!levinShopLocationId)
+      throw new Error("LevinShop's location ('Kantor') not found.");
 
-//     const store1 = await prisma.store.create({
-//       data: {
-//         name: "John's Preloved Goods",
-//         slug: 'johns-preloved-goods',
-//         isVerified: true,
-//         user: {
-//           connect: {
-//             id: user1.id,
-//           },
-//         },
-//         location: {
-//           connect: {
-//             id: store1Location.id,
-//           },
-//         },
-//       },
-//     });
+    console.log('Creating store from store.json...');
+    const levinStore = await prisma.store.create({
+      data: {
+        name: storeData.name,
+        slug: storeData.slug,
+        isVerified: storeData.isVerified,
+        user: { connect: { id: levinUser.id } },
+        location: { connect: { id: levinShopLocationId } },
+        profile: { create: storeData.profile },
+      },
+    });
+    console.log(`🏪 Created store: ${levinStore.name}.`);
 
-//     const store2 = await prisma.store.create({
-//       data: {
-//         name: "Jane's Corner",
-//         slug: 'janes-corner',
-//         isVerified: true,
-//         user: {
-//           connect: {
-//             id: user2.id,
-//           },
-//         },
-//       },
-//     });
+    console.log('Creating products from product.json...');
+    for (const product of productSeedData) {
+      const categoryId = product.isForMen ? mensCategory.id : womensCategory.id;
+      await prisma.product.create({
+        data: {
+          name: product.name,
+          slug: product.slug,
+          description: product.description,
+          images: product.images,
+          weight: 400,
+          length: 30,
+          width: 25,
+          height: 5,
+          seller: { connect: { id: levinUser.id } },
+          category: { connect: { id: categoryId } },
+          store: { connect: { id: levinStore.id } },
+          variants: {
+            create: { price: 299000, stock: 20, condition: Condition.NEW },
+          },
+        },
+      });
+      console.log(`📦 Created product: "${product.name}"`);
+    }
+  } catch (e) {
+    if (e instanceof Error) {
+      console.error('An error occurred during seeding:', e.message);
+    } else {
+      console.error('An unknown error occurred during seeding:', e);
+    }
+    process.exit(1);
+  } finally {
+    await prisma.$disconnect();
+  }
+}
 
-//     console.log(`🏪 Created stores: ${store1.name} and ${store2.name}`);
-
-//     await prisma.profile.create({
-//       data: {
-//         userId: user1.id,
-//         storeId: store1.id,
-//         bio: 'Selling quality preloved goods.',
-//         avatar: 'https://i.pravatar.cc/150?u=john.doe',
-//       },
-//     });
-
-//     await prisma.profile.create({
-//       data: {
-//         userId: user2.id,
-//         storeId: store2.id,
-//         bio: "The best collection for women's fashion.",
-//         avatar: 'https://i.pravatar.cc/150?u=jane.smith',
-//       },
-//     });
-
-//     console.log(`👨‍💼 Created profiles for store owners.`);
-
-//     const product1 = await prisma.product.create({
-//       data: {
-//         name: 'Preloved Flannel Shirt',
-//         slug: 'preloved-flannel-shirt-01',
-//         description: 'Preloved flannel shirt in like-new condition. Size L.',
-//         images: ['/images/flanel1.jpg', '/images/flanel2.jpg'],
-//         isPreloved: true,
-//         sellerId: user1.id,
-//         categoryId: parentCategory.childCategories[0].id,
-//         storeId: store1.id,
-//         variants: {
-//           create: {
-//             price: 120000,
-//             compareAtPrice: 250000,
-//             stock: 1,
-//             condition: Condition.LIKE_NEW,
-//             conditionNote: 'Only worn twice.',
-//             sku: 'SKU-FLANNEL-01',
-//           },
-//         },
-//       },
-//       include: { variants: true },
-//     });
-
-//     const product2 = await prisma.product.create({
-//       data: {
-//         name: 'Vintage Evening Gown',
-//         slug: 'vintage-evening-gown-01',
-//         description:
-//           'Elegant vintage evening gown from the 80s. Good condition.',
-//         images: ['/images/dress1.jpg'],
-//         isPreloved: true,
-//         sellerId: user2.id,
-//         categoryId: parentCategory.childCategories[1].id,
-//         storeId: store2.id,
-//         variants: {
-//           create: {
-//             price: 350000,
-//             stock: 1,
-//             condition: Condition.GOOD,
-//             conditionNote: "There's a small, faint stain on the bottom.",
-//             sku: 'SKU-DRESS-01',
-//           },
-//         },
-//       },
-//       include: { variants: true },
-//     });
-
-//     const product3 = await prisma.product.create({
-//       data: {
-//         name: 'New Gaming Headphones',
-//         slug: 'new-gaming-headphones-01',
-//         description:
-//           'New, sealed gaming headphones. Clear sound and great bass.',
-//         images: ['/images/headphone1.jpg'],
-//         isPreloved: false,
-//         sellerId: user1.id,
-//         categoryId: electronicsCategory.id,
-//         storeId: store1.id,
-//         variants: {
-//           create: {
-//             price: 450000,
-//             stock: 10,
-//             condition: Condition.NEW,
-//             sku: 'SKU-HEADPHONE-01',
-//           },
-//         },
-//       },
-//       include: { variants: true },
-//     });
-
-//     console.log(
-//       `📦 Created products: "${product1.name}", "${product2.name}", and "${product3.name}"`,
-//     );
-
-//     await prisma.review.create({
-//       data: {
-//         rating: 5,
-//         comment: 'The item is great, matches the description. Friendly seller!',
-//         productId: product1.id,
-//         authorId: user2.id,
-//       },
-//     });
-
-//     console.log(`⭐ Created a review.`);
-
-//     await prisma.cart.create({
-//       data: {
-//         userId: user2.id,
-//         items: {
-//           create: {
-//             variantId: product3.variants[0].id,
-//             quantity: 1,
-//           },
-//         },
-//       },
-//     });
-
-//     console.log(`🛒 Created a cart for ${user2.firstName}.`);
-
-//     await prisma.wishlist.create({
-//       data: {
-//         userId: user1.id,
-//         productId: product2.id,
-//       },
-//     });
-
-//     console.log(`❤️ Added an item to ${user1.firstName}'s wishlist.`);
-
-//     const order1 = await prisma.order.create({
-//       data: {
-//         orderNumber: `ORD-${Date.now()}`,
-//         totalAmount: 129000,
-//         itemsAmount: 120000,
-//         shippingCost: 9000,
-//         status: 'PAID',
-//         buyerId: user2.id,
-//         locationId: user2Location.id,
-//         items: {
-//           create: {
-//             variantId: product1.variants[0].id,
-//             quantity: 1,
-//             price: product1.variants[0].price,
-//             total: product1.variants[0].price * 1,
-//           },
-//         },
-//         payment: {
-//           create: {
-//             amount: 129000,
-//             status: 'PAID',
-//             method: 'BCA Virtual Account',
-//             midtrans_order_id: `midtrans-${Date.now()}`,
-//             paidAt: new Date(),
-//           },
-//         },
-//         shipment: {
-//           create: {
-//             courier: 'JNE',
-//             service: 'REG',
-//             status: 'IN_TRANSIT',
-//             trackingNumber: `JNE${Date.now()}`,
-//           },
-//         },
-//       },
-//     });
-
-//     console.log(`🧾 Created a complete order: ${order1.orderNumber}`);
-//     console.log(`\nSeeding finished successfully. ✅`);
-//   } catch (e) {
-//     console.error('An error occurred during seeding:', e);
-//     process.exit(1);
-//   } finally {
-//     console.log('🔌 Disconnecting Prisma Client...');
-//     await prisma.$disconnect();
-//   }
-// }
-
-// main();
+main();

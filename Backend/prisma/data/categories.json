@@ -1,0 +1,15 @@
+[
+  {
+    "name": "Fashion",
+    "slug": "fashion",
+    "children": [
+      { "name": "Men's Fashion", "slug": "mens-fashion" },
+      { "name": "Women's Fashion", "slug": "womens-fashion" }
+    ]
+  },
+  {
+    "name": "Electronics",
+    "slug": "electronics",
+    "children": []
+  }
+]

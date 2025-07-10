@@ -1,0 +1,22 @@
+[
+  {
+    "email": "user@gmail.com",
+    "firstName": "Levin",
+    "lastName": "Official",
+    "password": "password123",
+    "phone": "085555555555",
+    "role": "USER",
+    "isVerified": true,
+    "profileBio": "Official account for LevinShop."
+  },
+  {
+    "email": "admin@gmail.com",
+    "firstName": "Super",
+    "lastName": "Admin",
+    "password": "adminpassword",
+    "phone": "089999999999",
+    "role": "ADMIN",
+    "isVerified": true,
+    "profileBio": "System Administrator."
+  }
+]

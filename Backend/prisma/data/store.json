@@ -1,0 +1,21 @@
+{
+  "name": "LevinShop Official",
+  "slug": "levinshop_official",
+  "isVerified": true,
+  "profile": {
+    "bio": "Official store for LevinShop fashion. High-quality apparel for men and women.",
+    "banner": "https://res.cloudinary.com/dqcyabvc2/image/upload/banners/levinshop_banner.webp"
+  },
+  "location": {
+    "label": "LevinShop Warehouse",
+    "recipient": "LevinShop Official",
+    "phone": "085555555555",
+    "province": "DKI Jakarta",
+    "city": "Jakarta Pusat",
+    "district": "Tanah Abang",
+    "subDistrict": "Kebon Kacang",
+    "postalCode": "10240",
+    "address": "Thamrin City, Lantai 5",
+    "biteship_area_id": "IDNP6IDNC148IDND836IDZ10240"
+  }
+}

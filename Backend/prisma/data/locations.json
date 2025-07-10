@@ -1,0 +1,30 @@
+[
+  {
+    "ownerEmail": "user@gmail.com",
+    "label": "Rumah Utama",
+    "recipient": "Levin",
+    "phone": "085555555555",
+    "province": "DKI Jakarta",
+    "city": "Jakarta Selatan",
+    "district": "Tebet",
+    "subDistrict": "Tebet Timur",
+    "postalCode": "12820",
+    "address": "Jl. Tebet Raya No. 1",
+    "isDefault": true,
+    "biteship_area_id": "IDNP6IDNC148IDND838IDZ12820"
+  },
+  {
+    "ownerEmail": "user@gmail.com",
+    "label": "Kantor",
+    "recipient": "Levin (Kantor)",
+    "phone": "085555555555",
+    "province": "DKI Jakarta",
+    "city": "Jakarta Pusat",
+    "district": "Tanah Abang",
+    "subDistrict": "Kebon Kacang",
+    "postalCode": "10240",
+    "address": "Thamrin City, Lantai 5",
+    "isDefault": false,
+    "biteship_area_id": "IDNP6IDNC148IDND836IDZ10240"
+  }
+]
