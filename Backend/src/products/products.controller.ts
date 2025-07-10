@@ -18,6 +18,8 @@ import { QueryProductDto } from './dto/query-product.dto';
 import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
 import { GetUser } from '../common/decorators/get-user.decorator';
 import { User } from '@prisma/client';
+import { CreateVariantDto } from './dto/create-variant.dto';
+import { UpdateVariantDto } from './dto/update-variant.dto';
 
 @UseGuards(JwtAuthGuard)
 @Controller('products')
@@ -56,5 +58,38 @@ export class ProductsController {
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.productsService.findOne(id);
+  }
+
+  @Post(':productId/variants')
+  addVariant(
+    @GetUser() user: User,
+    @Param('productId', ParseIntPipe) productId: number,
+    @Body(new ValidationPipe()) createVariantDto: CreateVariantDto,
+  ) {
+    return this.productsService.addVariant(user, productId, createVariantDto);
+  }
+
+  @Patch(':productId/variants/:variantId')
+  updateVariant(
+    @GetUser() user: User,
+    @Param('productId', ParseIntPipe) productId: number,
+    @Param('variantId', ParseIntPipe) variantId: number,
+    @Body(new ValidationPipe()) updateVariantDto: UpdateVariantDto,
+  ) {
+    return this.productsService.updateVariant(
+      user,
+      productId,
+      variantId,
+      updateVariantDto,
+    );
+  }
+
+  @Delete(':productId/variants/:variantId')
+  removeVariant(
+    @GetUser() user: User,
+    @Param('productId', ParseIntPipe) productId: number,
+    @Param('variantId', ParseIntPipe) variantId: number,
+  ) {
+    return this.productsService.removeVariant(user, productId, variantId);
   }
 }

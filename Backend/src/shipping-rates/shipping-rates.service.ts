@@ -81,7 +81,7 @@ export class ShippingRatesService {
       name: item.variant.product.name,
       description: item.variant.name || 'Product Variant',
       value: item.variant.price,
-      weight: item.variant.product.weight,
+      weight: item.variant.weight,
       quantity: item.quantity,
     }));
 
@@ -104,10 +104,12 @@ export class ShippingRatesService {
       );
       return response.data.pricing;
     } catch (error) {
-      console.error(
-        'Biteship Rate Check Error:',
-        error.response?.data || error.message,
-      );
+      if (error instanceof Error) {
+        console.error(
+          'Biteship Rate Check Error:',
+          error['response']?.data || error.message,
+        );
+      }
       throw new BadGatewayException(
         'Failed to retrieve shipping rates from provider.',
       );

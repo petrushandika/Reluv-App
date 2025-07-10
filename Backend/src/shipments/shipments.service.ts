@@ -34,7 +34,6 @@ export class ShipmentsService {
   }
 
   async createShipment(orderId: number) {
-    // ... (method createShipment tidak berubah)
     const order = await this.prisma.order.findUnique({
       where: { id: orderId },
       include: {
@@ -43,21 +42,31 @@ export class ShipmentsService {
         buyer: true,
       },
     });
+
     if (!order) throw new NotFoundException('Order not found');
-    const product = order.items[0]?.variant.product;
-    if (!product) throw new NotFoundException('No products found in order');
+
+    const firstProduct = order.items[0]?.variant.product;
+    if (!firstProduct)
+      throw new NotFoundException('No products found in order');
+
     const seller = await this.prisma.user.findUnique({
-      where: { id: product.sellerId },
+      where: { id: firstProduct.sellerId },
     });
-    if (!seller)
+
+    if (!seller) {
       throw new NotFoundException(
-        `Seller for product ID ${product.id} not found.`,
+        `Seller for product ID ${firstProduct.id} not found.`,
       );
+    }
+
     const originLocation = await this.prisma.location.findFirst({
       where: { store: { userId: seller.id } },
     });
-    if (!originLocation)
+
+    if (!originLocation) {
       throw new NotFoundException('Seller origin location not found');
+    }
+
     const biteshipPayload = {
       shipper_contact_name: seller.firstName,
       shipper_contact_phone: seller.phone,
@@ -75,9 +84,10 @@ export class ShipmentsService {
         description: item.variant.name || 'Product Variant',
         value: item.price,
         quantity: item.quantity,
-        weight: item.variant.product.weight || 500,
+        weight: item.variant.weight,
       })),
     };
+
     try {
       const response = await firstValueFrom(
         this.httpService.post(
@@ -86,7 +96,9 @@ export class ShipmentsService {
           { headers: { Authorization: this.BITESHIP_API_KEY } },
         ),
       );
+
       const biteshipOrder = response.data;
+
       return this.prisma.shipment.create({
         data: {
           orderId: order.id,

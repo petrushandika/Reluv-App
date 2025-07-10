@@ -129,7 +129,6 @@ model StoreProfile {
   bio    String?
   operational String?
   
-
   store   Store @relation(fields: [storeId], references: [id], onDelete: Cascade)
   storeId Int   @unique
 
@@ -188,11 +187,6 @@ model Product {
   isActive    Boolean  @default(true)
   viewCount   Int      @default(0)
 
-  weight Int // gram
-  length Int // cm
-  width  Int // cm
-  height Int // cm
-
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
@@ -227,6 +221,11 @@ model Variant {
   stock         Int       @default(1)
   condition     Condition
   conditionNote String?
+
+  weight Int // gram
+  length Int // cm
+  width  Int // cm
+  height Int // cm
 
   isActive  Boolean  @default(true)
   createdAt DateTime @default(now())
@@ -359,10 +358,6 @@ model Payment {
   @@index([midtrans_order_id])
   @@map("payments")
 }
-
-
-
-
 
 model Notification {
   id      Int      @id @default(autoincrement())

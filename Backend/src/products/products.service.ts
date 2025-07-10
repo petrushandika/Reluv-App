@@ -9,10 +9,27 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { QueryProductDto } from './dto/query-product.dto';
 import { Prisma, User } from '@prisma/client';
+import { CreateVariantDto } from './dto/create-variant.dto';
+import { UpdateVariantDto } from './dto/update-variant.dto';
 
 @Injectable()
 export class ProductsService {
   constructor(private prisma: PrismaService) {}
+
+  private async checkProductOwnership(productId: number, userId: number) {
+    const product = await this.prisma.product.findUnique({
+      where: { id: productId },
+    });
+    if (!product) {
+      throw new NotFoundException(`Product with ID ${productId} not found.`);
+    }
+    if (product.sellerId !== userId) {
+      throw new ForbiddenException(
+        'You are not authorized to manage this product.',
+      );
+    }
+    return product;
+  }
 
   async create(user: User, createProductDto: CreateProductDto) {
     const { variants, categoryId, ...productData } = createProductDto;
@@ -35,18 +52,16 @@ export class ProductsService {
       );
     }
 
-    const dataToCreate: Prisma.ProductCreateInput = {
-      ...productData,
-      seller: { connect: { id: user.id } }, // Ambil sellerId dari token
-      store: { connect: { id: store.id } }, // Ambil storeId dari toko milik user
-      category: { connect: { id: categoryId } },
-      variants: {
-        create: variants,
-      },
-    };
-
     return this.prisma.product.create({
-      data: dataToCreate,
+      data: {
+        ...productData,
+        seller: { connect: { id: user.id } },
+        store: { connect: { id: store.id } },
+        category: { connect: { id: categoryId } },
+        variants: {
+          create: variants,
+        },
+      },
     });
   }
 
@@ -57,34 +72,27 @@ export class ProductsService {
     const where: Prisma.ProductWhereInput = {
       isActive: true,
       isPublished: true,
-      categoryId: categoryId,
-      sellerId: sellerId,
+      categoryId,
+      sellerId,
+      ...(search && {
+        OR: [
+          { name: { contains: search, mode: 'insensitive' } },
+          { description: { contains: search, mode: 'insensitive' } },
+        ],
+      }),
     };
-
-    if (search) {
-      where.OR = [
-        { name: { contains: search, mode: 'insensitive' } },
-        { description: { contains: search, mode: 'insensitive' } },
-      ];
-    }
 
     const products = await this.prisma.product.findMany({
       where,
       skip,
       take: limit,
       include: {
-        variants: {
-          where: { isActive: true },
-          orderBy: { price: 'asc' },
-        },
+        variants: { where: { isActive: true }, orderBy: { price: 'asc' } },
         category: true,
         store: { select: { name: true, slug: true } },
       },
-      orderBy: {
-        createdAt: 'desc',
-      },
+      orderBy: { createdAt: 'desc' },
     });
-
     return products;
   }
 
@@ -105,26 +113,13 @@ export class ProductsService {
     }
 
     this.prisma.product
-      .update({
-        where: { id },
-        data: { viewCount: { increment: 1 } },
-      })
-      .catch((err) => {
-        console.error(`Failed to update view count for product ${id}`, err);
-      });
-
+      .update({ where: { id }, data: { viewCount: { increment: 1 } } })
+      .catch(console.error);
     return product;
   }
 
   async update(user: User, id: number, updateProductDto: UpdateProductDto) {
-    const product = await this.findOne(id);
-
-    if (product.sellerId !== user.id) {
-      throw new ForbiddenException(
-        'You are not authorized to update this product.',
-      );
-    }
-
+    await this.checkProductOwnership(id, user.id);
     return this.prisma.product.update({
       where: { id },
       data: updateProductDto,
@@ -132,17 +127,44 @@ export class ProductsService {
   }
 
   async remove(user: User, id: number) {
-    const product = await this.findOne(id);
-
-    if (product.sellerId !== user.id) {
-      throw new ForbiddenException(
-        'You are not authorized to delete this product.',
-      );
-    }
-
+    await this.checkProductOwnership(id, user.id);
     await this.prisma.product.delete({
       where: { id },
     });
     return { message: `Product with ID ${id} has been successfully deleted.` };
+  }
+
+  async addVariant(
+    user: User,
+    productId: number,
+    createVariantDto: CreateVariantDto,
+  ) {
+    await this.checkProductOwnership(productId, user.id);
+    return this.prisma.variant.create({
+      data: {
+        ...createVariantDto,
+        product: { connect: { id: productId } },
+      },
+    });
+  }
+
+  async updateVariant(
+    user: User,
+    productId: number,
+    variantId: number,
+    updateVariantDto: UpdateVariantDto,
+  ) {
+    await this.checkProductOwnership(productId, user.id);
+    return this.prisma.variant.update({
+      where: { id: variantId, productId: productId },
+      data: updateVariantDto,
+    });
+  }
+
+  async removeVariant(user: User, productId: number, variantId: number) {
+    await this.checkProductOwnership(productId, user.id);
+    return this.prisma.variant.delete({
+      where: { id: variantId, productId: productId },
+    });
   }
 }

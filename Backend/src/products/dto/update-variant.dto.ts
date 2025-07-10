@@ -1,14 +1,7 @@
-import {
-  IsEnum,
-  IsInt,
-  IsNotEmpty,
-  IsOptional,
-  IsString,
-  Min,
-} from 'class-validator';
+import { IsEnum, IsInt, IsOptional, IsString, Min } from 'class-validator';
 import { Condition } from '@prisma/client';
 
-export class CreateVariantDto {
+export class UpdateVariantDto {
   @IsString()
   @IsOptional()
   name?: string;
@@ -18,9 +11,9 @@ export class CreateVariantDto {
   image?: string;
 
   @IsInt()
-  @IsNotEmpty()
+  @IsOptional()
   @Min(0)
-  price: number;
+  price?: number;
 
   @IsInt()
   @IsOptional()
@@ -28,35 +21,35 @@ export class CreateVariantDto {
   compareAtPrice?: number;
 
   @IsInt()
-  @IsNotEmpty()
+  @IsOptional()
   @Min(0)
-  stock: number;
+  stock?: number;
 
   @IsEnum(Condition)
-  @IsNotEmpty()
-  condition: Condition;
+  @IsOptional()
+  condition?: Condition;
 
   @IsString()
   @IsOptional()
   conditionNote?: string;
 
   @IsInt()
-  @IsNotEmpty()
+  @IsOptional()
   @Min(1)
-  weight: number;
+  weight?: number;
 
   @IsInt()
-  @IsNotEmpty()
+  @IsOptional()
   @Min(1)
-  length: number;
+  length?: number;
 
   @IsInt()
-  @IsNotEmpty()
+  @IsOptional()
   @Min(1)
-  width: number;
+  width?: number;
 
   @IsInt()
-  @IsNotEmpty()
+  @IsOptional()
   @Min(1)
-  height: number;
+  height?: number;
 }
