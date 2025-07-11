@@ -1,34 +1,35 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  UseGuards,
+  ParseIntPipe,
+  ValidationPipe,
+} from '@nestjs/common';
 import { ReviewsService } from './reviews.service';
 import { CreateReviewDto } from './dto/create-review.dto';
-import { UpdateReviewDto } from './dto/update-review.dto';
+import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
+import { GetUser } from '../common/decorators/get-user.decorator';
+import { User } from '@prisma/client';
 
-@Controller('reviews')
+@UseGuards(JwtAuthGuard)
+@Controller('products/:productId/reviews')
 export class ReviewsController {
   constructor(private readonly reviewsService: ReviewsService) {}
 
   @Post()
-  create(@Body() createReviewDto: CreateReviewDto) {
-    return this.reviewsService.create(createReviewDto);
+  create(
+    @GetUser() user: User,
+    @Param('productId', ParseIntPipe) productId: number,
+    @Body(new ValidationPipe()) createReviewDto: CreateReviewDto,
+  ) {
+    return this.reviewsService.create(user.id, productId, createReviewDto);
   }
 
   @Get()
-  findAll() {
-    return this.reviewsService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.reviewsService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateReviewDto: UpdateReviewDto) {
-    return this.reviewsService.update(+id, updateReviewDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.reviewsService.remove(+id);
+  findAllForProduct(@Param('productId', ParseIntPipe) productId: number) {
+    return this.reviewsService.findAllForProduct(productId);
   }
 }
