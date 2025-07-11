@@ -3,7 +3,7 @@ import {
   Injectable,
   InternalServerErrorException,
   NotFoundException,
-  BadGatewayException,
+  BadRequestException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { firstValueFrom } from 'rxjs';
@@ -44,9 +44,7 @@ export class ShippingRatesService {
         items: {
           include: {
             variant: {
-              include: {
-                product: true,
-              },
+              include: { product: { include: { store: true } } },
             },
           },
         },
@@ -61,38 +59,77 @@ export class ShippingRatesService {
       where: { id: checkRatesDto.destinationLocationId, userId },
     });
     if (!destinationLocation || !destinationLocation.biteship_area_id) {
-      throw new NotFoundException(
-        'Destination address not found or does not have a valid shipping area ID.',
-      );
+      throw new NotFoundException('Destination address not found or invalid.');
     }
 
-    const firstItem = cart.items[0];
-    const sellerId = firstItem.variant.product.sellerId;
-    const originLocation = await this.prisma.location.findFirst({
-      where: { store: { userId: sellerId } },
-    });
-    if (!originLocation || !originLocation.biteship_area_id) {
-      throw new NotFoundException(
-        "Seller's origin address could not be found or does not have a valid shipping area ID.",
-      );
+    const itemsByStore = new Map<number, { store: any; items: any[] }>();
+    for (const item of cart.items) {
+      const storeId = item.variant.product.storeId;
+      let storeEntry = itemsByStore.get(storeId);
+      if (!storeEntry) {
+        storeEntry = { store: item.variant.product.store, items: [] };
+        itemsByStore.set(storeId, storeEntry);
+      }
+
+      const { variant } = item;
+      if (
+        !variant.weight ||
+        !variant.length ||
+        !variant.width ||
+        !variant.height
+      ) {
+        throw new BadRequestException(
+          `Product variant "${variant.product.name} - ${variant.name || ''}" is missing required dimension data (weight, length, width, height).`,
+        );
+      }
+
+      storeEntry.items.push({
+        name: variant.product.name,
+        description: variant.name || 'Product Variant',
+        value: variant.price,
+        weight: variant.weight,
+        length: variant.length,
+        width: variant.width,
+        height: variant.height,
+        quantity: item.quantity,
+      });
     }
 
-    const itemsForBiteship = cart.items.map((item) => ({
-      name: item.variant.product.name,
-      description: item.variant.name || 'Product Variant',
-      value: item.variant.price,
-      weight: item.variant.weight,
-      quantity: item.quantity,
-    }));
+    const availableCouriers = await this.getAvailableCouriers();
 
-    return this.checkRates({
-      origin_area_id: originLocation.biteship_area_id,
-      destination_area_id: destinationLocation.biteship_area_id,
-      items: itemsForBiteship,
-    });
+    const shippingOptionsByStore = await Promise.all(
+      Array.from(itemsByStore.entries()).map(async ([storeId, data]) => {
+        const originLocation = await this.prisma.location.findUnique({
+          where: { id: data.store.locationId },
+        });
+        if (!originLocation || !originLocation.biteship_area_id) {
+          return {
+            store: { id: storeId, name: data.store.name },
+            pricing: [],
+            error: 'Origin address not found or invalid.',
+          };
+        }
+
+        const pricing = await this.checkRates({
+          origin_area_id: originLocation.biteship_area_id,
+          destination_area_id: destinationLocation.biteship_area_id!,
+          couriers: availableCouriers, // Menggunakan daftar kurir dinamis
+          items: data.items,
+        });
+
+        return {
+          store: { id: storeId, name: data.store.name, slug: data.store.slug },
+          pricing,
+        };
+      }),
+    );
+
+    return shippingOptionsByStore;
   }
 
-  async checkRates(checkRatesDto: CheckRatesDto) {
+  private async checkRates(
+    checkRatesDto: CheckRatesDto & { couriers: string },
+  ) {
     const headers = { Authorization: this.biteshipApiKey };
     try {
       const response = await firstValueFrom(
@@ -102,7 +139,7 @@ export class ShippingRatesService {
           { headers },
         ),
       );
-      return response.data.pricing;
+      return response.data.pricing || [];
     } catch (error) {
       if (error instanceof Error) {
         console.error(
@@ -110,9 +147,31 @@ export class ShippingRatesService {
           error['response']?.data || error.message,
         );
       }
-      throw new BadGatewayException(
-        'Failed to retrieve shipping rates from provider.',
+      return [];
+    }
+  }
+
+  private async getAvailableCouriers(): Promise<string> {
+    const headers = { Authorization: this.biteshipApiKey };
+    try {
+      const response = await firstValueFrom(
+        this.httpService.get(`${this.biteshipBaseUrl}/v1/couriers`, {
+          headers,
+        }),
       );
+      // Mengambil semua courier_code dan menggabungkannya menjadi string
+      const courierCodes = response.data.couriers
+        .map((c) => c.courier_code)
+        .join(',');
+      return courierCodes;
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error(
+          'Failed to fetch available couriers from Biteship:',
+          error['response']?.data || error.message,
+        );
+      }
+      return 'jne,jnt,sicepat,anteraja';
     }
   }
 }

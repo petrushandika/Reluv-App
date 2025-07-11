@@ -48,8 +48,8 @@ export class CreateLocationDto {
   isDefault?: boolean = false;
 
   @IsString()
-  @IsNotEmpty()
-  biteship_area_id: string;
+  @IsOptional()
+  biteship_area_id?: string;
 
   @IsNumber()
   @IsOptional()

@@ -21,5 +21,20 @@ export class CheckRatesItemDto {
   @IsInt()
   @IsNotEmpty()
   @Min(1)
+  length: number;
+
+  @IsInt()
+  @IsNotEmpty()
+  @Min(1)
+  width: number;
+
+  @IsInt()
+  @IsNotEmpty()
+  @Min(1)
+  height: number;
+
+  @IsInt()
+  @IsNotEmpty()
+  @Min(1)
   quantity: number;
 }
