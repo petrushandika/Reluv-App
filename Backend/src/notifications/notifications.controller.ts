@@ -1,34 +1,44 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Patch,
+  Param,
+  UseGuards,
+  ParseIntPipe,
+  Query,
+  ValidationPipe,
+  Post,
+} from '@nestjs/common';
 import { NotificationsService } from './notifications.service';
-import { CreateNotificationDto } from './dto/create-notification.dto';
-import { UpdateNotificationDto } from './dto/update-notification.dto';
+import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
+import { GetUser } from '../common/decorators/get-user.decorator';
+import { User } from '@prisma/client';
+import { QueryNotificationDto } from './dto/query-notification.dto';
 
+@UseGuards(JwtAuthGuard)
 @Controller('notifications')
 export class NotificationsController {
   constructor(private readonly notificationsService: NotificationsService) {}
 
-  @Post()
-  create(@Body() createNotificationDto: CreateNotificationDto) {
-    return this.notificationsService.create(createNotificationDto);
-  }
-
   @Get()
-  findAll() {
-    return this.notificationsService.findAll();
+  findAll(
+    @GetUser() user: User,
+    @Query(new ValidationPipe({ transform: true }))
+    queryDto: QueryNotificationDto,
+  ) {
+    return this.notificationsService.findAllForUser(user.id, queryDto);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.notificationsService.findOne(+id);
+  @Patch(':id/read')
+  markAsRead(
+    @GetUser() user: User,
+    @Param('id', ParseIntPipe) notificationId: number,
+  ) {
+    return this.notificationsService.markAsRead(user.id, notificationId);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateNotificationDto: UpdateNotificationDto) {
-    return this.notificationsService.update(+id, updateNotificationDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.notificationsService.remove(+id);
+  @Post('read-all')
+  markAllAsRead(@GetUser() user: User) {
+    return this.notificationsService.markAllAsRead(user.id);
   }
 }
