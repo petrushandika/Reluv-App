@@ -1,0 +1,117 @@
+<html lang='en'>
+  <head>
+    <meta charset='UTF-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0' />
+    <title>Verify Your Email Address</title>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&display=swap');
+
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: #ffffff;
+        font-family: 'Manrope', sans-serif;
+      }
+      .email-wrapper {
+        width: 100%;
+        background-color: #ffffff;
+        padding: 40px 20px;
+      }
+      .email-container {
+        width: 100%;
+        max-width: 600px;
+        margin: 0 auto;
+        background-color: #ffffff;
+        border-radius: 12px;
+        border: 1px solid #e5e7eb;
+        overflow: hidden;
+      }
+      .email-header {
+        background: linear-gradient(135deg, #87ceeb 0%, #4682b4 100%);
+        color: #ffffff;
+        padding: 30px;
+        text-align: center;
+      }
+      .email-header h1 {
+        margin: 0;
+        font-size: 26px;
+        font-weight: 700;
+      }
+      .email-body {
+        padding: 40px;
+        color: #333333;
+        line-height: 1.8;
+        font-size: 16px;
+      }
+      .email-body h2 {
+        color: #1a1a1a;
+        font-size: 22px;
+        font-weight: 700;
+        margin-top: 0;
+        margin-bottom: 15px;
+      }
+      .email-footer {
+        background-color: #ffffff;
+        color: #aaaaaa;
+        padding: 20px 30px;
+        text-align: center;
+        font-size: 12px;
+        border-top: 1px solid #eeeeee;
+      }
+      .button {
+        display: inline-block;
+        background-color: #4682b4;
+        color: #ffffff;
+        padding: 15px 30px;
+        text-decoration: none;
+        border-radius: 8px;
+        font-weight: 600;
+        margin: 30px 0;
+        text-align: center;
+        transition:
+          background-color 0.3s,
+          transform 0.2s;
+      }
+      .button:hover {
+        background-color: #3a709a;
+        transform: translateY(-2px);
+      }
+      .link {
+        color: #4682b4;
+        word-break: break-all;
+      }
+      .subtext {
+        font-size: 14px;
+        color: #6c757d;
+      }
+    </style>
+  </head>
+  <body>
+    <div class='email-wrapper'>
+      <div class='email-container'>
+        <div class='email-header'>
+          <h1>Confirm Your Account</h1>
+        </div>
+        <div class='email-body'>
+          <h2>Hello, {{name}}!</h2>
+          <p>Thank you for registering at Reluv. To complete the registration
+            process and secure your account, please verify your email address by
+            pressing the button below.</p>
+          <div style='text-align: center;'>
+            <a href='{{url}}' class='button'>Verify Email Address</a>
+          </div>
+          <p class='subtext'>If the button doesn't work, you can copy and paste
+            the following link into your browser:</p>
+          <p class='subtext'><a href='{{url}}' class='link'>{{url}}</a></p>
+          <p class='subtext'>This verification link will expire in 10 minutes.</p>
+          <br />
+          <p>Sincerely,<br />The Reluv Team</p>
+        </div>
+        <div class='email-footer'>
+          <p>&copy; 2025 Reluv. All Rights Reserved.</p>
+          <p>Jalan Jenderal Sudirman, South Jakarta, Indonesia</p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

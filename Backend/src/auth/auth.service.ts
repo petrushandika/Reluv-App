@@ -4,18 +4,20 @@ import {
   NotFoundException,
   ConflictException,
 } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { randomBytes, createHash } from 'crypto';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
+import { EmailService } from '../email/email.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private prisma: PrismaService,
     private jwtService: JwtService,
+    private emailService: EmailService,
   ) {}
 
   async register(registerDto: RegisterDto) {
@@ -35,14 +37,32 @@ export class AuthService {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    const verificationToken = randomBytes(32).toString('hex');
+
+    const hashedVerificationToken = createHash('sha256')
+      .update(verificationToken)
+      .digest('hex');
+
+    const verificationTokenExpiry = new Date(Date.now() + 10 * 60 * 1000);
+
     const user = await this.prisma.user.create({
       data: {
         email,
         password: hashedPassword,
         firstName,
         lastName,
+        verificationToken: hashedVerificationToken,
+        verificationTokenExpiry,
+        profile: {
+          create: {},
+        },
+        cart: {
+          create: {},
+        },
       },
     });
+
+    await this.emailService.sendUserConfirmation(user, verificationToken);
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password: _, ...result } = user;

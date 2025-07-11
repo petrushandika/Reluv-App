@@ -26,6 +26,7 @@ import { LocationsModule } from './locations/locations.module';
 import { UploadModule } from './upload/upload.module';
 import { StoreModule } from './store/store.module';
 import { MapsModule } from './maps/maps.module';
+import { EmailModule } from './email/email.module';
 
 @Module({
   imports: [
@@ -49,6 +50,7 @@ import { MapsModule } from './maps/maps.module';
     UploadModule,
     StoreModule,
     MapsModule,
+    EmailModule,
   ],
   controllers: [AppController],
 })
