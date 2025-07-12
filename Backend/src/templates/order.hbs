@@ -1,0 +1,203 @@
+<html lang='en'>
+  <head>
+    <meta charset='UTF-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0' />
+    <title>Your Order Status</title>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&display=swap');
+
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: #ffffff;
+        font-family: 'Manrope', sans-serif;
+      }
+      .email-wrapper {
+        width: 100%;
+        background-color: #ffffff;
+        padding: 40px 20px;
+      }
+      .email-container {
+        width: 100%;
+        max-width: 750px;
+        margin: 0 auto;
+        background-color: #ffffff;
+        border-radius: 12px;
+        border: 1px solid #e5e7eb;
+        overflow: hidden;
+      }
+      .email-header {
+        background: linear-gradient(135deg, #87ceeb 0%, #4682b4 100%);
+        color: #ffffff;
+        padding: 25px 40px;
+        text-align: center;
+      }
+      .email-header h1 {
+        margin: 0;
+        font-size: 24px;
+        font-weight: 700;
+      }
+      .email-body {
+        padding: 40px;
+        color: #333333;
+        line-height: 1.7;
+        font-size: 16px;
+      }
+      .email-body h2 {
+        color: #1a1a1a;
+        font-size: 22px;
+        font-weight: 700;
+        margin-top: 0;
+        margin-bottom: 15px;
+      }
+      .email-footer {
+        background-color: #f9f9f9;
+        color: #aaaaaa;
+        padding: 20px 40px;
+        text-align: center;
+        font-size: 12px;
+        border-top: 1px solid #eeeeee;
+      }
+      .button {
+        display: inline-block;
+        background-color: #4682b4;
+        color: #ffffff;
+        padding: 14px 28px;
+        text-decoration: none;
+        border-radius: 8px;
+        font-weight: 600;
+        margin-top: 25px;
+        text-align: center;
+        transition: background-color 0.3s;
+      }
+      .button:hover {
+        background-color: #3a709a;
+      }
+      .icon-column {
+        width: 100px;
+        vertical-align: top;
+        padding-right: 30px;
+      }
+      .content-column {
+        vertical-align: top;
+      }
+      .status-highlight {
+        background-color: #eef6ff;
+        border-left: 4px solid #4682b4;
+        padding: 15px 20px;
+        margin-bottom: 20px;
+      }
+      .status-highlight p {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 600;
+        color: #3a709a;
+      }
+      .item-table {
+        width: 100%;
+        margin-top: 30px;
+        border-collapse: collapse;
+      }
+      .item-table th,
+      .item-table td {
+        text-align: left;
+        padding: 12px 0;
+        border-bottom: 1px solid #eeeeee;
+      }
+      .item-table th {
+        color: #888888;
+        font-size: 14px;
+        text-transform: uppercase;
+      }
+      .item-name {
+        font-weight: 600;
+      }
+      .total-row td {
+        padding-top: 10px;
+        font-weight: 600;
+        border: none;
+      }
+      .grand-total td {
+        padding-top: 15px;
+        font-weight: 700;
+        font-size: 18px;
+        border-top: 2px solid #333;
+      }
+    </style>
+  </head>
+  <body>
+    <div class='email-wrapper'>
+      <div class='email-container'>
+        <div class='email-header'>
+          <h1>Order Status Update</h1>
+        </div>
+        <div class='email-body'>
+          <table width='100%' border='0' cellspacing='0' cellpadding='0'>
+            <tr>
+              <td class='icon-column'>
+                <img
+                  src='https://res.cloudinary.com/dqcyabvc2/image/upload/v1752299960/logo_gqfygx.png'
+                  alt='Order Icon'
+                  width='80'
+                  style='margin: 0 auto; display: block; border-radius: 50%;'
+                />
+              </td>
+              <td class='content-column'>
+                <h2>Hello, {{name}}!</h2>
+                <p>There's an update on your order
+                  <strong>#{{orderNumber}}</strong>. The status is now:</p>
+                <div class='status-highlight'>
+                  <p>{{status}}</p>
+                </div>
+              </td>
+            </tr>
+          </table>
+
+          <h3 style='margin-top: 30px; color: #1a1a1a;'>Order Summary</h3>
+          <table class='item-table'>
+            <thead>
+              <tr>
+                <th>Product</th>
+                <th style='text-align: right;'>Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              {{#each items}}
+                <tr>
+                  <td>
+                    <span class='item-name'>{{this.productName}}</span><br />
+                    <span
+                      style='font-size: 14px; color: #888;'
+                    >{{this.quantity}} x Rp {{this.price}}</span>
+                  </td>
+                  <td style='text-align: right; font-weight: 600;'>Rp
+                    {{this.total}}</td>
+                </tr>
+              {{/each}}
+              <tr class='total-row'>
+                <td>Subtotal</td>
+                <td style='text-align: right;'>Rp {{itemsAmount}}</td>
+              </tr>
+              <tr class='total-row'>
+                <td>Shipping Cost</td>
+                <td style='text-align: right;'>Rp {{shippingCost}}</td>
+              </tr>
+              <tr class='grand-total'>
+                <td>Grand Total</td>
+                <td style='text-align: right;'>Rp {{totalAmount}}</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div style='text-align: center; margin-top: 30px;'>
+            <a href='{{orderUrl}}' class='button'>View Full Order Details</a>
+          </div>
+        </div>
+        <div class='email-footer'>
+          <p>Thank you for your purchase!</p>
+          <p>&copy; 2025 Reluv. All Rights Reserved.</p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

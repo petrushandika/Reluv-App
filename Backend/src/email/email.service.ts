@@ -1,6 +1,15 @@
 import { MailerService } from '@nestjs-modules/mailer';
 import { Injectable } from '@nestjs/common';
-import { User } from '@prisma/client';
+import { User, Order, OrderItem, Variant, Product } from '@prisma/client';
+
+// Create a custom type to ensure the order object includes all necessary relations
+type OrderWithDetails = Order & {
+  items: (OrderItem & {
+    variant: Variant & {
+      product: Product;
+    };
+  })[];
+};
 
 @Injectable()
 export class EmailService {
@@ -26,10 +35,37 @@ export class EmailService {
     await this.mailerService.sendMail({
       to: user.email,
       subject: 'Your Password Reset Request',
-      template: './forgot-password',
+      template: './forgot',
       context: {
         name: user.firstName,
         url,
+      },
+    });
+  }
+
+  async sendOrderStatusUpdate(user: User, order: OrderWithDetails) {
+    const orderUrl = `http://your-frontend-app.com/orders/${order.id}`;
+
+    const formattedItems = order.items.map((item) => ({
+      productName: item.variant.product.name,
+      quantity: item.quantity,
+      price: item.price.toLocaleString('id-ID'),
+      total: item.total.toLocaleString('id-ID'),
+    }));
+
+    await this.mailerService.sendMail({
+      to: user.email,
+      subject: `Update for your order #${order.orderNumber}`,
+      template: './order',
+      context: {
+        name: user.firstName,
+        orderNumber: order.orderNumber,
+        status: order.status.replace('_', ' ').toUpperCase(),
+        itemsAmount: order.itemsAmount.toLocaleString('id-ID'),
+        shippingCost: order.shippingCost.toLocaleString('id-ID'),
+        totalAmount: order.totalAmount.toLocaleString('id-ID'),
+        items: formattedItems,
+        orderUrl,
       },
     });
   }
