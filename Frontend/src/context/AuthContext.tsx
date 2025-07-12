@@ -63,7 +63,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      if (email === "admin@example.com" && password === "password123") {
+      if (email === "admin@gmail.com" && password === "password123") {
         const userData: User = {
           id: "1",
           name: "Petrus Handika",
