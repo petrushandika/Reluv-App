@@ -38,11 +38,9 @@ export class AuthService {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const verificationToken = randomBytes(32).toString('hex');
-
     const hashedVerificationToken = createHash('sha256')
       .update(verificationToken)
       .digest('hex');
-
     const verificationTokenExpiry = new Date(Date.now() + 10 * 60 * 1000);
 
     const user = await this.prisma.user.create({
@@ -53,12 +51,8 @@ export class AuthService {
         lastName,
         verificationToken: hashedVerificationToken,
         verificationTokenExpiry,
-        profile: {
-          create: {},
-        },
-        cart: {
-          create: {},
-        },
+        profile: { create: {} },
+        cart: { create: {} },
       },
     });
 
@@ -69,13 +63,44 @@ export class AuthService {
     return result;
   }
 
+  async confirm(token: string): Promise<{ message: string }> {
+    const hashedToken = createHash('sha256').update(token).digest('hex');
+
+    const user = await this.prisma.user.findFirst({
+      where: {
+        verificationToken: hashedToken,
+        verificationTokenExpiry: { gt: new Date() },
+      },
+    });
+
+    if (!user) {
+      throw new UnauthorizedException('Token is invalid or has expired.');
+    }
+
+    await this.prisma.user.update({
+      where: { id: user.id },
+      data: {
+        isVerified: true,
+        verificationToken: null,
+        verificationTokenExpiry: null,
+      },
+    });
+
+    return { message: 'Email successfully verified.' };
+  }
+
   async login(loginDto: LoginDto) {
     const { email, password } = loginDto;
-
     const user = await this.prisma.user.findUnique({ where: { email } });
 
     if (!user || !user.password) {
       throw new UnauthorizedException('Invalid credentials');
+    }
+
+    if (!user.isVerified) {
+      throw new UnauthorizedException(
+        'Please verify your email before logging in.',
+      );
     }
 
     const isPasswordMatching = await bcrypt.compare(password, user.password);

@@ -1,34 +1,55 @@
-import { Controller, Post, Body, HttpCode, HttpStatus } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  HttpCode,
+  HttpStatus,
+  Get,
+  Query,
+  Res,
+  ValidationPipe,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { ForgotDto } from './dto/forgot.dto';
 import { ResetDto } from './dto/reset.dto';
+import { ConfirmDto } from './dto/confirm.dto';
+import { Response } from 'express';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('register')
-  register(@Body() registerDto: RegisterDto) {
+  register(@Body(new ValidationPipe()) registerDto: RegisterDto) {
     return this.authService.register(registerDto);
   }
 
   @Post('login')
   @HttpCode(HttpStatus.OK)
-  login(@Body() loginDto: LoginDto) {
+  login(@Body(new ValidationPipe()) loginDto: LoginDto) {
     return this.authService.login(loginDto);
+  }
+
+  @Get('confirm')
+  async confirm(
+    @Query(new ValidationPipe()) query: ConfirmDto,
+    @Res() res: Response,
+  ) {
+    await this.authService.confirm(query.token);
+    return res.redirect('http://your-frontend-app.com/login?verified=true');
   }
 
   @Post('forgot')
   @HttpCode(HttpStatus.OK)
-  forgot(@Body() forgotDto: ForgotDto) {
+  forgot(@Body(new ValidationPipe()) forgotDto: ForgotDto) {
     return this.authService.forgot(forgotDto.email);
   }
 
   @Post('reset')
   @HttpCode(HttpStatus.OK)
-  reset(@Body() resetDto: ResetDto) {
+  reset(@Body(new ValidationPipe()) resetDto: ResetDto) {
     return this.authService.reset(resetDto.token, resetDto.newPassword);
   }
 }

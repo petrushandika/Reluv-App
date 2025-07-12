@@ -2,7 +2,7 @@
   <head>
     <meta charset='UTF-8' />
     <meta name='viewport' content='width=device-width, initial-scale=1.0' />
-    <title>Verify Your Email Address</title>
+    <title>Reset Your Password</title>
     <style>
       @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&display=swap');
 
@@ -96,7 +96,7 @@
     <div class='email-wrapper'>
       <div class='email-container'>
         <div class='email-header'>
-          <h1>Confirm Your Account</h1>
+          <h1>Password Reset Request</h1>
         </div>
         <div class='email-body'>
           <table width='100%' border='0' cellspacing='0' cellpadding='0'>
@@ -104,17 +104,18 @@
               <td class='icon-column'>
                 <img
                   src='https://res.cloudinary.com/dqcyabvc2/image/upload/v1752299960/logo_gqfygx.png'
-                  alt='Email Icon'
+                  alt='Lock Icon'
                   width='80'
                   style='margin: 0 auto; display: block; border-radius: 50%;'
                 />
               </td>
               <td class='content-column'>
                 <h2>Hello, {{name}}!</h2>
-                <p>Thank you for registering at Reluv. To complete the
-                  registration process and secure your account, please verify
-                  your email address by pressing the button below.</p>
-                <a href='{{url}}' class='button'>Verify Email Address</a>
+                <p>We received a request to reset the password for your account.
+                  If you did not make this request, you can safely ignore this
+                  email.</p>
+                <p>To reset your password, please click the button below:</p>
+                <a href='{{url}}' class='button'>Reset Your Password</a>
                 <p class='subtext'>If the button doesn't work, you can copy and
                   paste the following link into your browser:</p>
                 <p class='subtext'><a
@@ -126,7 +127,7 @@
           </table>
         </div>
         <div class='email-footer'>
-          <p>This verification link will expire in 10 minutes.</p>
+          <p>This password reset link will expire in 10 minutes.</p>
           <p>&copy; 2025 Reluv. All Rights Reserved.</p>
         </div>
       </div>
