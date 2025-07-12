@@ -7,6 +7,7 @@ import {
   Param,
   UseGuards,
   ValidationPipe,
+  Query,
 } from '@nestjs/common';
 import { StoreService } from './store.service';
 import { CreateStoreDto } from './dto/create-store.dto';
@@ -15,17 +16,25 @@ import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
 import { GetUser } from '../common/decorators/get-user.decorator';
 import { User } from '@prisma/client';
 import { UpdateStoreProfileDto } from './dto/update-store-profile.dto';
+import { QueryStoreDto } from './dto/query-store.dto';
 
-@UseGuards(JwtAuthGuard)
 @Controller('store')
 export class StoreController {
   constructor(private readonly storeService: StoreService) {}
+
+  @Get()
+  findAllPublic(
+    @Query(new ValidationPipe({ transform: true })) queryDto: QueryStoreDto,
+  ) {
+    return this.storeService.findAllPublic(queryDto);
+  }
 
   @Get(':slug')
   findBySlug(@Param('slug') slug: string) {
     return this.storeService.findBySlug(slug);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Post()
   create(
     @GetUser() user: User,
@@ -34,11 +43,13 @@ export class StoreController {
     return this.storeService.create(user.id, createStoreDto);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get('me/my-store')
   findMyStore(@GetUser() user: User) {
     return this.storeService.findMyStore(user.id);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Patch('me/my-store')
   updateMyStore(
     @GetUser() user: User,
@@ -47,6 +58,7 @@ export class StoreController {
     return this.storeService.updateMyStore(user.id, updateStoreDto);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Patch('me/my-store/profile')
   updateMyStoreProfile(
     @GetUser() user: User,

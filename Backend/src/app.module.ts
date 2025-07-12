@@ -27,9 +27,11 @@ import { UploadModule } from './upload/upload.module';
 import { StoreModule } from './store/store.module';
 import { MapsModule } from './maps/maps.module';
 import { EmailModule } from './email/email.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({ isGlobal: true }),
     PrismaModule,
     UsersModule,
     CloudinaryModule,
@@ -67,6 +69,24 @@ export class AppModule implements NestModule {
         { path: '/auth/facebook/callback', method: RequestMethod.GET },
         { path: '/auth/forgot', method: RequestMethod.POST },
         { path: '/auth/reset', method: RequestMethod.POST },
+        { path: '/auth/confirm', method: RequestMethod.GET },
+
+        { path: '/store', method: RequestMethod.GET },
+        { path: '/store/:slug', method: RequestMethod.GET },
+
+        { path: '/products', method: RequestMethod.GET },
+        { path: '/products/:id', method: RequestMethod.GET },
+
+        { path: '/categories', method: RequestMethod.GET },
+        { path: '/categories/:id', method: RequestMethod.GET },
+
+        { path: '/products/:productId/reviews', method: RequestMethod.GET },
+
+        { path: '/shipping-rates/check', method: RequestMethod.POST },
+        { path: '/maps/search-areas', method: RequestMethod.GET },
+
+        { path: '/payments/midtrans-notification', method: RequestMethod.POST },
+        { path: '/shipments/biteship-webhook', method: RequestMethod.POST },
       )
       .forRoutes({ path: '*', method: RequestMethod.ALL });
   }

@@ -21,11 +21,11 @@ import { User } from '@prisma/client';
 import { CreateVariantDto } from './dto/create-variant.dto';
 import { UpdateVariantDto } from './dto/update-variant.dto';
 
-@UseGuards(JwtAuthGuard)
 @Controller('products')
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
+  @UseGuards(JwtAuthGuard)
   @Post()
   create(
     @GetUser() user: User,
@@ -34,6 +34,7 @@ export class ProductsController {
     return this.productsService.create(user, createProductDto);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Patch(':id')
   update(
     @GetUser() user: User,
@@ -43,6 +44,7 @@ export class ProductsController {
     return this.productsService.update(user, id, updateProductDto);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
   remove(@GetUser() user: User, @Param('id', ParseIntPipe) id: number) {
     return this.productsService.remove(user, id);
@@ -60,6 +62,7 @@ export class ProductsController {
     return this.productsService.findOne(id);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Post(':productId/variants')
   addVariant(
     @GetUser() user: User,
@@ -69,6 +72,7 @@ export class ProductsController {
     return this.productsService.addVariant(user, productId, createVariantDto);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Patch(':productId/variants/:variantId')
   updateVariant(
     @GetUser() user: User,
@@ -84,6 +88,7 @@ export class ProductsController {
     );
   }
 
+  @UseGuards(JwtAuthGuard)
   @Delete(':productId/variants/:variantId')
   removeVariant(
     @GetUser() user: User,
