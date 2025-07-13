@@ -1,118 +1,108 @@
 "use client";
 
-import React, { useState } from "react";
-import {
-  Tag,
-  Truck,
-  Gift,
-  Package,
-  Star,
-  ShieldCheck,
-  ShoppingCart,
-  Gem,
-  Percent,
-} from "lucide-react";
+import React, { useState, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import axios from "axios";
+import { z } from "zod";
+import { KeyRound, ShieldCheck, UserCheck } from "lucide-react";
 import ResetForm from "@/features/auth/components/ResetForm";
+import { resetPassword } from "@/features/auth/api/authApi";
 
-const Reset = () => {
+const resetSchema = z
+  .object({
+    password: z
+      .string()
+      .min(8, { message: "Password must be at least 8 characters long." }),
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords do not match.",
+    path: ["confirmPassword"],
+  });
+
+const ResetComponent = () => {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const token = searchParams.get("token");
+
   const [isReset, setIsReset] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = (data: {
+  const handleSubmit = async (data: {
     password: string;
     confirmPassword: string;
   }) => {
-    console.log("Password reset:", data);
-    setIsReset(true);
+    setError(null);
+
+    if (!token) {
+      setError("Reset token is missing or invalid.");
+      return;
+    }
+
+    const validationResult = resetSchema.safeParse(data);
+    if (!validationResult.success) {
+      setError(validationResult.error.errors[0].message);
+      return;
+    }
+
+    setLoading(true);
+    try {
+      await resetPassword({
+        token,
+        newPassword: validationResult.data.password,
+      });
+      setIsReset(true);
+    } catch (err: unknown) {
+      let errorMessage = "An unknown error occurred.";
+      if (axios.isAxiosError(err)) {
+        errorMessage =
+          err.response?.data?.message ||
+          err.message ||
+          "Failed to reset password.";
+      } else if (err instanceof Error) {
+        errorMessage = err.message;
+      }
+      setError(errorMessage);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleBackToLogin = () => {
-    console.log("Navigate back to login");
+    router.push("/auth/login");
   };
 
   const promoCards = [
     {
       id: 1,
-      icon: <Tag className="w-7 h-7 text-sky-200" />,
-      title: "Exclusive Vouchers",
-      description: "Unlock special discounts",
-      style: { top: "15%", left: "20%", animationDelay: "0s" },
+      icon: <KeyRound className="w-7 h-7 text-sky-200" />,
+      title: "New Credentials",
+      description: "Create a new, secure password.",
+      style: { top: "20%", left: "15%", animationDelay: "0s" },
       animationName: "slide-from-left",
     },
     {
       id: 2,
-      icon: <Truck className="w-7 h-7 text-sky-200" />,
-      title: "Free Shipping",
-      description: "On thousands of items",
-      style: { top: "35%", left: "65%", animationDelay: "1.5s" },
+      icon: <ShieldCheck className="w-7 h-7 text-sky-200" />,
+      title: "Account Secured",
+      description: "Regain access and protect your account.",
+      style: { top: "45%", left: "60%", animationDelay: "1.5s" },
       animationName: "slide-from-right",
     },
     {
       id: 3,
-      icon: <Star className="w-7 h-7 text-sky-200" />,
-      title: "Curated Finds",
-      description: "Discover unique style",
-      style: { top: "75%", left: "10%", animationDelay: "3s" },
+      icon: <UserCheck className="w-7 h-7 text-sky-200" />,
+      title: "Access Restored",
+      description: "You're just one step away.",
+      style: { top: "70%", left: "25%", animationDelay: "3s" },
       animationName: "slide-from-left",
     },
-    {
-      id: 4,
-      icon: <Gift className="w-7 h-7 text-sky-200" />,
-      title: "Daily Flash Deals",
-      description: "Offers you can't miss",
-      style: { top: "55%", left: "75%", animationDelay: "4.5s" },
-      animationName: "slide-from-right",
-    },
-    {
-      id: 5,
-      icon: <ShieldCheck className="w-7 h-7 text-sky-200" />,
-      title: "Secure Payments",
-      description: "Shop with confidence",
-      style: { top: "85%", left: "50%", animationDelay: "6s" },
-      animationName: "slide-from-left",
-    },
-    {
-      id: 6,
-      icon: <Package className="w-7 h-7 text-sky-200" />,
-      title: "New Arrivals",
-      description: "Fresh items daily",
-      style: { top: "5%", left: "50%", animationDelay: "7.5s" },
-      animationName: "slide-from-right",
-    },
-  ];
-
-  const streamIcons = [
-    <Tag key="1" />,
-    <ShoppingCart key="2" />,
-    <Package key="3" />,
-    <Gem key="4" />,
-    <Percent key="5" />,
-    <Gift key="6" />,
-    <Star key="7" />,
   ];
 
   return (
     <div className="min-h-screen flex bg-white">
-      {/* Left Side - Same as Login */}
       <div className="hidden lg:flex items-center justify-center lg:w-1/2 bg-gradient-to-br from-sky-500 to-sky-700 relative overflow-hidden">
-        <div className="absolute inset-0 z-0 flex justify-between opacity-100">
-          {[...Array(6)].map((_, i) => (
-            <div
-              key={i}
-              className="stream-column"
-              style={{
-                animationDuration: `${10 + i * 2}s`,
-                animationDelay: `${i * 0.5}s`,
-              }}
-            >
-              {[...Array(10)].map((_, j) => (
-                <div key={j} className="stream-icon">
-                  {streamIcons[Math.floor(Math.random() * streamIcons.length)]}
-                </div>
-              ))}
-            </div>
-          ))}
-        </div>
-
         <div className="absolute inset-0 z-20">
           {promoCards.map((card) => (
             <div
@@ -128,30 +118,32 @@ const Reset = () => {
             </div>
           ))}
         </div>
-
         <div className="relative z-10 flex flex-col justify-center items-center text-white px-12 text-center">
-          <h1 className="text-6xl font-bold text-white mb-4 tracking-wide [text-shadow:_2px_2px_8px_rgba(0,0,0,0.2)] animate-fade-in">
-            Reluv
+          <h1 className="text-6xl font-bold text-white mb-4 tracking-wide [text-shadow:_2px_2px_8px_rgba(0,0,0,0.2)]">
+            Create a New Password
           </h1>
-          <p className="text-2xl font-light mb-8 opacity-90 [text-shadow:_1px_1px_4px_rgba(0,0,0,0.2)] animate-fade-in-delayed">
-            Where Style Finds a Second Life.
-          </p>
-          <p className="text-md max-w-sm opacity-80 animate-fade-in-delayed-2">
-            Join our community to unearth unique items, enjoy exclusive deals,
-            and give your style a sustainable spin.
+          <p className="text-2xl font-light mb-8 opacity-90 [text-shadow:_1px_1px_4px_rgba(0,0,0,0.2)]">
+            A strong password helps keep your account secure.
           </p>
         </div>
       </div>
-
       <div className="w-full lg:w-1/2 flex items-center justify-center p-8">
         <ResetForm
-          isReset={isReset}
           onSubmit={handleSubmit}
           onBackToLogin={handleBackToLogin}
+          isReset={isReset}
+          isLoading={loading}
+          error={error}
         />
       </div>
     </div>
   );
 };
+
+const Reset = () => (
+  <Suspense fallback={<div>Loading...</div>}>
+    <ResetComponent />
+  </Suspense>
+);
 
 export default Reset;

@@ -1,19 +1,23 @@
 "use client";
 
 import React, { useState } from "react";
-import { Eye, EyeOff, Lock, CheckCircle } from "lucide-react";
+import { Eye, EyeOff, Lock, CheckCircle, AlertCircle } from "lucide-react";
 
 interface ResetFormProps {
   isReset: boolean;
+  isLoading: boolean;
+  error: string | null;
   onSubmit: (data: { password: string; confirmPassword: string }) => void;
   onBackToLogin: () => void;
 }
 
-const ResetForm: React.FC<ResetFormProps> = ({
+const ResetForm = ({
   isReset,
+  isLoading,
+  error,
   onSubmit,
   onBackToLogin,
-}) => {
+}: ResetFormProps) => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [formData, setFormData] = useState({
@@ -84,9 +88,7 @@ const ResetForm: React.FC<ResetFormProps> = ({
                 New Password
               </label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Lock className="h-5 w-5 text-gray-400" />
-                </div>
+                <Lock className="h-5 w-5 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
                 <input
                   id="password"
                   name="password"
@@ -100,12 +102,12 @@ const ResetForm: React.FC<ResetFormProps> = ({
                 <button
                   type="button"
                   onClick={togglePasswordVisibility}
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center hover:text-sky-500 transition-colors duration-200"
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-sky-500 transition-colors duration-200"
                 >
                   {showPassword ? (
-                    <EyeOff className="h-5 w-5 text-gray-400" />
+                    <EyeOff className="h-5 w-5" />
                   ) : (
-                    <Eye className="h-5 w-5 text-gray-400" />
+                    <Eye className="h-5 w-5" />
                   )}
                 </button>
               </div>
@@ -139,9 +141,7 @@ const ResetForm: React.FC<ResetFormProps> = ({
                 Confirm New Password
               </label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Lock className="h-5 w-5 text-gray-400" />
-                </div>
+                <Lock className="h-5 w-5 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
                 <input
                   id="confirmPassword"
                   name="confirmPassword"
@@ -155,12 +155,12 @@ const ResetForm: React.FC<ResetFormProps> = ({
                 <button
                   type="button"
                   onClick={toggleConfirmPasswordVisibility}
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center hover:text-sky-500 transition-colors duration-200"
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-sky-500 transition-colors duration-200"
                 >
                   {showConfirmPassword ? (
-                    <EyeOff className="h-5 w-5 text-gray-400" />
+                    <EyeOff className="h-5 w-5" />
                   ) : (
-                    <Eye className="h-5 w-5 text-gray-400" />
+                    <Eye className="h-5 w-5" />
                   )}
                 </button>
               </div>
@@ -180,6 +180,13 @@ const ResetForm: React.FC<ResetFormProps> = ({
                 </div>
               )}
             </div>
+
+            {error && (
+              <div className="flex items-center p-3 text-sm text-red-700 bg-red-100 border border-red-200 rounded-lg">
+                <AlertCircle className="w-5 h-5 mr-2 flex-shrink-0" />
+                <span>{error}</span>
+              </div>
+            )}
 
             <div className="bg-gray-50 rounded-lg p-4">
               <h4 className="text-sm font-medium text-gray-700 mb-2">
@@ -248,13 +255,14 @@ const ResetForm: React.FC<ResetFormProps> = ({
             <button
               type="submit"
               disabled={
+                isLoading ||
                 !formData.password ||
                 !formData.confirmPassword ||
                 formData.password !== formData.confirmPassword
               }
               className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-sky-600 hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 transition-all duration-200 transform disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Reset Password
+              {isLoading ? "Resetting Password..." : "Reset Password"}
             </button>
 
             <div className="text-center">

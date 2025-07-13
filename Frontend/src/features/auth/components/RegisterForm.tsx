@@ -1,45 +1,34 @@
 "use client";
 
 import React, { useState } from "react";
-import { useRouter } from "next/navigation";
-import axios from "axios";
-import { z } from "zod";
 import { Eye, EyeOff, Mail, Lock, User, AlertCircle } from "lucide-react";
-import {
-  registerUser,
-  redirectToGoogleAuth,
-  redirectToFacebookAuth,
-} from "@/features/auth/api/authApi";
-import { RegisterPayload } from "@/features/auth/types";
 
-const registerSchema = z
-  .object({
-    firstName: z.string().min(1, { message: "First name is required." }),
-    lastName: z.string().min(1, { message: "Last name is required." }),
-    email: z.string().email({ message: "Invalid email address." }),
-    password: z
-      .string()
-      .min(8, { message: "Password must be at least 8 characters long." }),
-    confirmPassword: z.string(),
-    agreeToTerms: z.literal(true, {
-      errorMap: () => ({
-        message: "You must agree to the Terms of Service and Privacy Policy.",
-      }),
-    }),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords do not match.",
-    path: ["confirmPassword"],
-  });
+interface RegisterFormData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+  agreeToTerms: boolean;
+}
 
-type SocialProvider = "Google" | "Facebook";
+interface RegisterFormProps {
+  onSubmit: (formData: RegisterFormData) => void;
+  onSocialLogin: (provider: "Google" | "Facebook") => void;
+  isLoading: boolean;
+  error: string | null;
+}
 
-const RegisterForm = () => {
-  const router = useRouter();
+const RegisterForm = ({
+  onSubmit,
+  onSocialLogin,
+  isLoading,
+  error,
+}: RegisterFormProps) => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<RegisterFormData>({
     firstName: "",
     lastName: "",
     email: "",
@@ -47,9 +36,6 @@ const RegisterForm = () => {
     confirmPassword: "",
     agreeToTerms: false,
   });
-
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   const togglePasswordVisibility = () => setShowPassword(!showPassword);
   const toggleConfirmPasswordVisibility = () =>
@@ -63,57 +49,9 @@ const RegisterForm = () => {
     }));
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setError(null);
-
-    const validationResult = registerSchema.safeParse(formData);
-
-    if (!validationResult.success) {
-      const firstError = validationResult.error.errors[0].message;
-      setError(firstError);
-      return;
-    }
-
-    setLoading(true);
-
-    const payload: RegisterPayload = {
-      firstName: validationResult.data.firstName,
-      lastName: validationResult.data.lastName,
-      email: validationResult.data.email,
-      password: validationResult.data.password,
-      confirmPassword: validationResult.data.confirmPassword,
-    };
-
-    try {
-      await registerUser(payload);
-      alert(
-        "Registration successful! Please check your email for verification and log in."
-      );
-      router.push("/auth/login");
-    } catch (err: unknown) {
-      let errorMessage = "An unknown error occurred.";
-      if (axios.isAxiosError(err)) {
-        if (Array.isArray(err.response?.data?.message)) {
-          errorMessage = err.response?.data?.message.join(" ");
-        } else {
-          errorMessage = err.response?.data?.message || err.message;
-        }
-      } else if (err instanceof Error) {
-        errorMessage = err.message;
-      }
-      setError(errorMessage);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleSocialLogin = (provider: SocialProvider) => {
-    if (provider === "Google") {
-      redirectToGoogleAuth();
-    } else if (provider === "Facebook") {
-      redirectToFacebookAuth();
-    }
+    onSubmit(formData);
   };
 
   return (
@@ -170,7 +108,6 @@ const RegisterForm = () => {
             </div>
           </div>
         </div>
-
         <div>
           <label
             htmlFor="email"
@@ -192,7 +129,6 @@ const RegisterForm = () => {
             />
           </div>
         </div>
-
         <div>
           <label
             htmlFor="password"
@@ -257,14 +193,12 @@ const RegisterForm = () => {
             </button>
           </div>
         </div>
-
         {error && (
           <div className="flex items-center p-3 text-sm text-red-700 bg-red-100 border border-red-200 rounded-lg">
             <AlertCircle className="w-5 h-5 mr-2 flex-shrink-0" />
             <span>{error}</span>
           </div>
         )}
-
         <div className="flex items-start">
           <input
             id="agreeToTerms"
@@ -294,16 +228,14 @@ const RegisterForm = () => {
             </a>
           </label>
         </div>
-
         <button
           type="submit"
-          disabled={loading}
+          disabled={isLoading}
           className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-sky-600 hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 disabled:opacity-50"
         >
-          {loading ? "Creating Account..." : "Create Account"}
+          {isLoading ? "Creating Account..." : "Create Account"}
         </button>
       </form>
-
       <div className="relative">
         <div className="absolute inset-0 flex items-center">
           <div className="w-full border-t border-gray-300" />
@@ -312,11 +244,10 @@ const RegisterForm = () => {
           <span className="px-2 bg-white text-gray-500">Or sign up with</span>
         </div>
       </div>
-
       <div className="flex space-x-4">
         <button
           type="button"
-          onClick={() => handleSocialLogin("Google")}
+          onClick={() => onSocialLogin("Google")}
           className="flex-1 flex justify-center items-center py-3 px-4 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
         >
           <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24">
@@ -341,7 +272,7 @@ const RegisterForm = () => {
         </button>
         <button
           type="button"
-          onClick={() => handleSocialLogin("Facebook")}
+          onClick={() => onSocialLogin("Facebook")}
           className="flex-1 flex justify-center items-center py-3 px-4 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
         >
           <svg className="w-5 h-5 mr-2" fill="#1877F2" viewBox="0 0 24 24">
@@ -350,7 +281,6 @@ const RegisterForm = () => {
           Facebook
         </button>
       </div>
-
       <div className="text-center">
         <p className="text-sm text-gray-600">
           Already have an account?{" "}

@@ -1,25 +1,29 @@
 "use client";
 
 import React from "react";
-import { Mail } from "lucide-react";
+import { Mail, AlertCircle } from "lucide-react";
 
 interface ForgotFormProps {
   email: string;
   isSubmitted: boolean;
+  isLoading: boolean;
+  error: string | null;
   onEmailChange: (value: string) => void;
   onSubmit: () => void;
   onBackToLogin: () => void;
   onTryAnotherEmail: () => void;
 }
 
-const ForgotForm: React.FC<ForgotFormProps> = ({
+const ForgotForm = ({
   email,
   isSubmitted,
+  isLoading,
+  error,
   onEmailChange,
   onSubmit,
   onBackToLogin,
   onTryAnotherEmail,
-}) => {
+}: ForgotFormProps) => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSubmit();
@@ -47,9 +51,7 @@ const ForgotForm: React.FC<ForgotFormProps> = ({
                 Email Address
               </label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Mail className="h-5 w-5 text-gray-400" />
-                </div>
+                <Mail className="h-5 w-5 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
                 <input
                   id="email"
                   name="email"
@@ -63,11 +65,19 @@ const ForgotForm: React.FC<ForgotFormProps> = ({
               </div>
             </div>
 
+            {error && (
+              <div className="flex items-center p-3 text-sm text-red-700 bg-red-100 border border-red-200 rounded-lg">
+                <AlertCircle className="w-5 h-5 mr-2 flex-shrink-0" />
+                <span>{error}</span>
+              </div>
+            )}
+
             <button
               type="submit"
-              className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-sky-600 hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 transition-all duration-200 transform"
+              disabled={isLoading}
+              className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-sky-600 hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 transition-all duration-200 transform disabled:opacity-50"
             >
-              Send Reset Instructions
+              {isLoading ? "Sending..." : "Send Reset Instructions"}
             </button>
 
             <div className="text-center">

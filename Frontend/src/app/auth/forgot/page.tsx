@@ -1,6 +1,9 @@
 "use client";
 
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import axios from "axios";
+import { z } from "zod";
 import {
   Tag,
   Truck,
@@ -13,22 +16,56 @@ import {
   Percent,
 } from "lucide-react";
 import ForgotForm from "@/features/auth/components/ForgotForm";
+import { forgotPassword } from "@/features/auth/api/authApi";
+
+const emailSchema = z
+  .string()
+  .email({ message: "Please enter a valid email address." });
 
 const Forgot = () => {
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = () => {
-    console.log("Password reset request for:", email);
-    setIsSubmitted(true);
+  const handleSubmit = async () => {
+    setError(null);
+    const validationResult = emailSchema.safeParse(email);
+
+    if (!validationResult.success) {
+      setError(validationResult.error.errors[0].message);
+      return;
+    }
+
+    setLoading(true);
+    try {
+      await forgotPassword({ email });
+      setIsSubmitted(true);
+    } catch (err: unknown) {
+      let errorMessage = "An unknown error occurred.";
+      if (axios.isAxiosError(err)) {
+        errorMessage =
+          err.response?.data?.message ||
+          err.message ||
+          "Failed to send reset link.";
+      } else if (err instanceof Error) {
+        errorMessage = err.message;
+      }
+      setError(errorMessage);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleBackToLogin = () => {
-    console.log("Navigate back to login");
+    router.push("/auth/login");
   };
 
   const handleTryAnotherEmail = () => {
     setIsSubmitted(false);
+    setEmail("");
+    setError(null);
   };
 
   const promoCards = [
@@ -94,7 +131,6 @@ const Forgot = () => {
 
   return (
     <div className="min-h-screen flex bg-white">
-      {/* Left Side - Same as Login */}
       <div className="hidden lg:flex items-center justify-center lg:w-1/2 bg-gradient-to-br from-sky-500 to-sky-700 relative overflow-hidden">
         <div className="absolute inset-0 z-0 flex justify-between opacity-100">
           {[...Array(6)].map((_, i) => (
@@ -114,7 +150,6 @@ const Forgot = () => {
             </div>
           ))}
         </div>
-
         <div className="absolute inset-0 z-20">
           {promoCards.map((card) => (
             <div
@@ -130,7 +165,6 @@ const Forgot = () => {
             </div>
           ))}
         </div>
-
         <div className="relative z-10 flex flex-col justify-center items-center text-white px-12 text-center">
           <h1 className="text-6xl font-bold text-white mb-4 tracking-wide [text-shadow:_2px_2px_8px_rgba(0,0,0,0.2)] animate-fade-in">
             Reluv
@@ -144,7 +178,6 @@ const Forgot = () => {
           </p>
         </div>
       </div>
-
       <div className="w-full lg:w-1/2 flex items-center justify-center p-8">
         <ForgotForm
           isSubmitted={isSubmitted}
@@ -153,6 +186,8 @@ const Forgot = () => {
           onSubmit={handleSubmit}
           onBackToLogin={handleBackToLogin}
           onTryAnotherEmail={handleTryAnotherEmail}
+          isLoading={loading}
+          error={error}
         />
       </div>
     </div>

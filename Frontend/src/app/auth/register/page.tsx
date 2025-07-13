@@ -1,6 +1,9 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import axios from "axios";
+import { z } from "zod";
 import {
   Tag,
   Truck,
@@ -13,8 +16,101 @@ import {
   Percent,
 } from "lucide-react";
 import RegisterForm from "@/features/auth/components/RegisterForm";
+import {
+  registerUser,
+  redirectToGoogleAuth,
+  redirectToFacebookAuth,
+} from "@/features/auth/api/authApi";
+import { RegisterPayload } from "@/features/auth/types";
+
+const registerSchema = z
+  .object({
+    firstName: z.string().min(1, { message: "First name is required." }),
+    lastName: z.string().min(1, { message: "Last name is required." }),
+    email: z.string().email({ message: "Invalid email address." }),
+    password: z
+      .string()
+      .min(8, { message: "Password must be at least 8 characters long." }),
+    confirmPassword: z.string(),
+    agreeToTerms: z.literal(true, {
+      errorMap: () => ({
+        message: "You must agree to the Terms of Service and Privacy Policy.",
+      }),
+    }),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords do not match.",
+    path: ["confirmPassword"],
+  });
+
+interface RegisterFormData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+  agreeToTerms: boolean;
+}
+
+type SocialProvider = "Google" | "Facebook";
 
 const Register = () => {
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleSubmit = async (formData: RegisterFormData) => {
+    setError(null);
+
+    const validationResult = registerSchema.safeParse(formData);
+
+    if (!validationResult.success) {
+      const firstError = validationResult.error.errors[0].message;
+      setError(firstError);
+      return;
+    }
+
+    setLoading(true);
+
+    const payload: RegisterPayload = {
+      firstName: validationResult.data.firstName,
+      lastName: validationResult.data.lastName,
+      email: validationResult.data.email,
+      password: validationResult.data.password,
+      confirmPassword: validationResult.data.confirmPassword,
+    };
+
+    try {
+      await registerUser(payload);
+      alert(
+        "Registration successful! Please check your email for verification."
+      );
+      router.push("/auth/login");
+    } catch (err: unknown) {
+      let errorMessage = "An unknown error occurred.";
+      if (axios.isAxiosError(err)) {
+        if (Array.isArray(err.response?.data?.message)) {
+          errorMessage = err.response?.data?.message.join(" ");
+        } else {
+          errorMessage = err.response?.data?.message || err.message;
+        }
+      } else if (err instanceof Error) {
+        errorMessage = err.message;
+      }
+      setError(errorMessage);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSocialLogin = (provider: SocialProvider) => {
+    if (provider === "Google") {
+      redirectToGoogleAuth();
+    } else if (provider === "Facebook") {
+      redirectToFacebookAuth();
+    }
+  };
+
   const promoCards = [
     {
       id: 1,
@@ -97,7 +193,6 @@ const Register = () => {
             </div>
           ))}
         </div>
-
         <div className="absolute inset-0 z-20">
           {promoCards.map((card) => (
             <div
@@ -113,7 +208,6 @@ const Register = () => {
             </div>
           ))}
         </div>
-
         <div className="relative z-10 flex flex-col justify-center items-center text-white px-12 text-center">
           <h1 className="text-6xl font-bold text-white mb-4 tracking-wide [text-shadow:_2px_2px_8px_rgba(0,0,0,0.2)] animate-fade-in">
             Reluv
@@ -127,9 +221,13 @@ const Register = () => {
           </p>
         </div>
       </div>
-
       <div className="w-full lg:w-1/2 flex items-center justify-center p-8">
-        <RegisterForm />
+        <RegisterForm
+          onSubmit={handleSubmit}
+          onSocialLogin={handleSocialLogin}
+          isLoading={loading}
+          error={error}
+        />
       </div>
     </div>
   );
