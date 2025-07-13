@@ -134,7 +134,7 @@ export class AuthService {
       },
     });
 
-    console.log(`Password reset token for ${email}: ${resetToken}`);
+    await this.emailService.sendPasswordReset(user, resetToken);
 
     return { message: 'Password reset link has been sent to your email.' };
   }
