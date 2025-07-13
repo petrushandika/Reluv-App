@@ -1,6 +1,9 @@
+"use client";
+
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import { loginUser } from "../api/authApi";
+import { api } from "../api/authApi";
 import { User, LoginPayload } from "../types";
 
 type Status = "idle" | "loading" | "success" | "error";
@@ -34,8 +37,11 @@ export const useAuthStore = create<AuthState>()(
           const response = await loginUser(data);
           const { token, user } = response;
 
+          api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+
           set({ user, token, status: "success" });
         } catch (error) {
+          delete api.defaults.headers.common["Authorization"];
           set({ status: "error" });
           console.error("Login failed:", error);
           throw error;
@@ -43,6 +49,7 @@ export const useAuthStore = create<AuthState>()(
       },
 
       logout: () => {
+        delete api.defaults.headers.common["Authorization"];
         set({ user: null, token: null, status: "idle" });
       },
     }),
@@ -52,6 +59,11 @@ export const useAuthStore = create<AuthState>()(
       partialize: (state) => ({ user: state.user, token: state.token }),
       onRehydrateStorage: () => (state) => {
         if (state) {
+          if (state.token) {
+            api.defaults.headers.common[
+              "Authorization"
+            ] = `Bearer ${state.token}`;
+          }
           state._setHydrated();
         }
       },

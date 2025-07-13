@@ -1,6 +1,8 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import axios from "axios";
 import {
   Tag,
   Truck,
@@ -13,14 +15,45 @@ import {
   Percent,
 } from "lucide-react";
 import LoginForm from "@/features/auth/components/LoginForm";
+import { useAuthStore } from "@/features/auth/store/auth.store";
+import {
+  redirectToGoogleAuth,
+  redirectToFacebookAuth,
+} from "@/features/auth/api/authApi";
+import { LoginPayload } from "@/features/auth/types";
+
+type SocialProvider = "Google" | "Facebook";
 
 const Login = () => {
-  const handleLoginSubmit = (data: { email: string; password: string }) => {
-    console.log("Login attempt from parent:", data);
+  const router = useRouter();
+  const { login, status } = useAuthStore();
+  const [error, setError] = useState<string | null>(null);
+
+  const isLoading = status === "loading";
+
+  const handleLoginSubmit = async (data: LoginPayload) => {
+    setError(null);
+    try {
+      await login(data);
+      router.push("/");
+    } catch (err: unknown) {
+      let errorMessage = "An unknown error occurred.";
+      if (axios.isAxiosError(err)) {
+        errorMessage =
+          err.response?.data?.message || err.message || "Login failed.";
+      } else if (err instanceof Error) {
+        errorMessage = err.message;
+      }
+      setError(errorMessage);
+    }
   };
 
-  const handleSocialLogin = (provider: "Google" | "Facebook") => {
-    console.log(`Login with ${provider} initiated from parent`);
+  const handleSocialLogin = (provider: SocialProvider) => {
+    if (provider === "Google") {
+      redirectToGoogleAuth();
+    } else if (provider === "Facebook") {
+      redirectToFacebookAuth();
+    }
   };
 
   const promoCards = [
@@ -106,6 +139,7 @@ const Login = () => {
           ))}
         </div>
 
+        {/* Promo cards */}
         <div className="absolute inset-0 z-20">
           {promoCards.map((card) => (
             <div
@@ -123,15 +157,11 @@ const Login = () => {
         </div>
 
         <div className="relative z-10 flex flex-col justify-center items-center text-white px-12 text-center">
-          <h1 className="text-6xl font-bold text-white mb-4 tracking-wide [text-shadow:_2px_2px_8px_rgba(0,0,0,0.2)] animate-fade-in">
+          <h1 className="text-6xl font-bold text-white mb-4 tracking-wide [text-shadow:_2px_2px_8px_rgba(0,0,0,0.2)]">
             Reluv
           </h1>
-          <p className="text-2xl font-light mb-8 opacity-90 [text-shadow:_1px_1px_4px_rgba(0,0,0,0.2)] animate-fade-in-delayed">
+          <p className="text-2xl font-light mb-8 opacity-90 [text-shadow:_1px_1px_4px_rgba(0,0,0,0.2)]">
             Where Style Finds a Second Life.
-          </p>
-          <p className="text-md max-w-sm opacity-80 animate-fade-in-delayed-2">
-            Join our community to unearth unique items, enjoy exclusive deals,
-            and give your style a sustainable spin.
           </p>
         </div>
       </div>
@@ -140,6 +170,8 @@ const Login = () => {
         <LoginForm
           onSubmit={handleLoginSubmit}
           onSocialLogin={handleSocialLogin}
+          isLoading={isLoading}
+          error={error}
         />
       </div>
     </div>

@@ -1,5 +1,3 @@
-// features/auth/api/authApi.ts
-
 import axios from "axios";
 import {
   AuthResponse,
