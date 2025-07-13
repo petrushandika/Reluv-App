@@ -41,13 +41,13 @@ export class AuthController {
     return res.redirect('http://localhost:3000/');
   }
 
-  @Post('forgot-password')
+  @Post('forgot')
   @HttpCode(HttpStatus.OK)
   forgot(@Body(new ValidationPipe()) forgotDto: ForgotDto) {
     return this.authService.forgot(forgotDto.email);
   }
 
-  @Post('reset-password')
+  @Post('reset')
   @HttpCode(HttpStatus.OK)
   reset(@Body(new ValidationPipe()) resetDto: ResetDto) {
     return this.authService.reset(resetDto.token, resetDto.newPassword);

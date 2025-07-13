@@ -68,8 +68,8 @@ export class AppModule implements NestModule {
         { path: 'auth/google/callback', method: RequestMethod.GET },
         { path: 'auth/facebook', method: RequestMethod.GET },
         { path: 'auth/facebook/callback', method: RequestMethod.GET },
-        { path: 'auth/forgot-password', method: RequestMethod.POST },
-        { path: 'auth/reset-password', method: RequestMethod.POST },
+        { path: 'auth/forgot', method: RequestMethod.POST },
+        { path: 'auth/reset', method: RequestMethod.POST },
 
         { path: 'store', method: RequestMethod.GET },
         { path: 'store/:slug', method: RequestMethod.GET },

@@ -2,7 +2,6 @@ import { MailerService } from '@nestjs-modules/mailer';
 import { Injectable } from '@nestjs/common';
 import { User, Order, OrderItem, Variant, Product } from '@prisma/client';
 
-// Membuat tipe kustom untuk Order dengan relasi yang dibutuhkan
 type OrderWithDetails = Order & {
   items: (OrderItem & {
     variant: Variant & {
@@ -30,12 +29,12 @@ export class EmailService {
   }
 
   async sendPasswordReset(user: User, token: string) {
-    const url = `http://localhost:3000/reset-password?token=${token}`;
+    const url = `http://localhost:3000/auth/reset?token=${token}`;
 
     await this.mailerService.sendMail({
       to: user.email,
       subject: 'Your Password Reset Request',
-      template: './forgot-password',
+      template: './forgot',
       context: {
         name: user.firstName,
         url,
@@ -56,7 +55,7 @@ export class EmailService {
     await this.mailerService.sendMail({
       to: user.email,
       subject: `Update for your order #${order.orderNumber}`,
-      template: './order-status',
+      template: './order',
       context: {
         name: user.firstName,
         orderNumber: order.orderNumber,
