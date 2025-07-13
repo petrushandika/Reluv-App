@@ -2,7 +2,7 @@ import { MailerService } from '@nestjs-modules/mailer';
 import { Injectable } from '@nestjs/common';
 import { User, Order, OrderItem, Variant, Product } from '@prisma/client';
 
-// Create a custom type to ensure the order object includes all necessary relations
+// Membuat tipe kustom untuk Order dengan relasi yang dibutuhkan
 type OrderWithDetails = Order & {
   items: (OrderItem & {
     variant: Variant & {
@@ -16,7 +16,7 @@ export class EmailService {
   constructor(private mailerService: MailerService) {}
 
   async sendUserConfirmation(user: User, token: string) {
-    const url = `http://your-frontend-app.com/reset-password?token=${token}`;
+    const url = `http://localhost:8000/api/v1/auth/confirm?token=${token}`;
 
     await this.mailerService.sendMail({
       to: user.email,
@@ -30,12 +30,12 @@ export class EmailService {
   }
 
   async sendPasswordReset(user: User, token: string) {
-    const url = `http://your-frontend-app.com/reset-password?token=${token}`;
+    const url = `http://localhost:3000/reset-password?token=${token}`;
 
     await this.mailerService.sendMail({
       to: user.email,
       subject: 'Your Password Reset Request',
-      template: './forgot',
+      template: './forgot-password',
       context: {
         name: user.firstName,
         url,
@@ -44,7 +44,7 @@ export class EmailService {
   }
 
   async sendOrderStatusUpdate(user: User, order: OrderWithDetails) {
-    const orderUrl = `http://your-frontend-app.com/orders/${order.id}`;
+    const orderUrl = `http://localhost:3000/orders/${order.id}`;
 
     const formattedItems = order.items.map((item) => ({
       productName: item.variant.product.name,
@@ -56,7 +56,7 @@ export class EmailService {
     await this.mailerService.sendMail({
       to: user.email,
       subject: `Update for your order #${order.orderNumber}`,
-      template: './order',
+      template: './order-status',
       context: {
         name: user.firstName,
         orderNumber: order.orderNumber,

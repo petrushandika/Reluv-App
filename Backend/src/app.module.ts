@@ -61,32 +61,29 @@ export class AppModule implements NestModule {
     consumer
       .apply(AuthMiddleware)
       .exclude(
-        { path: '/auth/login', method: RequestMethod.POST },
-        { path: '/auth/register', method: RequestMethod.POST },
-        { path: '/auth/google', method: RequestMethod.GET },
-        { path: '/auth/google/callback', method: RequestMethod.GET },
-        { path: '/auth/facebook', method: RequestMethod.GET },
-        { path: '/auth/facebook/callback', method: RequestMethod.GET },
-        { path: '/auth/forgot', method: RequestMethod.POST },
-        { path: '/auth/reset', method: RequestMethod.POST },
-        { path: '/auth/confirm', method: RequestMethod.GET },
+        { path: 'auth/register', method: RequestMethod.POST },
+        { path: 'auth/login', method: RequestMethod.POST },
+        { path: 'auth/confirm', method: RequestMethod.GET },
+        { path: 'auth/google', method: RequestMethod.GET },
+        { path: 'auth/google/callback', method: RequestMethod.GET },
+        { path: 'auth/facebook', method: RequestMethod.GET },
+        { path: 'auth/facebook/callback', method: RequestMethod.GET },
+        { path: 'auth/forgot-password', method: RequestMethod.POST },
+        { path: 'auth/reset-password', method: RequestMethod.POST },
 
-        { path: '/store', method: RequestMethod.GET },
-        { path: '/store/:slug', method: RequestMethod.GET },
+        { path: 'store', method: RequestMethod.GET },
+        { path: 'store/:slug', method: RequestMethod.GET },
 
-        { path: '/products', method: RequestMethod.GET },
-        { path: '/products/:id', method: RequestMethod.GET },
+        { path: 'products', method: RequestMethod.GET },
+        { path: 'products/:id', method: RequestMethod.GET },
+        { path: 'categories', method: RequestMethod.GET },
+        { path: 'categories/:id', method: RequestMethod.GET },
+        { path: 'products/:productId/reviews', method: RequestMethod.GET },
+        { path: 'shipping-rates/check', method: RequestMethod.POST },
+        { path: 'maps/search-areas', method: RequestMethod.GET },
 
-        { path: '/categories', method: RequestMethod.GET },
-        { path: '/categories/:id', method: RequestMethod.GET },
-
-        { path: '/products/:productId/reviews', method: RequestMethod.GET },
-
-        { path: '/shipping-rates/check', method: RequestMethod.POST },
-        { path: '/maps/search-areas', method: RequestMethod.GET },
-
-        { path: '/payments/midtrans-notification', method: RequestMethod.POST },
-        { path: '/shipments/biteship-webhook', method: RequestMethod.POST },
+        { path: 'payments/midtrans-notification', method: RequestMethod.POST },
+        { path: 'shipments/biteship-webhook', method: RequestMethod.POST },
       )
       .forRoutes({ path: '*', method: RequestMethod.ALL });
   }

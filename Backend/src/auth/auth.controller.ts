@@ -38,16 +38,16 @@ export class AuthController {
     @Res() res: Response,
   ) {
     await this.authService.confirm(query.token);
-    return res.redirect('http://your-frontend-app.com/login?verified=true');
+    return res.redirect('http://localhost:3000/');
   }
 
-  @Post('forgot')
+  @Post('forgot-password')
   @HttpCode(HttpStatus.OK)
   forgot(@Body(new ValidationPipe()) forgotDto: ForgotDto) {
     return this.authService.forgot(forgotDto.email);
   }
 
-  @Post('reset')
+  @Post('reset-password')
   @HttpCode(HttpStatus.OK)
   reset(@Body(new ValidationPipe()) resetDto: ResetDto) {
     return this.authService.reset(resetDto.token, resetDto.newPassword);
