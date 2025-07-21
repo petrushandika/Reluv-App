@@ -3,7 +3,6 @@ import {
   Injectable,
   InternalServerErrorException,
   NotFoundException,
-  BadRequestException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { firstValueFrom } from 'rxjs';
@@ -23,13 +22,11 @@ export class ShippingRatesService {
   ) {
     const apiKey = this.configService.get<string>('BITESHIP_API_KEY');
     const baseUrl = this.configService.get<string>('BITESHIP_BASE_URL');
-
     if (!apiKey || !baseUrl) {
       throw new InternalServerErrorException(
         'Biteship configuration is missing.',
       );
     }
-
     this.biteshipApiKey = apiKey;
     this.biteshipBaseUrl = baseUrl;
   }
@@ -65,37 +62,28 @@ export class ShippingRatesService {
     const itemsByStore = new Map<number, { store: any; items: any[] }>();
     for (const item of cart.items) {
       const storeId = item.variant.product.storeId;
+      if (!storeId) {
+        continue;
+      }
+
       let storeEntry = itemsByStore.get(storeId);
+
       if (!storeEntry) {
         storeEntry = { store: item.variant.product.store, items: [] };
         itemsByStore.set(storeId, storeEntry);
       }
 
-      const { variant } = item;
-      if (
-        !variant.weight ||
-        !variant.length ||
-        !variant.width ||
-        !variant.height
-      ) {
-        throw new BadRequestException(
-          `Product variant "${variant.product.name} - ${variant.name || ''}" is missing required dimension data (weight, length, width, height).`,
-        );
-      }
-
       storeEntry.items.push({
-        name: variant.product.name,
-        description: variant.name || 'Product Variant',
-        value: variant.price,
-        weight: variant.weight,
-        length: variant.length,
-        width: variant.width,
-        height: variant.height,
+        name: item.variant.product.name,
+        description: item.variant.name || 'Product Variant',
+        value: item.variant.price,
+        weight: item.variant.weight,
+        length: item.variant.length,
+        width: item.variant.width,
+        height: item.variant.height,
         quantity: item.quantity,
       });
     }
-
-    const availableCouriers = await this.getAvailableCouriers();
 
     const shippingOptionsByStore = await Promise.all(
       Array.from(itemsByStore.entries()).map(async ([storeId, data]) => {
@@ -113,7 +101,6 @@ export class ShippingRatesService {
         const pricing = await this.checkRates({
           origin_area_id: originLocation.biteship_area_id,
           destination_area_id: destinationLocation.biteship_area_id!,
-          couriers: availableCouriers, // Menggunakan daftar kurir dinamis
           items: data.items,
         });
 
@@ -127,9 +114,7 @@ export class ShippingRatesService {
     return shippingOptionsByStore;
   }
 
-  private async checkRates(
-    checkRatesDto: CheckRatesDto & { couriers: string },
-  ) {
+  private async checkRates(checkRatesDto: CheckRatesDto) {
     const headers = { Authorization: this.biteshipApiKey };
     try {
       const response = await firstValueFrom(
@@ -141,37 +126,11 @@ export class ShippingRatesService {
       );
       return response.data.pricing || [];
     } catch (error) {
-      if (error instanceof Error) {
-        console.error(
-          'Biteship Rate Check Error:',
-          error['response']?.data || error.message,
-        );
-      }
-      return [];
-    }
-  }
-
-  private async getAvailableCouriers(): Promise<string> {
-    const headers = { Authorization: this.biteshipApiKey };
-    try {
-      const response = await firstValueFrom(
-        this.httpService.get(`${this.biteshipBaseUrl}/v1/couriers`, {
-          headers,
-        }),
+      console.error(
+        'Biteship Rate Check Error:',
+        error.response?.data || error.message,
       );
-      // Mengambil semua courier_code dan menggabungkannya menjadi string
-      const courierCodes = response.data.couriers
-        .map((c) => c.courier_code)
-        .join(',');
-      return courierCodes;
-    } catch (error) {
-      if (error instanceof Error) {
-        console.error(
-          'Failed to fetch available couriers from Biteship:',
-          error['response']?.data || error.message,
-        );
-      }
-      return 'jne,jnt,sicepat,anteraja';
+      return [];
     }
   }
 }

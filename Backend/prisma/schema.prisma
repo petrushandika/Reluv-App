@@ -192,10 +192,12 @@ model Product {
 
   seller     User     @relation("SellerProducts", fields: [sellerId], references: [id])
   sellerId   Int
+
   category   Category @relation("ProductCategory", fields: [categoryId], references: [id])
   categoryId Int
-  store      Store   @relation(fields: [storeId], references: [id])
-  storeId    Int
+  
+  store      Store?   @relation(fields: [storeId], references: [id])
+  storeId    Int?
 
   variants Variant[]
   reviews  Review[]     @relation("ProductReviews")

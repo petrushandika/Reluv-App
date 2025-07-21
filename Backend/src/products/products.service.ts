@@ -37,11 +37,6 @@ export class ProductsService {
     const store = await this.prisma.store.findUnique({
       where: { userId: user.id },
     });
-    if (!store) {
-      throw new ForbiddenException(
-        'You do not own a store to add products to.',
-      );
-    }
 
     const existingProduct = await this.prisma.product.findUnique({
       where: { slug: productData.slug },
@@ -52,16 +47,18 @@ export class ProductsService {
       );
     }
 
-    return this.prisma.product.create({
-      data: {
-        ...productData,
-        seller: { connect: { id: user.id } },
-        store: { connect: { id: store.id } },
-        category: { connect: { id: categoryId } },
-        variants: {
-          create: variants,
-        },
+    const dataToCreate: Prisma.ProductCreateInput = {
+      ...productData,
+      seller: { connect: { id: user.id } },
+      category: { connect: { id: categoryId } },
+      variants: {
+        create: variants,
       },
+      ...(store && { store: { connect: { id: store.id } } }),
+    };
+
+    return this.prisma.product.create({
+      data: dataToCreate,
     });
   }
 
