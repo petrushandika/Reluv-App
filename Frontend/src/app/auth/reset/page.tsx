@@ -4,6 +4,7 @@ import React, { useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import axios from "axios";
 import { z } from "zod";
+import { toast } from "sonner";
 import { KeyRound, ShieldCheck, UserCheck } from "lucide-react";
 import ResetForm from "@/features/auth/components/ResetForm";
 import { resetPassword } from "@/features/auth/api/authApi";
@@ -36,13 +37,21 @@ const ResetComponent = () => {
     setError(null);
 
     if (!token) {
-      setError("Reset token is missing or invalid.");
+      const msg = "Reset token is missing or invalid.";
+      toast.error("Invalid Request", {
+        description: msg,
+      });
+      setError(msg);
       return;
     }
 
     const validationResult = resetSchema.safeParse(data);
     if (!validationResult.success) {
-      setError(validationResult.error.errors[0].message);
+      const msg = validationResult.error.errors[0].message;
+      toast.error("Validation Failed", {
+        description: msg,
+      });
+      setError(msg);
       return;
     }
 
@@ -51,6 +60,9 @@ const ResetComponent = () => {
       await resetPassword({
         token,
         newPassword: validationResult.data.password,
+      });
+      toast.success("Password Reset Successful!", {
+        description: "You can now log in with your new password.",
       });
       setIsReset(true);
     } catch (err: unknown) {
@@ -63,6 +75,7 @@ const ResetComponent = () => {
       } else if (err instanceof Error) {
         errorMessage = err.message;
       }
+      toast.error("Reset Failed", { description: errorMessage });
       setError(errorMessage);
     } finally {
       setLoading(false);

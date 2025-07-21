@@ -4,7 +4,8 @@ import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import { loginUser } from "../api/authApi";
 import { api } from "../api/authApi";
-import { User, LoginPayload } from "../types";
+import { User, LoginPayload, AuthResponse } from "../types";
+import { getMe } from "@/features/user/api/userApi";
 
 type Status = "idle" | "loading" | "success" | "error";
 
@@ -15,6 +16,7 @@ interface AuthState {
   isAuthenticated: () => boolean;
   login: (data: LoginPayload) => Promise<void>;
   logout: () => void;
+  fetchAndSetUser: () => Promise<void>;
   _setHydrated: () => void;
   isHydrated: boolean;
 }
@@ -34,12 +36,10 @@ export const useAuthStore = create<AuthState>()(
       login: async (data: LoginPayload) => {
         set({ status: "loading" });
         try {
-          const response = await loginUser(data);
+          const response: AuthResponse = await loginUser(data);
           const { token, user } = response;
-
           api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-
-          set({ user, token, status: "success" });
+          set({ user: user, token: token, status: "success" });
         } catch (error) {
           delete api.defaults.headers.common["Authorization"];
           set({ status: "error" });
@@ -51,6 +51,16 @@ export const useAuthStore = create<AuthState>()(
       logout: () => {
         delete api.defaults.headers.common["Authorization"];
         set({ user: null, token: null, status: "idle" });
+      },
+
+      fetchAndSetUser: async () => {
+        try {
+          const freshUser = await getMe();
+          set({ user: freshUser });
+        } catch (error) {
+          console.error("Session expired or invalid. Logging out.", error);
+          get().logout();
+        }
       },
     }),
     {

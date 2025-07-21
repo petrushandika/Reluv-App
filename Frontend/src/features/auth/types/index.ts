@@ -1,7 +1,17 @@
 export interface User {
   id: number;
-  firstName: string;
+  firstName: string | null;
+  lastName: string | null;
   email: string;
+  profile: UserProfile | null;
+}
+
+export interface UserProfile {
+  avatar: string | null;
+  banner: string | null;
+  bio: string | null;
+  birth: Date | null;
+  gender: string | null;
 }
 
 export interface AuthResponse {

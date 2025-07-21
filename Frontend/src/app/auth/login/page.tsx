@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import { toast } from "sonner";
 import {
   Tag,
   Truck,
@@ -35,16 +36,24 @@ const Login = () => {
     setError(null);
     try {
       await login(data);
+      toast.success("Login Successful!", {
+        description: "Welcome back! Redirecting you now...",
+      });
       router.push("/");
     } catch (err: unknown) {
       let errorMessage = "An unknown error occurred.";
       if (axios.isAxiosError(err)) {
         errorMessage =
-          err.response?.data?.message || err.message || "Login failed.";
+          err.response?.data?.message ||
+          err.message ||
+          "Login failed. Please check your credentials.";
       } else if (err instanceof Error) {
         errorMessage = err.message;
       }
       setError(errorMessage);
+      toast.error("Login Failed", {
+        description: errorMessage,
+      });
     }
   };
 
@@ -138,8 +147,6 @@ const Login = () => {
             </div>
           ))}
         </div>
-
-        {/* Promo cards */}
         <div className="absolute inset-0 z-20">
           {promoCards.map((card) => (
             <div
@@ -155,7 +162,6 @@ const Login = () => {
             </div>
           ))}
         </div>
-
         <div className="relative z-10 flex flex-col justify-center items-center text-white px-12 text-center">
           <h1 className="text-6xl font-bold text-white mb-4 tracking-wide [text-shadow:_2px_2px_8px_rgba(0,0,0,0.2)]">
             Reluv
@@ -165,7 +171,6 @@ const Login = () => {
           </p>
         </div>
       </div>
-
       <div className="w-full lg:w-1/2 flex items-center justify-center p-8">
         <LoginForm
           onSubmit={handleLoginSubmit}

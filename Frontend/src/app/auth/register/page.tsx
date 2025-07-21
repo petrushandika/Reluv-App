@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { z } from "zod";
+import { toast } from "sonner";
 import {
   Tag,
   Truck,
@@ -57,16 +58,13 @@ type SocialProvider = "Google" | "Facebook";
 const Register = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (formData: RegisterFormData) => {
-    setError(null);
-
     const validationResult = registerSchema.safeParse(formData);
 
     if (!validationResult.success) {
       const firstError = validationResult.error.errors[0].message;
-      setError(firstError);
+      toast.error(firstError);
       return;
     }
 
@@ -82,9 +80,9 @@ const Register = () => {
 
     try {
       await registerUser(payload);
-      alert(
-        "Registration successful! Please check your email for verification."
-      );
+      toast.success("Registration successful!", {
+        description: "Please check your email for verification.",
+      });
       router.push("/auth/login");
     } catch (err: unknown) {
       let errorMessage = "An unknown error occurred.";
@@ -97,7 +95,7 @@ const Register = () => {
       } else if (err instanceof Error) {
         errorMessage = err.message;
       }
-      setError(errorMessage);
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -226,7 +224,6 @@ const Register = () => {
           onSubmit={handleSubmit}
           onSocialLogin={handleSocialLogin}
           isLoading={loading}
-          error={error}
         />
       </div>
     </div>

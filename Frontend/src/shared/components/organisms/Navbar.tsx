@@ -9,8 +9,11 @@ import {
   Menu,
   X,
   ChevronDown,
+  LogOut,
+  ScrollText,
 } from "lucide-react";
 import Link from "next/link";
+import { useAuthStore } from "@/features/auth/store/auth.store";
 
 interface SubMenuSection {
   title: string;
@@ -24,10 +27,10 @@ interface DropdownContent {
 }
 
 const Navbar = () => {
+  const { isAuthenticated, user, logout } = useAuthStore();
   const [activeMainMenu, setActiveMainMenu] = useState<string | null>(null);
   const [activeSubMenu, setActiveSubMenu] = useState<string | null>(null);
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
-
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [mobileActiveMainMenu, setMobileActiveMainMenu] = useState<
     string | null
@@ -35,6 +38,7 @@ const Navbar = () => {
   const [mobileActiveSubMenu, setMobileActiveSubMenu] = useState<string | null>(
     null
   );
+  const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
 
   const dropdownData: { [key: string]: DropdownContent } = {
     Women: {
@@ -332,19 +336,15 @@ const Navbar = () => {
     setActiveMainMenu(menu);
     setActiveSubMenu(null);
   };
-
   const handleSubMenuEnter = (subMenu: string) => {
     setActiveSubMenu(subMenu);
   };
-
   const handleNavbarLeave = () => {
     setActiveMainMenu(null);
     setActiveSubMenu(null);
   };
-
   const handleMainMenuClick = (menu: string) => {
-    const menuPath = menu.toLowerCase();
-    window.location.href = `/main/${menuPath}`;
+    window.location.href = `/main/${menu.toLowerCase()}`;
   };
 
   const toggleMobileMenu = () => {
@@ -368,15 +368,17 @@ const Navbar = () => {
     setMobileActiveMainMenu((prev) => (prev === menu ? null : menu));
     setMobileActiveSubMenu(null);
   };
-
   const toggleMobileSubMenu = (subMenu: string) => {
     setMobileActiveSubMenu((prev) => (prev === subMenu ? null : subMenu));
   };
-
   const handleMobileMainMenuClick = (e: React.MouseEvent, menu: string) => {
     e.stopPropagation();
-    const menuPath = menu.toLowerCase();
-    window.location.href = `/main/${menuPath}`;
+    window.location.href = `/main/${menu.toLowerCase()}`;
+  };
+
+  const handleLogout = () => {
+    logout();
+    setIsProfileDropdownOpen(false);
   };
 
   return (
@@ -386,10 +388,8 @@ const Navbar = () => {
     >
       <div className="w-full text-gray-800 relative">
         <div className="container mx-auto flex items-center justify-between px-6 md:px-20 xl:px-40 py-4">
-          <Link href="/">
-            <div className="text-xl lg:text-2xl font-bold text-sky-700">
-              reluv
-            </div>
+          <Link href="/" className="text-xl lg:text-2xl font-bold text-sky-700">
+            reluv
           </Link>
           <nav className="hidden lg:flex items-center space-x-8">
             {Object.keys(dropdownData).map((menu) => (
@@ -420,34 +420,98 @@ const Navbar = () => {
             <Link href="/main/cart" aria-label="Cart">
               <ShoppingBag className="w-6 h-6 text-sky-600 hover:text-sky-700 cursor-pointer transition-colors" />
             </Link>
-            <div className="flex items-center space-x-2 text-sm">
-              <User className="w-5 h-5 text-sky-600" />
-              <Link
-                href="/auth/login"
-                aria-label="Sign In"
-                className="font-semibold hover:text-sky-600 transition-colors"
+
+            {isAuthenticated() ? (
+              <div
+                className="relative"
+                onMouseEnter={() => setIsProfileDropdownOpen(true)}
+                onMouseLeave={() => setIsProfileDropdownOpen(false)}
               >
-                Sign In
-              </Link>
-              <span className="text-gray-400">|</span>
-              <Link
-                href="/auth/register"
-                aria-label="Register"
-                className="font-semibold hover:text-sky-600 transition-colors"
-              >
-                Register
-              </Link>
-            </div>
+                <button className="flex items-center space-x-2 text-sm font-semibold hover:text-sky-600 transition-colors">
+                  <img
+                    src={
+                      user?.profile?.avatar ||
+                      "https://res.cloudinary.com/dqcyabvc2/image/upload/v1753019800/user_nxnpv1.webp"
+                    }
+                    alt="User Avatar"
+                    className="w-7 h-7 rounded-full object-cover border-2 border-sky-100"
+                  />
+                  <span>
+                    Hi, {user?.firstName} {user?.lastName}!
+                  </span>{" "}
+                </button>
+                {isProfileDropdownOpen && (
+                  <div className="absolute right-0 top-full pt-2 w-48">
+                    <div className="bg-white rounded-md shadow-lg py-1 z-50 border border-gray-200">
+                      <Link
+                        href="/profile/me"
+                        className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-sky-600"
+                      >
+                        <User className="w-4 h-4 mr-2" /> My Profile
+                      </Link>
+                      <Link
+                        href="/orders"
+                        className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-sky-600"
+                      >
+                        <ScrollText className="w-4 h-4 mr-2" /> Order History
+                      </Link>
+                      <button
+                        onClick={handleLogout}
+                        className="w-full text-left flex items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50"
+                      >
+                        <LogOut className="w-4 h-4 mr-2" /> Logout
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="flex items-center space-x-2 text-sm">
+                <User className="w-5 h-5 text-sky-600" />
+                <Link
+                  href="/auth/login"
+                  aria-label="Sign In"
+                  className="font-semibold hover:text-sky-600 transition-colors"
+                >
+                  Sign In
+                </Link>
+                <span className="text-gray-400">|</span>
+                <Link
+                  href="/auth/register"
+                  aria-label="Register"
+                  className="font-semibold hover:text-sky-600 transition-colors"
+                >
+                  Register
+                </Link>
+              </div>
+            )}
           </div>
-          <div className="flex lg:hidden items-center space-x-3">
+          <div className="flex lg:hidden items-center space-x-4">
             <Search className="w-6 h-6 text-gray-600 hover:text-sky-600 cursor-pointer" />
-            <Link href="/main/wishlist" aria-label="Cart">
+            <Link href="/main/wishlist" aria-label="Wishlist">
               <Heart className="w-6 h-6 text-gray-600 hover:text-sky-600 cursor-pointer" />
             </Link>
-
             <Link href="/main/cart" aria-label="Cart">
               <ShoppingBag className="w-6 h-6 text-gray-600 hover:text-sky-600 cursor-pointer" />
             </Link>
+
+            {isAuthenticated() ? (
+              <Link href="/profile/me" aria-label="Profile">
+                <img
+                  src={
+                    user?.profile?.avatar ||
+                    "https://res.cloudinary.com/dqcyabvc2/image/upload/v1753019800/user_nxnpv1.webp"
+                  }
+                  alt="User Avatar"
+                  className="w-7 h-7 rounded-full object-cover"
+                />
+              </Link>
+            ) : (
+              <Link href="/auth/login" aria-label="Login">
+                <User className="w-6 h-6 text-gray-600 hover:text-sky-600 cursor-pointer" />
+              </Link>
+            )}
+
             <button onClick={toggleMobileMenu} className="p-1">
               {isMobileMenuOpen ? (
                 <X className="w-6 h-6 text-gray-800" />
@@ -461,7 +525,7 @@ const Navbar = () => {
 
       {isMobileMenuOpen && (
         <div className="absolute top-full left-0 w-full z-10 lg:hidden bg-white text-gray-800 border-t border-gray-200 max-h-[calc(100vh-4.5rem)] overflow-y-auto">
-          <div className="py-4 px-6 space-y-1">
+          <div className="py-4 px-6 space-y-1 border-b border-gray-200">
             {Object.keys(dropdownData).map((menu) => (
               <div
                 key={menu}
@@ -534,16 +598,29 @@ const Navbar = () => {
                 )}
               </div>
             ))}
-            <div className="flex items-center space-x-2 text-sm py-3 font-semibold">
-              <User className="w-5 h-5" />
-              <Link href="/auth/login" className="hover:text-sky-600">
-                Sign In
-              </Link>
-              <span className="text-gray-300">|</span>
-              <Link href="/auth/register" className="hover:text-sky-600">
-                Register
-              </Link>
-            </div>
+            {isAuthenticated() && (
+              <div className="">
+                <Link
+                  href="/profile/me"
+                  className="flex items-center py-3 text-sm text-gray-700 font-semibold hover:text-sky-600 hover:bg-gray-50 rounded-md transition-colors"
+                >
+                  <User className="w-5 h-5 mr-3 text-gray-500" /> My Profile
+                </Link>
+                <Link
+                  href="/orders"
+                  className="flex items-center py-3 text-sm text-gray-700 font-semibold hover:text-sky-600 hover:bg-gray-50 rounded-md transition-colors"
+                >
+                  <ScrollText className="w-5 h-5 mr-3 text-gray-500" /> Order
+                  History
+                </Link>
+                <button
+                  onClick={handleLogout}
+                  className="w-full text-left flex items-center py-3 text-sm text-red-600 font-semibold hover:bg-red-50 rounded-md transition-colors"
+                >
+                  <LogOut className="w-5 h-5 mr-3" /> Logout
+                </button>
+              </div>
+            )}
           </div>
         </div>
       )}
@@ -566,7 +643,6 @@ const Navbar = () => {
               ))}
             </div>
           </div>
-
           {activeSubMenu && (
             <div className="w-full bg-white text-gray-800 shadow">
               <div className="container mx-auto px-6 md:px-20 lg:px-40 py-8">

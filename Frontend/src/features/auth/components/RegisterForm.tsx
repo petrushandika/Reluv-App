@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Eye, EyeOff, Mail, Lock, User, AlertCircle } from "lucide-react";
+import { Eye, EyeOff, Mail, Lock, User } from "lucide-react";
 
 interface RegisterFormData {
   firstName: string;
@@ -16,14 +16,12 @@ interface RegisterFormProps {
   onSubmit: (formData: RegisterFormData) => void;
   onSocialLogin: (provider: "Google" | "Facebook") => void;
   isLoading: boolean;
-  error: string | null;
 }
 
 const RegisterForm = ({
   onSubmit,
   onSocialLogin,
   isLoading,
-  error,
 }: RegisterFormProps) => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -193,12 +191,6 @@ const RegisterForm = ({
             </button>
           </div>
         </div>
-        {error && (
-          <div className="flex items-center p-3 text-sm text-red-700 bg-red-100 border border-red-200 rounded-lg">
-            <AlertCircle className="w-5 h-5 mr-2 flex-shrink-0" />
-            <span>{error}</span>
-          </div>
-        )}
         <div className="flex items-start">
           <input
             id="agreeToTerms"
