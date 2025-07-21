@@ -110,7 +110,7 @@ const Wishlist = (): JSX.Element => {
         itemName={itemToRemove?.name || ""}
       />
 
-      <div className="container mx-auto px-6 md:px-20 xl:px-40 py-4 md:py-8">
+      <div className="container mx-auto px-6 md:px-20 xl:px-40 py-12 md:py-12">
         <h1 className="text-xl md:text-2xl font-bold text-black mb-6 md:mb-8">
           My Wishlist
         </h1>

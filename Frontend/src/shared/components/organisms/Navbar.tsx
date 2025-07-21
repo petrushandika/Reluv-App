@@ -11,6 +11,7 @@ import {
   ChevronDown,
   LogOut,
   ScrollText,
+  Bell,
 } from "lucide-react";
 import Link from "next/link";
 import { useAuthStore } from "@/features/auth/store/auth.store";
@@ -381,6 +382,17 @@ const Navbar = () => {
     setIsProfileDropdownOpen(false);
   };
 
+  const formatUserName = () => {
+    if (!user) return "";
+    const fullName = `${user.firstName || ""} ${user.lastName || ""}`.trim();
+    if (fullName.length > 8) {
+      return `${user.firstName} ${
+        user.lastName ? user.lastName.charAt(0) + "." : ""
+      }`;
+    }
+    return fullName;
+  };
+
   return (
     <header
       onMouseLeave={handleNavbarLeave}
@@ -388,8 +400,15 @@ const Navbar = () => {
     >
       <div className="w-full text-gray-800 relative">
         <div className="container mx-auto flex items-center justify-between px-6 md:px-20 xl:px-40 py-4">
-          <Link href="/" className="text-xl lg:text-2xl font-bold text-sky-700">
-            reluv
+          <Link href="/">
+            <div className="text-xl lg:text-2xl font-bold text-sky-700 hidden lg:block">
+              reluv
+            </div>
+            <img
+              src="https://res.cloudinary.com/dqcyabvc2/image/upload/v1752299960/logo_gqfygx.png"
+              alt="Reluv Logo"
+              className="block lg:hidden h-8 w-auto"
+            />
           </Link>
           <nav className="hidden lg:flex items-center space-x-8">
             {Object.keys(dropdownData).map((menu) => (
@@ -414,11 +433,21 @@ const Navbar = () => {
               />
               <Search className="absolute right-3 top-2.5 w-5 h-5 text-gray-400" />
             </div>
+
+            <Link href="/main/store" passHref>
+              <div className="bg-sky-600 text-white px-4 py-2 rounded-md text-sm font-semibold hover:bg-sky-700 transition-colors cursor-pointer">
+                Sell
+              </div>
+            </Link>
+
             <Link href="/main/wishlist" aria-label="Wishlist">
               <Heart className="w-6 h-6 text-sky-600 hover:text-sky-700 cursor-pointer transition-colors" />
             </Link>
             <Link href="/main/cart" aria-label="Cart">
               <ShoppingBag className="w-6 h-6 text-sky-600 hover:text-sky-700 cursor-pointer transition-colors" />
+            </Link>
+            <Link href="/notifications" aria-label="Notifications">
+              <Bell className="w-6 h-6 text-sky-600 hover:text-sky-700 cursor-pointer transition-colors" />
             </Link>
 
             {isAuthenticated() ? (
@@ -436,9 +465,7 @@ const Navbar = () => {
                     alt="User Avatar"
                     className="w-7 h-7 rounded-full object-cover border-2 border-sky-100"
                   />
-                  <span>
-                    Hi, {user?.firstName} {user?.lastName}!
-                  </span>{" "}
+                  <span>Hi, {formatUserName()}!</span>
                 </button>
                 {isProfileDropdownOpen && (
                   <div className="absolute right-0 top-full pt-2 w-48">
@@ -487,30 +514,16 @@ const Navbar = () => {
             )}
           </div>
           <div className="flex lg:hidden items-center space-x-4">
-            <Search className="w-6 h-6 text-gray-600 hover:text-sky-600 cursor-pointer" />
+            <Search className="w-6 h-6 text-sky-600 hover:text-sky-700 cursor-pointer" />
+            <Link href="/notifications" aria-label="Notifications">
+              <Bell className="w-6 h-6 text-sky-600 hover:text-sky-700 cursor-pointer" />
+            </Link>
             <Link href="/main/wishlist" aria-label="Wishlist">
-              <Heart className="w-6 h-6 text-gray-600 hover:text-sky-600 cursor-pointer" />
+              <Heart className="w-6 h-6 text-sky-600 hover:text-sky-700 cursor-pointer" />
             </Link>
             <Link href="/main/cart" aria-label="Cart">
-              <ShoppingBag className="w-6 h-6 text-gray-600 hover:text-sky-600 cursor-pointer" />
+              <ShoppingBag className="w-6 h-6 text-sky-600 hover:text-sky-700 cursor-pointer" />
             </Link>
-
-            {isAuthenticated() ? (
-              <Link href="/profile/me" aria-label="Profile">
-                <img
-                  src={
-                    user?.profile?.avatar ||
-                    "https://res.cloudinary.com/dqcyabvc2/image/upload/v1753019800/user_nxnpv1.webp"
-                  }
-                  alt="User Avatar"
-                  className="w-7 h-7 rounded-full object-cover"
-                />
-              </Link>
-            ) : (
-              <Link href="/auth/login" aria-label="Login">
-                <User className="w-6 h-6 text-gray-600 hover:text-sky-600 cursor-pointer" />
-              </Link>
-            )}
 
             <button onClick={toggleMobileMenu} className="p-1">
               {isMobileMenuOpen ? (
@@ -598,13 +611,21 @@ const Navbar = () => {
                 )}
               </div>
             ))}
-            {isAuthenticated() && (
+            {isAuthenticated() ? (
               <div className="">
                 <Link
                   href="/profile/me"
                   className="flex items-center py-3 text-sm text-gray-700 font-semibold hover:text-sky-600 hover:bg-gray-50 rounded-md transition-colors"
                 >
-                  <User className="w-5 h-5 mr-3 text-gray-500" /> My Profile
+                  <img
+                    src={
+                      user?.profile?.avatar ||
+                      "https://res.cloudinary.com/dqcyabvc2/image/upload/v1753019800/user_nxnpv1.webp"
+                    }
+                    alt="User Avatar"
+                    className="w-6 h-6 rounded-full object-cover mr-3"
+                  />
+                  My Profile
                 </Link>
                 <Link
                   href="/orders"
@@ -613,12 +634,25 @@ const Navbar = () => {
                   <ScrollText className="w-5 h-5 mr-3 text-gray-500" /> Order
                   History
                 </Link>
-                <button
-                  onClick={handleLogout}
-                  className="w-full text-left flex items-center py-3 text-sm text-red-600 font-semibold hover:bg-red-50 rounded-md transition-colors"
-                >
-                  <LogOut className="w-5 h-5 mr-3" /> Logout
-                </button>
+                <div className="">
+                  <button
+                    onClick={handleLogout}
+                    className="w-full text-left flex items-center py-3 text-sm text-red-600 font-semibold hover:bg-red-50 rounded-md transition-colors"
+                  >
+                    <LogOut className="w-5 h-5 mr-3" /> Logout
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="flex items-center space-x-2 text-sm py-3 font-semibold">
+                <User className="w-5 h-5" />
+                <Link href="/auth/login" className="hover:text-sky-600">
+                  Sign In
+                </Link>
+                <span className="text-gray-300">|</span>
+                <Link href="/auth/register" className="hover:text-sky-600">
+                  Register
+                </Link>
               </div>
             )}
           </div>

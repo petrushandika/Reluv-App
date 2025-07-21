@@ -20,6 +20,10 @@ const nextConfig: NextConfig = {
         destination: "/main/brands",
       },
       {
+        source: "/sell",
+        destination: "/main/sell",
+      },
+      {
         source: "/cart",
         destination: "/main/cart",
       },
@@ -58,6 +62,11 @@ const nextConfig: NextConfig = {
       {
         source: "/main/brands",
         destination: "/brands",
+        permanent: true,
+      },
+      {
+        source: "/main/sell",
+        destination: "/sell",
         permanent: true,
       },
       {

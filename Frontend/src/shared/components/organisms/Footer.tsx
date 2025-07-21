@@ -69,7 +69,7 @@ const Footer = () => {
   return (
     <footer className="bg-white">
       <div className="bg-gray-50 border-t border-b border-gray-200">
-        <div className="container mx-auto px-6 md:px-20 xl:px-40 py-8 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+        <div className="container mx-auto px-6 md:px-20 xl:px-40 py-12 md:py-12 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
           <div className="flex flex-col items-center space-y-2">
             <ShieldCheck className="w-8 h-8 text-sky-600" />
             <h4 className="font-semibold text-gray-800">

@@ -79,7 +79,7 @@ const ProductDetail = () => {
 
   return (
     <div className="min-h-screen bg-white">
-      <div className="container mx-auto px-6 md:px-20 xl:px-40 py-8">
+      <div className="container mx-auto px-6 md:px-20 xl:px-40 py-12">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16">
           <div className="space-y-4 lg:sticky top-8 self-start">
             <div className="relative bg-gray-50 rounded-lg overflow-hidden">
