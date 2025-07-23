@@ -75,7 +75,7 @@ export class ShippingRatesService {
 
       storeEntry.items.push({
         name: item.variant.product.name,
-        description: item.variant.name || 'Product Variant',
+        description: item.variant.size || 'Product Variant',
         value: item.variant.price,
         weight: item.variant.weight,
         length: item.variant.length,

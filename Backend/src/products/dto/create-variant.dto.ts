@@ -11,11 +11,11 @@ import { Condition } from '@prisma/client';
 export class CreateVariantDto {
   @IsString()
   @IsOptional()
-  name?: string;
+  size?: string;
 
   @IsString()
   @IsOptional()
-  image?: string;
+  color?: string;
 
   @IsInt()
   @IsNotEmpty()

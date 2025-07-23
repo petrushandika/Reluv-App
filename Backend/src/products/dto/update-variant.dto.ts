@@ -4,11 +4,11 @@ import { Condition } from '@prisma/client';
 export class UpdateVariantDto {
   @IsString()
   @IsOptional()
-  name?: string;
+  size?: string;
 
   @IsString()
   @IsOptional()
-  image?: string;
+  color?: string;
 
   @IsInt()
   @IsOptional()

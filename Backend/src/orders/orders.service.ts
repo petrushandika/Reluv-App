@@ -99,8 +99,8 @@ export class OrdersService {
           include: {
             variant: {
               select: {
-                name: true,
-                image: true,
+                size: true,
+                color: true,
                 product: { select: { name: true } },
               },
             },

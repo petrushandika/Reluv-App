@@ -47,18 +47,16 @@ export class ProductsService {
       );
     }
 
-    const dataToCreate: Prisma.ProductCreateInput = {
-      ...productData,
-      seller: { connect: { id: user.id } },
-      category: { connect: { id: categoryId } },
-      variants: {
-        create: variants,
-      },
-      ...(store && { store: { connect: { id: store.id } } }),
-    };
-
     return this.prisma.product.create({
-      data: dataToCreate,
+      data: {
+        ...productData,
+        seller: { connect: { id: user.id } },
+        category: { connect: { id: categoryId } },
+        ...(store && { store: { connect: { id: store.id } } }),
+        variants: {
+          create: variants,
+        },
+      },
     });
   }
 

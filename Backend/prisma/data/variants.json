@@ -3,7 +3,7 @@
     "key": "collection_1_men",
     "variants": [
       {
-        "name": "Size M",
+        "size": "M",
         "price": 299000,
         "stock": 20,
         "condition": "NEW",
@@ -13,7 +13,7 @@
         "height": 2
       },
       {
-        "name": "Size L",
+        "size": "L",
         "price": 299000,
         "stock": 15,
         "condition": "NEW",
@@ -28,7 +28,7 @@
     "key": "collection_2_men",
     "variants": [
       {
-        "name": "Size S",
+        "size": "S",
         "price": 349000,
         "stock": 25,
         "condition": "NEW",
@@ -38,7 +38,7 @@
         "height": 2
       },
       {
-        "name": "Size M",
+        "size": "M",
         "price": 349000,
         "stock": 25,
         "condition": "NEW",
@@ -53,7 +53,7 @@
     "key": "collection_3_men",
     "variants": [
       {
-        "name": "All Size",
+        "size": "All",
         "price": 450000,
         "stock": 10,
         "condition": "LIKE_NEW",
@@ -68,7 +68,7 @@
     "key": "collection_4_men",
     "variants": [
       {
-        "name": "All Size",
+        "size": "All",
         "price": 399000,
         "stock": 12,
         "condition": "NEW",
@@ -83,7 +83,7 @@
     "key": "collection_5_men",
     "variants": [
       {
-        "name": "Size L",
+        "size": "L",
         "price": 550000,
         "stock": 8,
         "condition": "NEW",
@@ -93,7 +93,7 @@
         "height": 5
       },
       {
-        "name": "Size XL",
+        "size": "XL",
         "price": 550000,
         "stock": 5,
         "condition": "NEW",

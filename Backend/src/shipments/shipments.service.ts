@@ -81,7 +81,7 @@ export class ShipmentsService {
       delivery_type: 'now',
       items: order.items.map((item) => ({
         name: item.variant.product.name,
-        description: item.variant.name || 'Product Variant',
+        description: item.variant.size || 'Product Variant',
         value: item.price,
         quantity: item.quantity,
         weight: item.variant.weight,
