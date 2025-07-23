@@ -5,8 +5,13 @@ import ListingEditor from "@/features/sell/components/ListingEditor";
 import { useSellProduct } from "@/features/sell/hooks/useSellProduct";
 import { ListingData } from "@/features/sell/types";
 import React, { useState, useRef } from "react";
+import { useAuthStore } from "@/features/auth/store/auth.store";
+import { Loader2 } from "lucide-react";
+import AuthWarningModal from "@/shared/components/molecules/AuthWarningModal";
 
 export default function Sell() {
+  const { isAuthenticated, isHydrated } = useAuthStore();
+
   const [files, setFiles] = useState<File[]>([]);
   const [isDragging, setIsDragging] = useState(false);
   const [listingData, setListingData] = useState<ListingData>({
@@ -73,40 +78,62 @@ export default function Sell() {
     listProduct(listingData, files);
   };
 
+  if (!isHydrated) {
+    return (
+      <div className="flex h-screen w-full items-center justify-center">
+        <Loader2 className="h-12 w-12 animate-spin text-sky-500" />
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-white w-full flex items-center justify-center p-4">
       <div className="container mx-auto px-6 md:px-20 xl:px-40 py-5">
-        <input
-          ref={fileInputRef}
-          type="file"
-          multiple
-          accept="image/*"
-          className="hidden"
-          onChange={(e) => handleFileSelect(e.target.files)}
-        />
-        {files.length === 0 ? (
-          <ImageDropzone
-            onDragOver={handleDragOver}
-            onDragLeave={handleDragLeave}
-            onDrop={handleDrop}
-            onClick={() => fileInputRef.current?.click()}
-            isDragging={isDragging}
-          />
+        {!isAuthenticated() ? (
+          <AuthWarningModal />
+        ) : files.length === 0 ? (
+          <>
+            <input
+              ref={fileInputRef}
+              type="file"
+              multiple
+              accept="image/*"
+              className="hidden"
+              onChange={(e) => handleFileSelect(e.target.files)}
+            />
+            <ImageDropzone
+              onDragOver={handleDragOver}
+              onDragLeave={handleDragLeave}
+              onDrop={handleDrop}
+              onClick={() => fileInputRef.current?.click()}
+              isDragging={isDragging}
+            />
+          </>
         ) : (
-          <ListingEditor
-            files={files}
-            removeFile={removeFile}
-            listingData={listingData}
-            handleInputChange={handleInputChange}
-            setListingData={setListingData}
-            isDragging={isDragging}
-            handleDragOver={handleDragOver}
-            handleDragLeave={handleDragLeave}
-            handleDrop={handleDrop}
-            onAddMoreClick={() => fileInputRef.current?.click()}
-            handleSubmit={handleSubmit}
-            isLoading={isLoading}
-          />
+          <>
+            <input
+              ref={fileInputRef}
+              type="file"
+              multiple
+              accept="image/*"
+              className="hidden"
+              onChange={(e) => handleFileSelect(e.target.files)}
+            />
+            <ListingEditor
+              files={files}
+              removeFile={removeFile}
+              listingData={listingData}
+              handleInputChange={handleInputChange}
+              setListingData={setListingData}
+              isDragging={isDragging}
+              handleDragOver={handleDragOver}
+              handleDragLeave={handleDragLeave}
+              handleDrop={handleDrop}
+              onAddMoreClick={() => fileInputRef.current?.click()}
+              handleSubmit={handleSubmit}
+              isLoading={isLoading}
+            />
+          </>
         )}
       </div>
     </div>
