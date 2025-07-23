@@ -28,7 +28,11 @@ interface DropdownContent {
 }
 
 const Navbar = () => {
-  const { isAuthenticated, user, logout } = useAuthStore();
+  const user = useAuthStore((state) => state.user);
+  const token = useAuthStore((state) => state.token);
+  const logout = useAuthStore((state) => state.logout);
+  const isAuthenticated = !!token;
+
   const [activeMainMenu, setActiveMainMenu] = useState<string | null>(null);
   const [activeSubMenu, setActiveSubMenu] = useState<string | null>(null);
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
@@ -434,7 +438,7 @@ const Navbar = () => {
               <Search className="absolute right-3 top-2.5 w-5 h-5 text-gray-400" />
             </div>
 
-            <Link href="/main/store" passHref>
+            <Link href="/sell" passHref>
               <div className="bg-sky-600 text-white px-4 py-2 rounded-md text-sm font-semibold hover:bg-sky-700 transition-colors cursor-pointer">
                 Sell
               </div>
@@ -450,7 +454,7 @@ const Navbar = () => {
               <Bell className="w-6 h-6 text-sky-600 hover:text-sky-700 cursor-pointer transition-colors" />
             </Link>
 
-            {isAuthenticated() ? (
+            {isAuthenticated ? (
               <div
                 className="relative"
                 onMouseEnter={() => setIsProfileDropdownOpen(true)}
@@ -611,7 +615,7 @@ const Navbar = () => {
                 )}
               </div>
             ))}
-            {isAuthenticated() ? (
+            {isAuthenticated ? (
               <div className="">
                 <Link
                   href="/profile/me"

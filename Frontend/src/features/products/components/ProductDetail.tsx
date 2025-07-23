@@ -62,7 +62,6 @@ const ProductDetail = () => {
     { name: "Nude", color: "#D4B896", available: true, stock: "Limited Stock" },
   ];
 
-  // Get recommended products (exclude current product)
   const recommendedProducts = recommended
     .filter((p) => p.id !== productId)
     .slice(0, 10);
