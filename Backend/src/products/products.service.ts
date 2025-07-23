@@ -65,7 +65,6 @@ export class ProductsService {
   async findAll(queryDto: QueryProductDto) {
     const { page = 1, limit = 10, categoryId, sellerId, search } = queryDto;
     const skip = (page - 1) * limit;
-
     const where: Prisma.ProductWhereInput = {
       isActive: true,
       isPublished: true,
@@ -104,11 +103,9 @@ export class ProductsService {
         reviews: true,
       },
     });
-
     if (!product) {
       throw new NotFoundException(`Product with ID ${id} not found`);
     }
-
     this.prisma.product
       .update({ where: { id }, data: { viewCount: { increment: 1 } } })
       .catch(console.error);
@@ -125,10 +122,7 @@ export class ProductsService {
 
   async remove(user: User, id: number) {
     await this.checkProductOwnership(id, user.id);
-    await this.prisma.product.delete({
-      where: { id },
-    });
-    return { message: `Product with ID ${id} has been successfully deleted.` };
+    return this.prisma.product.delete({ where: { id } });
   }
 
   async addVariant(
