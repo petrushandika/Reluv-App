@@ -12,6 +12,17 @@ const conditionOptions: Record<Condition, string> = {
   POOR: "Poor",
 };
 
+const sizeOptions = ["S", "M", "L", "XL", "XXL", "OTHER"];
+const colorOptions = [
+  "Red",
+  "Blue",
+  "Black",
+  "White",
+  "Green",
+  "Yellow",
+  "OTHER",
+];
+
 interface ListingFormProps {
   listingData: ListingData;
   setListingData: React.Dispatch<React.SetStateAction<ListingData>>;
@@ -166,22 +177,75 @@ const ListingForm = ({
             </div>
           </div>
 
-          <div>
-            <label
-              htmlFor="variantName"
-              className="block text-sm font-medium text-gray-700 mb-2"
-            >
-              Variant Name (Optional)
-            </label>
-            <input
-              type="text"
-              id="variantName"
-              name="variantName"
-              value={listingData.variantName}
-              onChange={handleInputChange}
-              placeholder="e.g. Size M, Color Blue"
-              className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500"
-            />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label
+                htmlFor="size"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
+                Size (Optional)
+              </label>
+              <select
+                id="size"
+                name="size"
+                value={listingData.size}
+                onChange={(e) =>
+                  setListingData((prev) => ({ ...prev, size: e.target.value }))
+                }
+                className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500"
+              >
+                <option value="">Select a size</option>
+                {sizeOptions.map((s) => (
+                  <option key={s} value={s}>
+                    {s === "OTHER" ? "Another Size..." : s}
+                  </option>
+                ))}
+              </select>
+              {listingData.size === "OTHER" && (
+                <input
+                  type="text"
+                  name="customSize"
+                  value={listingData.customSize}
+                  onChange={handleInputChange}
+                  placeholder="Enter custom size"
+                  className="mt-2 w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500"
+                />
+              )}
+            </div>
+            <div>
+              <label
+                htmlFor="color"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
+                Color (Optional)
+              </label>
+              <select
+                id="color"
+                name="color"
+                value={listingData.color}
+                onChange={(e) =>
+                  setListingData((prev) => ({ ...prev, color: e.target.value }))
+                }
+                className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500"
+              >
+                <option value="">Select a color</option>
+                {colorOptions.map((c) => (
+                  <option key={c} value={c}>
+                    {c === "OTHER" ? "Another Color..." : c}
+                  </option>
+                ))}
+              </select>
+              {listingData.color === "OTHER" && (
+                <input
+                  type="text"
+                  name="customColor"
+                  value={listingData.customColor}
+                  onChange={handleInputChange}
+                  placeholder="Enter custom color"
+                  className="mt-2 w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500"
+                />
+              )}
+            </div>
           </div>
 
           <div>

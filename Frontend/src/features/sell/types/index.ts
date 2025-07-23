@@ -1,7 +1,8 @@
 export type Condition = "NEW" | "LIKE_NEW" | "GOOD" | "FAIR" | "POOR";
 
 export interface CreateVariantPayload {
-  name?: string;
+  size?: string;
+  color?: string;
   price: number;
   stock: number;
   condition: Condition;
@@ -33,7 +34,10 @@ export interface ListingData {
   length: string;
   width: string;
   height: string;
-  variantName: string;
+  size: string;
+  customSize: string;
+  color: string;
+  customColor: string;
   conditionNote: string;
   isPreloved: boolean;
 }

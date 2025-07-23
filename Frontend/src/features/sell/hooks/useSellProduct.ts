@@ -48,8 +48,18 @@ export const useSellProduct = () => {
       const imageUrls = await Promise.all(uploadPromises);
       toast.success("Gambar berhasil diunggah!", { id: "upload-toast" });
 
+      const finalSize =
+        listingData.size === "OTHER"
+          ? listingData.customSize
+          : listingData.size;
+      const finalColor =
+        listingData.color === "OTHER"
+          ? listingData.customColor
+          : listingData.color;
+
       const variantPayload: CreateVariantPayload = {
-        name: listingData.variantName || undefined,
+        size: finalSize || undefined,
+        color: finalColor || undefined,
         price: parseInt(listingData.price, 10) || 0,
         stock: Number(listingData.stock) || 1,
         condition: listingData.condition as Condition,

@@ -1,9 +1,9 @@
 "use client";
 
-import { ListingData } from "@/features/sell/types";
 import ImageDropzone from "@/features/sell/components/ImageDropzone";
 import ListingEditor from "@/features/sell/components/ListingEditor";
 import { useSellProduct } from "@/features/sell/hooks/useSellProduct";
+import { ListingData } from "@/features/sell/types";
 import React, { useState, useRef } from "react";
 
 export default function Sell() {
@@ -20,7 +20,10 @@ export default function Sell() {
     length: "",
     width: "",
     height: "",
-    variantName: "",
+    size: "",
+    customSize: "",
+    color: "",
+    customColor: "",
     conditionNote: "",
     isPreloved: true,
   });
