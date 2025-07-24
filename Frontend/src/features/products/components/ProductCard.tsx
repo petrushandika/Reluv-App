@@ -3,10 +3,17 @@
 import React from "react";
 import Link from "next/link";
 import { Heart } from "lucide-react";
-import { Product } from "../types";
+import { Product } from "@/features/products/types";
 
 const formatPrice = (price: number) => {
   return `Rp${new Intl.NumberFormat("id-ID").format(price)}`;
+};
+
+const isNewProduct = (createdAt: string) => {
+  const productDate = new Date(createdAt);
+  const sevenDaysAgo = new Date();
+  sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+  return productDate > sevenDaysAgo;
 };
 
 interface ProductCardProps {
@@ -14,20 +21,25 @@ interface ProductCardProps {
 }
 
 const ProductCard = ({ product }: ProductCardProps) => {
+  const firstVariant = product.variants[0];
+  const imageUrl =
+    product.images[0] ||
+    "https://placehold.co/400x400/e2e8f0/e2e8f0?text=Image";
+
   return (
     <div className="flex-grow-0 flex-shrink-0 w-1/2 md:w-1/3 lg:w-1/5 pl-4">
       <div className="relative group/card">
-        <Link href={`/main/product/${product.id}`}>
-          <div className="bg-gray-50 rounded overflow-hidden cursor-pointer">
+        <Link href={`/products/${product.id}`}>
+          <div className="bg-gray-50 rounded overflow-hidden cursor-pointer aspect-square">
             <img
-              src={product.imageUrl}
+              src={imageUrl}
               alt={product.name}
-              className="w-full h-auto object-cover rounded group-hover/card:scale-105 transition-transform duration-300"
+              className="w-full h-full object-cover rounded group-hover/card:scale-105 transition-transform duration-300"
             />
           </div>
         </Link>
 
-        {product.isNew && (
+        {isNewProduct(product.createdAt) && (
           <span className="absolute top-3 left-3 bg-black text-white text-[10px] px-2 py-1 rounded-sm z-10">
             New
           </span>
@@ -39,34 +51,27 @@ const ProductCard = ({ product }: ProductCardProps) => {
         >
           <Heart className="w-5 h-5" />
         </button>
-
-        {product.isPrime && (
-          <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-white via-white to-transparent">
-            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-4/5">
-              <div className="flex items-center justify-center bg-gradient-to-r from-yellow-300 to-yellow-400 text-black text-sm font-semibold py-1.5 px-3 rounded-md shadow-md">
-                <span className="text-base font-bold mr-2">+</span>
-                <span>Prime Picks!</span>
-              </div>
-            </div>
-          </div>
-        )}
       </div>
-      <Link href={`/main/product/${product.id}`}>
+      <Link href={`/products/${product.id}`}>
         <div className="pt-4 text-left cursor-pointer">
-          <p className="font-bold text-sm text-gray-800">{product.brand}</p>
+          <p className="font-bold text-sm text-gray-800">
+            {product.store?.name || "Reluv"}
+          </p>
           <p className="text-sm text-gray-600 truncate">{product.name}</p>
-          {product.originalPrice ? (
+          {firstVariant?.compareAtPrice ? (
             <div className="mt-1 flex items-baseline flex-wrap gap-x-2">
               <p className="font-bold text-red-600 text-base">
-                {formatPrice(product.price)}
+                {formatPrice(firstVariant.price)}
               </p>
               <p className="text-sm text-gray-400 line-through">
-                {formatPrice(product.originalPrice)}
+                {formatPrice(firstVariant.compareAtPrice)}
               </p>
             </div>
           ) : (
             <p className="font-bold text-gray-900 mt-1 text-base">
-              {formatPrice(product.price)}
+              {firstVariant
+                ? formatPrice(firstVariant.price)
+                : "Price unavailable"}
             </p>
           )}
         </div>

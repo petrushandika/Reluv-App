@@ -36,7 +36,7 @@ const nextConfig: NextConfig = {
         destination: "/main/checkout",
       },
       {
-        source: "/product/:id",
+        source: "/products/:id",
         destination: "/main/product/:id",
       },
     ];
@@ -86,7 +86,7 @@ const nextConfig: NextConfig = {
       },
       {
         source: "/main/product/:id",
-        destination: "/product/:id",
+        destination: "/products/:id",
         permanent: true,
       },
     ];
