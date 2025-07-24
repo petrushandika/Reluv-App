@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useAuthStore } from "@/features/auth/store/auth.store";
+import { useCartStore } from "@/features/cart/store/cart.store";
 
 interface SubMenuSection {
   title: string;
@@ -31,6 +32,7 @@ const Navbar = () => {
   const user = useAuthStore((state) => state.user);
   const token = useAuthStore((state) => state.token);
   const logout = useAuthStore((state) => state.logout);
+  const itemCount = useCartStore((state) => state.itemCount);
   const isAuthenticated = !!token;
 
   const [activeMainMenu, setActiveMainMenu] = useState<string | null>(null);
@@ -447,8 +449,13 @@ const Navbar = () => {
             <Link href="/main/wishlist" aria-label="Wishlist">
               <Heart className="w-6 h-6 text-sky-600 hover:text-sky-700 cursor-pointer transition-colors" />
             </Link>
-            <Link href="/main/cart" aria-label="Cart">
+            <Link href="/main/cart" aria-label="Cart" className="relative">
               <ShoppingBag className="w-6 h-6 text-sky-600 hover:text-sky-700 cursor-pointer transition-colors" />
+              {itemCount > 0 && (
+                <span className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-sky-500/90 text-white text-xs font-bold">
+                  {itemCount}
+                </span>
+              )}
             </Link>
             <Link href="/notifications" aria-label="Notifications">
               <Bell className="w-6 h-6 text-sky-600 hover:text-sky-700 cursor-pointer transition-colors" />
@@ -519,14 +526,23 @@ const Navbar = () => {
           </div>
           <div className="flex lg:hidden items-center space-x-4">
             <Search className="w-6 h-6 text-sky-600 hover:text-sky-700 cursor-pointer" />
-            <Link href="/notifications" aria-label="Notifications">
+            <Link
+              href="/notifications"
+              aria-label="Notifications"
+              className="relative"
+            >
               <Bell className="w-6 h-6 text-sky-600 hover:text-sky-700 cursor-pointer" />
             </Link>
             <Link href="/main/wishlist" aria-label="Wishlist">
               <Heart className="w-6 h-6 text-sky-600 hover:text-sky-700 cursor-pointer" />
             </Link>
-            <Link href="/main/cart" aria-label="Cart">
+            <Link href="/main/cart" aria-label="Cart" className="relative">
               <ShoppingBag className="w-6 h-6 text-sky-600 hover:text-sky-700 cursor-pointer" />
+              {itemCount > 0 && (
+                <span className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-sky-500/90 text-white text-xs font-bold">
+                  {itemCount}
+                </span>
+              )}
             </Link>
 
             <button onClick={toggleMobileMenu} className="p-1">

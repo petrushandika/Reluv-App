@@ -20,13 +20,26 @@ export interface Variant {
   updatedAt: string;
 }
 
-export interface Category {
-  id: number;
-  name: string;
-  slug: string;
+export interface StoreProfile {
+  avatar: string | null;
+  banner: string | null;
+  bio: string | null;
+  operational: string | null;
 }
 
 export interface Store {
+  id: number;
+  name: string;
+  slug: string;
+  isActive: boolean;
+  isVerified: boolean;
+  totalProducts: number;
+  totalSales: number;
+  rating: number | null;
+  profile: StoreProfile | null;
+}
+
+export interface Category {
   id: number;
   name: string;
   slug: string;

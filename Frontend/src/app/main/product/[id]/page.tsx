@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import {
   ChevronLeft,
   ChevronRight,
@@ -11,11 +11,14 @@ import {
   Smartphone,
   Search,
   Loader2,
+  Plus,
+  Minus,
 } from "lucide-react";
 import { PublicRoute } from "@/shared/components/guards/RouteGuards";
 import ProductList from "@/features/products/components/ProductList";
 import { useProductDetail } from "@/features/products/hooks/useProductDetail";
 import { useProduct } from "@/features/products/hooks/useProduct";
+import { useCart } from "@/features/cart/hooks/useCart";
 
 const formatPrice = (price: number) => {
   return `Rp${new Intl.NumberFormat("id-ID").format(price)}`;
@@ -23,15 +26,18 @@ const formatPrice = (price: number) => {
 
 const ProductDetail = () => {
   const params = useParams();
-  const productId = params?.id ? parseInt(params.id as string) : null;
+  const router = useRouter();
+  const productId = params?.id ? parseInt(params.id as string, 10) : null;
 
   const { product, isLoading, error } = useProductDetail(productId);
   const { recommendedProducts, isLoadingRecommended } = useProduct({
     limit: 10,
   });
+  const { addItem: addItemToCart, isAdding } = useCart();
 
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [selectedVariantIndex, setSelectedVariantIndex] = useState(0);
+  const [quantity, setQuantity] = useState(1);
 
   if (isLoading) {
     return (
@@ -57,6 +63,7 @@ const ProductDetail = () => {
   }
 
   const selectedVariant = product.variants[selectedVariantIndex];
+  const installmentPrice = selectedVariant.price / 12;
 
   const nextImage = () => {
     setSelectedImageIndex((prev) => (prev + 1) % product.images.length);
@@ -66,6 +73,16 @@ const ProductDetail = () => {
     setSelectedImageIndex(
       (prev) => (prev - 1 + product.images.length) % product.images.length
     );
+  };
+
+  const handleAddToCart = () => {
+    if (selectedVariant) {
+      addItemToCart({ variantId: selectedVariant.id, quantity });
+    }
+  };
+
+  const handleBuyNow = () => {
+    router.push("/checkout");
   };
 
   return (
@@ -182,7 +199,7 @@ const ProductDetail = () => {
                   </div>
                   <span className="text-gray-700">
                     <span className="font-medium">Installment</span> from
-                    Rp2.473.333/month
+                    {formatPrice(installmentPrice)}/month
                   </span>
                   <button className="text-sky-600 font-medium hover:underline">
                     See Detail
@@ -242,11 +259,40 @@ const ProductDetail = () => {
                   </p>
                 </div>
               </div>
-              <div className="flex flex-col sm:flex-row gap-3 pt-4">
-                <button className="w-full sm:w-auto flex-1 bg-white border-2 border-sky-600 text-sky-600 font-semibold py-3 px-6 rounded-lg transition-colors hover:bg-sky-50 text-base cursor-pointer">
-                  Add To Cart
+              <div className="flex items-center space-x-4 pt-4">
+                <div className="font-medium text-gray-700">Quantity:</div>
+                <div className="flex items-center border border-gray-200 rounded-lg bg-gray-50">
+                  <button
+                    onClick={() => setQuantity((q) => Math.max(1, q - 1))}
+                    className="px-4 py-3 text-sky-600 hover:bg-gray-200 rounded-l-lg transition-colors"
+                  >
+                    <Minus className="w-4 h-4" />
+                  </button>
+                  <span className="px-5 text-lg font-semibold text-gray-800">
+                    {quantity}
+                  </span>
+                  <button
+                    onClick={() =>
+                      setQuantity((q) => Math.min(selectedVariant.stock, q + 1))
+                    }
+                    className="px-4 py-3 text-sky-600 hover:bg-gray-200 rounded-r-lg transition-colors"
+                  >
+                    <Plus className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+              <div className="flex flex-col sm:flex-row gap-3 pt-2">
+                <button
+                  onClick={handleAddToCart}
+                  disabled={isAdding}
+                  className="w-full sm:w-auto flex-1 bg-white border-2 border-sky-600 text-sky-600 font-semibold py-3 px-6 rounded-lg transition-colors hover:bg-sky-50 text-base cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {isAdding ? "Adding..." : "Add To Cart"}
                 </button>
-                <button className="w-full sm:w-auto flex-1 bg-sky-600 hover:bg-sky-700 text-white font-semibold py-3 px-6 rounded-lg transition-transform text-base cursor-pointer">
+                <button
+                  onClick={handleBuyNow}
+                  className="w-full sm:w-auto flex-1 bg-sky-600 hover:bg-sky-700 text-white font-semibold py-3 px-6 rounded-lg transition-transform text-base cursor-pointer"
+                >
                   Buy Now
                 </button>
               </div>
@@ -316,9 +362,12 @@ const ProductDetail = () => {
                 <div className="mt-6 p-4 border border-gray-200 rounded-lg">
                   <div className="flex items-center space-x-4">
                     <img
-                      src="https://imgs.search.brave.com/ivG1zIrBWmERK1pk3vCbs6puU5uoDHK4cedt50ZMJqo/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9jb21w/YW55bG9nb3Mub3Jn/L3dwLWNvbnRlbnQv/dXBsb2Fkcy8yMDI0/LzA3L05pa2UtMTk3/MS0zMDB4MTY5LnBu/Zw"
-                      alt="Nike"
-                      className="w-12 h-12 object-contain"
+                      src={
+                        product.store?.profile?.avatar ||
+                        "https://placehold.co/48x48/e2e8f0/e2e8f0?text=Store"
+                      }
+                      alt={product.store?.name || "Store"}
+                      className="w-12 h-12 object-contain rounded-md"
                     />
                     <div className="flex-1">
                       <p className="font-semibold text-gray-800">

@@ -21,10 +21,14 @@ interface ProductCardProps {
 }
 
 const ProductCard = ({ product }: ProductCardProps) => {
-  const firstVariant = product.variants[0];
+  const firstVariant =
+    product.variants && product.variants.length > 0
+      ? product.variants[0]
+      : null;
   const imageUrl =
-    product.images[0] ||
-    "https://placehold.co/400x400/e2e8f0/e2e8f0?text=Image";
+    product.images && product.images.length > 0
+      ? product.images[0]
+      : "https://placehold.co/400x400/e2e8f0/e2e8f0?text=Image";
 
   return (
     <div className="flex-grow-0 flex-shrink-0 w-1/2 md:w-1/3 lg:w-1/5 pl-4">

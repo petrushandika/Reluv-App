@@ -1,20 +1,10 @@
 "use client";
 
 import React, { useState } from "react";
-import { Minus, Plus, Trash2, ShoppingBag } from "lucide-react";
 import Link from "next/link";
-
-interface CartItem {
-  id: number;
-  brand: string;
-  name: string;
-  price: number;
-  originalPrice?: number;
-  imageUrl: string;
-  quantity: number;
-  size?: string;
-  color?: string;
-}
+import { Minus, Plus, Trash2, ShoppingBag, Loader2 } from "lucide-react";
+import { useCart } from "@/features/cart/hooks/useCart";
+import { CartItem } from "@/features/cart/types";
 
 const ConfirmationModal = ({
   isOpen,
@@ -67,56 +57,13 @@ const formatPrice = (price: number) => {
 };
 
 const Cart = () => {
-  const [cartItems, setCartItems] = useState<CartItem[]>([
-    {
-      id: 1,
-      brand: "NIKE",
-      name: "Air Jordan 1 High '85",
-      price: 2240000,
-      originalPrice: 2800000,
-      imageUrl:
-        "https://res.cloudinary.com/dqcyabvc2/image/upload/v1750143729/airdjordan1high85_fmbzyt.png",
-      quantity: 1,
-      size: "42",
-      color: "Black/White",
-    },
-    {
-      id: 2,
-      brand: "NIKE",
-      name: "Zion 4 PF Iridescence",
-      price: 9000000,
-      imageUrl:
-        "https://res.cloudinary.com/dqcyabvc2/image/upload/v1750143728/zion4pfiridescence_qds8uo.png",
-      quantity: 2,
-      size: "43",
-      color: "Multicolor",
-    },
-    {
-      id: 3,
-      brand: "NIKE",
-      name: "Jordan Air Rev",
-      price: 2800000,
-      imageUrl:
-        "https://res.cloudinary.com/dqcyabvc2/image/upload/v1750143729/jordanairrev_pkb1qo.png",
-      quantity: 1,
-      size: "41",
-      color: "White",
-    },
-  ]);
-
+  const { cart, isFetchingCart, subtotal, updateItemQuantity, removeItem } =
+    useCart();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [itemToRemove, setItemToRemove] = useState<CartItem | null>(null);
 
   const SHIPPING_COST = 25000;
   const TAX_RATE = 0.11;
-
-  const updateQuantity = (id: number, newQuantity: number) => {
-    setCartItems((items) =>
-      items.map((item) =>
-        item.id === id ? { ...item, quantity: newQuantity } : item
-      )
-    );
-  };
 
   const requestRemoveItem = (item: CartItem) => {
     setItemToRemove(item);
@@ -125,28 +72,21 @@ const Cart = () => {
 
   const handleConfirmRemove = () => {
     if (itemToRemove) {
-      setCartItems((items) =>
-        items.filter((item) => item.id !== itemToRemove.id)
-      );
+      removeItem(itemToRemove.id);
     }
     setIsModalOpen(false);
     setItemToRemove(null);
   };
 
-  const subtotal = cartItems.reduce(
-    (sum, item) => sum + item.price * item.quantity,
-    0
-  );
-  const tax = subtotal * TAX_RATE;
-  const total = subtotal + SHIPPING_COST + tax;
-  const totalSavings = cartItems.reduce((sum, item) => {
-    if (item.originalPrice) {
-      return sum + (item.originalPrice - item.price) * item.quantity;
-    }
-    return sum;
-  }, 0);
+  if (isFetchingCart) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <Loader2 className="w-12 h-12 animate-spin text-sky-500" />
+      </div>
+    );
+  }
 
-  if (cartItems.length === 0) {
+  if (!cart || cart.items.length === 0) {
     return (
       <div className="min-h-screen bg-white">
         <div className="container mx-auto px-6 md:px-20 xl:px-40 py-12 md:py-12">
@@ -173,13 +113,24 @@ const Cart = () => {
     );
   }
 
+  const tax = subtotal * TAX_RATE;
+  const total = subtotal + SHIPPING_COST + tax;
+  const totalSavings = cart.items.reduce((sum, item) => {
+    if (item.variant.compareAtPrice) {
+      return (
+        sum + (item.variant.compareAtPrice - item.variant.price) * item.quantity
+      );
+    }
+    return sum;
+  }, 0);
+
   return (
     <div className="min-h-screen bg-white">
       <ConfirmationModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onConfirm={handleConfirmRemove}
-        itemName={itemToRemove?.name || ""}
+        itemName={itemToRemove?.variant.product.name || ""}
       />
 
       <div className="container mx-auto px-6 md:px-20 xl:px-40 py-12 md:py-12">
@@ -192,18 +143,21 @@ const Cart = () => {
             <div className="bg-white rounded-lg shadow-sm border border-gray-200">
               <div className="p-4 md:p-6 border-b border-gray-200">
                 <h2 className="text-xl font-semibold text-sky-600 flex items-center gap-3">
-                  <ShoppingBag size={22} /> Cart Items ({cartItems.length})
+                  <ShoppingBag size={22} /> Cart Items ({cart.items.length})
                 </h2>
               </div>
 
               <div className="divide-y divide-gray-200">
-                {cartItems.map((item) => (
+                {cart.items.map((item) => (
                   <div key={item.id} className="p-4 md:p-6">
                     <div className="flex flex-col sm:flex-row items-start space-y-4 sm:space-y-0 sm:space-x-4">
                       <div className="flex-shrink-0 w-full sm:w-auto">
                         <img
-                          src={item.imageUrl}
-                          alt={item.name}
+                          src={
+                            item.variant.product.images[0] ||
+                            "https://placehold.co/100x100/e2e8f0/e2e8f0?text=Image"
+                          }
+                          alt={item.variant.product.name}
                           className="w-full sm:w-20 md:w-24 h-48 sm:h-20 md:h-24 object-cover rounded-lg bg-gray-100"
                         />
                       </div>
@@ -212,14 +166,18 @@ const Cart = () => {
                         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start space-y-2 sm:space-y-0">
                           <div className="flex-grow">
                             <p className="text-xs md:text-sm font-medium text-sky-600">
-                              {item.brand}
+                              {item.variant.product.store?.name || "Reluv"}
                             </p>
                             <h3 className="text-sm md:text-base font-semibold text-black mt-1 line-clamp-2">
-                              {item.name}
+                              {item.variant.product.name}
                             </h3>
                             <div className="flex flex-wrap items-center gap-x-4 mt-2 text-xs md:text-sm text-gray-500">
-                              {item.size && <span>Size: {item.size}</span>}
-                              {item.color && <span>Color: {item.color}</span>}
+                              {item.variant.size && (
+                                <span>Size: {item.variant.size}</span>
+                              )}
+                              {item.variant.color && (
+                                <span>Color: {item.variant.color}</span>
+                              )}
                             </div>
                           </div>
 
@@ -234,13 +192,13 @@ const Cart = () => {
 
                         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mt-4 space-y-3 sm:space-y-0">
                           <div className="flex items-center space-x-2">
-                            {item.originalPrice && (
+                            {item.variant.compareAtPrice && (
                               <span className="text-xs md:text-sm text-gray-400 line-through">
-                                {formatPrice(item.originalPrice)}
+                                {formatPrice(item.variant.compareAtPrice)}
                               </span>
                             )}
                             <span className="text-base md:text-lg font-bold text-black">
-                              {formatPrice(item.price)}
+                              {formatPrice(item.variant.price)}
                             </span>
                           </div>
 
@@ -252,7 +210,9 @@ const Cart = () => {
                               <button
                                 onClick={() => {
                                   if (item.quantity > 1) {
-                                    updateQuantity(item.id, item.quantity - 1);
+                                    updateItemQuantity(item.id, {
+                                      quantity: item.quantity - 1,
+                                    });
                                   } else {
                                     requestRemoveItem(item);
                                   }
@@ -268,7 +228,9 @@ const Cart = () => {
 
                               <button
                                 onClick={() =>
-                                  updateQuantity(item.id, item.quantity + 1)
+                                  updateItemQuantity(item.id, {
+                                    quantity: item.quantity + 1,
+                                  })
                                 }
                                 className="p-1 md:p-1.5 rounded-md border border-gray-300 hover:bg-gray-50"
                               >
