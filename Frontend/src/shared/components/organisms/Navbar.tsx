@@ -16,6 +16,7 @@ import {
 import Link from "next/link";
 import { useAuthStore } from "@/features/auth/store/auth.store";
 import { useCartStore } from "@/features/cart/store/cart.store";
+import { useWishlistStore } from "@/features/wishlist/store/wishlist.store";
 
 interface SubMenuSection {
   title: string;
@@ -33,7 +34,10 @@ const Navbar = () => {
   const token = useAuthStore((state) => state.token);
   const logout = useAuthStore((state) => state.logout);
   const itemCount = useCartStore((state) => state.itemCount);
+  const wishlistItems = useWishlistStore((state) => state.items);
+
   const isAuthenticated = !!token;
+  const wishlistItemCount = wishlistItems.length;
 
   const [activeMainMenu, setActiveMainMenu] = useState<string | null>(null);
   const [activeSubMenu, setActiveSubMenu] = useState<string | null>(null);
@@ -446,8 +450,17 @@ const Navbar = () => {
               </div>
             </Link>
 
-            <Link href="/main/wishlist" aria-label="Wishlist">
+            <Link
+              href="/main/wishlist"
+              aria-label="Wishlist"
+              className="relative"
+            >
               <Heart className="w-6 h-6 text-sky-600 hover:text-sky-700 cursor-pointer transition-colors" />
+              {wishlistItemCount > 0 && (
+                <span className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-sky-500/90 text-white text-xs font-bold">
+                  {wishlistItemCount}
+                </span>
+              )}
             </Link>
             <Link href="/main/cart" aria-label="Cart" className="relative">
               <ShoppingBag className="w-6 h-6 text-sky-600 hover:text-sky-700 cursor-pointer transition-colors" />
@@ -533,8 +546,17 @@ const Navbar = () => {
             >
               <Bell className="w-6 h-6 text-sky-600 hover:text-sky-700 cursor-pointer" />
             </Link>
-            <Link href="/main/wishlist" aria-label="Wishlist">
+            <Link
+              href="/main/wishlist"
+              aria-label="Wishlist"
+              className="relative"
+            >
               <Heart className="w-6 h-6 text-sky-600 hover:text-sky-700 cursor-pointer" />
+              {wishlistItemCount > 0 && (
+                <span className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-sky-500/90 text-white text-xs font-bold">
+                  {wishlistItemCount}
+                </span>
+              )}
             </Link>
             <Link href="/main/cart" aria-label="Cart" className="relative">
               <ShoppingBag className="w-6 h-6 text-sky-600 hover:text-sky-700 cursor-pointer" />

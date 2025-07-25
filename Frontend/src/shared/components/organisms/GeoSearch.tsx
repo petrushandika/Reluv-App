@@ -3,7 +3,8 @@
 import { useState, useEffect, useCallback } from "react";
 import { OpenStreetMapProvider } from "leaflet-geosearch";
 import type { SearchResult } from "leaflet-geosearch/dist/providers/provider.js";
-import { Search, Loader2 } from "lucide-react";
+import { Search } from "lucide-react";
+import Spinner from "../atoms/Spinner";
 
 interface GeoSearchProps {
   onLocationSelect: (location: SearchResult) => void;
@@ -66,11 +67,7 @@ const GeoSearch = ({ onLocationSelect }: GeoSearchProps) => {
           placeholder="Search location..."
           className="w-full rounded-lg border-2 border-transparent bg-black/20 py-3 pl-11 pr-10 text-white placeholder-gray-300 backdrop-blur-lg transition-all focus:border-sky-500 focus:bg-black/30 focus:outline-none"
         />
-        {isLoading && (
-          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-4">
-            <Loader2 className="h-5 w-5 animate-spin text-gray-300" />
-          </div>
-        )}
+        {isLoading && <Spinner />}
       </div>
 
       {results.length > 0 && (

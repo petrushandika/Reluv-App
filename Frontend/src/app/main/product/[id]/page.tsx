@@ -10,7 +10,6 @@ import {
   MessageCircle,
   Smartphone,
   Search,
-  Loader2,
   Plus,
   Minus,
 } from "lucide-react";
@@ -19,6 +18,7 @@ import ProductList from "@/features/products/components/ProductList";
 import { useProductDetail } from "@/features/products/hooks/useProductDetail";
 import { useProduct } from "@/features/products/hooks/useProduct";
 import { useCart } from "@/features/cart/hooks/useCart";
+import Spinner from "@/shared/components/atoms/Spinner";
 
 const formatPrice = (price: number) => {
   return `Rp${new Intl.NumberFormat("id-ID").format(price)}`;
@@ -40,11 +40,7 @@ const ProductDetail = () => {
   const [quantity, setQuantity] = useState(1);
 
   if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="w-12 h-12 animate-spin text-sky-500" />
-      </div>
-    );
+    return <Spinner />;
   }
 
   if (error || !product) {

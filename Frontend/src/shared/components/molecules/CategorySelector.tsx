@@ -1,9 +1,10 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
-import { Search, ChevronDown, Loader2 } from "lucide-react";
+import { Search, ChevronDown } from "lucide-react";
 import { getCategories } from "@/features/categories/api/categoryApi";
 import { Category } from "@/features/categories/types";
+import Spinner from "../atoms/Spinner";
 
 interface CategorySelectorProps {
   selectedCategoryId: number | null;
@@ -95,9 +96,7 @@ const CategorySelector = ({
           </div>
           <ul className="max-h-48 overflow-y-auto">
             {isLoading ? (
-              <li className="flex items-center justify-center p-4 text-gray-500">
-                <Loader2 className="w-5 h-5 animate-spin mr-2" /> Loading...
-              </li>
+              <Spinner />
             ) : error ? (
               <li className="px-4 py-2 text-red-500">{error}</li>
             ) : (

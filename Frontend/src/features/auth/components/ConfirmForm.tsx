@@ -2,9 +2,10 @@
 
 import React, { useEffect, useState, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { Loader2, CheckCircle, AlertTriangle } from "lucide-react";
+import { CheckCircle, AlertTriangle } from "lucide-react";
 import axios from "axios";
 import { api } from "../api/authApi";
+import Spinner from "@/shared/components/atoms/Spinner";
 
 const ConfirmForm = () => (
   <Suspense fallback={<LoadingState />}>
@@ -75,7 +76,7 @@ const ConfirmForms = () => {
 
 const LoadingState = ({ message = "Loading..." }: { message?: string }) => (
   <div className="text-center p-10 flex flex-col items-center justify-center">
-    <Loader2 className="w-12 h-12 text-sky-500 animate-spin mb-4" />
+    <Spinner />
     <h3 className="text-xl font-semibold text-gray-800">Processing...</h3>
     <p className="text-gray-600 mt-2">{message}</p>
   </div>

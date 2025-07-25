@@ -6,8 +6,8 @@ import { useSellProduct } from "@/features/sell/hooks/useSellProduct";
 import { ListingData } from "@/features/sell/types";
 import React, { useState, useRef } from "react";
 import { useAuthStore } from "@/features/auth/store/auth.store";
-import { Loader2 } from "lucide-react";
 import AuthWarningModal from "@/shared/components/molecules/AuthWarningModal";
+import Spinner from "@/shared/components/atoms/Spinner";
 
 export default function Sell() {
   const { isAuthenticated, isHydrated } = useAuthStore();
@@ -79,11 +79,7 @@ export default function Sell() {
   };
 
   if (!isHydrated) {
-    return (
-      <div className="flex h-screen w-full items-center justify-center">
-        <Loader2 className="h-12 w-12 animate-spin text-sky-500" />
-      </div>
-    );
+    return <Spinner />;
   }
 
   return (

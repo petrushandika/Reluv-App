@@ -2,9 +2,10 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { Minus, Plus, Trash2, ShoppingBag, Loader2 } from "lucide-react";
+import { Minus, Plus, Trash2, ShoppingBag } from "lucide-react";
 import { useCart } from "@/features/cart/hooks/useCart";
 import { CartItem } from "@/features/cart/types";
+import Spinner from "@/shared/components/atoms/Spinner";
 
 const ConfirmationModal = ({
   isOpen,
@@ -79,11 +80,7 @@ const Cart = () => {
   };
 
   if (isFetchingCart) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-white">
-        <Loader2 className="w-12 h-12 animate-spin text-sky-500" />
-      </div>
-    );
+    return <Spinner />;
   }
 
   if (!cart || cart.items.length === 0) {

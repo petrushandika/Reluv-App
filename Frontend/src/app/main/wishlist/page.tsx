@@ -1,81 +1,47 @@
 "use client";
 
-import React, { JSX, useState } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { Heart, Trash2 } from "lucide-react";
+import { useWishlist } from "@/features/wishlist/hooks/useWishlist";
+import { WishlistItem } from "@/features/wishlist/types";
+import Spinner from "@/shared/components/atoms/Spinner";
 
-import { recommended } from "@/features/products/data/kids";
-import { Product } from "@/features/products/types";
-import ProductCard from "@/features/products/components/ProductCard";
-
-const ConfirmationModal = ({
-  isOpen,
-  onClose,
-  onConfirm,
-  itemName,
-}: {
-  isOpen: boolean;
-  onClose: () => void;
-  onConfirm: () => void;
-  itemName: string;
-}): JSX.Element | null => {
-  if (!isOpen) return null;
-
-  return (
-    <div
-      className="fixed inset-0 bg-gray-900/40 backdrop-blur-sm z-50 flex justify-center items-center p-4"
-      onClick={onClose}
-    >
-      <div
-        className="bg-white rounded-xl shadow-xl w-full max-w-sm p-6"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <h2 className="text-lg font-bold text-gray-900 mb-4">
-          Confirm Removal
-        </h2>
-        <p className="text-gray-600 mb-8">
-          Are you sure you want to remove &ldquo;{itemName}&rdquo; from your
-          wishlist?
-        </p>
-        <div className="flex justify-end items-center space-x-3">
-          <button
-            onClick={onClose}
-            className="px-5 py-2 rounded-md text-sm font-medium text-gray-700 border border-gray-300 hover:bg-gray-100 transition-colors"
-          >
-            Cancel
-          </button>
-          <button
-            onClick={onConfirm}
-            className="px-5 py-2 rounded-md bg-red-600 text-sm font-medium text-white hover:bg-red-700 transition-colors"
-          >
-            Remove
-          </button>
-        </div>
-      </div>
-    </div>
-  );
+const formatPrice = (price: number) => {
+  return `Rp${new Intl.NumberFormat("id-ID").format(price)}`;
 };
 
-const Wishlist = (): JSX.Element => {
-  const [wishlistItems, setWishlistItems] = useState<Product[]>(recommended);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [itemToRemove, setItemToRemove] = useState<Product | null>(null);
+const isNewProduct = (createdAt: string) => {
+  const productDate = new Date(createdAt);
+  const sevenDaysAgo = new Date();
+  sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+  return productDate > sevenDaysAgo;
+};
 
-  const requestRemoveItem = (product: Product) => {
-    setItemToRemove(product);
-    setIsModalOpen(true);
-  };
+const Wishlist: React.FC = () => {
+  const { wishlistItems, isLoading, removeItem } = useWishlist();
+  const [removingId, setRemovingId] = useState<number | null>(null);
 
-  const handleConfirmRemove = () => {
-    if (itemToRemove) {
-      setWishlistItems((currentItems) =>
-        currentItems.filter((item) => item.id !== itemToRemove.id)
-      );
+  const handleRemoveItem = async (productId: number) => {
+    setRemovingId(productId);
+    try {
+      await removeItem(productId);
+    } finally {
+      setRemovingId(null);
     }
-    // Reset state modal
-    setIsModalOpen(false);
-    setItemToRemove(null);
   };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-white">
+        <div className="container mx-auto px-6 md:px-20 xl:px-40 py-12 md:py-12">
+          <div className="flex justify-center items-center h-64">
+            <Spinner />
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   if (wishlistItems.length === 0) {
     return (
@@ -102,40 +68,100 @@ const Wishlist = (): JSX.Element => {
   }
 
   return (
-    <div className="bg-white text-black min-h-screen">
-      <ConfirmationModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        onConfirm={handleConfirmRemove}
-        itemName={itemToRemove?.name || ""}
-      />
-
+    <div className="min-h-screen bg-white">
       <div className="container mx-auto px-6 md:px-20 xl:px-40 py-12 md:py-12">
         <h1 className="text-xl md:text-2xl font-bold text-black mb-6 md:mb-8">
-          My Wishlist
+          Wishlist
         </h1>
 
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-          <div className="p-4 md:p-6 border-b border-gray-200">
-            <h2 className="text-xl font-semibold text-sky-600 flex items-center gap-3">
-              <Heart size={22} /> Wishlist Items ({wishlistItems.length})
-            </h2>
-          </div>
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 md:p-6">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+            {wishlistItems.map((item: WishlistItem) => {
+              const { product } = item;
+              const firstVariant =
+                product.variants && product.variants.length > 0
+                  ? product.variants[0]
+                  : null;
+              const imageUrl =
+                product.images && product.images.length > 0
+                  ? product.images[0]
+                  : "https://placehold.co/400x400/e2e8f0/e2e8f0?text=Image";
 
-          <div className="p-4 md:p-6 grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
-            {wishlistItems.map((product) => (
-              <div key={product.id} className="relative group/wishlist-item">
-                <ProductCard product={product} />
-
-                <button
-                  onClick={() => requestRemoveItem(product)}
-                  aria-label="Remove from wishlist"
-                  className="absolute top-2 right-2 z-20 p-2 bg-white/70 backdrop-blur-sm rounded-full text-gray-600 hover:text-red-500 hover:bg-white transition-all duration-200 opacity-0 group-hover/wishlist-item:opacity-100"
+              return (
+                <div
+                  key={item.id}
+                  className="bg-white rounded-lg overflow-hidden"
                 >
-                  <Trash2 className="w-5 h-5" />
-                </button>
-              </div>
-            ))}
+                  <div className="relative group/card">
+                    <Link href={`/products/${product.id}`}>
+                      <div className="bg-gray-50 overflow-hidden cursor-pointer aspect-square">
+                        <img
+                          src={imageUrl}
+                          alt={product.name}
+                          className="w-full h-full object-cover rounded group-hover/card:scale-105 transition-transform duration-300"
+                        />
+                      </div>
+                    </Link>
+
+                    {isNewProduct(product.createdAt) && (
+                      <span className="absolute top-3 left-3 bg-black text-white text-[10px] px-2 py-1 rounded-sm z-10">
+                        New
+                      </span>
+                    )}
+
+                    {product.isPreloved && !isNewProduct(product.createdAt) && (
+                      <span className="absolute top-3 left-3 bg-yellow-100 text-yellow-800 text-[10px] px-2 py-1 rounded-sm z-10">
+                        Preloved
+                      </span>
+                    )}
+
+                    <button
+                      onClick={() => handleRemoveItem(product.id)}
+                      disabled={removingId === product.id}
+                      className="absolute top-3 right-3 z-10 p-1.5 bg-white/60 backdrop-blur-sm rounded-full text-red-500 hover:bg-white transition-all duration-200 disabled:opacity-50"
+                      aria-label="Hapus dari wishlist"
+                    >
+                      {removingId === product.id ? (
+                        <div className="w-5 h-5">
+                          <Spinner />
+                        </div>
+                      ) : (
+                        <Trash2 className="w-5 h-5" />
+                      )}
+                    </button>
+                  </div>
+
+                  <div className="p-4">
+                    <Link href={`/products/${product.id}`}>
+                      <div className="text-left cursor-pointer">
+                        <p className="font-bold text-sm text-gray-800 mb-1">
+                          {product.store?.name || "Reluv"}
+                        </p>
+                        <p className="text-sm text-gray-600 truncate mb-2">
+                          {product.name}
+                        </p>
+                        {firstVariant?.compareAtPrice ? (
+                          <div className="mt-1 flex items-baseline flex-wrap gap-x-2">
+                            <p className="font-bold text-red-600 text-base">
+                              {formatPrice(firstVariant.price)}
+                            </p>
+                            <p className="text-sm text-gray-400 line-through">
+                              {formatPrice(firstVariant.compareAtPrice)}
+                            </p>
+                          </div>
+                        ) : (
+                          <p className="font-bold text-gray-900 text-base">
+                            {firstVariant
+                              ? formatPrice(firstVariant.price)
+                              : "Price unavailable"}
+                          </p>
+                        )}
+                      </div>
+                    </Link>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>
