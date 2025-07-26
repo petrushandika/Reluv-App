@@ -18,7 +18,7 @@ const isNewProduct = (createdAt: string) => {
   return productDate > sevenDaysAgo;
 };
 
-const Wishlist: React.FC = () => {
+const Wishlist = () => {
   const { wishlistItems, isLoading, removeItem } = useWishlist();
   const [removingId, setRemovingId] = useState<number | null>(null);
 
@@ -70,9 +70,14 @@ const Wishlist: React.FC = () => {
   return (
     <div className="min-h-screen bg-white">
       <div className="container mx-auto px-6 md:px-20 xl:px-40 py-12 md:py-12">
-        <h1 className="text-xl md:text-2xl font-bold text-black mb-6 md:mb-8">
-          Wishlist
-        </h1>
+        <div className="flex justify-between items-center mb-6 md:mb-8">
+          <h1 className="text-xl md:text-2xl font-bold text-black">
+            My Wishlist
+          </h1>
+          <span className="text-sm font-medium bg-sky-100 text-sky-700 px-3 py-1 rounded-full">
+            {wishlistItems.length} Items
+          </span>
+        </div>
 
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 md:p-6">
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">

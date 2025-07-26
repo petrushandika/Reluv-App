@@ -10,6 +10,7 @@ import {
   MessageCircle,
   Smartphone,
   Search,
+  Loader2,
   Plus,
   Minus,
 } from "lucide-react";
@@ -18,7 +19,8 @@ import ProductList from "@/features/products/components/ProductList";
 import { useProductDetail } from "@/features/products/hooks/useProductDetail";
 import { useProduct } from "@/features/products/hooks/useProduct";
 import { useCart } from "@/features/cart/hooks/useCart";
-import Spinner from "@/shared/components/atoms/Spinner";
+import { useWishlist } from "@/features/wishlist/hooks/useWishlist";
+import ShareModal from "@/shared/components/molecules/ShareModal";
 
 const formatPrice = (price: number) => {
   return `Rp${new Intl.NumberFormat("id-ID").format(price)}`;
@@ -34,13 +36,25 @@ const ProductDetail = () => {
     limit: 10,
   });
   const { addItem: addItemToCart, isAdding } = useCart();
+  const {
+    addItem: addItemToWishlist,
+    removeItem: removeItemFromWishlist,
+    isInWishlist,
+  } = useWishlist();
 
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [selectedVariantIndex, setSelectedVariantIndex] = useState(0);
   const [quantity, setQuantity] = useState(1);
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+
+  const isWishlisted = product ? isInWishlist(product.id) : false;
 
   if (isLoading) {
-    return <Spinner />;
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="w-12 h-12 animate-spin text-sky-500" />
+      </div>
+    );
   }
 
   if (error || !product) {
@@ -79,6 +93,14 @@ const ProductDetail = () => {
 
   const handleBuyNow = () => {
     router.push("/checkout");
+  };
+
+  const handleWishlistToggle = () => {
+    if (isWishlisted) {
+      removeItemFromWishlist(product.id);
+    } else {
+      addItemToWishlist({ productId: product.id });
+    }
   };
 
   return (
@@ -293,8 +315,15 @@ const ProductDetail = () => {
                 </button>
               </div>
               <div className="flex flex-col gap-3 md:flex-row">
-                <button className="flex items-center justify-center w-full md:w-1/3 border border-gray-300 hover:bg-gray-100 text-gray-700 font-medium py-3 px-4 rounded-lg transition-colors duration-200 cursor-pointer">
-                  <Heart className="w-5 h-5 mr-2" />
+                <button
+                  onClick={handleWishlistToggle}
+                  className="flex items-center justify-center w-full md:w-1/3 border border-gray-300 hover:bg-gray-100 text-gray-700 font-medium py-3 px-4 rounded-lg transition-colors duration-200 cursor-pointer"
+                >
+                  <Heart
+                    className={`w-5 h-5 mr-2 ${
+                      isWishlisted ? "text-red-500 fill-current" : ""
+                    }`}
+                  />
                   <span>Wishlist</span>
                 </button>
                 <div className="flex gap-3 w-full md:w-2/3">
@@ -302,7 +331,10 @@ const ProductDetail = () => {
                     <MessageCircle className="w-5 h-5 mr-2" />
                     <span>Chat CS</span>
                   </button>
-                  <button className="flex items-center justify-center w-1/2 border border-gray-300 hover:bg-gray-100 text-gray-700 font-medium py-3 px-4 rounded-lg transition-colors duration-200 cursor-pointer">
+                  <button
+                    onClick={() => setIsShareModalOpen(true)}
+                    className="flex items-center justify-center w-1/2 border border-gray-300 hover:bg-gray-100 text-gray-700 font-medium py-3 px-4 rounded-lg transition-colors duration-200 cursor-pointer"
+                  >
                     <Share className="w-5 h-5 mr-2" />
                     <span>Share</span>
                   </button>
@@ -385,6 +417,11 @@ const ProductDetail = () => {
           isLoading={isLoadingRecommended}
         />
       </div>
+      <ShareModal
+        isOpen={isShareModalOpen}
+        onClose={() => setIsShareModalOpen(false)}
+        product={product}
+      />
     </PublicRoute>
   );
 };

@@ -9,7 +9,7 @@ import { useAuthStore } from "@/features/auth/store/auth.store";
 import AuthWarningModal from "@/shared/components/molecules/AuthWarningModal";
 import Spinner from "@/shared/components/atoms/Spinner";
 
-export default function Sell() {
+const Sell = () => {
   const { isAuthenticated, isHydrated } = useAuthStore();
 
   const [files, setFiles] = useState<File[]>([]);
@@ -134,4 +134,6 @@ export default function Sell() {
       </div>
     </div>
   );
-}
+};
+
+export default Sell;
