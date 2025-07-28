@@ -28,6 +28,7 @@ import { StoreModule } from './store/store.module';
 import { MapsModule } from './maps/maps.module';
 import { EmailModule } from './email/email.module';
 import { ConfigModule } from '@nestjs/config';
+import { VouchersModule } from './vouchers/vouchers.module';
 
 @Module({
   imports: [
@@ -53,6 +54,7 @@ import { ConfigModule } from '@nestjs/config';
     StoreModule,
     MapsModule,
     EmailModule,
+    VouchersModule,
   ],
   controllers: [AppController],
 })

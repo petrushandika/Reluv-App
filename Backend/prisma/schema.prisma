@@ -48,6 +48,12 @@ enum ShipmentStatus {
   CANCELLED
 }
 
+enum VoucherType {
+  PERCENTAGE
+  FIXED_AMOUNT
+  FREE_SHIPPING
+}
+
 model User {
   id        Int      @id @default(autoincrement())
   googleId   String? @unique
@@ -67,15 +73,16 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  locations     Location[]      @relation("UserLocations")
-  products      Product[]      @relation("SellerProducts")
-  reviews       Review[]       @relation("UserReviews")
-  orders        Order[]        @relation("UserOrders")
+  locations     Location[]
+  products      Product[]
+  reviews       Review[]       
+  orders        Order[]        
   cart          Cart?
   profile       UserProfile?
   wishlist      Wishlist[]
   notifications Notification[]
   store         Store?
+  voucherUsages VoucherUsage[]
 
   @@index([email])
   @@map("users")
@@ -84,9 +91,8 @@ model User {
 model UserProfile {
   id     Int     @id @default(autoincrement())
   avatar String?
-  banner String?
   bio    String?
-  birth DateTime?
+  birth  DateTime?
   gender String?
 
   user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -152,7 +158,7 @@ model Location {
   longitude        Float?
   biteship_area_id String?
 
-  user    User?   @relation("UserLocations", fields: [userId], references: [id], onDelete: Cascade)
+  user    User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId  Int?
   
   store   Store?
@@ -167,10 +173,10 @@ model Category {
   name String @unique
   slug String @unique
 
-  products Product[] @relation("ProductCategory")
+  products Product[]
 
   parentId        Int?
-  parentCategory  Category?  @relation("SubCategories", fields: [parentId], references: [id])
+  parentCategory  Category?  @relation("SubCategories", fields: [parentId], references: [id], onDelete: Restrict)
   childCategories Category[] @relation("SubCategories")
 
   @@map("categories")
@@ -190,17 +196,17 @@ model Product {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  seller     User     @relation("SellerProducts", fields: [sellerId], references: [id])
+  seller     User     @relation(fields: [sellerId], references: [id])
   sellerId   Int
 
-  category   Category @relation("ProductCategory", fields: [categoryId], references: [id])
+  category   Category @relation(fields: [categoryId], references: [id])
   categoryId Int
   
   store      Store?   @relation(fields: [storeId], references: [id])
   storeId    Int?
 
   variants Variant[]
-  reviews  Review[]     @relation("ProductReviews")
+  reviews  Review[]
   wishlist Wishlist[]
 
   @@index([sellerId, isPublished, isActive])
@@ -216,6 +222,7 @@ model Variant {
   size      String?
   color     String?
   sku       String? @unique
+  image     String?
 
   price          Int
   compareAtPrice Int?
@@ -224,10 +231,10 @@ model Variant {
   condition     Condition
   conditionNote String?
 
-  weight Int // gram
-  length Int // cm
-  width  Int // cm
-  height Int // cm
+  weight Int
+  length Int
+  width  Int
+  height Int
 
   isActive  Boolean  @default(true)
   createdAt DateTime @default(now())
@@ -241,7 +248,7 @@ model Variant {
 
 model Wishlist {
   id        Int      @id @default(autoincrement())
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id])
   userId    Int
   product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
   productId Int
@@ -273,15 +280,44 @@ model CartItem {
   @@map("cart_items")
 }
 
+model Voucher {
+  id          Int         @id @default(autoincrement())
+  code        String      @unique
+  description String
+  type        VoucherType
+  value       Float
+  maxDiscount Int?
+  minPurchase Int?
+  usageLimit  Int?
+  expiry      DateTime
+  isActive    Boolean     @default(true)
+
+  usages VoucherUsage[]
+
+  @@map("vouchers")
+}
+
+model VoucherUsage {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  voucherId Int
+  voucher   Voucher  @relation(fields: [voucherId], references: [id])
+  usedAt    DateTime @default(now())
+
+  @@unique([userId, voucherId])
+  @@map("voucher_usages")
+}
+
 model Review {
   id      Int    @id @default(autoincrement())
   rating  Int    @db.SmallInt
   comment String? @db.Text
   images  String[]
 
-  product   Product @relation("ProductReviews", fields: [productId], references: [id], onDelete: Cascade)
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
   productId Int
-  author    User    @relation("UserReviews", fields: [authorId], references: [id])
+  author    User    @relation(fields: [authorId], references: [id]) 
   authorId  Int
 
   createdAt DateTime @default(now())
@@ -292,17 +328,19 @@ model Review {
 }
 
 model Order {
-  id           Int         @id @default(autoincrement())
-  orderNumber  String      @unique
-  totalAmount  Int
-  itemsAmount  Int
-  shippingCost Int         @default(0)
-  status       OrderStatus @default(PENDING)
-  notes        String?     @db.Text
-  createdAt    DateTime    @default(now())
-  updatedAt    DateTime    @updatedAt
+  id             Int         @id @default(autoincrement())
+  orderNumber    String      @unique
+  totalAmount    Int
+  itemsAmount    Int
+  shippingCost   Int         @default(0)
+  discountAmount Int         @default(0)
+  voucherCode    String?
+  status         OrderStatus @default(PENDING)
+  notes          String?     @db.Text
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
 
-  buyer     User    @relation("UserOrders", fields: [buyerId], references: [id])
+  buyer     User    @relation(fields: [buyerId], references: [id])
   buyerId   Int
   location   Location @relation(fields: [locationId], references: [id])
   locationId Int
@@ -363,7 +401,7 @@ model Payment {
 
 model Notification {
   id      Int      @id @default(autoincrement())
-  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user    User     @relation(fields: [userId], references: [id])
   userId  Int
   title   String
   body    String   @db.Text
