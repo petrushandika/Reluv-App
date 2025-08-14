@@ -20,6 +20,8 @@ export class WishlistService {
               where: { isActive: true },
               orderBy: { price: 'asc' },
             },
+            store: true,
+            category: true,
           },
         },
       },
