@@ -5,3 +5,9 @@ export class SearchAreaDto {
   @IsNotEmpty()
   input: string;
 }
+
+export class SearchMapDto {
+  @IsString()
+  @IsNotEmpty()
+  q: string;
+}

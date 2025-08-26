@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { firstValueFrom } from 'rxjs';
+import { AxiosError } from 'axios';
 
 @Injectable()
 export class MapsService {
@@ -33,7 +34,6 @@ export class MapsService {
     const headers = {
       Authorization: this.biteshipApiKey,
     };
-
     const params = {
       countries: 'ID',
       input: query,
@@ -47,17 +47,44 @@ export class MapsService {
           params,
         }),
       );
-
       return response.data.areas;
     } catch (error) {
-      if (error instanceof Error) {
+      if (error instanceof AxiosError) {
         console.error(
           'Biteship Area Search Error:',
-          error['response']?.data || error.message,
+          error.response?.data || error.message,
         );
       }
       throw new BadGatewayException(
         'Failed to search for areas from the provider.',
+      );
+    }
+  }
+
+  async searchOpenStreetMap(query: string) {
+    const params = {
+      q: query,
+      format: 'json',
+      addressdetails: 1,
+      limit: 5,
+    };
+
+    try {
+      const response = await firstValueFrom(
+        this.httpService.get('https://nominatim.openstreetmap.org/search', {
+          params,
+        }),
+      );
+      return response.data;
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        console.error(
+          'OpenStreetMap API Error:',
+          error.response?.data || error.message,
+        );
+      }
+      throw new BadGatewayException(
+        'Failed to retrieve location data from provider.',
       );
     }
   }

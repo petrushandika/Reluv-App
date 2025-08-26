@@ -1,26 +1,21 @@
-import {
-  Body,
-  Controller,
-  Post,
-  UseGuards,
-  ValidationPipe,
-} from '@nestjs/common';
-import { User } from '@prisma/client';
-import { GetUser } from '../common/decorators/get-user.decorator';
-import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
-import { CheckRatesFromCartDto } from './dto/check-rates-from-cart.dto';
+import { Controller, Post, Body, ValidationPipe } from '@nestjs/common';
 import { ShippingRatesService } from './shipping-rates.service';
+import { CheckRatesDto } from './dto/check-rates.dto';
+import { CheckRatesByCoordsDto } from './dto/check-rates-by-coords.dto';
 
 @Controller('shipping-rates')
 export class ShippingRatesController {
   constructor(private readonly shippingRatesService: ShippingRatesService) {}
 
-  @UseGuards(JwtAuthGuard)
-  @Post('check-from-cart')
-  checkRatesFromCart(
-    @GetUser() user: User,
-    @Body(new ValidationPipe()) checkRatesDto: CheckRatesFromCartDto,
+  @Post('check-by-area')
+  checkRatesByArea(@Body(new ValidationPipe()) checkRatesDto: CheckRatesDto) {
+    return this.shippingRatesService.checkRatesByArea(checkRatesDto);
+  }
+
+  @Post('check-by-coords')
+  checkRatesByCoords(
+    @Body(new ValidationPipe()) checkRatesByCoordsDto: CheckRatesByCoordsDto,
   ) {
-    return this.shippingRatesService.checkRatesFromCart(user.id, checkRatesDto);
+    return this.shippingRatesService.checkRatesByCoords(checkRatesByCoordsDto);
   }
 }

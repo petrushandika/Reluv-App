@@ -1,17 +1,21 @@
 import {
-  IsBoolean,
-  IsDateString,
-  IsEnum,
-  IsInt,
+  IsString,
   IsNotEmpty,
+  IsEnum,
   IsNumber,
   IsOptional,
-  IsString,
+  IsDate,
+  IsInt,
   Min,
 } from 'class-validator';
+import { Type } from 'class-transformer';
 import { VoucherType } from '@prisma/client';
 
 export class CreateVoucherDto {
+  @IsString()
+  @IsNotEmpty()
+  name: string;
+
   @IsString()
   @IsNotEmpty()
   code: string;
@@ -25,7 +29,6 @@ export class CreateVoucherDto {
   type: VoucherType;
 
   @IsNumber()
-  @Min(0)
   @IsNotEmpty()
   value: number;
 
@@ -44,11 +47,8 @@ export class CreateVoucherDto {
   @IsOptional()
   usageLimit?: number;
 
-  @IsDateString()
+  @Type(() => Date)
+  @IsDate()
   @IsNotEmpty()
   expiry: Date;
-
-  @IsBoolean()
-  @IsOptional()
-  isActive?: boolean = true;
 }

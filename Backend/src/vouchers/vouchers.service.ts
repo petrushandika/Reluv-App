@@ -4,7 +4,7 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { User } from '@prisma/client';
+import { Prisma, User } from '@prisma/client';
 import { CreateVoucherDto } from './dto/create-voucher.dto';
 import { UpdateVoucherDto } from './dto/update-voucher.dto';
 
@@ -123,7 +123,27 @@ export class VouchersService {
   }
 
   create(createVoucherDto: CreateVoucherDto) {
-    return this.prisma.voucher.create({ data: createVoucherDto });
+    const data: Prisma.VoucherCreateInput = {
+      name: createVoucherDto.name,
+      code: createVoucherDto.code,
+      description: createVoucherDto.description,
+      type: createVoucherDto.type,
+      value: createVoucherDto.value,
+      maxDiscount: createVoucherDto.maxDiscount,
+      minPurchase: createVoucherDto.minPurchase,
+      usageLimit: createVoucherDto.usageLimit,
+      expiry: createVoucherDto.expiry,
+    };
+
+    return this.prisma.voucher.create({ data });
+  }
+
+  findAll() {
+    return this.prisma.voucher.findMany({ where: { isActive: true } });
+  }
+
+  findOne(id: number) {
+    return this.prisma.voucher.findUnique({ where: { id } });
   }
 
   update(id: number, updateVoucherDto: UpdateVoucherDto) {
