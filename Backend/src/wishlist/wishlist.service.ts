@@ -59,6 +59,19 @@ export class WishlistService {
     });
   }
 
+  async checkStatus(userId: number, productId: number) {
+    const wishlistItem = await this.prisma.wishlist.findUnique({
+      where: {
+        userId_productId: {
+          userId,
+          productId,
+        },
+      },
+    });
+
+    return { isInWishlist: !!wishlistItem };
+  }
+
   async removeFromWishlist(userId: number, productId: number) {
     try {
       await this.prisma.wishlist.delete({

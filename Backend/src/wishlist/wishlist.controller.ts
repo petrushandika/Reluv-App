@@ -31,6 +31,14 @@ export class WishlistController {
     );
   }
 
+  @Get('status/:productId')
+  checkWishlistStatus(
+    @GetUser() user: User,
+    @Param('productId', ParseIntPipe) productId: number,
+  ) {
+    return this.wishlistService.checkStatus(user.id, productId);
+  }
+
   @Get()
   getMyWishlist(@GetUser() user: User) {
     return this.wishlistService.getMyWishlist(user.id);
