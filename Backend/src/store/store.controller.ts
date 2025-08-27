@@ -17,6 +17,8 @@ import { GetUser } from '../common/decorators/get-user.decorator';
 import { User } from '@prisma/client';
 import { UpdateStoreProfileDto } from './dto/update-store-profile.dto';
 import { QueryStoreDto } from './dto/query-store.dto';
+import { AdminCreateStoreDto } from './dto/admin-create-store.dto';
+import { AdminGuard } from 'src/common/guards/admin.guard';
 
 @Controller('store')
 export class StoreController {
@@ -47,6 +49,12 @@ export class StoreController {
   @Get('me/my-store')
   findMyStore(@GetUser() user: User) {
     return this.storeService.findMyStore(user.id);
+  }
+
+  @UseGuards(JwtAuthGuard, AdminGuard)
+  @Post('/admin/create-for-user')
+  createStoreForUser(@Body() adminCreateStoreDto: AdminCreateStoreDto) {
+    return this.storeService.createStoreForUser(adminCreateStoreDto);
   }
 
   @UseGuards(JwtAuthGuard)

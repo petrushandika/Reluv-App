@@ -183,13 +183,17 @@ export class StoreService {
     userId: number,
     updateStoreProfileDto: UpdateStoreProfileDto,
   ) {
-    const myStore = await this.findMyStore(userId);
-    if (!myStore.profile) {
-      throw new NotFoundException('Store profile does not exist.');
+    const store = await this.prisma.store.findUnique({
+      where: { userId },
+      select: { id: true },
+    });
+
+    if (!store) {
+      throw new NotFoundException('You do not have a store to update.');
     }
 
     return this.prisma.storeProfile.update({
-      where: { id: myStore.profile.id },
+      where: { storeId: store.id },
       data: updateStoreProfileDto,
     });
   }
