@@ -25,10 +25,16 @@ export class LocationsService {
     });
   }
 
-  async findAllForUser(userId: number) {
+  async findAllForUser(
+    userId: number,
+    pagination: { page: number; limit: number },
+  ) {
+    const { page, limit } = pagination;
     return this.prisma.location.findMany({
       where: { userId },
       orderBy: { isDefault: 'desc' },
+      skip: (page - 1) * limit,
+      take: limit,
     });
   }
 

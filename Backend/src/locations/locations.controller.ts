@@ -9,6 +9,7 @@ import {
   UseGuards,
   ParseIntPipe,
   ValidationPipe,
+  Query,
 } from '@nestjs/common';
 import { LocationsService } from './locations.service';
 import { CreateLocationDto } from './dto/create-location.dto';
@@ -31,8 +32,12 @@ export class LocationsController {
   }
 
   @Get()
-  findAll(@GetUser() user: User) {
-    return this.locationsService.findAllForUser(user.id);
+  findAll(
+    @GetUser() user: User,
+    @Query('page', new ParseIntPipe({ optional: true })) page: number = 1,
+    @Query('limit', new ParseIntPipe({ optional: true })) limit: number = 10,
+  ) {
+    return this.locationsService.findAllForUser(user.id, { page, limit });
   }
 
   @Get(':id')
