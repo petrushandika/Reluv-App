@@ -34,6 +34,13 @@ export class ProductsService {
   async create(user: User, createProductDto: CreateProductDto) {
     const { variants, categoryId, ...productData } = createProductDto;
 
+    const categoryExists = await this.prisma.category.findUnique({
+      where: { id: categoryId },
+    });
+    if (!categoryExists) {
+      throw new NotFoundException(`Category with ID ${categoryId} not found.`);
+    }
+
     const store = await this.prisma.store.findUnique({
       where: { userId: user.id },
     });
@@ -76,18 +83,30 @@ export class ProductsService {
       }),
     };
 
-    const products = await this.prisma.product.findMany({
-      where,
-      skip,
-      take: limit,
-      include: {
-        variants: { where: { isActive: true }, orderBy: { price: 'asc' } },
-        category: true,
-        store: { select: { name: true, slug: true } },
+    const [products, total] = await this.prisma.$transaction([
+      this.prisma.product.findMany({
+        where,
+        skip,
+        take: limit,
+        include: {
+          variants: { where: { isActive: true }, orderBy: { price: 'asc' } },
+          category: true,
+          store: { select: { name: true, slug: true } },
+        },
+        orderBy: { createdAt: 'desc' },
+      }),
+      this.prisma.product.count({ where }),
+    ]);
+
+    return {
+      data: products,
+      meta: {
+        total,
+        page,
+        limit,
+        lastPage: Math.ceil(total / limit),
       },
-      orderBy: { createdAt: 'desc' },
-    });
-    return products;
+    };
   }
 
   async findOne(id: number) {
