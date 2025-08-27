@@ -29,6 +29,7 @@ import { MapsModule } from './maps/maps.module';
 import { EmailModule } from './email/email.module';
 import { ConfigModule } from '@nestjs/config';
 import { VouchersModule } from './vouchers/vouchers.module';
+import { GeocodeModule } from './geocode/geocode.module';
 
 @Module({
   imports: [
@@ -55,6 +56,7 @@ import { VouchersModule } from './vouchers/vouchers.module';
     MapsModule,
     EmailModule,
     VouchersModule,
+    GeocodeModule,
   ],
   controllers: [AppController],
 })
@@ -82,6 +84,7 @@ export class AppModule implements NestModule {
         { path: 'categories/:id', method: RequestMethod.GET },
         { path: 'products/:productId/reviews', method: RequestMethod.GET },
         { path: 'shipping-rates/check', method: RequestMethod.POST },
+        { path: 'geocode/reverse', method: RequestMethod.GET },
         { path: 'maps/search-areas', method: RequestMethod.GET },
 
         { path: 'payments/midtrans-notification', method: RequestMethod.POST },

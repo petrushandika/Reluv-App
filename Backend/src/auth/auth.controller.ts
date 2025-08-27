@@ -50,6 +50,6 @@ export class AuthController {
   @Post('reset')
   @HttpCode(HttpStatus.OK)
   reset(@Body(new ValidationPipe()) resetDto: ResetDto) {
-    return this.authService.reset(resetDto.token, resetDto.newPassword);
+    return this.authService.reset(resetDto);
   }
 }

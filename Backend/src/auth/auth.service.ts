@@ -1,8 +1,8 @@
 import {
   Injectable,
   UnauthorizedException,
-  NotFoundException,
   ConflictException,
+  BadRequestException,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { JwtService } from '@nestjs/jwt';
@@ -11,6 +11,8 @@ import { randomBytes, createHash } from 'crypto';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { EmailService } from '../email/email.service';
+import { ResetDto } from './dto/reset.dto';
+import { User } from '@prisma/client';
 
 @Injectable()
 export class AuthService {
@@ -25,7 +27,9 @@ export class AuthService {
       registerDto;
 
     if (password !== confirmPassword) {
-      throw new ConflictException('Password and confirm password do not match');
+      throw new BadRequestException(
+        'Password and confirm password do not match',
+      );
     }
 
     const existingUser = await this.prisma.user.findUnique({
@@ -36,12 +40,7 @@ export class AuthService {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-
-    const verificationToken = randomBytes(32).toString('hex');
-    const hashedVerificationToken = createHash('sha256')
-      .update(verificationToken)
-      .digest('hex');
-    const verificationTokenExpiry = new Date(Date.now() + 10 * 60 * 1000);
+    const tokenDetails = this._createVerificationToken();
 
     const user = await this.prisma.user.create({
       data: {
@@ -49,14 +48,14 @@ export class AuthService {
         password: hashedPassword,
         firstName,
         lastName,
-        verificationToken: hashedVerificationToken,
-        verificationTokenExpiry,
+        verificationToken: tokenDetails.hashedToken,
+        verificationTokenExpiry: tokenDetails.expiry,
         profile: { create: {} },
         cart: { create: {} },
       },
     });
 
-    await this.emailService.sendUserConfirmation(user, verificationToken);
+    await this.emailService.sendUserConfirmation(user, tokenDetails.token);
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password: _, ...result } = user;
@@ -64,18 +63,7 @@ export class AuthService {
   }
 
   async confirm(token: string): Promise<{ message: string }> {
-    const hashedToken = createHash('sha256').update(token).digest('hex');
-
-    const user = await this.prisma.user.findFirst({
-      where: {
-        verificationToken: hashedToken,
-        verificationTokenExpiry: { gt: new Date() },
-      },
-    });
-
-    if (!user) {
-      throw new UnauthorizedException('Token is invalid or has expired.');
-    }
+    const user = await this._validateAndFindUserByToken(token);
 
     await this.prisma.user.update({
       where: { id: user.id },
@@ -117,42 +105,38 @@ export class AuthService {
   async forgot(email: string) {
     const user = await this.prisma.user.findUnique({ where: { email } });
     if (!user) {
-      throw new NotFoundException('User not found');
+      return {
+        message:
+          'If a user with that email exists, a password reset link has been sent.',
+      };
     }
 
-    const resetToken = randomBytes(32).toString('hex');
-    const verificationToken = createHash('sha256')
-      .update(resetToken)
-      .digest('hex');
-    const verificationTokenExpiry = new Date(Date.now() + 10 * 60 * 1000);
+    const tokenDetails = this._createVerificationToken();
 
     await this.prisma.user.update({
       where: { id: user.id },
       data: {
-        verificationToken,
-        verificationTokenExpiry,
+        verificationToken: tokenDetails.hashedToken,
+        verificationTokenExpiry: tokenDetails.expiry,
       },
     });
 
-    await this.emailService.sendPasswordReset(user, resetToken);
+    await this.emailService.sendPasswordReset(user, tokenDetails.token);
 
-    return { message: 'Password reset link has been sent to your email.' };
+    return {
+      message:
+        'If a user with that email exists, a password reset link has been sent.',
+    };
   }
 
-  async reset(token: string, newPassword: string) {
-    const hashedToken = createHash('sha256').update(token).digest('hex');
+  async reset(resetDto: ResetDto) {
+    const { token, newPassword, confirmNewPassword } = resetDto;
 
-    const user = await this.prisma.user.findFirst({
-      where: {
-        verificationToken: hashedToken,
-        verificationTokenExpiry: { gt: new Date() },
-      },
-    });
-
-    if (!user) {
-      throw new UnauthorizedException('Token is invalid or has expired');
+    if (newPassword !== confirmNewPassword) {
+      throw new BadRequestException('Passwords do not match');
     }
 
+    const user = await this._validateAndFindUserByToken(token);
     const hashedPassword = await bcrypt.hash(newPassword, 10);
 
     await this.prisma.user.update({
@@ -165,5 +149,29 @@ export class AuthService {
     });
 
     return { message: 'Password has been reset successfully.' };
+  }
+
+  private _createVerificationToken() {
+    const token = randomBytes(32).toString('hex');
+    const hashedToken = createHash('sha256').update(token).digest('hex');
+    const expiry = new Date(Date.now() + 10 * 60 * 1000);
+    return { token, hashedToken, expiry };
+  }
+
+  private async _validateAndFindUserByToken(token: string): Promise<User> {
+    const hashedToken = createHash('sha256').update(token).digest('hex');
+
+    const user = await this.prisma.user.findFirst({
+      where: {
+        verificationToken: hashedToken,
+        verificationTokenExpiry: { gt: new Date() },
+      },
+    });
+
+    if (!user) {
+      throw new UnauthorizedException('Token is invalid or has expired.');
+    }
+
+    return user;
   }
 }

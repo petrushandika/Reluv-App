@@ -15,6 +15,21 @@ function loadJsonData<T>(filename: string): T {
   return JSON.parse(fileContent) as T;
 }
 
+interface LocationSeed {
+  ownerEmail: string;
+  label: string;
+  recipient: string;
+  phone: string;
+  province: string;
+  city: string;
+  district: string;
+  subDistrict: string;
+  postalCode: string;
+  address: string;
+  isDefault: boolean;
+  biteship_area_id: string;
+}
+
 interface UserSeed {
   email: string;
   firstName: string;
@@ -81,6 +96,7 @@ const categoriesData = loadJsonData<CategorySeed[]>('categories.json');
 const storeData = loadJsonData<StoreSeed>('store.json');
 const productSeedData = loadJsonData<ProductSeed[]>('products.json');
 const variantsData = loadJsonData<VariantsSeed[]>('variants.json');
+const locationsData = loadJsonData<LocationSeed[]>('locations.json');
 
 const prisma = new PrismaClient();
 
@@ -129,6 +145,37 @@ async function main() {
           cart: { create: {} },
         },
       });
+
+      const userLocations = locationsData.filter(
+        (loc) => loc.ownerEmail === userData.email,
+      );
+      if (userLocations.length > 0) {
+        // <<< PERBAIKAN FINAL DI SINI
+        const locationsToCreate = userLocations.map((loc) => ({
+          label: loc.label,
+          recipient: loc.recipient,
+          phone: loc.phone,
+          province: loc.province,
+          city: loc.city,
+          district: loc.district,
+          subDistrict: loc.subDistrict,
+          postalCode: loc.postalCode,
+          address: loc.address,
+          isDefault: loc.isDefault,
+          biteship_area_id: loc.biteship_area_id,
+          userId: user.id,
+        }));
+
+        await prisma.location.createMany({
+          data: locationsToCreate,
+        });
+        // <<< AKHIR PERBAIKAN FINAL
+
+        console.log(
+          `📍 Created ${userLocations.length} locations for ${user.email}`,
+        );
+      }
+
       createdUsers.push(user);
     }
     const sellerUser = createdUsers.find((u) => u.email === 'user@gmail.com');
