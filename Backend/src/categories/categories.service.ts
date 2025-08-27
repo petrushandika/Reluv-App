@@ -46,8 +46,10 @@ export class CategoriesService {
 
   async findAll() {
     return this.prisma.category.findMany({
+      where: {
+        parentId: null,
+      },
       include: {
-        parentCategory: true,
         childCategories: true,
       },
     });
