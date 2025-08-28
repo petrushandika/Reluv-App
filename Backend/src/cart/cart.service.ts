@@ -2,6 +2,7 @@ import {
   Injectable,
   NotFoundException,
   ForbiddenException,
+  ConflictException,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { AddToCartDto } from './dto/add-to-cart.dto';
@@ -92,10 +93,17 @@ export class CartService {
   ) {
     const cartItem = await this.prisma.cartItem.findFirst({
       where: { id: cartItemId, cart: { userId } },
+      include: { variant: true },
     });
 
     if (!cartItem) {
       throw new ForbiddenException('This cart item does not belong to you.');
+    }
+
+    if (cartItem.variant.stock < updateCartItemDto.quantity) {
+      throw new ConflictException(
+        `Not enough stock. Only ${cartItem.variant.stock} items left.`,
+      );
     }
 
     return this.prisma.cartItem.update({
