@@ -1,0 +1,1912 @@
+{
+  "info": {
+    "_postman_id": "reluv-api-2024",
+    "name": "Reluv API",
+    "description": "Comprehensive API collection for Reluv-App with all endpoints",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "reluv-team"
+  },
+  "variable": [
+    {
+      "key": "BACKEND",
+      "value": "http://localhost:8000",
+      "type": "string"
+    },
+    {
+      "key": "FRONTEND",
+      "value": "http://localhost:3000",
+      "type": "string"
+    },
+    {
+      "key": "TOKEN",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "App",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BACKEND}}/api/v1",
+              "host": ["{{BACKEND}}"],
+              "path": ["api", "v1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"email\": \"john.doe@example.com\",\n  \"password\": \"SecurePassword123!\",\n  \"confirmPassword\": \"SecurePassword123!\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BACKEND}}/api/v1/auth/register",
+              "host": ["{{BACKEND}}"],
+              "path": ["api", "v1", "auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "Login",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"john.doe@example.com\",\n  \"password\": \"SecurePassword123!\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BACKEND}}/api/v1/auth/login",
+              "host": ["{{BACKEND}}"],
+              "path": ["api", "v1", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Confirm Email",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BACKEND}}/api/v1/auth/confirm?token=your-confirmation-token",
+              "host": ["{{BACKEND}}"],
+              "path": ["api", "v1", "auth", "confirm"],
+              "query": [
+                {
+                  "key": "token",
+                  "value": "your-confirmation-token"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Forgot Password",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"john.doe@example.com\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BACKEND}}/api/v1/auth/forgot",
+              "host": ["{{BACKEND}}"],
+              "path": ["api", "v1", "auth", "forgot"]
+            }
+          }
+        },
+        {
+          "name": "Reset Password",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"token\": \"your-reset-token\",\n  \"newPassword\": \"NewSecurePassword123!\",\n  \"confirmNewPassword\": \"NewSecurePassword123!\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BACKEND}}/api/v1/auth/reset",
+              "host": ["{{BACKEND}}"],
+              "path": ["api", "v1", "auth", "reset"]
+            }
+          }
+        },
+        {
+          "name": "Google OAuth",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BACKEND}}/api/v1/auth/google",
+              "host": ["{{BACKEND}}"],
+              "path": ["api", "v1", "auth", "google"]
+            }
+          }
+        },
+        {
+          "name": "Google OAuth Callback",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BACKEND}}/api/v1/auth/google/callback",
+              "host": ["{{BACKEND}}"],
+              "path": ["api", "v1", "auth", "google", "callback"]
+            }
+          }
+        },
+        {
+          "name": "Facebook OAuth",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BACKEND}}/api/v1/auth/facebook",
+              "host": ["{{BACKEND}}"],
+              "path": ["api", "v1", "auth", "facebook"]
+            }
+          }
+        },
+        {
+          "name": "Facebook OAuth Callback",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BACKEND}}/api/v1/auth/facebook/callback",
+              "host": ["{{BACKEND}}"],
+              "path": ["api", "v1", "auth", "facebook", "callback"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Get My Profile",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BACKEND}}/api/v1/users/me",
+              "host": ["{{BACKEND}}"],
+              "path": ["api", "v1", "users", "me"]
+            }
+          }
+        },
+        {
+          "name": "Update My Profile",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"John Updated\",\n  \"lastName\": \"Doe Updated\",\n  \"phone\": \"+6281234567890\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BACKEND}}/api/v1/users/me",
+              "host": ["{{BACKEND}}"],
+              "path": ["api", "v1", "users", "me"]
+            }
+          }
+        },
+        {
+          "name": "Update My User Profile",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"avatar\": \"https://example.com/avatar.jpg\",\n  \"banner\": \"https://example.com/banner.jpg\",\n  \"bio\": \"This is my updated bio\",\n  \"gender\": \"Male\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BACKEND}}/api/v1/users/me/profile",
+              "host": ["{{BACKEND}}"],
+              "path": ["api", "v1", "users", "me", "profile"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Upload",
+      "item": [
+        {
+          "name": "Upload Image",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": []
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{BACKEND}}/api/v1/upload/image",
+              "host": ["{{BACKEND}}"],
+              "path": ["api", "v1", "upload", "image"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Locations",
+      "item": [
+        {
+          "name": "Create Location",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"label\": \"Home\",\n  \"recipient\": \"John Doe\",\n  \"phone\": \"+6281234567890\",\n  \"province\": \"DKI Jakarta\",\n  \"city\": \"Jakarta Selatan\",\n  \"district\": \"Tebet\",\n  \"subDistrict\": \"Tebet Timur\",\n  \"postalCode\": \"12820\",\n  \"address\": \"Jl. Example Street No. 123\",\n  \"isDefault\": true,\n  \"biteship_area_id\": \"IDNP6IDNC148IDND845IDZ12820\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BACKEND}}/api/v1/locations",
+              "host": ["{{BACKEND}}"],
+              "path": ["api", "v1", "locations"]
+            }
+          }
+        },
+        {
+          "name": "Get All My Locations",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BACKEND}}/api/v1/locations?page=1&limit=10",
+              "host": ["{{BACKEND}}"],
+              "path": ["api", "v1", "locations"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Location By ID",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BACKEND}}/api/v1/locations/1",
+              "host": ["{{BACKEND}}"],
+              "path": ["api", "v1", "locations", "1"]
+            }
+          }
+        },
+        {
+          "name": "Update Location",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"label\": \"Office\",\n  \"recipient\": \"John Doe\",\n  \"phone\": \"+6281234567890\",\n  \"address\": \"Jl. Updated Address No. 456\",\n  \"isDefault\": false\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BACKEND}}/api/v1/locations/1",
+              "host": ["{{BACKEND}}"],
+              "path": ["api", "v1", "locations", "1"]
+            }
+          }
+        },
+        {
+          "name": "Delete Location",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{BACKEND}}/api/v1/locations/1",
+              "host": ["{{BACKEND}}"],
+              "path": ["api", "v1", "locations", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Store",
+      "item": [
+        {
+          "name": "Create Store",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"My Awesome Store\",\n  \"slug\": \"my-awesome-store\",\n  \"locationId\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BACKEND}}/api/v1/store",
+              "host": ["{{BACKEND}}"],
+              "path": ["api", "v1", "store"]
+            }
+          }
+        },
+        {
+          "name": "Get All Stores (Public)",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BACKEND}}/api/v1/store?page=1&limit=10&search=store",
+              "host": ["{{BACKEND}}"],
+              "path": ["api", "v1", "store"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "search",
+                  "value": "store"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Store Profile by Slug",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BACKEND}}/api/v1/store/my-awesome-store",
+              "host": ["{{BACKEND}}"],
+              "path": ["api", "v1", "store", "my-awesome-store"]
+            }
+          }
+        },
+        {
+          "name": "Get My Store",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BACKEND}}/api/v1/store/me/my-store",
+              "host": ["{{BACKEND}}"],
+              "path": ["api", "v1", "store", "me", "my-store"]
+            }
+          }
+        },
+        {
+          "name": "Update My Store",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"My Updated Store Name\",\n  \"slug\": \"my-updated-store\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BACKEND}}/api/v1/store/me/my-store",
+              "host": ["{{BACKEND}}"],
+              "path": ["api", "v1", "store", "me", "my-store"]
+            }
+          }
+        },
+        {
+          "name": "Update My Store Profile",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"avatar\": \"https://example.com/store-avatar.jpg\",\n  \"banner\": \"https://example.com/store-banner.jpg\",\n  \"bio\": \"We sell amazing preloved items\",\n  \"operational\": \"Monday - Friday, 09:00 - 18:00\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BACKEND}}/api/v1/store/me/my-store/profile",
+              "host": ["{{BACKEND}}"],
+              "path": ["api", "v1", "store", "me", "my-store", "profile"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Categories",
+      "item": [
+        {
+          "name": "Create Category (Admin)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Electronics\",\n  \"slug\": \"electronics\",\n  \"parentId\": null\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BACKEND}}/api/v1/categories",
+              "host": ["{{BACKEND}}"],
+              "path": ["api", "v1", "categories"]
+            }
+          }
+        },
+        {
+          "name": "Get All Categories",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BACKEND}}/api/v1/categories",
+              "host": ["{{BACKEND}}"],
+              "path": ["api", "v1", "categories"]
+            }
+          }
+        },
+        {
+          "name": "Get Category By ID",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BACKEND}}/api/v1/categories/1",
+              "host": ["{{BACKEND}}"],
+              "path": ["api", "v1", "categories", "1"]
+            }
+          }
+        },
+        {
+          "name": "Update Category (Admin)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated Electronics\",\n  \"slug\": \"updated-electronics\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BACKEND}}/api/v1/categories/1",
+              "host": ["{{BACKEND}}"],
+              "path": ["api", "v1", "categories", "1"]
+            }
+          }
+        },
+        {
+          "name": "Delete Category (Admin)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{BACKEND}}/api/v1/categories/1",
+              "host": ["{{BACKEND}}"],
+              "path": ["api", "v1", "categories", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Products",
+      "item": [
+        {
+          "name": "Create Product",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Vintage T-Shirt\",\n  \"description\": \"Beautiful vintage t-shirt in excellent condition\",\n  \"categoryId\": 1,\n  \"condition\": \"EXCELLENT\",\n  \"images\": [\"https://example.com/image1.jpg\", \"https://example.com/image2.jpg\"],\n  \"variants\": [\n    {\n      \"size\": \"M\",\n      \"color\": \"Blue\",\n      \"price\": 150000,\n      \"stock\": 1,\n      \"weight\": 200\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BACKEND}}/api/v1/products",
+              "host": ["{{BACKEND}}"],
+              "path": ["api", "v1", "products"]
+            }
+          }
+        },
+        {
+          "name": "Get All Products",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BACKEND}}/api/v1/products?page=1&limit=10&search=shirt&categoryId=1&condition=EXCELLENT&minPrice=100000&maxPrice=500000&sortBy=createdAt&sortOrder=desc",
+              "host": ["{{BACKEND}}"],
+              "path": ["api", "v1", "products"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "search",
+                  "value": "shirt"
+                },
+                {
+                  "key": "categoryId",
+                  "value": "1"
+                },
+                {
+                  "key": "condition",
+                  "value": "EXCELLENT"
+                },
+                {
+                  "key": "minPrice",
+                  "value": "100000"
+                },
+                {
+                  "key": "maxPrice",
+                  "value": "500000"
+                },
+                {
+                  "key": "sortBy",
+                  "value": "createdAt"
+                },
+                {
+                  "key": "sortOrder",
+                  "value": "desc"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Product By ID",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BACKEND}}/api/v1/products/1",
+              "host": ["{{BACKEND}}"],
+              "path": ["api", "v1", "products", "1"]
+            }
+          }
+        },
+        {
+          "name": "Update Product",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated Vintage T-Shirt\",\n  \"description\": \"Updated description for vintage t-shirt\",\n  \"condition\": \"GOOD\",\n  \"images\": [\"https://example.com/updated-image1.jpg\"]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BACKEND}}/api/v1/products/1",
+              "host": ["{{BACKEND}}"],
+              "path": ["api", "v1", "products", "1"]
+            }
+          }
+        },
+        {
+          "name": "Delete Product",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{BACKEND}}/api/v1/products/1",
+              "host": ["{{BACKEND}}"],
+              "path": ["api", "v1", "products", "1"]
+            }
+          }
+        },
+        {
+          "name": "Add Product Variant",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"size\": \"L\",\n  \"color\": \"Red\",\n  \"price\": 175000,\n  \"stock\": 1,\n  \"weight\": 220\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BACKEND}}/api/v1/products/1/variants",
+              "host": ["{{BACKEND}}"],
+              "path": ["api", "v1", "products", "1", "variants"]
+            }
+          }
+        },
+        {
+          "name": "Update Product Variant",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"price\": 200000,\n  \"stock\": 2\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BACKEND}}/api/v1/products/1/variants/1",
+              "host": ["{{BACKEND}}"],
+              "path": ["api", "v1", "products", "1", "variants", "1"]
+            }
+          }
+        },
+        {
+          "name": "Delete Product Variant",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{BACKEND}}/api/v1/products/1/variants/1",
+              "host": ["{{BACKEND}}"],
+              "path": ["api", "v1", "products", "1", "variants", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Cart",
+      "item": [
+        {
+          "name": "Get My Cart",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BACKEND}}/api/v1/cart",
+              "host": ["{{BACKEND}}"],
+              "path": ["api", "v1", "cart"]
+            }
+          }
+        },
+        {
+          "name": "Add Item to Cart",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"variantId\": 1,\n  \"quantity\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BACKEND}}/api/v1/cart/items",
+              "host": ["{{BACKEND}}"],
+              "path": ["api", "v1", "cart", "items"]
+            }
+          }
+        },
+        {
+          "name": "Update Cart Item Quantity",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"quantity\": 2\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BACKEND}}/api/v1/cart/items/1",
+              "host": ["{{BACKEND}}"],
+              "path": ["api", "v1", "cart", "items", "1"]
+            }
+          }
+        },
+        {
+          "name": "Remove Item from Cart",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{BACKEND}}/api/v1/cart/items/1",
+              "host": ["{{BACKEND}}"],
+              "path": ["api", "v1", "cart", "items", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Wishlist",
+      "item": [
+        {
+          "name": "Add to Wishlist",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productId\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BACKEND}}/api/v1/wishlist",
+              "host": ["{{BACKEND}}"],
+              "path": ["api", "v1", "wishlist"]
+            }
+          }
+        },
+        {
+          "name": "Check Wishlist Status",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BACKEND}}/api/v1/wishlist/status/1",
+              "host": ["{{BACKEND}}"],
+              "path": ["api", "v1", "wishlist", "status", "1"]
+            }
+          }
+        },
+        {
+          "name": "Get My Wishlist",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BACKEND}}/api/v1/wishlist",
+              "host": ["{{BACKEND}}"],
+              "path": ["api", "v1", "wishlist"]
+            }
+          }
+        },
+        {
+          "name": "Remove from Wishlist",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{BACKEND}}/api/v1/wishlist/1",
+              "host": ["{{BACKEND}}"],
+              "path": ["api", "v1", "wishlist", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Orders",
+      "item": [
+        {
+          "name": "Create Order",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"locationId\": 1,\n  \"items\": [\n    {\n      \"variantId\": 1,\n      \"quantity\": 1\n    }\n  ],\n  \"voucherCode\": \"DISCOUNT10\",\n  \"shippingMethod\": \"jne\",\n  \"shippingService\": \"reg\",\n  \"shippingCost\": 15000\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BACKEND}}/api/v1/orders",
+              "host": ["{{BACKEND}}"],
+              "path": ["api", "v1", "orders"]
+            }
+          }
+        },
+        {
+          "name": "Get My Orders",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BACKEND}}/api/v1/orders",
+              "host": ["{{BACKEND}}"],
+              "path": ["api", "v1", "orders"]
+            }
+          }
+        },
+        {
+          "name": "Get Order By ID",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BACKEND}}/api/v1/orders/1",
+              "host": ["{{BACKEND}}"],
+              "path": ["api", "v1", "orders", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Reviews",
+      "item": [
+        {
+          "name": "Create Review",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"rating\": 5,\n  \"comment\": \"Excellent product! Highly recommended.\",\n  \"images\": [\"https://example.com/review-image.jpg\"]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BACKEND}}/api/v1/products/1/reviews",
+              "host": ["{{BACKEND}}"],
+              "path": ["api", "v1", "products", "1", "reviews"]
+            }
+          }
+        },
+        {
+          "name": "Get Product Reviews",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BACKEND}}/api/v1/products/1/reviews",
+              "host": ["{{BACKEND}}"],
+              "path": ["api", "v1", "products", "1", "reviews"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Vouchers",
+      "item": [
+        {
+          "name": "Get All Active Vouchers",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BACKEND}}/api/v1/vouchers",
+              "host": ["{{BACKEND}}"],
+              "path": ["api", "v1", "vouchers"]
+            }
+          }
+        },
+        {
+          "name": "Apply Voucher",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"code\": \"DISCOUNT10\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BACKEND}}/api/v1/vouchers/apply",
+              "host": ["{{BACKEND}}"],
+              "path": ["api", "v1", "vouchers", "apply"]
+            }
+          }
+        },
+        {
+          "name": "Create Voucher (Admin)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"code\": \"NEWUSER20\",\n  \"type\": \"PERCENTAGE\",\n  \"value\": 20,\n  \"minPurchase\": 100000,\n  \"maxDiscount\": 50000,\n  \"maxUsage\": 100,\n  \"validFrom\": \"2024-01-01T00:00:00.000Z\",\n  \"validUntil\": \"2024-12-31T23:59:59.000Z\",\n  \"description\": \"20% discount for new users\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BACKEND}}/api/v1/vouchers/admin",
+              "host": ["{{BACKEND}}"],
+              "path": ["api", "v1", "vouchers", "admin"]
+            }
+          }
+        },
+        {
+          "name": "Update Voucher (Admin)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"value\": 25,\n  \"maxDiscount\": 75000,\n  \"description\": \"Updated 25% discount for new users\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BACKEND}}/api/v1/vouchers/admin/1",
+              "host": ["{{BACKEND}}"],
+              "path": ["api", "v1", "vouchers", "admin", "1"]
+            }
+          }
+        },
+        {
+          "name": "Delete Voucher (Admin)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{BACKEND}}/api/v1/vouchers/admin/1",
+              "host": ["{{BACKEND}}"],
+              "path": ["api", "v1", "vouchers", "admin", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Notifications",
+      "item": [
+        {
+          "name": "Get My Notifications",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BACKEND}}/api/v1/notifications?page=1&limit=10&isRead=false",
+              "host": ["{{BACKEND}}"],
+              "path": ["api", "v1", "notifications"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "isRead",
+                  "value": "false"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Mark Notification as Read",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{BACKEND}}/api/v1/notifications/1/read",
+              "host": ["{{BACKEND}}"],
+              "path": ["api", "v1", "notifications", "1", "read"]
+            }
+          }
+        },
+        {
+          "name": "Mark All Notifications as Read",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{BACKEND}}/api/v1/notifications/read-all",
+              "host": ["{{BACKEND}}"],
+              "path": ["api", "v1", "notifications", "read-all"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Payments",
+      "item": [
+        {
+          "name": "Midtrans Notification Webhook",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"transaction_time\": \"2024-01-15 10:30:00\",\n  \"transaction_status\": \"capture\",\n  \"transaction_id\": \"12345678-1234-1234-1234-123456789012\",\n  \"status_message\": \"midtrans payment notification\",\n  \"status_code\": \"200\",\n  \"signature_key\": \"signature_key_from_midtrans\",\n  \"payment_type\": \"credit_card\",\n  \"order_id\": \"ORDER-123456\",\n  \"merchant_id\": \"G123456789\",\n  \"gross_amount\": \"150000.00\",\n  \"fraud_status\": \"accept\",\n  \"currency\": \"IDR\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BACKEND}}/api/v1/payments/midtrans-notification",
+              "host": ["{{BACKEND}}"],
+              "path": ["api", "v1", "payments", "midtrans-notification"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Shipments",
+      "item": [
+        {
+          "name": "Biteship Webhook",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"order_id\": \"ORDER-123456\",\n  \"status\": \"delivered\",\n  \"tracking_id\": \"TRACK123456\",\n  \"courier\": {\n    \"company\": \"jne\",\n    \"name\": \"JNE\"\n  },\n  \"history\": [\n    {\n      \"note\": \"Package delivered\",\n      \"updated_at\": \"2024-01-15T15:30:00Z\",\n      \"status\": \"delivered\"\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BACKEND}}/api/v1/shipments/biteship-webhook",
+              "host": ["{{BACKEND}}"],
+              "path": ["api", "v1", "shipments", "biteship-webhook"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Shipping Rates",
+      "item": [
+        {
+          "name": "Check Rates by Area",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"origin_area_id\": \"IDNP6IDNC148IDND845IDZ12820\",\n  \"destination_area_id\": \"IDNP6IDNC148IDND845IDZ12830\",\n  \"couriers\": \"jne,pos,tiki\",\n  \"items\": [\n    {\n      \"name\": \"T-Shirt\",\n      \"description\": \"Vintage T-Shirt\",\n      \"value\": 150000,\n      \"length\": 20,\n      \"width\": 15,\n      \"height\": 5,\n      \"weight\": 200,\n      \"quantity\": 1\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BACKEND}}/api/v1/shipping-rates/check-by-area",
+              "host": ["{{BACKEND}}"],
+              "path": ["api", "v1", "shipping-rates", "check-by-area"]
+            }
+          }
+        },
+        {
+          "name": "Check Rates by Coordinates",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"origin_latitude\": -6.2088,\n  \"origin_longitude\": 106.8456,\n  \"destination_latitude\": -6.1751,\n  \"destination_longitude\": 106.8650,\n  \"couriers\": \"jne,pos,tiki\",\n  \"items\": [\n    {\n      \"name\": \"T-Shirt\",\n      \"description\": \"Vintage T-Shirt\",\n      \"value\": 150000,\n      \"length\": 20,\n      \"width\": 15,\n      \"height\": 5,\n      \"weight\": 200,\n      \"quantity\": 1\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BACKEND}}/api/v1/shipping-rates/check-by-coords",
+              "host": ["{{BACKEND}}"],
+              "path": ["api", "v1", "shipping-rates", "check-by-coords"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Maps & Geocoding",
+      "item": [
+        {
+          "name": "Search Areas (Biteship)",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BACKEND}}/api/v1/maps/search-areas?input=Jakarta",
+              "host": ["{{BACKEND}}"],
+              "path": ["api", "v1", "maps", "search-areas"],
+              "query": [
+                {
+                  "key": "input",
+                  "value": "Jakarta"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Search OpenStreetMap",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BACKEND}}/api/v1/maps/search-osm?q=Jakarta",
+              "host": ["{{BACKEND}}"],
+              "path": ["api", "v1", "maps", "search-osm"],
+              "query": [
+                {
+                  "key": "q",
+                  "value": "Jakarta"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Reverse Geocode",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BACKEND}}/api/v1/geocode/reverse?lat=-6.2088&lon=106.8456",
+              "host": ["{{BACKEND}}"],
+              "path": ["api", "v1", "geocode", "reverse"],
+              "query": [
+                {
+                  "key": "lat",
+                  "value": "-6.2088"
+                },
+                {
+                  "key": "lon",
+                  "value": "106.8456"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
