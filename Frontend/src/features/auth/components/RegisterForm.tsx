@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import React, { useState } from "react";
-import { Eye, EyeOff, Mail, Lock, User } from "lucide-react";
+import React, { useState } from 'react';
+import { Eye, EyeOff, Mail, Lock, User } from 'lucide-react';
 
 interface RegisterFormData {
   firstName: string;
@@ -14,7 +14,7 @@ interface RegisterFormData {
 
 interface RegisterFormProps {
   onSubmit: (formData: RegisterFormData) => void;
-  onSocialLogin: (provider: "Google" | "Facebook") => void;
+  onSocialLogin: (provider: 'Google' | 'Facebook') => void;
   isLoading: boolean;
 }
 
@@ -27,11 +27,11 @@ const RegisterForm = ({
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const [formData, setFormData] = useState<RegisterFormData>({
-    firstName: "",
-    lastName: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
+    firstName: '',
+    lastName: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
     agreeToTerms: false,
   });
 
@@ -43,7 +43,7 @@ const RegisterForm = ({
     const { name, value, type, checked } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: type === "checkbox" ? checked : value,
+      [name]: type === 'checkbox' ? checked : value,
     }));
   };
 
@@ -139,7 +139,7 @@ const RegisterForm = ({
             <input
               id="password"
               name="password"
-              type={showPassword ? "text" : "password"}
+              type={showPassword ? 'text' : 'password'}
               autoComplete="new-password"
               value={formData.password}
               onChange={handleInputChange}
@@ -171,7 +171,7 @@ const RegisterForm = ({
             <input
               id="confirmPassword"
               name="confirmPassword"
-              type={showConfirmPassword ? "text" : "password"}
+              type={showConfirmPassword ? 'text' : 'password'}
               autoComplete="new-password"
               value={formData.confirmPassword}
               onChange={handleInputChange}
@@ -191,7 +191,7 @@ const RegisterForm = ({
             </button>
           </div>
         </div>
-        <div className="flex items-start">
+        <div className="flex items-center">
           <input
             id="agreeToTerms"
             name="agreeToTerms"
@@ -204,14 +204,14 @@ const RegisterForm = ({
             htmlFor="agreeToTerms"
             className="ml-2 block text-sm text-gray-700"
           >
-            I agree to the{" "}
+            I agree to the{' '}
             <a
               href="/terms"
               className="font-medium text-sky-600 hover:text-sky-500"
             >
               Terms of Service
-            </a>{" "}
-            &{" "}
+            </a>{' '}
+            &{' '}
             <a
               href="/privacy"
               className="font-medium text-sky-600 hover:text-sky-500"
@@ -225,7 +225,7 @@ const RegisterForm = ({
           disabled={isLoading}
           className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-sky-600 hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 disabled:opacity-50"
         >
-          {isLoading ? "Creating Account..." : "Create Account"}
+          {isLoading ? 'Creating Account...' : 'Create Account'}
         </button>
       </form>
       <div className="relative">
@@ -239,7 +239,7 @@ const RegisterForm = ({
       <div className="flex space-x-4">
         <button
           type="button"
-          onClick={() => onSocialLogin("Google")}
+          onClick={() => onSocialLogin('Google')}
           className="flex-1 flex justify-center items-center py-3 px-4 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
         >
           <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24">
@@ -264,7 +264,7 @@ const RegisterForm = ({
         </button>
         <button
           type="button"
-          onClick={() => onSocialLogin("Facebook")}
+          onClick={() => onSocialLogin('Facebook')}
           className="flex-1 flex justify-center items-center py-3 px-4 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
         >
           <svg className="w-5 h-5 mr-2" fill="#1877F2" viewBox="0 0 24 24">
@@ -275,7 +275,7 @@ const RegisterForm = ({
       </div>
       <div className="text-center">
         <p className="text-sm text-gray-600">
-          Already have an account?{" "}
+          Already have an account?{' '}
           <a
             href="/auth/login"
             className="font-medium text-sky-600 hover:text-sky-500"
