@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { useParams, useRouter } from "next/navigation";
 import {
   ChevronLeft,
@@ -9,7 +9,6 @@ import {
   Share,
   MessageCircle,
   Smartphone,
-  Search,
   Loader2,
   Plus,
   Minus,
@@ -46,6 +45,9 @@ const ProductDetail = () => {
   const [selectedVariantIndex, setSelectedVariantIndex] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+  const [isHovering, setIsHovering] = useState(false);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const imageRef = useRef<HTMLDivElement>(null);
 
   const isWishlisted = product ? isInWishlist(product.id) : false;
 
@@ -76,13 +78,40 @@ const ProductDetail = () => {
   const installmentPrice = selectedVariant.price / 12;
 
   const nextImage = () => {
+    setIsHovering(false);
     setSelectedImageIndex((prev) => (prev + 1) % product.images.length);
   };
 
   const prevImage = () => {
+    setIsHovering(false);
     setSelectedImageIndex(
       (prev) => (prev - 1 + product.images.length) % product.images.length
     );
+  };
+
+  const handleMouseEnter = (e: React.MouseEvent<HTMLDivElement>) => {
+    const target = e.target as HTMLElement;
+    if (!target.closest("button")) {
+      setIsHovering(true);
+    }
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovering(false);
+  };
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const target = e.target as HTMLElement;
+    if (target.closest("button")) {
+      return;
+    }
+
+    if (imageRef.current) {
+      const rect = imageRef.current.getBoundingClientRect();
+      const x = ((e.clientX - rect.left) / rect.width) * 100;
+      const y = ((e.clientY - rect.top) / rect.height) * 100;
+      setMousePosition({ x, y });
+    }
   };
 
   const handleAddToCart = () => {
@@ -110,26 +139,61 @@ const ProductDetail = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-16">
             <div className="space-y-4 lg:sticky top-8 self-start">
               <div className="relative bg-gray-50 dark:bg-gray-800 rounded-lg overflow-hidden">
-                <div className="aspect-square relative">
-                  <img
-                    src={product.images[selectedImageIndex]}
-                    alt={product.name}
-                    className="w-full h-full object-cover"
-                  />
+                <div
+                  ref={imageRef}
+                  className="aspect-square relative overflow-hidden cursor-zoom-in"
+                  onMouseEnter={handleMouseEnter}
+                  onMouseLeave={handleMouseLeave}
+                  onMouseMove={handleMouseMove}
+                >
+                  <div className="relative w-full h-full">
+                    {product.images.map((image, index) => (
+                      <div
+                        key={index}
+                        className="absolute inset-0 w-full h-full"
+                        style={{
+                          opacity: index === selectedImageIndex ? 1 : 0,
+                          transform:
+                            isHovering && index === selectedImageIndex
+                              ? `scale(2) translate(${
+                                  (50 - mousePosition.x) * 0.5
+                                }%, ${(50 - mousePosition.y) * 0.5}%)`
+                              : "scale(1)",
+                          transformOrigin: `${mousePosition.x}% ${mousePosition.y}%`,
+                          transition:
+                            index === selectedImageIndex
+                              ? isHovering
+                                ? "transform 0.3s ease-out, opacity 0.5s ease-in-out"
+                                : "opacity 0.5s ease-in-out, transform 0.3s ease-out"
+                              : "opacity 0.5s ease-in-out",
+                          pointerEvents:
+                            index === selectedImageIndex ? "auto" : "none",
+                        }}
+                      >
+                        <img
+                          src={image}
+                          alt={product.name}
+                          className="w-full h-full object-cover"
+                          draggable={false}
+                        />
+                      </div>
+                    ))}
+                  </div>
                   <button
                     onClick={prevImage}
-                    className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 dark:bg-gray-800/80 hover:bg-white dark:hover:bg-gray-700 rounded-full p-2 shadow-md transition-all duration-200"
+                    onMouseEnter={() => setIsHovering(false)}
+                    className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 dark:bg-gray-800/80 hover:bg-white dark:hover:bg-gray-700 rounded-full p-2 shadow-md transition-all duration-200 z-10 touch-manipulation"
+                    aria-label="Previous image"
                   >
                     <ChevronLeft className="w-5 h-5 text-gray-700 dark:text-white" />
                   </button>
                   <button
                     onClick={nextImage}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 dark:bg-gray-800/80 hover:bg-white dark:hover:bg-gray-700 rounded-full p-2 shadow-md transition-all duration-200"
+                    onMouseEnter={() => setIsHovering(false)}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 dark:bg-gray-800/80 hover:bg-white dark:hover:bg-gray-700 rounded-full p-2 shadow-md transition-all duration-200 z-10 touch-manipulation"
+                    aria-label="Next image"
                   >
                     <ChevronRight className="w-5 h-5 text-gray-700 dark:text-white" />
-                  </button>
-                  <button className="absolute bottom-4 right-4 bg-white/80 dark:bg-gray-800/80 hover:bg-white dark:hover:bg-gray-700 rounded-full p-2 shadow-md transition-all duration-200">
-                    <Search className="w-5 h-5 text-gray-700 dark:text-white" />
                   </button>
                 </div>
                 <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2">
