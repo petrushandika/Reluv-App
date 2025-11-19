@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
+import { useRouter } from "next/navigation";
 import {
   User,
   Mail,
@@ -14,6 +15,8 @@ import {
   Clock,
 } from "lucide-react";
 import type { LatLngExpression } from "leaflet";
+import { useCart } from "@/features/cart/hooks/useCart";
+import Spinner from "@/shared/components/atoms/Spinner";
 
 const MapPicker = dynamic(
   () => import("@/shared/components/organisms/MapPicker"),
@@ -49,28 +52,6 @@ const locationData = {
     ],
   },
 };
-
-const checkoutItems = [
-  {
-    id: 1,
-    name: "Air Jordan 1 High '85",
-    price: 2240000,
-    originalPrice: 2800000,
-    imageUrl:
-      "https://res.cloudinary.com/dqcyabvc2/image/upload/v1750143729/airdjordan1high85_fmbzyt.png",
-    quantity: 1,
-    size: "42",
-  },
-  {
-    id: 3,
-    name: "Jordan Air Rev",
-    price: 2800000,
-    imageUrl:
-      "https://res.cloudinary.com/dqcyabvc2/image/upload/v1750143729/jordanairrev_pkb1qo.png",
-    quantity: 1,
-    size: "41",
-  },
-];
 
 const shippingData = {
   sicepat: {
@@ -148,6 +129,9 @@ const formatPrice = (price: number) =>
   `Rp${new Intl.NumberFormat("id-ID").format(price)}`;
 
 const Checkout = () => {
+  const router = useRouter();
+  const { cart, isFetchingCart, subtotal } = useCart();
+
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -176,6 +160,12 @@ const Checkout = () => {
   const [selectedVoucher, setSelectedVoucher] = useState<
     (typeof voucherData)[0] | null
   >(null);
+
+  useEffect(() => {
+    if (!isFetchingCart && (!cart || cart.items.length === 0)) {
+      router.push("/cart");
+    }
+  }, [cart, isFetchingCart, router]);
 
   const handleInputChange = (
     e: React.ChangeEvent<
@@ -206,12 +196,21 @@ const Checkout = () => {
     setIsVoucherModalOpen(false);
   };
 
-  const subtotal = checkoutItems.reduce(
-    (sum, item) => sum + item.price * item.quantity,
-    0
-  );
+  if (isFetchingCart) {
+    return (
+      <div className="min-h-screen bg-white dark:bg-gray-900 flex items-center justify-center">
+        <Spinner />
+      </div>
+    );
+  }
+
+  if (!cart || cart.items.length === 0) {
+    return null;
+  }
+
   const shippingCost = selectedService?.price || 0;
-  const tax = subtotal * 0.11;
+  const TAX_RATE = 0.11;
+  const tax = subtotal * TAX_RATE;
 
   let voucherDiscount = 0;
   if (selectedVoucher) {
@@ -223,7 +222,7 @@ const Checkout = () => {
         );
         break;
       case "fixed":
-        voucherDiscount = selectedVoucher.value;
+        voucherDiscount = Math.min(selectedVoucher.value, subtotal);
         break;
       case "shipping":
         voucherDiscount = Math.min(shippingCost, selectedVoucher.value);
@@ -233,14 +232,16 @@ const Checkout = () => {
     }
   }
 
+  const totalSavings = cart.items.reduce((sum, item) => {
+    if (item.variant.compareAtPrice) {
+      return (
+        sum + (item.variant.compareAtPrice - item.variant.price) * item.quantity
+      );
+    }
+    return sum;
+  }, 0);
+
   const total = Math.max(0, subtotal + shippingCost + tax - voucherDiscount);
-  const totalSavings = checkoutItems.reduce(
-    (sum, item) =>
-      item.originalPrice
-        ? sum + (item.originalPrice - item.price) * item.quantity
-        : sum,
-    0
-  );
 
   const FormInput = ({
     id,
@@ -269,7 +270,10 @@ const Checkout = () => {
       <div className="relative">
         {Icon && (
           <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5">
-            <Icon className="h-5 w-5 text-gray-400 dark:text-gray-500" aria-hidden="true" />
+            <Icon
+              className="h-5 w-5 text-gray-400 dark:text-gray-500"
+              aria-hidden="true"
+            />
           </div>
         )}
         <input
@@ -511,28 +515,35 @@ const Checkout = () => {
                   Order Summary
                 </h2>
                 <div className="space-y-4">
-                  {checkoutItems.map((item) => (
+                  {cart.items.map((item) => (
                     <div key={item.id} className="flex items-center gap-4">
-                      <div className="relative">
-                        <img
-                          src={item.imageUrl}
-                          alt={item.name}
-                          className="w-16 h-16 rounded-md object-cover"
-                        />
+                      <div className="relative flex-shrink-0">
+                        <div className="w-16 h-16 rounded-md overflow-hidden bg-gray-100 dark:bg-gray-700">
+                          <img
+                            src={item.variant.product.images[0] || ""}
+                            alt={item.variant.product.name}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
                         <span className="absolute -top-2 -right-2 flex h-6 w-6 items-center justify-center rounded-full bg-sky-600 text-xs font-medium text-white">
                           {item.quantity}
                         </span>
                       </div>
                       <div className="flex-grow">
                         <p className="font-semibold text-black dark:text-white text-sm">
-                          {item.name}
+                          {item.variant.product.name}
                         </p>
-                        <p className="text-gray-500 dark:text-gray-400 text-xs">
-                          Size: {item.size}
-                        </p>
+                        <div className="flex flex-wrap gap-x-2 text-gray-500 dark:text-gray-400 text-xs">
+                          {item.variant.size && (
+                            <span>Size: {item.variant.size}</span>
+                          )}
+                          {item.variant.color && (
+                            <span>Color: {item.variant.color}</span>
+                          )}
+                        </div>
                       </div>
                       <p className="font-semibold text-black dark:text-white text-sm">
-                        {formatPrice(item.price)}
+                        {formatPrice(item.variant.price * item.quantity)}
                       </p>
                     </div>
                   ))}
@@ -593,19 +604,25 @@ const Checkout = () => {
 
                 <div className="space-y-2 md:space-y-3 mb-4">
                   <div className="flex justify-between text-xs md:text-sm">
-                    <span className="text-gray-600 dark:text-gray-400">Subtotal</span>
+                    <span className="text-gray-600 dark:text-gray-400">
+                      Subtotal
+                    </span>
                     <span className="font-medium text-black dark:text-white">
                       {formatPrice(subtotal)}
                     </span>
                   </div>
                   <div className="flex justify-between text-xs md:text-sm">
-                    <span className="text-gray-600 dark:text-gray-400">Shipping</span>
+                    <span className="text-gray-600 dark:text-gray-400">
+                      Shipping
+                    </span>
                     <span className="font-medium text-black dark:text-white">
                       {formatPrice(shippingCost)}
                     </span>
                   </div>
                   <div className="flex justify-between text-xs md:text-sm">
-                    <span className="text-gray-600 dark:text-gray-400">Tax (VAT 11%)</span>
+                    <span className="text-gray-600 dark:text-gray-400">
+                      Tax (VAT 11%)
+                    </span>
                     <span className="font-medium text-black dark:text-white">
                       {formatPrice(tax)}
                     </span>
@@ -631,7 +648,9 @@ const Checkout = () => {
                 <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
                   <div className="flex justify-between text-lg font-bold">
                     <span className="text-black dark:text-white">Total</span>
-                    <span className="text-sky-600 dark:text-sky-400">{formatPrice(total)}</span>
+                    <span className="text-sky-600 dark:text-sky-400">
+                      {formatPrice(total)}
+                    </span>
                   </div>
                 </div>
 
