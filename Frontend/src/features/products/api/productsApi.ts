@@ -11,6 +11,11 @@ export const getProducts = async (query?: ProductQuery): Promise<Product[]> => {
         params: query,
       }
     );
+
+    if (!response || !response.data) {
+      return [];
+    }
+
     const data = response.data;
     if (Array.isArray(data)) {
       return data;
@@ -23,10 +28,8 @@ export const getProducts = async (query?: ProductQuery): Promise<Product[]> => {
     ) {
       return data.data;
     }
-    console.warn("Unexpected API response structure:", data);
     return [];
-  } catch (error) {
-    console.error("Gagal mengambil produk:", error);
+  } catch {
     return [];
   }
 };
@@ -35,8 +38,7 @@ export const getProductById = async (id: number): Promise<Product> => {
   try {
     const response = await api.get<Product>(`/products/${id}`);
     return response.data;
-  } catch (error) {
-    console.error(`Gagal mengambil produk dengan ID ${id}:`, error);
+  } catch {
     throw new Error("Tidak dapat memuat produk.");
   }
 };
