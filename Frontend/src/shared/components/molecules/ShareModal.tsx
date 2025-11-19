@@ -100,7 +100,7 @@ const ShareModal = ({ isOpen, onClose, product }: ShareModalProps) => {
         <p className="text-gray-600 dark:text-gray-300 mb-4 text-sm">
           Share this link via
         </p>
-        <div className="flex space-x-4 overflow-x-auto pb-3">
+        <div className="flex space-x-4 overflow-x-auto pb-3 share-modal-scroll">
           {shareOptions.map((option) => (
             <a
               key={option.name}
