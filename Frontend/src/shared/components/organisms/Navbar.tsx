@@ -19,6 +19,7 @@ import { useAuthStore } from '@/features/auth/store/auth.store';
 import { useCartStore } from '@/features/cart/store/cart.store';
 import { useWishlistStore } from '@/features/wishlist/store/wishlist.store';
 import ThemeToggle from './ThemeToggle';
+import PromoMarquee from '@/shared/components/molecules/PromoMarquee';
 
 interface SubMenuSection {
   title: string;
@@ -434,8 +435,9 @@ const Navbar = () => {
   return (
     <header
       onMouseLeave={handleNavbarLeave}
-      className="fixed top-0 left-0 right-0 w-full z-50 bg-white dark:bg-gray-900 shadow transition-all duration-300"
+      className="fixed top-0 left-0 right-0 w-full z-40 bg-white dark:bg-gray-900 shadow transition-all duration-300"
     >
+      <PromoMarquee />
       <div className="w-full text-gray-800 dark:text-white relative">
         <div className="container mx-auto flex items-center justify-between px-6 md:px-10 xl:px-20 2xl:px-40 py-4">
           <Link href="/">

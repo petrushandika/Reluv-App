@@ -1,19 +1,19 @@
-"use client";
+'use client';
 
-import { Inter } from "next/font/google";
-import { usePathname } from "next/navigation";
-import { Toaster } from "sonner";
-import "./globals.css";
-import "leaflet/dist/leaflet.css";
-import { AuthProvider } from "@/context/AuthContext";
-import Navbar from "@/shared/components/organisms/Navbar";
-import Footer from "@/shared/components/organisms/Footer";
-import AppInitializer from "@/shared/components/organisms/AppInitializer";
-import BackToTop from "@/shared/components/organisms/BackToTop";
+import { Inter } from 'next/font/google';
+import { usePathname } from 'next/navigation';
+import { Toaster } from 'sonner';
+import './globals.css';
+import 'leaflet/dist/leaflet.css';
+import { AuthProvider } from '@/context/AuthContext';
+import Navbar from '@/shared/components/organisms/Navbar';
+import Footer from '@/shared/components/organisms/Footer';
+import AppInitializer from '@/shared/components/organisms/AppInitializer';
+import BackToTop from '@/shared/components/organisms/BackToTop';
 
 const inter = Inter({
-  variable: "--font-sans",
-  subsets: ["latin"],
+  variable: '--font-sans',
+  subsets: ['latin'],
 });
 
 export default function RootLayout({
@@ -22,8 +22,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   const pathname = usePathname();
-  const isAuthPage = pathname.startsWith("/auth");
-  const isDashboardPage = pathname.startsWith("/dashboard");
+  const isAuthPage = pathname.startsWith('/auth');
+  const isDashboardPage = pathname.startsWith('/dashboard');
 
   return (
     <html lang="en" suppressHydrationWarning>
@@ -78,13 +78,13 @@ export default function RootLayout({
               richColors
               toastOptions={{
                 style: {
-                  borderRadius: "8px",
+                  borderRadius: '8px',
                 },
                 classNames: {
-                  toast: "p-4",
-                  title: "text-base",
-                  description: "text-sm",
-                  success: "bg-sky-600 border-sky-700 text-white",
+                  toast: 'p-4',
+                  title: 'text-base',
+                  description: 'text-sm',
+                  success: 'bg-sky-600 border-sky-700 text-white',
                 },
               }}
             />
@@ -92,7 +92,7 @@ export default function RootLayout({
               {!isAuthPage && !isDashboardPage && <Navbar />}
               <main
                 className={`flex-1 ${
-                  isAuthPage || isDashboardPage ? "" : "pt-20 md:pt-24"
+                  isAuthPage || isDashboardPage ? '' : 'pt-24 md:pt-28'
                 }`}
               >
                 {children}
