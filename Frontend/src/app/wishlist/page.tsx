@@ -34,7 +34,7 @@ const Wishlist = () => {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-white dark:bg-gray-900">
-        <div className="container mx-auto px-4 sm:px-6 md:px-20 xl:px-40 py-6 sm:py-8 md:py-12">
+        <div className="container mx-auto px-4 sm:px-6 md:px-10 xl:px-20 2xl:px-40 py-6 sm:py-8 md:py-12">
           <div className="flex justify-center items-center h-48 sm:h-64">
             <Spinner />
           </div>
@@ -46,7 +46,7 @@ const Wishlist = () => {
   if (wishlistItems.length === 0) {
     return (
       <div className="bg-white dark:bg-gray-900 min-h-screen">
-        <div className="container mx-auto px-4 sm:px-6 md:px-20 xl:px-40 py-8 sm:py-12 md:py-16">
+        <div className="container mx-auto px-4 sm:px-6 md:px-10 xl:px-20 2xl:px-40 py-8 sm:py-12 md:py-16">
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 sm:p-8 md:p-12 text-center border border-gray-200 dark:border-gray-700">
             <Heart className="w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 text-gray-300 dark:text-gray-600 mx-auto mb-3 sm:mb-4" />
             <h2 className="text-lg sm:text-xl font-semibold text-black dark:text-white mb-2">
@@ -69,7 +69,7 @@ const Wishlist = () => {
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">
-      <div className="container mx-auto px-4 sm:px-6 md:px-20 xl:px-40 py-6 sm:py-8 md:py-12">
+      <div className="container mx-auto px-4 sm:px-6 md:px-10 xl:px-20 2xl:px-40 py-6 sm:py-8 md:py-12">
         <div className="flex justify-between items-center mb-4 sm:mb-6 md:mb-8">
           <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-black dark:text-white">
             My Wishlist

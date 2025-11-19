@@ -112,7 +112,7 @@ const Banner = () => {
           <div className="embla__container flex">
             {slides.map((slide) => (
               <div key={slide.id} className="embla__slide flex-none w-full">
-                <div className="container mx-auto px-6 md:px-20 xl:px-40 py-5">
+                <div className="container mx-auto px-6 md:px-10 xl:px-20 2xl:px-40 py-5">
                   <div className="relative">
                     <div className="grid lg:grid-cols-2 gap-6 lg:gap-8 items-center py-8 lg:py-12 min-h-[380px]">
                       <div className="space-y-4 lg:space-y-6 order-2 lg:order-1">
@@ -226,7 +226,7 @@ const Banner = () => {
           </div>
         </div>
 
-        <div className="container mx-auto px-6 md:px-20 xl:px-40 absolute inset-0 pointer-events-none">
+        <div className="container mx-auto px-6 md:px-10 xl:px-20 2xl:px-40 absolute inset-0 pointer-events-none">
           <div className="relative w-full h-full">
             <button
               onClick={scrollPrev}

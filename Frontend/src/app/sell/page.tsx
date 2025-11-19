@@ -107,7 +107,7 @@ const Sell = () => {
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900 w-full flex items-center justify-center p-3 sm:p-4">
-      <div className="container mx-auto px-4 sm:px-6 md:px-20 xl:px-40 py-4 sm:py-5">
+      <div className="container mx-auto px-4 sm:px-6 md:px-10 xl:px-20 2xl:px-40 py-4 sm:py-5">
         {!isAuthenticated() ? (
           <AuthWarningModal />
         ) : files.length === 0 ? (

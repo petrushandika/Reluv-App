@@ -429,7 +429,7 @@ const Navbar = () => {
       className="fixed top-0 left-0 right-0 w-full z-50 bg-white dark:bg-gray-900 shadow transition-all duration-300"
     >
       <div className="w-full text-gray-800 dark:text-white relative">
-        <div className="container mx-auto flex items-center justify-between px-6 md:px-20 xl:px-40 py-4">
+        <div className="container mx-auto flex items-center justify-between px-6 md:px-10 xl:px-20 2xl:px-40 py-4">
           <Link href="/">
             <div className="text-xl lg:text-2xl font-bold text-sky-700 dark:text-sky-400 hidden lg:block">
               reluv

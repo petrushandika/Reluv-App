@@ -86,7 +86,7 @@ const Cart = () => {
   if (!cart || cart.items.length === 0) {
     return (
       <div className="min-h-screen bg-white">
-        <div className="container mx-auto px-6 md:px-20 xl:px-40 py-12 md:py-12">
+        <div className="container mx-auto px-6 md:px-10 xl:px-20 2xl:px-40 py-12 md:py-12">
           <h1 className="text-xl md:text-2xl font-bold text-black mb-6 md:mb-8">
             Shopping Cart
           </h1>
@@ -130,7 +130,7 @@ const Cart = () => {
         itemName={itemToRemove?.variant.product.name || ""}
       />
 
-      <div className="container mx-auto px-6 md:px-20 xl:px-40 py-12 md:py-12">
+      <div className="container mx-auto px-6 md:px-10 xl:px-20 2xl:px-40 py-12 md:py-12">
         <h1 className="text-xl md:text-2xl font-bold text-black mb-6 md:mb-8">
           Shopping Cart
         </h1>

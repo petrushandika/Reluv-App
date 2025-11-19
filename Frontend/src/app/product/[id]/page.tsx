@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import React, { useState, useRef } from "react";
-import { useParams, useRouter } from "next/navigation";
+import React, { useState, useRef } from 'react';
+import { useParams, useRouter } from 'next/navigation';
 import {
   ChevronLeft,
   ChevronRight,
@@ -12,17 +12,17 @@ import {
   Loader2,
   Plus,
   Minus,
-} from "lucide-react";
-import { PublicRoute } from "@/shared/components/guards/RouteGuards";
-import ProductList from "@/features/products/components/ProductList";
-import { useProductDetail } from "@/features/products/hooks/useProductDetail";
-import { useProduct } from "@/features/products/hooks/useProduct";
-import { useCart } from "@/features/cart/hooks/useCart";
-import { useWishlist } from "@/features/wishlist/hooks/useWishlist";
-import ShareModal from "@/shared/components/molecules/ShareModal";
+} from 'lucide-react';
+import { PublicRoute } from '@/shared/components/guards/RouteGuards';
+import ProductList from '@/features/products/components/ProductList';
+import { useProductDetail } from '@/features/products/hooks/useProductDetail';
+import { useProduct } from '@/features/products/hooks/useProduct';
+import { useCart } from '@/features/cart/hooks/useCart';
+import { useWishlist } from '@/features/wishlist/hooks/useWishlist';
+import ShareModal from '@/shared/components/molecules/ShareModal';
 
 const formatPrice = (price: number) => {
-  return `Rp${new Intl.NumberFormat("id-ID").format(price)}`;
+  return `Rp${new Intl.NumberFormat('id-ID').format(price)}`;
 };
 
 const ProductDetail = () => {
@@ -47,6 +47,8 @@ const ProductDetail = () => {
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [touchEnd, setTouchEnd] = useState<number | null>(null);
   const imageRef = useRef<HTMLDivElement>(null);
 
   const isWishlisted = product ? isInWishlist(product.id) : false;
@@ -91,7 +93,7 @@ const ProductDetail = () => {
 
   const handleMouseEnter = (e: React.MouseEvent<HTMLDivElement>) => {
     const target = e.target as HTMLElement;
-    if (!target.closest("button")) {
+    if (!target.closest('button')) {
       setIsHovering(true);
     }
   };
@@ -102,7 +104,7 @@ const ProductDetail = () => {
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const target = e.target as HTMLElement;
-    if (target.closest("button")) {
+    if (target.closest('button')) {
       return;
     }
 
@@ -114,6 +116,33 @@ const ProductDetail = () => {
     }
   };
 
+  // Swipe gesture handlers for mobile
+  const minSwipeDistance = 50;
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const onTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > minSwipeDistance;
+    const isRightSwipe = distance < -minSwipeDistance;
+
+    if (isLeftSwipe) {
+      nextImage();
+    }
+    if (isRightSwipe) {
+      prevImage();
+    }
+  };
+
   const handleAddToCart = () => {
     if (selectedVariant) {
       addItemToCart({ variantId: selectedVariant.id, quantity });
@@ -121,7 +150,7 @@ const ProductDetail = () => {
   };
 
   const handleBuyNow = () => {
-    router.push("/checkout");
+    router.push('/checkout');
   };
 
   const handleWishlistToggle = () => {
@@ -135,7 +164,7 @@ const ProductDetail = () => {
   return (
     <PublicRoute>
       <div className="min-h-screen bg-white dark:bg-gray-900">
-        <div className="container mx-auto px-4 sm:px-6 md:px-20 xl:px-40 py-6 sm:py-8 md:py-12">
+        <div className="container mx-auto px-4 sm:px-6 md:px-10 xl:px-20 2xl:px-40 py-6 sm:py-8 md:py-12">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-16">
             <div className="space-y-4 lg:sticky top-8 self-start">
               <div className="relative bg-gray-50 dark:bg-gray-800 rounded-lg overflow-hidden">
@@ -145,6 +174,9 @@ const ProductDetail = () => {
                   onMouseEnter={handleMouseEnter}
                   onMouseLeave={handleMouseLeave}
                   onMouseMove={handleMouseMove}
+                  onTouchStart={onTouchStart}
+                  onTouchMove={onTouchMove}
+                  onTouchEnd={onTouchEnd}
                 >
                   <div className="relative w-full h-full">
                     {product.images.map((image, index) => (
@@ -158,16 +190,16 @@ const ProductDetail = () => {
                               ? `scale(2) translate(${
                                   (50 - mousePosition.x) * 0.5
                                 }%, ${(50 - mousePosition.y) * 0.5}%)`
-                              : "scale(1)",
+                              : 'scale(1)',
                           transformOrigin: `${mousePosition.x}% ${mousePosition.y}%`,
                           transition:
                             index === selectedImageIndex
                               ? isHovering
-                                ? "transform 0.3s ease-out, opacity 0.5s ease-in-out"
-                                : "opacity 0.5s ease-in-out, transform 0.3s ease-out"
-                              : "opacity 0.5s ease-in-out",
+                                ? 'transform 0.3s ease-out, opacity 0.5s ease-in-out'
+                                : 'opacity 0.5s ease-in-out, transform 0.3s ease-out'
+                              : 'opacity 0.5s ease-in-out',
                           pointerEvents:
-                            index === selectedImageIndex ? "auto" : "none",
+                            index === selectedImageIndex ? 'auto' : 'none',
                         }}
                       >
                         <img
@@ -182,7 +214,7 @@ const ProductDetail = () => {
                   <button
                     onClick={prevImage}
                     onMouseEnter={() => setIsHovering(false)}
-                    className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 dark:bg-gray-800/80 hover:bg-white dark:hover:bg-gray-700 rounded-full p-2 shadow-md transition-all duration-200 z-10 touch-manipulation"
+                    className="hidden md:flex absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 dark:bg-gray-800/80 hover:bg-white dark:hover:bg-gray-700 rounded-full p-2 shadow-md transition-all duration-200 z-10 touch-manipulation items-center justify-center"
                     aria-label="Previous image"
                   >
                     <ChevronLeft className="w-5 h-5 text-gray-700 dark:text-white" />
@@ -190,7 +222,7 @@ const ProductDetail = () => {
                   <button
                     onClick={nextImage}
                     onMouseEnter={() => setIsHovering(false)}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 dark:bg-gray-800/80 hover:bg-white dark:hover:bg-gray-700 rounded-full p-2 shadow-md transition-all duration-200 z-10 touch-manipulation"
+                    className="hidden md:flex absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 dark:bg-gray-800/80 hover:bg-white dark:hover:bg-gray-700 rounded-full p-2 shadow-md transition-all duration-200 z-10 touch-manipulation items-center justify-center"
                     aria-label="Next image"
                   >
                     <ChevronRight className="w-5 h-5 text-gray-700 dark:text-white" />
@@ -203,8 +235,8 @@ const ProductDetail = () => {
                       onClick={() => setSelectedImageIndex(index)}
                       className={`w-2 h-2 rounded-full transition-all duration-200 ${
                         index === selectedImageIndex
-                          ? "bg-sky-600"
-                          : "bg-gray-300 dark:bg-gray-600"
+                          ? 'bg-sky-600'
+                          : 'bg-gray-300 dark:bg-gray-600'
                       }`}
                     />
                   ))}
@@ -217,8 +249,8 @@ const ProductDetail = () => {
                     onClick={() => setSelectedImageIndex(index)}
                     className={`aspect-square bg-gray-50 dark:bg-gray-800 rounded-lg overflow-hidden border-2 transition-all duration-200 ${
                       index === selectedImageIndex
-                        ? "border-sky-600 dark:border-sky-400"
-                        : "border-transparent hover:border-gray-300 dark:hover:border-gray-600"
+                        ? 'border-sky-600 dark:border-sky-400'
+                        : 'border-transparent hover:border-gray-300 dark:hover:border-gray-600'
                     }`}
                   >
                     <img
@@ -243,7 +275,7 @@ const ProductDetail = () => {
                   </h3>
                   <p className="text-sm text-gray-600 dark:text-gray-300">
                     Dedicated to providing genuine luxury products that uphold
-                    the highest standards of quality.{" "}
+                    the highest standards of quality.{' '}
                     <span className="text-sky-600 dark:text-sky-400 font-medium cursor-pointer hover:underline">
                       Learn more
                     </span>
@@ -254,7 +286,7 @@ const ProductDetail = () => {
             <div className="space-y-4 sm:space-y-6">
               <div>
                 <h1 className="text-base sm:text-lg md:text-xl font-bold text-gray-800 dark:text-white mb-1 sm:mb-2">
-                  {product.store?.name || "Reluv"}
+                  {product.store?.name || 'Reluv'}
                 </h1>
                 <h2 className="text-xl sm:text-2xl lg:text-3xl font-light text-gray-800 dark:text-white leading-tight">
                   {product.name}
@@ -302,13 +334,13 @@ const ProductDetail = () => {
                       Variant:
                     </span>
                     <span className="text-gray-600 dark:text-gray-300">
-                      {selectedVariant.size || ""} {selectedVariant.color || ""}{" "}
+                      {selectedVariant.size || ''} {selectedVariant.color || ''}{' '}
                       -
                     </span>
                     <span className="text-red-600 dark:text-red-400 font-medium">
                       {selectedVariant.stock > 0
                         ? `${selectedVariant.stock} left`
-                        : "Out of Stock"}
+                        : 'Out of Stock'}
                     </span>
                   </div>
                   <div className="flex flex-wrap gap-2 sm:gap-3">
@@ -318,13 +350,13 @@ const ProductDetail = () => {
                         onClick={() => setSelectedVariantIndex(index)}
                         className={`relative w-12 h-12 sm:w-16 sm:h-16 rounded-lg border-2 overflow-hidden transition-all duration-200 ${
                           index === selectedVariantIndex
-                            ? "border-sky-600 dark:border-sky-400"
-                            : "border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600"
+                            ? 'border-sky-600 dark:border-sky-400'
+                            : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
                         }`}
                       >
                         <img
                           src={product.images[0]}
-                          alt={variant.size || ""}
+                          alt={variant.size || ''}
                           className="w-full h-full object-cover"
                         />
                         {index === selectedVariantIndex && (
@@ -340,7 +372,7 @@ const ProductDetail = () => {
                 <div className="flex-1">
                   <p className="text-sm text-gray-700 dark:text-gray-300">
                     Try virtual try-on and see size on the app to see how the
-                    product fits you.{" "}
+                    product fits you.{' '}
                     <button className="text-sky-600 dark:text-sky-400 font-medium hover:underline">
                       Learn more
                     </button>
@@ -379,7 +411,7 @@ const ProductDetail = () => {
                   disabled={isAdding}
                   className="w-full sm:w-auto flex-1 bg-white dark:bg-gray-800 border-2 border-sky-600 dark:border-sky-400 text-sky-600 dark:text-sky-400 font-semibold py-3 sm:py-3 px-4 sm:px-6 rounded-lg transition-colors hover:bg-sky-50 dark:hover:bg-sky-900/20 text-sm sm:text-base cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation"
                 >
-                  {isAdding ? "Adding..." : "Add To Cart"}
+                  {isAdding ? 'Adding...' : 'Add To Cart'}
                 </button>
                 <button
                   onClick={handleBuyNow}
@@ -395,7 +427,7 @@ const ProductDetail = () => {
                 >
                   <Heart
                     className={`w-4 h-4 sm:w-5 sm:h-5 mr-2 ${
-                      isWishlisted ? "text-red-500 fill-current" : ""
+                      isWishlisted ? 'text-red-500 fill-current' : ''
                     }`}
                   />
                   <span>Wishlist</span>
@@ -437,7 +469,7 @@ const ProductDetail = () => {
                 </h3>
                 <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 space-y-2">
                   <p>
-                    <strong>Category:</strong>{" "}
+                    <strong>Category:</strong>{' '}
                     <span className="text-sky-700 dark:text-sky-400 font-medium cursor-pointer hover:underline">
                       {product.category.name}
                     </span>
@@ -456,7 +488,7 @@ const ProductDetail = () => {
                     Dimensions
                   </h4>
                   <p className="text-xs sm:text-sm text-gray-700 dark:text-gray-300">
-                    L {selectedVariant.length} x W {selectedVariant.width} x H{" "}
+                    L {selectedVariant.length} x W {selectedVariant.width} x H{' '}
                     {selectedVariant.height} cm
                   </p>
                 </div>
@@ -468,14 +500,14 @@ const ProductDetail = () => {
                     <img
                       src={
                         product.store?.profile?.avatar ||
-                        "https://placehold.co/48x48/e2e8f0/e2e8f0?text=Store"
+                        'https://placehold.co/48x48/e2e8f0/e2e8f0?text=Store'
                       }
-                      alt={product.store?.name || "Store"}
+                      alt={product.store?.name || 'Store'}
                       className="w-10 h-10 sm:w-12 sm:h-12 object-contain rounded-md flex-shrink-0"
                     />
                     <div className="flex-1 min-w-0">
                       <p className="font-semibold text-sm sm:text-base text-gray-800 dark:text-white truncate">
-                        {product.store?.name || "Reluv"}
+                        {product.store?.name || 'Reluv'}
                       </p>
                     </div>
                   </div>

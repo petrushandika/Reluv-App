@@ -689,7 +689,7 @@ const Checkout = () => {
   if (isFetchingCart || !hasCheckedCart) {
     return (
       <div className="bg-white dark:bg-gray-900 min-h-screen">
-        <div className="container mx-auto px-4 sm:px-6 md:px-20 xl:px-40 py-6 sm:py-8 md:py-12">
+        <div className="container mx-auto px-4 sm:px-6 md:px-10 xl:px-20 2xl:px-40 py-6 sm:py-8 md:py-12">
           <div className="flex items-center justify-center min-h-[50vh] sm:min-h-[60vh]">
             <Spinner />
           </div>
@@ -701,7 +701,7 @@ const Checkout = () => {
   return (
     <>
       <div className="bg-white dark:bg-gray-900 min-h-screen">
-        <div className="container mx-auto px-4 sm:px-6 md:px-20 xl:px-40 py-6 sm:py-8 md:py-12">
+        <div className="container mx-auto px-4 sm:px-6 md:px-10 xl:px-20 2xl:px-40 py-6 sm:py-8 md:py-12">
           <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-black dark:text-white mb-4 sm:mb-6 md:mb-8">
             Shipping Details
           </h1>
