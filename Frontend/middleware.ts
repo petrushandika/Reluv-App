@@ -1,20 +1,11 @@
-// import { NextResponse } from "next/server";
-// import type { NextRequest } from "next/server";
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 
-// export function middleware(request: NextRequest) {
-//   const pathname = request.nextUrl.pathname;
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function middleware(request: NextRequest) {
+  return NextResponse.next();
+}
 
-//   if (pathname === "/women") {
-//     return NextResponse.rewrite(new URL("/main/women", request.url));
-//   }
-
-//   if (pathname === "/login") {
-//     return NextResponse.rewrite(new URL("/auth/login", request.url));
-//   }
-
-//   return NextResponse.next();
-// }
-
-// export const config = {
-//   matcher: ["/women", "/login"],
-// };
+export const config = {
+  matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
+};
