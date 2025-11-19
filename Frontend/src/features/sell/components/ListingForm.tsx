@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { ChevronDown } from "lucide-react";
 import { ListingData, Condition } from "../types";
 import CategorySelector from "@/shared/components/molecules/CategorySelector";
 
@@ -40,6 +41,9 @@ const ListingForm = ({
   handleSubmit,
   isLoading,
 }: ListingFormProps) => {
+  const [isSizeOpen, setIsSizeOpen] = React.useState(false);
+  const [isColorOpen, setIsColorOpen] = React.useState(false);
+
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     handleSubmit();
@@ -185,22 +189,36 @@ const ListingForm = ({
               >
                 Size (Optional)
               </label>
-              <select
-                id="size"
-                name="size"
-                value={listingData.size}
-                onChange={(e) =>
-                  setListingData((prev) => ({ ...prev, size: e.target.value }))
-                }
-                className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500"
-              >
-                <option value="">Select a size</option>
-                {sizeOptions.map((s) => (
-                  <option key={s} value={s}>
-                    {s === "OTHER" ? "Another Size..." : s}
-                  </option>
-                ))}
-              </select>
+              <div className="relative">
+                <select
+                  id="size"
+                  name="size"
+                  value={listingData.size}
+                  onChange={(e) => {
+                    setListingData((prev) => ({
+                      ...prev,
+                      size: e.target.value,
+                    }));
+                    setIsSizeOpen(false);
+                  }}
+                  onFocus={() => setIsSizeOpen(true)}
+                  onBlur={() => setIsSizeOpen(false)}
+                  onMouseDown={() => setIsSizeOpen(!isSizeOpen)}
+                  className="w-full px-4 py-3 pr-10 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 appearance-none cursor-pointer transition-all"
+                >
+                  <option value="">Select a size</option>
+                  {sizeOptions.map((s) => (
+                    <option key={s} value={s}>
+                      {s === "OTHER" ? "Another Size..." : s}
+                    </option>
+                  ))}
+                </select>
+                <ChevronDown
+                  className={`absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none transition-transform duration-200 ${
+                    isSizeOpen ? "rotate-180" : ""
+                  }`}
+                />
+              </div>
               {listingData.size === "OTHER" && (
                 <input
                   type="text"
@@ -219,22 +237,36 @@ const ListingForm = ({
               >
                 Color (Optional)
               </label>
-              <select
-                id="color"
-                name="color"
-                value={listingData.color}
-                onChange={(e) =>
-                  setListingData((prev) => ({ ...prev, color: e.target.value }))
-                }
-                className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500"
-              >
-                <option value="">Select a color</option>
-                {colorOptions.map((c) => (
-                  <option key={c} value={c}>
-                    {c === "OTHER" ? "Another Color..." : c}
-                  </option>
-                ))}
-              </select>
+              <div className="relative">
+                <select
+                  id="color"
+                  name="color"
+                  value={listingData.color}
+                  onChange={(e) => {
+                    setListingData((prev) => ({
+                      ...prev,
+                      color: e.target.value,
+                    }));
+                    setIsColorOpen(false);
+                  }}
+                  onFocus={() => setIsColorOpen(true)}
+                  onBlur={() => setIsColorOpen(false)}
+                  onMouseDown={() => setIsColorOpen(!isColorOpen)}
+                  className="w-full px-4 py-3 pr-10 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 appearance-none cursor-pointer transition-all"
+                >
+                  <option value="">Select a color</option>
+                  {colorOptions.map((c) => (
+                    <option key={c} value={c}>
+                      {c === "OTHER" ? "Another Color..." : c}
+                    </option>
+                  ))}
+                </select>
+                <ChevronDown
+                  className={`absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none transition-transform duration-200 ${
+                    isColorOpen ? "rotate-180" : ""
+                  }`}
+                />
+              </div>
               {listingData.color === "OTHER" && (
                 <input
                   type="text"
@@ -373,7 +405,7 @@ const ListingForm = ({
             disabled={isLoading || !isFormValid()}
             className="w-full bg-sky-600 text-white font-bold py-3 rounded-lg hover:bg-sky-700 shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed transition-all"
           >
-            {isLoading ? "Listing..." : "List Now"}
+            {isLoading ? "Selling..." : "Sell Now"}
           </button>
         </>
       )}
