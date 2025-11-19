@@ -18,31 +18,32 @@
 
 ### 🖥️ Frontend
 
-- **Framework**: Next.js 15.3.4 (React 19.1.0)
-- **Styling**: TailwindCSS 4.1.10
+- **Framework**: Next.js 16.0.3 (React 19.2.0)
+- **Styling**: TailwindCSS 4.1.17
 - **UI Components**: Radix UI, Lucide React
-- **State Management**: Zustand 5.0.6
-- **Form Handling**: React Hook Form 7.58.1
-- **Animation**: Framer Motion 12.19.1
+- **State Management**: Zustand 5.0.8
+- **Form Handling**: React Hook Form 7.66.1
+- **Animation**: Framer Motion 12.23.24
 - **Maps**: Leaflet, React Leaflet
-- **Authentication**: NextAuth 4.24.11
-- **HTTP Client**: Axios 1.10.0
-- **Validation**: Zod 3.25.67
-- **Carousel**: Embla Carousel
-- **Notifications**: Sonner
+- **Authentication**: NextAuth 5.0.0-beta.30
+- **HTTP Client**: Axios 1.13.2
+- **Validation**: Zod 3.25.76
+- **Carousel**: Embla Carousel 8.6.0
+- **Notifications**: Sonner 2.0.7
+- **TypeScript**: 5.9.3
 
 ### ⚙️ Backend
 
-- **Framework**: NestJS 11.1.3
-- **Runtime**: Node.js dengan TypeScript 5.8.3
-- **Database ORM**: Prisma 6.11.0
+- **Framework**: NestJS 11.1.9
+- **Runtime**: Node.js 20+ dengan TypeScript 5.9.3
+- **Database ORM**: Prisma 6.19.0
 - **Authentication**: JWT, Passport (Local, Google, Facebook)
-- **File Upload**: Cloudinary 2.7.0
-- **Email**: Nodemailer 7.0.5, Resend 4.6.0
+- **File Upload**: Cloudinary 2.8.0
+- **Email**: Nodemailer 7.0.10, Resend 4.8.0
 - **Payment**: Midtrans Client 1.4.3
-- **Validation**: Class Validator, Zod
-- **Password Hashing**: bcrypt, bcryptjs
-- **HTTP Client**: Axios 1.10.0
+- **Validation**: Class Validator, Zod 3.25.76
+- **Password Hashing**: bcrypt, bcryptjs 3.0.3
+- **HTTP Client**: Axios 1.13.2
 
 ### 🗃️ Database
 

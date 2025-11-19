@@ -7,6 +7,8 @@ import { PrismaService } from '../prisma/prisma.service';
 import { JwtStrategy } from './jwt.strategy';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { EmailModule } from 'src/email/email.module';
+import { SignOptions } from 'jsonwebtoken';
+import type { StringValue } from 'ms';
 
 @Module({
   imports: [
@@ -16,12 +18,16 @@ import { EmailModule } from 'src/email/email.module';
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        secret: configService.get<string>('JWT_SECRET'),
-        signOptions: {
-          expiresIn: configService.get<string>('JWT_EXPIRATION_TIME'),
-        },
-      }),
+      useFactory: (configService: ConfigService) => {
+        const expirationTime = configService.get<string>('JWT_EXPIRATION_TIME');
+        const signOptions: SignOptions = {
+          expiresIn: expirationTime as StringValue,
+        };
+        return {
+          secret: configService.get<string>('JWT_SECRET'),
+          signOptions,
+        };
+      },
     }),
   ],
   controllers: [AuthController],
