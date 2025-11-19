@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { useAuthStore } from "@/features/auth/store/auth.store";
-import { useThemeStore } from "@/shared/store/theme.store";
-import { useCartStore } from "@/features/cart/store/cart.store";
-import { useWishlistStore } from "@/features/wishlist/store/wishlist.store";
-import { useEffect } from "react";
+import { useAuthStore } from '@/features/auth/store/auth.store';
+import { useThemeStore } from '@/shared/store/theme.store';
+import { useCartStore } from '@/features/cart/store/cart.store';
+import { useWishlistStore } from '@/features/wishlist/store/wishlist.store';
+import { useEffect } from 'react';
 
 const AppInitializer = ({ children }: { children: React.ReactNode }) => {
   const { isHydrated, fetchAndSetUser, token } = useAuthStore();
@@ -14,7 +14,7 @@ const AppInitializer = ({ children }: { children: React.ReactNode }) => {
   const fetchWishlist = useWishlistStore((state) => state.fetchWishlist);
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
+    if (typeof window !== 'undefined') {
       initializeTheme();
     }
   }, [initializeTheme]);
@@ -23,13 +23,17 @@ const AppInitializer = ({ children }: { children: React.ReactNode }) => {
     if (isHydrated && token) {
       const initializeData = async () => {
         try {
-          await fetchAndSetUser();
-          await Promise.all([fetchCart(), fetchWishlist()]);
+          Promise.all([
+            fetchAndSetUser().catch(console.error),
+            fetchCart().catch(console.error),
+            fetchWishlist().catch(console.error),
+          ]);
         } catch (error) {
-          console.error("Failed to initialize user data:", error);
+          console.error('Failed to initialize user data:', error);
         }
       };
-      initializeData();
+      const timer = setTimeout(initializeData, 0);
+      return () => clearTimeout(timer);
     } else if (isHydrated && !token) {
       useCartStore.getState().clearCart();
       useWishlistStore.getState().clearWishlist();
@@ -37,13 +41,12 @@ const AppInitializer = ({ children }: { children: React.ReactNode }) => {
   }, [isHydrated, token, fetchAndSetUser, fetchCart, fetchWishlist]);
 
   useEffect(() => {
-    // Apply theme on mount and when theme changes
-    if (typeof window !== "undefined") {
+    if (typeof window !== 'undefined') {
       const root = document.documentElement;
-      if (theme === "dark") {
-        root.classList.add("dark");
+      if (theme === 'dark') {
+        root.classList.add('dark');
       } else {
-        root.classList.remove("dark");
+        root.classList.remove('dark');
       }
     }
   }, [theme]);

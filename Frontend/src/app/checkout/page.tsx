@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import React, { useState, useEffect } from "react";
-import dynamic from "next/dynamic";
-import { useRouter } from "next/navigation";
+import React, { useState, useEffect } from 'react';
+import dynamic from 'next/dynamic';
+import { useRouter } from 'next/navigation';
 import {
   User,
   Mail,
@@ -15,13 +15,13 @@ import {
   Clock,
   ChevronDown,
   Search,
-} from "lucide-react";
-import type { LatLngExpression } from "leaflet";
-import { useCart } from "@/features/cart/hooks/useCart";
-import Spinner from "@/shared/components/atoms/Spinner";
+} from 'lucide-react';
+import type { LatLngExpression } from 'leaflet';
+import { useCart } from '@/features/cart/hooks/useCart';
+import Spinner from '@/shared/components/atoms/Spinner';
 
 const MapPicker = dynamic(
-  () => import("@/shared/components/organisms/MapPicker"),
+  () => import('@/shared/components/organisms/MapPicker'),
   {
     ssr: false,
     loading: () => (
@@ -45,93 +45,93 @@ interface Regency {
 
 const shippingData = {
   sicepat: {
-    name: "SiCepat",
+    name: 'SiCepat',
     services: [
       {
-        id: "sicepat-reg",
-        name: "Regular",
-        estimation: "2-3 Days",
+        id: 'sicepat-reg',
+        name: 'Regular',
+        estimation: '2-3 Days',
         price: 15000,
       },
-      { id: "sicepat-best", name: "BEST", estimation: "1 Day", price: 28000 },
+      { id: 'sicepat-best', name: 'BEST', estimation: '1 Day', price: 28000 },
     ],
   },
   jne: {
-    name: "JNE",
+    name: 'JNE',
     services: [
-      { id: "jne-reg", name: "Regular", estimation: "2-3 Days", price: 18000 },
+      { id: 'jne-reg', name: 'Regular', estimation: '2-3 Days', price: 18000 },
       {
-        id: "jne-yes",
-        name: "YES (Next Day)",
-        estimation: "1 Day",
+        id: 'jne-yes',
+        name: 'YES (Next Day)',
+        estimation: '1 Day',
         price: 35000,
       },
     ],
   },
   gosend: {
-    name: "GoSend",
+    name: 'GoSend',
     services: [
       {
-        id: "gojek-sameday",
-        name: "Same Day",
-        estimation: "6-8 Hours",
+        id: 'gojek-sameday',
+        name: 'Same Day',
+        estimation: '6-8 Hours',
         price: 25000,
       },
       {
-        id: "gojek-instant",
-        name: "Instant",
-        estimation: "1-2 Hours",
+        id: 'gojek-instant',
+        name: 'Instant',
+        estimation: '1-2 Hours',
         price: 40000,
       },
     ],
   },
   tiki: {
-    name: "TIKI",
+    name: 'TIKI',
     services: [
       {
-        id: "tiki-reg",
-        name: "Regular",
-        estimation: "2-4 Days",
+        id: 'tiki-reg',
+        name: 'Regular',
+        estimation: '2-4 Days',
         price: 20000,
       },
       {
-        id: "tiki-ons",
-        name: "ONS (Overnight Service)",
-        estimation: "1 Day",
+        id: 'tiki-ons',
+        name: 'ONS (Overnight Service)',
+        estimation: '1 Day',
         price: 30000,
       },
     ],
   },
   jnt: {
-    name: "J&T Express",
+    name: 'J&T Express',
     services: [
       {
-        id: "jnt-reg",
-        name: "Regular",
-        estimation: "2-3 Days",
+        id: 'jnt-reg',
+        name: 'Regular',
+        estimation: '2-3 Days',
         price: 16000,
       },
       {
-        id: "jnt-eco",
-        name: "ECO",
-        estimation: "3-5 Days",
+        id: 'jnt-eco',
+        name: 'ECO',
+        estimation: '3-5 Days',
         price: 12000,
       },
     ],
   },
   pos: {
-    name: "POS Indonesia",
+    name: 'POS Indonesia',
     services: [
       {
-        id: "pos-reg",
-        name: "Paket Kilat Khusus",
-        estimation: "2-3 Days",
+        id: 'pos-reg',
+        name: 'Paket Kilat Khusus',
+        estimation: '2-3 Days',
         price: 14000,
       },
       {
-        id: "pos-express",
-        name: "Express Next Day",
-        estimation: "1 Day",
+        id: 'pos-express',
+        name: 'Express Next Day',
+        estimation: '1 Day',
         price: 32000,
       },
     ],
@@ -141,33 +141,33 @@ const shippingData = {
 const voucherData = [
   {
     id: 1,
-    code: "SAVE20",
-    description: "20% discount for all items",
-    type: "percentage",
+    code: 'SAVE20',
+    description: '20% discount for all items',
+    type: 'percentage',
     value: 0.2,
     maxDiscount: 50000,
-    expiry: "Valid until 31 Jul 2025",
+    expiry: 'Valid until 31 Jul 2025',
   },
   {
     id: 2,
-    code: "SUPERDEAL",
-    description: "Direct discount of Rp 75,000",
-    type: "fixed",
+    code: 'SUPERDEAL',
+    description: 'Direct discount of Rp 75,000',
+    type: 'fixed',
     value: 75000,
-    expiry: "Valid until 15 Aug 2025",
+    expiry: 'Valid until 15 Aug 2025',
   },
   {
     id: 3,
-    code: "FREESHIP",
-    description: "Free Shipping up to Rp 20,000",
-    type: "shipping",
+    code: 'FREESHIP',
+    description: 'Free Shipping up to Rp 20,000',
+    type: 'shipping',
     value: 20000,
-    expiry: "Valid until 30 Sep 2025",
+    expiry: 'Valid until 30 Sep 2025',
   },
 ];
 
 const formatPrice = (price: number) =>
-  `Rp${new Intl.NumberFormat("id-ID").format(price)}`;
+  `Rp${new Intl.NumberFormat('id-ID').format(price)}`;
 
 const Checkout = () => {
   const router = useRouter();
@@ -175,29 +175,29 @@ const Checkout = () => {
   const [hasCheckedCart, setHasCheckedCart] = useState(false);
 
   const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    phone: "",
-    address: "",
-    country: "ID",
-    province: "",
-    city: "",
-    zip: "",
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: '',
+    address: '',
+    country: 'ID',
+    province: '',
+    city: '',
+    zip: '',
   });
 
   const [mapPosition, setMapPosition] = useState<LatLngExpression>([
     -6.2088, 106.8456,
   ]);
 
-  const [selectedCourier, setSelectedCourier] = useState("");
+  const [selectedCourier, setSelectedCourier] = useState('');
   const [selectedService, setSelectedService] = useState<{
     id: string;
     name: string;
     estimation: string;
     price: number;
   } | null>(null);
-  const [orderNotes, setOrderNotes] = useState("");
+  const [orderNotes, setOrderNotes] = useState('');
   const [isVoucherModalOpen, setIsVoucherModalOpen] = useState(false);
   const [selectedVoucher, setSelectedVoucher] = useState<
     (typeof voucherData)[0] | null
@@ -212,8 +212,8 @@ const Checkout = () => {
   const [regencies, setRegencies] = useState<Regency[]>([]);
   const [isLoadingProvinces, setIsLoadingProvinces] = useState(false);
   const [isLoadingRegencies, setIsLoadingRegencies] = useState(false);
-  const [provinceSearchTerm, setProvinceSearchTerm] = useState("");
-  const [citySearchTerm, setCitySearchTerm] = useState("");
+  const [provinceSearchTerm, setProvinceSearchTerm] = useState('');
+  const [citySearchTerm, setCitySearchTerm] = useState('');
 
   useEffect(() => {
     if (!isFetchingCart) {
@@ -224,7 +224,10 @@ const Checkout = () => {
   useEffect(() => {
     if (hasCheckedCart && !isFetchingCart) {
       if (!cart || (cart.items && cart.items.length === 0)) {
-        router.push("/cart");
+        const timer = setTimeout(() => {
+          router.push('/cart');
+        }, 0);
+        return () => clearTimeout(timer);
       }
     }
   }, [cart, isFetchingCart, hasCheckedCart, router]);
@@ -234,12 +237,12 @@ const Checkout = () => {
       setIsLoadingProvinces(true);
       try {
         const response = await fetch(
-          "https://www.emsifa.com/api-wilayah-indonesia/api/provinces.json"
+          'https://www.emsifa.com/api-wilayah-indonesia/api/provinces.json'
         );
         const data: Province[] = await response.json();
         setProvinces(data);
       } catch (error) {
-        console.error("Failed to fetch provinces:", error);
+        console.error('Failed to fetch provinces:', error);
       } finally {
         setIsLoadingProvinces(false);
       }
@@ -258,7 +261,7 @@ const Checkout = () => {
           const data: Regency[] = await response.json();
           setRegencies(data);
         } catch (error) {
-          console.error("Failed to fetch regencies:", error);
+          console.error('Failed to fetch regencies:', error);
           setRegencies([]);
         } finally {
           setIsLoadingRegencies(false);
@@ -267,7 +270,7 @@ const Checkout = () => {
       fetchRegencies();
     } else {
       setRegencies([]);
-      setFormData((prev) => ({ ...prev, city: "" }));
+      setFormData((prev) => ({ ...prev, city: '' }));
     }
   }, [formData.province]);
 
@@ -281,15 +284,15 @@ const Checkout = () => {
   };
 
   const handleProvinceChange = (provinceId: string) => {
-    setFormData((prev) => ({ ...prev, province: provinceId, city: "" }));
+    setFormData((prev) => ({ ...prev, province: provinceId, city: '' }));
     setIsProvinceOpen(false);
-    setProvinceSearchTerm("");
+    setProvinceSearchTerm('');
   };
 
   const handleCityChange = (regencyId: string) => {
     setFormData((prev) => ({ ...prev, city: regencyId }));
     setIsCityOpen(false);
-    setCitySearchTerm("");
+    setCitySearchTerm('');
   };
 
   const handleCourierChange = (courierValue: string) => {
@@ -327,16 +330,16 @@ const Checkout = () => {
   let voucherDiscount = 0;
   if (selectedVoucher) {
     switch (selectedVoucher.type) {
-      case "percentage":
+      case 'percentage':
         voucherDiscount = Math.min(
           subtotal * selectedVoucher.value,
           selectedVoucher.maxDiscount || Infinity
         );
         break;
-      case "fixed":
+      case 'fixed':
         voucherDiscount = Math.min(selectedVoucher.value, subtotal);
         break;
-      case "shipping":
+      case 'shipping':
         voucherDiscount = Math.min(shippingCost, selectedVoucher.value);
         break;
       default:
@@ -358,7 +361,7 @@ const Checkout = () => {
   const FormInput = ({
     id,
     label,
-    type = "text",
+    type = 'text',
     placeholder,
     icon: Icon,
     value,
@@ -395,7 +398,7 @@ const Checkout = () => {
           value={value}
           onChange={onChange}
           className={`block w-full ${
-            Icon ? "pl-10" : "pl-4"
+            Icon ? 'pl-10' : 'pl-4'
           } pr-3 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200 placeholder-gray-400 dark:placeholder-gray-500`}
           placeholder={placeholder}
         />
@@ -441,9 +444,9 @@ const Checkout = () => {
           setIsOpen(false);
         }
       };
-      document.addEventListener("mousedown", handleClickOutside);
+      document.addEventListener('mousedown', handleClickOutside);
       return () =>
-        document.removeEventListener("mousedown", handleClickOutside);
+        document.removeEventListener('mousedown', handleClickOutside);
     }, [setIsOpen]);
 
     const filteredOptions = options.filter((option) =>
@@ -469,7 +472,7 @@ const Checkout = () => {
           >
             <span
               className={
-                selectedOption ? "" : "text-gray-400 dark:text-gray-500"
+                selectedOption ? '' : 'text-gray-400 dark:text-gray-500'
               }
             >
               {selectedOption
@@ -479,7 +482,7 @@ const Checkout = () => {
           </button>
           <ChevronDown
             className={`absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 dark:text-gray-500 pointer-events-none transition-transform duration-200 ${
-              isOpen ? "rotate-180" : ""
+              isOpen ? 'rotate-180' : ''
             }`}
           />
         </div>
@@ -515,7 +518,7 @@ const Checkout = () => {
                     onClick={() => {
                       onSelect(option.id);
                       setIsOpen(false);
-                      setSearchTerm("");
+                      setSearchTerm('');
                     }}
                   >
                     {option.name}
@@ -561,9 +564,9 @@ const Checkout = () => {
           setIsOpen(false);
         }
       };
-      document.addEventListener("mousedown", handleClickOutside);
+      document.addEventListener('mousedown', handleClickOutside);
       return () =>
-        document.removeEventListener("mousedown", handleClickOutside);
+        document.removeEventListener('mousedown', handleClickOutside);
     }, [setIsOpen]);
 
     const selectedOption = options.find((opt) => opt.value === value);
@@ -585,7 +588,7 @@ const Checkout = () => {
           >
             <span
               className={
-                selectedOption ? "" : "text-gray-400 dark:text-gray-500"
+                selectedOption ? '' : 'text-gray-400 dark:text-gray-500'
               }
             >
               {selectedOption
@@ -595,7 +598,7 @@ const Checkout = () => {
           </button>
           <ChevronDown
             className={`absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 dark:text-gray-500 pointer-events-none transition-transform duration-200 ${
-              isOpen ? "rotate-180" : ""
+              isOpen ? 'rotate-180' : ''
             }`}
           />
         </div>
@@ -678,28 +681,22 @@ const Checkout = () => {
         </select>
         <ChevronDown
           className={`absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 dark:text-gray-500 pointer-events-none transition-transform duration-200 ${
-            isOpen ? "rotate-180" : ""
+            isOpen ? 'rotate-180' : ''
           }`}
         />
       </div>
     </div>
   );
 
-  // Show loading state while checking cart
-  if (isFetchingCart || !hasCheckedCart) {
-    return (
-      <div className="bg-white dark:bg-gray-900 min-h-screen">
-        <div className="container mx-auto px-4 sm:px-6 md:px-10 xl:px-20 2xl:px-40 py-6 sm:py-8 md:py-12">
-          <div className="flex items-center justify-center min-h-[50vh] sm:min-h-[60vh]">
-            <Spinner />
-          </div>
-        </div>
-      </div>
-    );
-  }
+  const isLoading = isFetchingCart || !hasCheckedCart;
 
   return (
     <>
+      {isLoading && (
+        <div className="fixed inset-0 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm z-50 flex items-center justify-center">
+          <Spinner />
+        </div>
+      )}
       <div className="bg-white dark:bg-gray-900 min-h-screen">
         <div className="container mx-auto px-4 sm:px-6 md:px-10 xl:px-20 2xl:px-40 py-6 sm:py-8 md:py-12">
           <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-black dark:text-white mb-4 sm:mb-6 md:mb-8">
@@ -765,7 +762,7 @@ const Checkout = () => {
                     <FormSelect
                       id="country"
                       label="Country"
-                      options={[{ value: "ID", label: "Indonesia" }]}
+                      options={[{ value: 'ID', label: 'Indonesia' }]}
                       value={formData.country}
                       onChange={handleInputChange}
                       isOpen={isCountryOpen}
@@ -852,8 +849,8 @@ const Checkout = () => {
                             htmlFor={service.id}
                             className={`flex items-center p-4 border rounded-lg cursor-pointer transition-all bg-white dark:bg-gray-800 ${
                               selectedService?.id === service.id
-                                ? "border-sky-500 dark:border-sky-400 ring-2 ring-sky-500 dark:ring-sky-400"
-                                : "border-gray-300 dark:border-gray-600"
+                                ? 'border-sky-500 dark:border-sky-400 ring-2 ring-sky-500 dark:ring-sky-400'
+                                : 'border-gray-300 dark:border-gray-600'
                             }`}
                           >
                             <input
@@ -900,7 +897,7 @@ const Checkout = () => {
                       <div className="relative flex-shrink-0">
                         <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-md overflow-hidden bg-gray-100 dark:bg-gray-700">
                           <img
-                            src={item.variant.product.images[0] || ""}
+                            src={item.variant.product.images[0] || ''}
                             alt={item.variant.product.name}
                             className="w-full h-full object-cover"
                           />
@@ -1073,8 +1070,8 @@ const Checkout = () => {
                   onClick={() => handleVoucherSelect(voucher)}
                   className={`flex items-center p-4 rounded-lg cursor-pointer transition-all duration-300 ease-in-out border-2 bg-white dark:bg-gray-800 ${
                     selectedVoucher?.id === voucher.id
-                      ? "border-sky-500 dark:border-sky-400 shadow"
-                      : "border-gray-200 dark:border-gray-700 shadow hover:border-sky-300 dark:hover:border-sky-500"
+                      ? 'border-sky-500 dark:border-sky-400 shadow'
+                      : 'border-gray-200 dark:border-gray-700 shadow hover:border-sky-300 dark:hover:border-sky-500'
                   }`}
                 >
                   <div className="flex-shrink-0 flex items-center justify-center w-16 h-16 rounded-full bg-sky-100/70 dark:bg-sky-900/30">

@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
 interface User {
   id: string;
@@ -22,7 +22,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error("useAuth must be used within an AuthProvider");
+    throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
 };
@@ -34,27 +34,26 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     const checkAuth = () => {
       try {
-        if (typeof window !== "undefined") {
-          const userData = localStorage.getItem("user");
-          const token = localStorage.getItem("token");
+        if (typeof window !== 'undefined') {
+          const userData = localStorage.getItem('user');
+          const token = localStorage.getItem('token');
 
           if (userData && token) {
             setUser(JSON.parse(userData));
           }
         }
       } catch (error) {
-        console.error("Error checking auth:", error);
-        if (typeof window !== "undefined") {
-          localStorage.removeItem("user");
-          localStorage.removeItem("token");
+        console.error('Error checking auth:', error);
+        if (typeof window !== 'undefined') {
+          localStorage.removeItem('user');
+          localStorage.removeItem('token');
         }
       } finally {
         setIsLoading(false);
       }
     };
 
-    const timer = setTimeout(checkAuth, 100);
-    return () => clearTimeout(timer);
+    checkAuth();
   }, []);
 
   const login = async (email: string, password: string): Promise<boolean> => {
@@ -63,19 +62,19 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      if (email === "admin@gmail.com" && password === "password123") {
+      if (email === 'admin@gmail.com' && password === 'password123') {
         const userData: User = {
-          id: "1",
-          name: "Petrus Handika",
+          id: '1',
+          name: 'Petrus Handika',
           email: email,
-          role: "Admin",
+          role: 'Admin',
         };
 
-        const token = "mock-jwt-token-" + Date.now();
+        const token = 'mock-jwt-token-' + Date.now();
 
-        if (typeof window !== "undefined") {
-          localStorage.setItem("user", JSON.stringify(userData));
-          localStorage.setItem("token", token);
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('user', JSON.stringify(userData));
+          localStorage.setItem('token', token);
         }
         setUser(userData);
 
@@ -84,7 +83,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
       return false;
     } catch (error) {
-      console.error("Login error:", error);
+      console.error('Login error:', error);
       return false;
     } finally {
       setIsLoading(false);
@@ -92,9 +91,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const logout = () => {
-    if (typeof window !== "undefined") {
-      localStorage.removeItem("user");
-      localStorage.removeItem("token");
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('user');
+      localStorage.removeItem('token');
     }
     setUser(null);
   };

@@ -116,7 +116,6 @@ const ProductDetail = () => {
     }
   };
 
-  // Swipe gesture handlers for mobile
   const minSwipeDistance = 50;
 
   const onTouchStart = (e: React.TouchEvent) => {
@@ -150,6 +149,7 @@ const ProductDetail = () => {
   };
 
   const handleBuyNow = () => {
+    router.prefetch('/checkout');
     router.push('/checkout');
   };
 

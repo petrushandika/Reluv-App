@@ -309,6 +309,7 @@ const Cart = () => {
               <div className="space-y-2 sm:space-y-3">
                 <Link
                   href="/checkout"
+                  prefetch={true}
                   className="block w-full bg-sky-500 dark:bg-sky-600 text-white text-center py-3 sm:py-3 px-4 rounded-md font-medium hover:bg-sky-600 dark:hover:bg-sky-700 transition-colors text-sm sm:text-base cursor-pointer touch-manipulation"
                 >
                   Proceed to Checkout
