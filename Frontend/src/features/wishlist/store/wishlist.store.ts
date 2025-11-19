@@ -17,7 +17,7 @@ interface WishlistState {
 
 export const useWishlistStore = create<WishlistState>((set, get) => ({
   items: [],
-  isLoading: true,
+  isLoading: false,
 
   fetchWishlist: async () => {
     set({ isLoading: true });
@@ -32,9 +32,29 @@ export const useWishlistStore = create<WishlistState>((set, get) => ({
 
   addItem: async (data) => {
     try {
+      const currentItems = get().items;
+      if (currentItems.some((item) => item.productId === data.productId)) {
+        await get().fetchWishlist();
+        return;
+      }
+      const newItem: WishlistItem = {
+        id: Date.now(),
+        productId: data.productId,
+        product: {
+          id: 0,
+          name: "",
+          description: "",
+          storeId: 0,
+          createdAt: "",
+          updatedAt: "",
+        } as WishlistItem["product"],
+      };
+      set({ items: [...currentItems, newItem] });
+
       await addToWishlist(data);
       await get().fetchWishlist();
     } catch (error) {
+      await get().fetchWishlist();
       console.error("Gagal menambah item ke wishlist:", error);
       throw error;
     }
@@ -42,9 +62,15 @@ export const useWishlistStore = create<WishlistState>((set, get) => ({
 
   removeItem: async (productId) => {
     try {
+      const currentItems = get().items;
+      set({
+        items: currentItems.filter((item) => item.productId !== productId),
+      });
+
       await removeFromWishlist(productId);
       await get().fetchWishlist();
     } catch (error) {
+      await get().fetchWishlist();
       console.error("Gagal menghapus item dari wishlist:", error);
       throw error;
     }

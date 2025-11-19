@@ -3,12 +3,16 @@
 import { useEffect, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useAuthStore } from "@/features/auth/store/auth.store";
+import { useCartStore } from "@/features/cart/store/cart.store";
+import { useWishlistStore } from "@/features/wishlist/store/wishlist.store";
 import Spinner from "@/shared/components/atoms/Spinner";
 
 const CallbackContent = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const setToken = useAuthStore((state) => state.setToken);
+  const fetchCart = useCartStore((state) => state.fetchCart);
+  const fetchWishlist = useWishlistStore((state) => state.fetchWishlist);
 
   useEffect(() => {
     const token = searchParams.get("token");
@@ -17,7 +21,8 @@ const CallbackContent = () => {
       const previousPage = localStorage.getItem("previousPage") || "/";
 
       setToken(token)
-        .then(() => {
+        .then(async () => {
+          await Promise.all([fetchCart(), fetchWishlist()]);
           localStorage.removeItem("previousPage");
           router.push(previousPage);
         })
@@ -28,7 +33,7 @@ const CallbackContent = () => {
     } else {
       router.push("/auth/login?error=no_token");
     }
-  }, [searchParams, setToken, router]);
+  }, [searchParams, setToken, router, fetchCart, fetchWishlist]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-white dark:bg-gray-900">

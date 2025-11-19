@@ -17,6 +17,8 @@ import {
 } from "lucide-react";
 import LoginForm from "@/features/auth/components/LoginForm";
 import { useAuthStore } from "@/features/auth/store/auth.store";
+import { useCartStore } from "@/features/cart/store/cart.store";
+import { useWishlistStore } from "@/features/wishlist/store/wishlist.store";
 import {
   redirectToGoogleAuth,
   redirectToFacebookAuth,
@@ -28,6 +30,8 @@ type SocialProvider = "Google" | "Facebook";
 const Login = () => {
   const router = useRouter();
   const { login, status } = useAuthStore();
+  const fetchCart = useCartStore((state) => state.fetchCart);
+  const fetchWishlist = useWishlistStore((state) => state.fetchWishlist);
   const [error, setError] = useState<string | null>(null);
 
   const isLoading = status === "loading";
@@ -36,6 +40,7 @@ const Login = () => {
     setError(null);
     try {
       await login(data);
+      await Promise.all([fetchCart(), fetchWishlist()]);
       toast.success("Login Successful!", {
         description: "Welcome back! Redirecting you now...",
       });

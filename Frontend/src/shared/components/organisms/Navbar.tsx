@@ -36,6 +36,8 @@ const Navbar = () => {
   const logout = useAuthStore((state) => state.logout);
   const itemCount = useCartStore((state) => state.itemCount);
   const wishlistItems = useWishlistStore((state) => state.items);
+  const clearCart = useCartStore((state) => state.clearCart);
+  const clearWishlist = useWishlistStore((state) => state.clearWishlist);
 
   const isAuthenticated = !!token;
   const wishlistItemCount = wishlistItems.length;
@@ -405,6 +407,8 @@ const Navbar = () => {
 
   const handleLogout = () => {
     logout();
+    clearCart();
+    clearWishlist();
     setIsProfileDropdownOpen(false);
   };
 

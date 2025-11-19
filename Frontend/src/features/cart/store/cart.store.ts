@@ -23,7 +23,7 @@ interface CartState {
 
 export const useCartStore = create<CartState>((set, get) => ({
   cart: null,
-  isLoading: true,
+  isLoading: false,
   itemCount: 0,
 
   fetchCart: async () => {
@@ -43,9 +43,13 @@ export const useCartStore = create<CartState>((set, get) => ({
 
   addItem: async (data) => {
     try {
+      const currentCount = get().itemCount;
+      set({ itemCount: currentCount + (data.quantity || 1) });
+
       await addToCart(data);
       await get().fetchCart();
     } catch (error) {
+      await get().fetchCart();
       console.error("Gagal menambah item ke keranjang:", error);
       throw error;
     }
@@ -53,9 +57,22 @@ export const useCartStore = create<CartState>((set, get) => ({
 
   updateItemQuantity: async (itemId, data) => {
     try {
+      const currentCart = get().cart;
+      if (currentCart) {
+        const item = currentCart.items.find((i) => i.id === itemId);
+        if (item) {
+          const oldQuantity = item.quantity;
+          const newQuantity = data.quantity || item.quantity;
+          const diff = newQuantity - oldQuantity;
+          const currentCount = get().itemCount;
+          set({ itemCount: Math.max(0, currentCount + diff) });
+        }
+      }
+
       await updateCartItem(itemId, data);
       await get().fetchCart();
     } catch (error) {
+      await get().fetchCart();
       console.error("Gagal memperbarui item keranjang:", error);
       throw error;
     }
@@ -63,9 +80,19 @@ export const useCartStore = create<CartState>((set, get) => ({
 
   removeItem: async (itemId) => {
     try {
+      const currentCart = get().cart;
+      if (currentCart) {
+        const item = currentCart.items.find((i) => i.id === itemId);
+        if (item) {
+          const currentCount = get().itemCount;
+          set({ itemCount: Math.max(0, currentCount - item.quantity) });
+        }
+      }
+
       await deleteCartItem(itemId);
       await get().fetchCart();
     } catch (error) {
+      await get().fetchCart();
       console.error("Gagal menghapus item dari keranjang:", error);
       throw error;
     }
