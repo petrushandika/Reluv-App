@@ -26,9 +26,10 @@ export const useProductStore = create<ProductState>((set) => ({
     set({ isLoadingTrending: true });
     try {
       const products = await getProducts(query);
-      set({ trendingProducts: products });
+      set({ trendingProducts: Array.isArray(products) ? products : [] });
     } catch (error) {
       console.error("Gagal mengambil produk trending:", error);
+      set({ trendingProducts: [] });
     } finally {
       set({ isLoadingTrending: false });
     }
@@ -38,9 +39,10 @@ export const useProductStore = create<ProductState>((set) => ({
     set({ isLoadingSlashed: true });
     try {
       const products = await getProducts(query);
-      set({ slashedPriceProducts: products });
+      set({ slashedPriceProducts: Array.isArray(products) ? products : [] });
     } catch (error) {
       console.error("Gagal mengambil produk diskon:", error);
+      set({ slashedPriceProducts: [] });
     } finally {
       set({ isLoadingSlashed: false });
     }
@@ -50,9 +52,10 @@ export const useProductStore = create<ProductState>((set) => ({
     set({ isLoadingRecommended: true });
     try {
       const products = await getProducts(query);
-      set({ recommendedProducts: products });
+      set({ recommendedProducts: Array.isArray(products) ? products : [] });
     } catch (error) {
       console.error("Gagal mengambil produk rekomendasi:", error);
+      set({ recommendedProducts: [] });
     } finally {
       set({ isLoadingRecommended: false });
     }

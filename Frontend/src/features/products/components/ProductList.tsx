@@ -61,6 +61,8 @@ const ProductList = ({
   showSeeMoreButton = true,
   onSeeMoreClick,
 }: ProductListProps) => {
+  const safeProducts = Array.isArray(products) ? products : [];
+
   const [emblaRef, emblaApi] = useEmblaCarousel({
     align: "start",
     containScroll: "trimSnaps",
@@ -126,7 +128,7 @@ const ProductList = ({
                 ? Array.from({ length: 5 }).map((_, index) => (
                     <SkeletonCard key={index} />
                   ))
-                : products.map((product) => (
+                : safeProducts.map((product) => (
                     <ProductCard key={product.id} product={product} />
                   ))}
             </div>
