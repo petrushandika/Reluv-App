@@ -15,6 +15,7 @@ interface AuthState {
   status: Status;
   isAuthenticated: () => boolean;
   login: (data: LoginPayload) => Promise<void>;
+  setToken: (token: string) => Promise<void>;
   logout: () => void;
   fetchAndSetUser: () => Promise<void>;
   _setHydrated: () => void;
@@ -44,6 +45,21 @@ export const useAuthStore = create<AuthState>()(
           delete api.defaults.headers.common["Authorization"];
           set({ status: "error" });
           console.error("Login failed:", error);
+          throw error;
+        }
+      },
+
+      setToken: async (token: string) => {
+        set({ status: "loading" });
+        try {
+          api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+          set({ token: token });
+          const freshUser = await getMe();
+          set({ user: freshUser, status: "success" });
+        } catch (error) {
+          delete api.defaults.headers.common["Authorization"];
+          set({ status: "error", token: null });
+          console.error("Failed to set token:", error);
           throw error;
         }
       },

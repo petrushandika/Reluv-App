@@ -36,12 +36,24 @@ export const resetPassword = async (data: ResetPasswordPayload) => {
 
 export const redirectToGoogleAuth = () => {
   if (typeof window !== "undefined" && process.env.NEXT_PUBLIC_API_URL) {
+    const currentPath = window.location.pathname;
+    if (currentPath !== "/auth/login" && currentPath !== "/auth/register") {
+      localStorage.setItem("previousPage", currentPath);
+    } else {
+      localStorage.setItem("previousPage", "/");
+    }
     window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/auth/google`;
   }
 };
 
 export const redirectToFacebookAuth = () => {
   if (typeof window !== "undefined" && process.env.NEXT_PUBLIC_API_URL) {
+    const currentPath = window.location.pathname;
+    if (currentPath !== "/auth/login" && currentPath !== "/auth/register") {
+      localStorage.setItem("previousPage", currentPath);
+    } else {
+      localStorage.setItem("previousPage", "/");
+    }
     window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/auth/facebook`;
   }
 };
