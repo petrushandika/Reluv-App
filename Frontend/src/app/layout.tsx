@@ -9,6 +9,7 @@ import { AuthProvider } from "@/context/AuthContext";
 import Navbar from "@/shared/components/organisms/Navbar";
 import Footer from "@/shared/components/organisms/Footer";
 import AppInitializer from "@/shared/components/organisms/AppInitializer";
+import BackToTop from "@/shared/components/organisms/BackToTop";
 
 const inter = Inter({
   variable: "--font-sans",
@@ -97,6 +98,7 @@ export default function RootLayout({
                 {children}
               </main>
               {!isAuthPage && !isDashboardPage && <Footer />}
+              {!isAuthPage && !isDashboardPage && <BackToTop />}
             </div>
           </AppInitializer>
         </AuthProvider>
