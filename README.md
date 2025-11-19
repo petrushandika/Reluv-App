@@ -61,7 +61,7 @@
 
 ### 🔧 Tools & Library Penting
 
-- **Development**: ESLint, Prettier, TypeScript
+- **Development**: Prettier, TypeScript
 - **Testing**: Jest (Backend)
 - **API Documentation**: Swagger (dapat ditambahkan)
 - **Monitoring**: Dapat ditambahkan (Sentry, LogRocket)
@@ -75,32 +75,50 @@
 ```text
 Frontend/
 ├── src/
-│   ├── app/                    # Next.js App Router
-│   │   ├── auth/              # Authentication pages
-│   │   ├── dashboard/         # Admin dashboard
-│   │   ├── main/              # Main application pages
-│   │   ├── globals.css        # Global styles
-│   │   ├── layout.tsx         # Root layout
-│   │   └── page.tsx           # Home page
-│   ├── context/               # React contexts
-│   ├── features/              # Feature-based modules
-│   │   ├── auth/              # Authentication feature
-│   │   ├── cart/              # Shopping cart feature
-│   │   ├── products/          # Product management
-│   │   ├── reviews/           # Review system
-│   │   ├── sell/              # Selling feature
-│   │   ├── user/              # User management
-│   │   └── wishlist/          # Wishlist feature
-│   └── shared/                # Shared components & utilities
-│       ├── components/        # Reusable components
-│       ├── hooks/             # Custom hooks
-│       ├── lib/               # Utility libraries
-│       ├── store/             # Global state
-│       └── types/             # TypeScript types
-├── public/                    # Static assets
-├── components.json            # shadcn/ui config
-├── middleware.ts              # Next.js middleware
-├── next.config.ts             # Next.js configuration
+│   ├── app/                    # Next.js App Router
+│   │   ├── auth/              # Authentication pages
+│   │   │   ├── callback/      # OAuth callback handler
+│   │   │   ├── login/         # Login page
+│   │   │   ├── register/      # Registration page
+│   │   │   ├── forgot/        # Forgot password
+│   │   │   ├── reset/         # Reset password
+│   │   │   └── confirm/        # Email confirmation
+│   │   ├── dashboard/         # Admin dashboard
+│   │   ├── women/             # Women's category pages
+│   │   │   └── [category]/    # Dynamic category routes
+│   │   ├── men/               # Men's category pages
+│   │   │   └── [category]/    # Dynamic category routes
+│   │   ├── kids/              # Kids category pages
+│   │   │   └── [category]/    # Dynamic category routes
+│   │   ├── brands/            # Brands page
+│   │   ├── product/           # Product pages
+│   │   │   └── [id]/          # Product detail page
+│   │   ├── cart/              # Shopping cart
+│   │   ├── wishlist/          # User wishlist
+│   │   ├── checkout/          # Checkout process
+│   │   ├── sell/              # Sell product page
+│   │   ├── globals.css        # Global styles
+│   │   ├── layout.tsx         # Root layout
+│   │   └── page.tsx           # Home page
+│   ├── context/               # React contexts
+│   ├── features/              # Feature-based modules
+│   │   ├── auth/              # Authentication feature
+│   │   ├── cart/              # Shopping cart feature
+│   │   ├── products/          # Product management
+│   │   ├── reviews/           # Review system
+│   │   ├── sell/              # Selling feature
+│   │   ├── user/              # User management
+│   │   └── wishlist/          # Wishlist feature
+│   └── shared/                # Shared components & utilities
+│       ├── components/        # Reusable components
+│       ├── hooks/             # Custom hooks
+│       ├── lib/               # Utility libraries
+│       ├── store/             # Global state
+│       └── types/             # TypeScript types
+├── public/                    # Static assets
+├── components.json            # shadcn/ui config
+├── middleware.ts              # Next.js middleware
+├── next.config.ts             # Next.js configuration
 └── package.json
 ```
 
@@ -109,41 +127,41 @@ Frontend/
 ```text
 Backend/
 ├── src/
-│   ├── auth/                  # Authentication module
-│   ├── cart/                  # Shopping cart module
-│   ├── categories/            # Product categories
-│   ├── cloudinary/            # File upload service
-│   ├── common/                 # Shared utilities
-│   ├── configs/               # Configuration files
-│   ├── email/                 # Email service
-│   ├── facebook/              # Facebook OAuth
-│   ├── geocode/               # Geocoding service
-│   ├── google/                # Google OAuth
-│   ├── locations/             # Location management
-│   ├── maps/                  # Maps integration
-│   ├── notifications/         # Notification system
-│   ├── orders/                # Order management
-│   ├── payments/              # Payment processing
-│   ├── prisma/                # Database service
-│   ├── products/              # Product management
-│   ├── reviews/               # Review system
-│   ├── shipments/             # Shipping management
-│   ├── shipping-rates/        # Shipping rates
-│   ├── store/                 # Store management
-│   ├── templates/             # Email templates
-│   ├── upload/                # File upload
-│   ├── users/                 # User management
-│   ├── utils/                 # Utility functions
-│   ├── vouchers/              # Voucher system
-│   ├── wishlist/              # Wishlist management
-│   ├── app.module.ts          # Main app module
-│   └── main.ts                # Application entry point
+│   ├── auth/                  # Authentication module
+│   ├── cart/                  # Shopping cart module
+│   ├── categories/             # Product categories
+│   ├── cloudinary/             # File upload service
+│   ├── common/                 # Shared utilities
+│   ├── configs/               # Configuration files
+│   ├── email/                 # Email service
+│   ├── facebook/              # Facebook OAuth
+│   ├── geocode/               # Geocoding service
+│   ├── google/                # Google OAuth
+│   ├── locations/              # Location management
+│   ├── maps/                  # Maps integration
+│   ├── notifications/         # Notification system
+│   ├── orders/                # Order management
+│   ├── payments/              # Payment processing
+│   ├── prisma/                # Database service
+│   ├── products/              # Product management
+│   ├── reviews/               # Review system
+│   ├── shipments/             # Shipping management
+│   ├── shipping-rates/        # Shipping rates
+│   ├── store/                 # Store management
+│   ├── templates/             # Email templates
+│   ├── upload/                # File upload
+│   ├── users/                 # User management
+│   ├── utils/                 # Utility functions
+│   ├── vouchers/              # Voucher system
+│   ├── wishlist/              # Wishlist management
+│   ├── app.module.ts          # Main app module
+│   └── main.ts                # Application entry point
 ├── prisma/
-│   ├── migrations/            # Database migrations
-│   ├── data/                  # Seed data
-│   ├── schema.prisma          # Database schema
-│   └── seed.ts                # Database seeding
-├── test/                      # E2E tests
+│   ├── migrations/            # Database migrations
+│   ├── data/                 # Seed data
+│   ├── schema.prisma         # Database schema
+│   └── seed.ts               # Database seeding
+├── test/                     # E2E tests
 └── package.json
 ```
 
@@ -188,19 +206,23 @@ DATABASE_URL="postgresql://username:password@localhost:5432/reluv_app?schema=pub
 
 # JWT Configuration
 JWT_SECRET=your-jwt-secret-key
-JWT_EXPIRES_IN=7d
+JWT_EXPIRATION_TIME=7d
 
 # OAuth Providers
 GOOGLE_CLIENT_ID=your-google-client-id
 GOOGLE_CLIENT_SECRET=your-google-client-secret
+GOOGLE_CALLBACK_URL=http://localhost:3001/api/v1/auth/google/callback
 FACEBOOK_APP_ID=your-facebook-app-id
 FACEBOOK_APP_SECRET=your-facebook-app-secret
+FACEBOOK_CALLBACK_URL=http://localhost:3001/api/v1/auth/facebook/callback
 
 # Email Configuration
-SMTP_HOST=smtp.gmail.com
-SMTP_PORT=587
-SMTP_USER=your-email@gmail.com
-SMTP_PASS=your-app-password
+MAIL_HOST=smtp.gmail.com
+MAIL_PORT=587
+MAIL_SECURE=false
+MAIL_USER=your-email@gmail.com
+MAIL_PASSWORD=your-app-password
+MAIL_FROM=your-email@gmail.com
 RESEND_API_KEY=your-resend-api-key
 
 # Cloudinary Configuration
@@ -235,81 +257,81 @@ FRONTEND_URL=http://localhost:3000
 1.  **Registration/Login**
 
 - Register dengan email atau OAuth (Google/Facebook)
-     - Email verification
-     - Login dan mendapat JWT token
+  - Email verification
+  - Login dan mendapat JWT token
 
 2.  **Browse & Search Products**
 
 - Browse kategori produk
-     - Search dan filter produk
-     - View detail produk dan review
+  - Search dan filter produk
+  - View detail produk dan review
 
 3.  **Shopping Process**
 
 - Add to cart atau wishlist
-     - Manage cart items
-     - Checkout process
-     - Select shipping address
-     - Choose payment method
-     - Complete payment
+  - Manage cart items
+  - Checkout process
+  - Select shipping address
+  - Choose payment method
+  - Complete payment
 
 4.  **Order Management**
-       - Track order status
-       - View order history
-       - Receive notifications
-       - Write product reviews
+    - Track order status
+    - View order history
+    - Receive notifications
+    - Write product reviews
 
 ### 🏪 Alur Seller/Store Owner
 
 1.  **Store Setup**
 
 - Create store profile
-     - Setup store information
-     - Add store location
+  - Setup store information
+  - Add store location
 
 2.  **Product Management**
 
 - Add new products
-     - Manage product variants
-     - Upload product images
-     - Set pricing and stock
+  - Manage product variants
+  - Upload product images
+  - Set pricing and stock
 
 3.  **Order Fulfillment**
 
 - Receive order notifications
-     - Process orders
-     - Arrange shipping
-     - Update order status
+  - Process orders
+  - Arrange shipping
+  - Update order status
 
 4.  **Store Analytics**
-       - View sales reports
-       - Manage reviews
-       - Track store performance
+    - View sales reports
+    - Manage reviews
+    - Track store performance
 
 ### 👑 Alur Admin
 
 1.  **User Management**
 
 - Manage user accounts
-     - Handle user verification
-     - Moderate content
+  - Handle user verification
+  - Moderate content
 
 2.  **Product Moderation**
 
 - Review new products
-     - Moderate product content
-     - Manage categories
+  - Moderate product content
+  - Manage categories
 
 3.  **Order Oversight**
 
 - Monitor all orders
-     - Handle disputes
-     - Manage refunds
+  - Handle disputes
+  - Manage refunds
 
 4.  **System Management**
-       - Manage vouchers
-       - Configure shipping rates
-       - System analytics
+    - Manage vouchers
+    - Configure shipping rates
+    - System analytics
 
 ### Relasi Antar Entitas
 
@@ -368,75 +390,79 @@ FRONTEND_URL=http://localhost:3000
 ### Authentication Endpoints
 
 ```text
-POST /auth/register          # User registration
-POST /auth/login             # User login
-POST /auth/logout            # User logout
-POST /auth/refresh           # Refresh JWT token
-POST /auth/forgot-password   # Forgot password
-POST /auth/reset-password    # Reset password
-POST /auth/verify-email      # Email verification
-GET  /auth/profile           # Get user profile
+POST /auth/register          # User registration
+POST /auth/login             # User login
+POST /auth/logout            # User logout
+POST /auth/refresh           # Refresh JWT token
+POST /auth/forgot-password   # Forgot password
+POST /auth/reset-password    # Reset password
+POST /auth/verify-email      # Email verification
+GET  /auth/profile           # Get user profile
+GET  /auth/google            # Google OAuth login
+GET  /auth/google/callback   # Google OAuth callback
+GET  /auth/facebook          # Facebook OAuth login
+GET  /auth/facebook/callback  # Facebook OAuth callback
 ```
 
 ### User Management
 
 ```text
-GET    /users               # Get all users (Admin)
-GET    /users/:id           # Get user by ID
-PUT    /users/:id           # Update user
-DELETE /users/:id           # Delete user
-GET    /users/profile       # Get current user profile
-PUT    /users/profile       # Update current user profile
+GET    /users               # Get all users (Admin)
+GET    /users/:id           # Get user by ID
+PUT    /users/:id           # Update user
+DELETE /users/:id           # Delete user
+GET    /users/profile       # Get current user profile
+PUT    /users/profile       # Update current user profile
 ```
 
 ### Product Management
 
 ```text
-GET    /products            # Get all products (with filters)
-GET    /products/:id        # Get product by ID
-POST   /products            # Create new product
-PUT    /products/:id        # Update product
-DELETE /products/:id        # Delete product
-GET    /products/search     # Search products
-GET    /products/category/:categoryId  # Get products by category
+GET    /products            # Get all products (with filters)
+GET    /products/:id       # Get product by ID
+POST   /products            # Create new product
+PUT    /products/:id       # Update product
+DELETE /products/:id        # Delete product
+GET    /products/search     # Search products
+GET    /products/category/:categoryId  # Get products by category
 ```
 
 ### Store Management
 
 ```text
-GET    /store              # Get current user's store
-POST   /store              # Create new store
-PUT    /store              # Update store
-GET    /store/:slug        # Get store by slug
-GET    /store/:id/products # Get store products
+GET    /store              # Get current user's store
+POST   /store              # Create new store
+PUT    /store              # Update store
+GET    /store/:slug        # Get store by slug
+GET    /store/:id/products # Get store products
 ```
 
 ### Cart Management
 
 ```text
-GET    /cart               # Get user cart
-POST   /cart/items         # Add item to cart
-PUT    /cart/items/:id     # Update cart item
-DELETE /cart/items/:id     # Remove cart item
-DELETE /cart               # Clear cart
+GET    /cart               # Get user cart
+POST   /cart/items         # Add item to cart
+PUT    /cart/items/:id     # Update cart item
+DELETE /cart/items/:id     # Remove cart item
+DELETE /cart               # Clear cart
 ```
 
 ### Order Management
 
 ```text
-GET    /orders             # Get user orders
-GET    /orders/:id         # Get order by ID
-POST   /orders             # Create new order
-PUT    /orders/:id/status  # Update order status
-GET    /orders/seller      # Get seller orders
+GET    /orders             # Get user orders
+GET    /orders/:id         # Get order by ID
+POST   /orders             # Create new order
+PUT    /orders/:id/status  # Update order status
+GET    /orders/seller      # Get seller orders
 ```
 
 ### Payment Integration
 
 ```text
-POST   /payments/create    # Create payment
-POST   /payments/callback  # Payment callback (Midtrans)
-GET    /payments/:id       # Get payment status
+POST   /payments/create    # Create payment
+POST   /payments/callback  # Payment callback (Midtrans)
+GET    /payments/:id       # Get payment status
 ```
 
 ### Example Request & Response
@@ -535,30 +561,41 @@ GET /products?page=1&limit=10&category=fashion&condition=LIKE_NEW&minPrice=50000
 ### Routing Halaman
 
 ```text
-/                           # Homepage
-/auth/login                 # Login page
-/auth/register              # Registration page
-/auth/forgot                # Forgot password
-/auth/reset                 # Reset password
-/auth/confirm               # Email confirmation
+/                         # Homepage
 
-/main                       # Main marketplace
-/main/men                   # Men's category
-/main/women                 # Women's category
-/main/kids                  # Kids category
-/main/brands                # Brands page
-/main/product/[slug]        # Product detail
-/main/cart                  # Shopping cart
-/main/checkout              # Checkout process
-/main/wishlist              # User wishlist
-/main/sell                  # Sell product
+# Authentication Routes
+/auth/login              # Login page
+/auth/register           # Registration page
+/auth/forgot             # Forgot password
+/auth/reset              # Reset password
+/auth/confirm            # Email confirmation
+/auth/callback           # OAuth callback handler
 
-/dashboard                  # Admin dashboard
-/dashboard/users            # User management
-/dashboard/products         # Product management
-/dashboard/orders           # Order management
-/dashboard/reviews          # Review management
-/dashboard/settings         # Settings
+# Category Routes
+/women                   # Women's category page
+/women/[category]        # Women's sub-category (e.g., /women/limited-offers)
+/men                     # Men's category page
+/men/[category]          # Men's sub-category
+/kids                    # Kids category page
+/kids/[category]         # Kids sub-category
+/brands                  # Brands page
+
+# Product Routes
+/product/[id]            # Product detail page
+
+# Shopping Routes
+/cart                    # Shopping cart
+/wishlist                # User wishlist
+/checkout                # Checkout process
+/sell                    # Sell product page
+
+# Dashboard Routes (Admin)
+/dashboard               # Admin dashboard
+/dashboard/users         # User management
+/dashboard/products      # Product management
+/dashboard/orders        # Order management
+/dashboard/reviews       # Review management
+/dashboard/settings      # Settings
 ```
 
 ### Komponen Penting
@@ -594,6 +631,7 @@ interface AuthState {
   login: (credentials: LoginCredentials) => Promise<void>;
   logout: () => void;
   register: (userData: RegisterData) => Promise<void>;
+  setToken: (token: string) => Promise<void>; // For OAuth callback
 }
 
 // Cart Store
@@ -742,38 +780,38 @@ FRONTEND_URL=https://reluv-app.vercel.app
 name: Deploy to Production
 
 on:
-  push:
-    branches: [main]
+  push:
+    branches: [main]
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-      - run: npm ci
-      - run: npm run test
-      - run: npm run lint
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+      - run: npm ci
+      - run: npm run test
+      - run: npm run lint
 
-  deploy-frontend:
-    needs: test
-    runs-on: ubuntu-latest
-    steps:
-      - name: Deploy to Vercel
-        uses: amondnet/vercel-action@v20
-        with:
-          vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          vercel-org-id: ${{ secrets.ORG_ID }}
-          vercel-project-id: ${{ secrets.PROJECT_ID }}
+  deploy-frontend:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to Vercel
+        uses: amondnet/vercel-action@v20
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.ORG_ID }}
+          vercel-project-id: ${{ secrets.PROJECT_ID }}
 
-  deploy-backend:
-    needs: test
-    runs-on: ubuntu-latest
-    steps:
-      - name: Deploy to Railway
-        uses: railway-deploy@v1
-        with:
-          railway-token: ${{ secrets.RAILWAY_TOKEN }}
+  deploy-backend:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to Railway
+        uses: railway-deploy@v1
+        with:
+          railway-token: ${{ secrets.RAILWAY_TOKEN }}
 ```
 
 ### Database Migration Strategy
@@ -839,12 +877,12 @@ npm run dev
 
 ### Development Workflow
 
-1.  Create feature branch
-2.  Develop and test locally
-3.  Create pull request
-4.  Code review
-5.  Merge to main
-6.  Automatic deployment
+1. Create feature branch
+2. Develop and test locally
+3. Create pull request
+4. Code review
+5. Merge to main
+6. Automatic deployment
 
 ---
 
