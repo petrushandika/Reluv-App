@@ -689,8 +689,8 @@ const Checkout = () => {
   if (isFetchingCart || !hasCheckedCart) {
     return (
       <div className="bg-white dark:bg-gray-900 min-h-screen">
-        <div className="container mx-auto px-6 md:px-20 xl:px-40 py-12 md:py-12">
-          <div className="flex items-center justify-center min-h-[60vh]">
+        <div className="container mx-auto px-4 sm:px-6 md:px-20 xl:px-40 py-6 sm:py-8 md:py-12">
+          <div className="flex items-center justify-center min-h-[50vh] sm:min-h-[60vh]">
             <Spinner />
           </div>
         </div>
@@ -701,16 +701,17 @@ const Checkout = () => {
   return (
     <>
       <div className="bg-white dark:bg-gray-900 min-h-screen">
-        <div className="container mx-auto px-6 md:px-20 xl:px-40 py-12 md:py-12">
-          <h1 className="text-xl md:text-2xl font-bold text-black dark:text-white mb-6 md:mb-8">
+        <div className="container mx-auto px-4 sm:px-6 md:px-20 xl:px-40 py-6 sm:py-8 md:py-12">
+          <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-black dark:text-white mb-4 sm:mb-6 md:mb-8">
             Shipping Details
           </h1>
-          <div className="flex flex-col lg:grid lg:grid-cols-3 gap-6 md:gap-8">
-            <div className="lg:col-span-2 border border-gray-200 dark:border-gray-700 rounded-lg p-6 md:p-8 bg-white dark:bg-gray-800">
-              <form className="space-y-8">
-                <div className="space-y-6">
-                  <h2 className="text-xl font-semibold text-sky-600 dark:text-sky-400 flex items-center gap-3">
-                    <User size={22} /> Contact Information
+          <div className="flex flex-col lg:grid lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
+            <div className="lg:col-span-2 border border-gray-200 dark:border-gray-700 rounded-lg p-4 sm:p-6 md:p-8 bg-white dark:bg-gray-800">
+              <form className="space-y-6 sm:space-y-8">
+                <div className="space-y-4 sm:space-y-6">
+                  <h2 className="text-base sm:text-lg md:text-xl font-semibold text-sky-600 dark:text-sky-400 flex items-center gap-2 sm:gap-3">
+                    <User className="w-5 h-5 sm:w-6 sm:h-6" /> Contact
+                    Information
                   </h2>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     <FormInput
@@ -748,9 +749,10 @@ const Checkout = () => {
                   />
                 </div>
 
-                <div className="space-y-6">
-                  <h2 className="text-xl font-semibold text-sky-600 dark:text-sky-400 flex items-center gap-3">
-                    <MapPin size={22} /> Shipping Address
+                <div className="space-y-4 sm:space-y-6">
+                  <h2 className="text-base sm:text-lg md:text-xl font-semibold text-sky-600 dark:text-sky-400 flex items-center gap-2 sm:gap-3">
+                    <MapPin className="w-5 h-5 sm:w-6 sm:h-6" /> Shipping
+                    Address
                   </h2>
                   <FormInput
                     id="address"
@@ -818,9 +820,9 @@ const Checkout = () => {
                   </div>
                 </div>
 
-                <div className="space-y-6">
-                  <h2 className="text-xl font-semibold text-sky-600 dark:text-sky-400 flex items-center gap-3">
-                    <Truck size={22} /> Shipping Method
+                <div className="space-y-4 sm:space-y-6">
+                  <h2 className="text-base sm:text-lg md:text-xl font-semibold text-sky-600 dark:text-sky-400 flex items-center gap-2 sm:gap-3">
+                    <Truck className="w-5 h-5 sm:w-6 sm:h-6" /> Shipping Method
                   </h2>
                   <CustomSelect
                     id="courier"
@@ -885,30 +887,33 @@ const Checkout = () => {
             </div>
 
             <div className="lg:col-span-1">
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-4 md:p-6 lg:sticky lg:top-4 border border-gray-200 dark:border-gray-700">
-                <h2 className="text-base md:text-lg font-semibold text-black dark:text-white mb-6">
+              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-4 sm:p-5 md:p-6 lg:sticky lg:top-4 border border-gray-200 dark:border-gray-700">
+                <h2 className="text-base sm:text-lg font-semibold text-black dark:text-white mb-4 sm:mb-6">
                   Order Summary
                 </h2>
-                <div className="space-y-4">
+                <div className="space-y-3 sm:space-y-4">
                   {cart.items.map((item) => (
-                    <div key={item.id} className="flex items-center gap-4">
+                    <div
+                      key={item.id}
+                      className="flex items-center gap-3 sm:gap-4"
+                    >
                       <div className="relative flex-shrink-0">
-                        <div className="w-16 h-16 rounded-md overflow-hidden bg-gray-100 dark:bg-gray-700">
+                        <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-md overflow-hidden bg-gray-100 dark:bg-gray-700">
                           <img
                             src={item.variant.product.images[0] || ""}
                             alt={item.variant.product.name}
                             className="w-full h-full object-cover"
                           />
                         </div>
-                        <span className="absolute -top-2 -right-2 flex h-6 w-6 items-center justify-center rounded-full bg-sky-600 text-xs font-medium text-white">
+                        <span className="absolute -top-1.5 -right-1.5 sm:-top-2 sm:-right-2 flex h-5 w-5 sm:h-6 sm:w-6 items-center justify-center rounded-full bg-sky-600 text-[10px] sm:text-xs font-medium text-white">
                           {item.quantity}
                         </span>
                       </div>
-                      <div className="flex-grow">
-                        <p className="font-semibold text-black dark:text-white text-sm">
+                      <div className="flex-grow min-w-0">
+                        <p className="font-semibold text-black dark:text-white text-xs sm:text-sm truncate">
                           {item.variant.product.name}
                         </p>
-                        <div className="flex flex-wrap gap-x-2 text-gray-500 dark:text-gray-400 text-xs">
+                        <div className="flex flex-wrap gap-x-1.5 sm:gap-x-2 text-gray-500 dark:text-gray-400 text-[10px] sm:text-xs">
                           {item.variant.size && (
                             <span>Size: {item.variant.size}</span>
                           )}
@@ -917,7 +922,7 @@ const Checkout = () => {
                           )}
                         </div>
                       </div>
-                      <p className="font-semibold text-black dark:text-white text-sm">
+                      <p className="font-semibold text-black dark:text-white text-xs sm:text-sm flex-shrink-0">
                         {formatPrice(item.variant.price * item.quantity)}
                       </p>
                     </div>
@@ -977,8 +982,8 @@ const Checkout = () => {
 
                 <div className="my-6 border-t border-gray-200 dark:border-gray-700"></div>
 
-                <div className="space-y-2 md:space-y-3 mb-4">
-                  <div className="flex justify-between text-xs md:text-sm">
+                <div className="space-y-2 sm:space-y-2.5 md:space-y-3 mb-3 sm:mb-4">
+                  <div className="flex justify-between text-xs sm:text-sm">
                     <span className="text-gray-600 dark:text-gray-400">
                       Subtotal
                     </span>
@@ -986,7 +991,7 @@ const Checkout = () => {
                       {formatPrice(subtotal)}
                     </span>
                   </div>
-                  <div className="flex justify-between text-xs md:text-sm">
+                  <div className="flex justify-between text-xs sm:text-sm">
                     <span className="text-gray-600 dark:text-gray-400">
                       Shipping
                     </span>
@@ -994,7 +999,7 @@ const Checkout = () => {
                       {formatPrice(shippingCost)}
                     </span>
                   </div>
-                  <div className="flex justify-between text-xs md:text-sm">
+                  <div className="flex justify-between text-xs sm:text-sm">
                     <span className="text-gray-600 dark:text-gray-400">
                       Tax (VAT 11%)
                     </span>
@@ -1003,7 +1008,7 @@ const Checkout = () => {
                     </span>
                   </div>
                   {totalSavings > 0 && (
-                    <div className="flex justify-between text-xs md:text-sm text-green-600 dark:text-green-400">
+                    <div className="flex justify-between text-xs sm:text-sm text-green-600 dark:text-green-400">
                       <span className="font-medium">You Save</span>
                       <span className="font-medium">
                         -{formatPrice(totalSavings)}
@@ -1011,7 +1016,7 @@ const Checkout = () => {
                     </div>
                   )}
                   {voucherDiscount > 0 && (
-                    <div className="flex justify-between text-xs md:text-sm text-green-600 dark:text-green-400">
+                    <div className="flex justify-between text-xs sm:text-sm text-green-600 dark:text-green-400">
                       <span className="font-medium">Voucher Discount</span>
                       <span className="font-medium">
                         -{formatPrice(voucherDiscount)}
@@ -1020,8 +1025,8 @@ const Checkout = () => {
                   )}
                 </div>
 
-                <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
-                  <div className="flex justify-between text-lg font-bold">
+                <div className="border-t border-gray-200 dark:border-gray-700 pt-3 sm:pt-4">
+                  <div className="flex justify-between text-base sm:text-lg font-bold">
                     <span className="text-black dark:text-white">Total</span>
                     <span className="text-sky-600 dark:text-sky-400">
                       {formatPrice(total)}
@@ -1031,7 +1036,7 @@ const Checkout = () => {
 
                 <button
                   type="submit"
-                  className="mt-5 block w-full bg-sky-500 dark:bg-sky-600 text-white text-center py-3 px-4 rounded-md font-medium hover:bg-sky-600 dark:hover:bg-sky-700 transition-colors text-sm md:text-base cursor-pointer"
+                  className="mt-4 sm:mt-5 block w-full bg-sky-500 dark:bg-sky-600 text-white text-center py-3 px-4 rounded-md font-medium hover:bg-sky-600 dark:hover:bg-sky-700 transition-colors text-sm sm:text-base cursor-pointer touch-manipulation"
                 >
                   Pay Now
                 </button>

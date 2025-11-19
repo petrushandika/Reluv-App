@@ -121,22 +121,22 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ category }) => {
 
           <div
             className={`
-            relative z-10 mb-2 md:mb-3
-            p-2 md:p-3
+            relative z-10 mb-1.5 sm:mb-2 md:mb-3
+            p-1.5 sm:p-2 md:p-3
             ${category.iconColor}
             transition-transform duration-300
             group-hover:scale-110
           `}
           >
             <IconComponent
-              size={24}
-              className="md:w-7 md:h-7 lg:w-8 lg:h-8"
+              size={20}
+              className="sm:w-6 sm:h-6 md:w-7 md:h-7 lg:w-8 lg:h-8"
               strokeWidth={1.5}
             />
           </div>
 
-          <div className="relative z-10 px-2 text-center">
-            <h3 className="text-sky-700 dark:text-sky-400 font-semibold text-xs sm:text-sm md:text-base leading-tight">
+          <div className="relative z-10 px-1.5 sm:px-2 text-center">
+            <h3 className="text-sky-700 dark:text-sky-400 font-semibold text-[10px] sm:text-xs md:text-sm lg:text-base leading-tight">
               {category.name}
             </h3>
           </div>
@@ -162,20 +162,20 @@ const Categories: React.FC = () => {
   }, [emblaApi]);
 
   return (
-    <div className="w-full bg-white dark:bg-gray-900 py-8 md:py-12 lg:py-16">
-      <div className="container mx-auto px-6 md:px-20 xl:px-40">
-        <div className="flex items-center justify-between mb-8 md:mb-10">
+    <div className="w-full bg-white dark:bg-gray-900 py-6 sm:py-8 md:py-12 lg:py-16">
+      <div className="container mx-auto px-4 sm:px-6 md:px-20 xl:px-40">
+        <div className="flex items-center justify-between mb-6 sm:mb-8 md:mb-10">
           <div>
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-sky-600 dark:text-sky-400 mb-1">
+            <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-sky-600 dark:text-sky-400 mb-1">
               What would you like to find?
             </h2>
-            <div className="w-16 md:w-20 h-1 bg-gradient-to-r from-sky-400 to-sky-600 rounded-full"></div>
+            <div className="w-12 sm:w-16 md:w-20 h-0.5 sm:h-1 bg-gradient-to-r from-sky-400 to-sky-600 rounded-full"></div>
           </div>
 
-          <button className="group flex items-center gap-2 text-sky-500 dark:text-sky-400 hover:text-sky-600 dark:hover:text-sky-300 transition-all duration-300 font-medium text-sm md:text-base">
+          <button className="group flex items-center gap-1.5 sm:gap-2 text-sky-500 dark:text-sky-400 hover:text-sky-600 dark:hover:text-sky-300 transition-all duration-300 font-medium text-xs sm:text-sm md:text-base touch-manipulation">
             <Grid3X3
-              size={18}
-              className="group-hover:rotate-90 transition-transform duration-300"
+              size={16}
+              className="sm:w-[18px] sm:h-[18px] group-hover:rotate-90 transition-transform duration-300"
             />
             <span className="hidden sm:inline">See all</span>
             <span className="sm:hidden">All</span>
@@ -204,7 +204,7 @@ const Categories: React.FC = () => {
           </button>
 
           <div className="overflow-hidden" ref={emblaRef}>
-            <div className="flex gap-4 md:gap-6 py-2 -mx-1 px-1">
+            <div className="flex gap-3 sm:gap-4 md:gap-6 py-2 -mx-1 px-1">
               {categories.map((category) => (
                 <CategoryCard key={category.id} category={category} />
               ))}

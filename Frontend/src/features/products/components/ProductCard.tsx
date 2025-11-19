@@ -80,22 +80,22 @@ const ProductCard = ({ product, containerClassName }: ProductCardProps) => {
         </button>
       </div>
       <Link href={`/product/${product.id}`}>
-        <div className="pt-4 text-left cursor-pointer">
-          <p className="font-bold text-sm text-gray-800 dark:text-white">
+        <div className="pt-3 sm:pt-4 text-left cursor-pointer">
+          <p className="font-bold text-xs sm:text-sm text-gray-800 dark:text-white">
             {product.store?.name || "Reluv"}
           </p>
-          <p className="text-sm text-gray-600 dark:text-gray-300 truncate">{product.name}</p>
+          <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 truncate mt-0.5">{product.name}</p>
           {firstVariant?.compareAtPrice ? (
-            <div className="mt-1 flex items-baseline flex-wrap gap-x-2">
-              <p className="font-bold text-red-600 text-base">
+            <div className="mt-1 flex items-baseline flex-wrap gap-x-1.5 sm:gap-x-2">
+              <p className="font-bold text-red-600 text-sm sm:text-base">
                 {formatPrice(firstVariant.price)}
               </p>
-              <p className="text-sm text-gray-400 dark:text-gray-500 line-through">
+              <p className="text-xs sm:text-sm text-gray-400 dark:text-gray-500 line-through">
                 {formatPrice(firstVariant.compareAtPrice)}
               </p>
             </div>
           ) : (
-            <p className="font-bold text-gray-900 dark:text-white mt-1 text-base">
+            <p className="font-bold text-gray-900 dark:text-white mt-1 text-sm sm:text-base">
               {firstVariant
                 ? formatPrice(firstVariant.price)
                 : "Price unavailable"}

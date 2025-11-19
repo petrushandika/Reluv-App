@@ -12,7 +12,7 @@ import { useParams } from "next/navigation";
 export default function WomenCategory() {
   const params = useParams();
   const category = params?.category as string;
-  
+
   const {
     trendingProducts,
     slashedPriceProducts,
@@ -34,8 +34,10 @@ export default function WomenCategory() {
     <div className="bg-white dark:bg-gray-900 min-h-screen">
       <Banner />
       <Categories />
-      <div className="container mx-auto px-6 md:px-20 xl:px-40 py-8">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">{categoryTitle}</h1>
+      <div className="container mx-auto px-4 sm:px-6 md:px-20 xl:px-40 py-6 sm:py-8">
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-4 sm:mb-6">
+          {categoryTitle}
+        </h1>
       </div>
       <ProductList
         title="Trending Now"
@@ -57,4 +59,3 @@ export default function WomenCategory() {
     </div>
   );
 }
-
