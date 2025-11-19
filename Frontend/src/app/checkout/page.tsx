@@ -14,6 +14,7 @@ import {
   BookText,
   Clock,
   ChevronDown,
+  Search,
 } from "lucide-react";
 import type { LatLngExpression } from "leaflet";
 import { useCart } from "@/features/cart/hooks/useCart";
@@ -31,28 +32,16 @@ const MapPicker = dynamic(
   }
 );
 
-const locationData = {
-  countries: [{ value: "ID", label: "Indonesia" }],
-  provinces: [
-    { value: "ID-JK", label: "DKI Jakarta" },
-    { value: "ID-JB", label: "West Java" },
-    { value: "ID-JT", label: "Central Java" },
-  ],
-  cities: {
-    "ID-JK": [
-      { value: "jkt-selatan", label: "South Jakarta" },
-      { value: "jkt-pusat", label: "Central Jakarta" },
-    ],
-    "ID-JB": [
-      { value: "bandung", label: "Bandung" },
-      { value: "bekasi", label: "Bekasi" },
-    ],
-    "ID-JT": [
-      { value: "semarang", label: "Semarang" },
-      { value: "surakarta", label: "Surakarta" },
-    ],
-  },
-};
+interface Province {
+  id: string;
+  name: string;
+}
+
+interface Regency {
+  id: string;
+  name: string;
+  province_id: string;
+}
 
 const shippingData = {
   sicepat: {
@@ -93,6 +82,57 @@ const shippingData = {
         name: "Instant",
         estimation: "1-2 Hours",
         price: 40000,
+      },
+    ],
+  },
+  tiki: {
+    name: "TIKI",
+    services: [
+      {
+        id: "tiki-reg",
+        name: "Regular",
+        estimation: "2-4 Days",
+        price: 20000,
+      },
+      {
+        id: "tiki-ons",
+        name: "ONS (Overnight Service)",
+        estimation: "1 Day",
+        price: 30000,
+      },
+    ],
+  },
+  jnt: {
+    name: "J&T Express",
+    services: [
+      {
+        id: "jnt-reg",
+        name: "Regular",
+        estimation: "2-3 Days",
+        price: 16000,
+      },
+      {
+        id: "jnt-eco",
+        name: "ECO",
+        estimation: "3-5 Days",
+        price: 12000,
+      },
+    ],
+  },
+  pos: {
+    name: "POS Indonesia",
+    services: [
+      {
+        id: "pos-reg",
+        name: "Paket Kilat Khusus",
+        estimation: "2-3 Days",
+        price: 14000,
+      },
+      {
+        id: "pos-express",
+        name: "Express Next Day",
+        estimation: "1 Day",
+        price: 32000,
       },
     ],
   },
@@ -167,11 +207,60 @@ const Checkout = () => {
   const [isCityOpen, setIsCityOpen] = useState(false);
   const [isCourierOpen, setIsCourierOpen] = useState(false);
 
+  const [provinces, setProvinces] = useState<Province[]>([]);
+  const [regencies, setRegencies] = useState<Regency[]>([]);
+  const [isLoadingProvinces, setIsLoadingProvinces] = useState(false);
+  const [isLoadingRegencies, setIsLoadingRegencies] = useState(false);
+  const [provinceSearchTerm, setProvinceSearchTerm] = useState("");
+  const [citySearchTerm, setCitySearchTerm] = useState("");
+
   useEffect(() => {
     if (!isFetchingCart && (!cart || cart.items.length === 0)) {
       router.push("/cart");
     }
   }, [cart, isFetchingCart, router]);
+
+  useEffect(() => {
+    const fetchProvinces = async () => {
+      setIsLoadingProvinces(true);
+      try {
+        const response = await fetch(
+          "https://www.emsifa.com/api-wilayah-indonesia/api/provinces.json"
+        );
+        const data: Province[] = await response.json();
+        setProvinces(data);
+      } catch (error) {
+        console.error("Failed to fetch provinces:", error);
+      } finally {
+        setIsLoadingProvinces(false);
+      }
+    };
+    fetchProvinces();
+  }, []);
+
+  useEffect(() => {
+    if (formData.province) {
+      const fetchRegencies = async () => {
+        setIsLoadingRegencies(true);
+        try {
+          const response = await fetch(
+            `https://www.emsifa.com/api-wilayah-indonesia/api/regencies/${formData.province}.json`
+          );
+          const data: Regency[] = await response.json();
+          setRegencies(data);
+        } catch (error) {
+          console.error("Failed to fetch regencies:", error);
+          setRegencies([]);
+        } finally {
+          setIsLoadingRegencies(false);
+        }
+      };
+      fetchRegencies();
+    } else {
+      setRegencies([]);
+      setFormData((prev) => ({ ...prev, city: "" }));
+    }
+  }, [formData.province]);
 
   const handleInputChange = (
     e: React.ChangeEvent<
@@ -182,12 +271,20 @@ const Checkout = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleProvinceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setFormData((prev) => ({ ...prev, province: e.target.value, city: "" }));
+  const handleProvinceChange = (provinceId: string) => {
+    setFormData((prev) => ({ ...prev, province: provinceId, city: "" }));
+    setIsProvinceOpen(false);
+    setProvinceSearchTerm("");
   };
 
-  const handleCourierChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedCourier(e.target.value);
+  const handleCityChange = (regencyId: string) => {
+    setFormData((prev) => ({ ...prev, city: regencyId }));
+    setIsCityOpen(false);
+    setCitySearchTerm("");
+  };
+
+  const handleCourierChange = (courierValue: string) => {
+    setSelectedCourier(courierValue);
     setSelectedService(null);
   };
 
@@ -296,6 +393,230 @@ const Checkout = () => {
       </div>
     </div>
   );
+
+  const SearchableSelect = ({
+    id,
+    label,
+    value,
+    options,
+    isLoading,
+    searchTerm,
+    setSearchTerm,
+    isOpen,
+    setIsOpen,
+    onSelect,
+    disabled = false,
+    placeholder,
+  }: {
+    id: string;
+    label: string;
+    value: string;
+    options: { id: string; name: string }[];
+    isLoading: boolean;
+    searchTerm: string;
+    setSearchTerm: (term: string) => void;
+    isOpen: boolean;
+    setIsOpen: (open: boolean) => void;
+    onSelect: (id: string) => void;
+    disabled?: boolean;
+    placeholder?: string;
+  }) => {
+    const selectRef = React.useRef<HTMLDivElement>(null);
+
+    React.useEffect(() => {
+      const handleClickOutside = (event: MouseEvent) => {
+        if (
+          selectRef.current &&
+          !selectRef.current.contains(event.target as Node)
+        ) {
+          setIsOpen(false);
+        }
+      };
+      document.addEventListener("mousedown", handleClickOutside);
+      return () =>
+        document.removeEventListener("mousedown", handleClickOutside);
+    }, [setIsOpen]);
+
+    const filteredOptions = options.filter((option) =>
+      option.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    const selectedOption = options.find((opt) => opt.id === value);
+
+    return (
+      <div ref={selectRef} className="relative">
+        <label
+          htmlFor={id}
+          className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5"
+        >
+          {label}
+        </label>
+        <div className="relative">
+          <button
+            type="button"
+            onClick={() => !disabled && setIsOpen(!isOpen)}
+            disabled={disabled}
+            className="w-full flex justify-between items-center text-left px-4 pr-12 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200 disabled:bg-gray-50 dark:disabled:bg-gray-700 disabled:cursor-not-allowed"
+          >
+            <span
+              className={
+                selectedOption ? "" : "text-gray-400 dark:text-gray-500"
+              }
+            >
+              {selectedOption
+                ? selectedOption.name
+                : placeholder || `Select ${label}`}
+            </span>
+          </button>
+          <ChevronDown
+            className={`absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 dark:text-gray-500 pointer-events-none transition-transform duration-200 ${
+              isOpen ? "rotate-180" : ""
+            }`}
+          />
+        </div>
+        {isOpen && (
+          <div className="absolute top-full left-0 mt-1 w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg z-10">
+            <div className="p-2 border-b border-gray-200 dark:border-gray-700">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-gray-500" />
+                <input
+                  type="text"
+                  placeholder={`Search ${label.toLowerCase()}...`}
+                  className="w-full pl-9 pr-3 py-2 border border-gray-200 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-400 focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 outline-none"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  autoFocus
+                />
+              </div>
+            </div>
+            <ul className="max-h-60 overflow-y-auto scrollbar-hide">
+              {isLoading ? (
+                <li className="px-4 py-3 text-center">
+                  <Spinner />
+                </li>
+              ) : filteredOptions.length === 0 ? (
+                <li className="px-4 py-3 text-gray-500 dark:text-gray-400 text-sm text-center">
+                  No results found
+                </li>
+              ) : (
+                filteredOptions.map((option) => (
+                  <li
+                    key={option.id}
+                    className="px-4 py-2 hover:bg-sky-100 dark:hover:bg-sky-900/30 cursor-pointer text-gray-900 dark:text-white transition-colors"
+                    onClick={() => {
+                      onSelect(option.id);
+                      setIsOpen(false);
+                      setSearchTerm("");
+                    }}
+                  >
+                    {option.name}
+                  </li>
+                ))
+              )}
+            </ul>
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  const CustomSelect = ({
+    id,
+    label,
+    options,
+    value,
+    onSelect,
+    disabled = false,
+    placeholder,
+    isOpen,
+    setIsOpen,
+  }: {
+    id: string;
+    label: string;
+    options: { value: string; label: string }[];
+    value: string;
+    onSelect: (value: string) => void;
+    disabled?: boolean;
+    placeholder?: string;
+    isOpen: boolean;
+    setIsOpen: (open: boolean) => void;
+  }) => {
+    const selectRef = React.useRef<HTMLDivElement>(null);
+
+    React.useEffect(() => {
+      const handleClickOutside = (event: MouseEvent) => {
+        if (
+          selectRef.current &&
+          !selectRef.current.contains(event.target as Node)
+        ) {
+          setIsOpen(false);
+        }
+      };
+      document.addEventListener("mousedown", handleClickOutside);
+      return () =>
+        document.removeEventListener("mousedown", handleClickOutside);
+    }, [setIsOpen]);
+
+    const selectedOption = options.find((opt) => opt.value === value);
+
+    return (
+      <div ref={selectRef} className="relative">
+        <label
+          htmlFor={id}
+          className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5"
+        >
+          {label}
+        </label>
+        <div className="relative">
+          <button
+            type="button"
+            onClick={() => !disabled && setIsOpen(!isOpen)}
+            disabled={disabled}
+            className="w-full flex justify-between items-center text-left px-4 pr-12 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200 disabled:bg-gray-50 dark:disabled:bg-gray-700 disabled:cursor-not-allowed"
+          >
+            <span
+              className={
+                selectedOption ? "" : "text-gray-400 dark:text-gray-500"
+              }
+            >
+              {selectedOption
+                ? selectedOption.label
+                : placeholder || `Select ${label}`}
+            </span>
+          </button>
+          <ChevronDown
+            className={`absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 dark:text-gray-500 pointer-events-none transition-transform duration-200 ${
+              isOpen ? "rotate-180" : ""
+            }`}
+          />
+        </div>
+        {isOpen && (
+          <div className="absolute top-full left-0 mt-1 w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg z-10">
+            <ul className="max-h-60 overflow-y-auto scrollbar-hide">
+              {options.length === 0 ? (
+                <li className="px-4 py-3 text-gray-500 dark:text-gray-400 text-sm text-center">
+                  No options available
+                </li>
+              ) : (
+                options.map((option) => (
+                  <li
+                    key={option.value}
+                    className="px-4 py-2 hover:bg-sky-100 dark:hover:bg-sky-900/30 cursor-pointer text-gray-900 dark:text-white transition-colors"
+                    onClick={() => {
+                      onSelect(option.value);
+                      setIsOpen(false);
+                    }}
+                  >
+                    {option.label}
+                  </li>
+                ))
+              )}
+            </ul>
+          </div>
+        )}
+      </div>
+    );
+  };
 
   const FormSelect = ({
     id,
@@ -420,36 +741,40 @@ const Checkout = () => {
                     <FormSelect
                       id="country"
                       label="Country"
-                      options={locationData.countries}
+                      options={[{ value: "ID", label: "Indonesia" }]}
                       value={formData.country}
                       onChange={handleInputChange}
                       isOpen={isCountryOpen}
                       setIsOpen={setIsCountryOpen}
                     />
-                    <FormSelect
+                    <SearchableSelect
                       id="province"
                       label="Province"
-                      options={locationData.provinces}
                       value={formData.province}
-                      onChange={handleProvinceChange}
+                      options={provinces}
+                      isLoading={isLoadingProvinces}
+                      searchTerm={provinceSearchTerm}
+                      setSearchTerm={setProvinceSearchTerm}
                       isOpen={isProvinceOpen}
                       setIsOpen={setIsProvinceOpen}
+                      onSelect={handleProvinceChange}
+                      placeholder="Select Province"
                     />
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                    <FormSelect
+                    <SearchableSelect
                       id="city"
                       label="City"
-                      options={
-                        locationData.cities[
-                          formData.province as keyof typeof locationData.cities
-                        ] || []
-                      }
                       value={formData.city}
-                      onChange={handleInputChange}
-                      disabled={!formData.province}
+                      options={regencies}
+                      isLoading={isLoadingRegencies}
+                      searchTerm={citySearchTerm}
+                      setSearchTerm={setCitySearchTerm}
                       isOpen={isCityOpen}
                       setIsOpen={setIsCityOpen}
+                      onSelect={handleCityChange}
+                      disabled={!formData.province}
+                      placeholder="Select City"
                     />
                     <FormInput
                       id="zip"
@@ -475,12 +800,12 @@ const Checkout = () => {
                   <h2 className="text-xl font-semibold text-sky-600 dark:text-sky-400 flex items-center gap-3">
                     <Truck size={22} /> Shipping Method
                   </h2>
-                  <FormSelect
+                  <CustomSelect
                     id="courier"
                     label="Courier"
                     placeholder="Select Courier"
                     value={selectedCourier}
-                    onChange={handleCourierChange}
+                    onSelect={handleCourierChange}
                     options={Object.keys(shippingData).map((key) => ({
                       value: key,
                       label:
