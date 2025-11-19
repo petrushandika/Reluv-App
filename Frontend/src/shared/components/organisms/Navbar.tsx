@@ -51,6 +51,7 @@ const Navbar = () => {
     null
   );
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
+  const [searchValue, setSearchValue] = useState("");
 
   const dropdownData: { [key: string]: DropdownContent } = {
     Women: {
@@ -565,7 +566,6 @@ const Navbar = () => {
             )}
           </div>
           <div className="flex lg:hidden items-center space-x-4">
-            <Search className="w-6 h-6 text-sky-600 hover:text-sky-700 dark:text-sky-400 dark:hover:text-sky-300 cursor-pointer" />
             <Link
               href="/notifications"
               aria-label="Notifications"
@@ -605,6 +605,24 @@ const Navbar = () => {
       {isMobileMenuOpen && (
         <div className="absolute top-full left-0 w-full z-10 lg:hidden bg-white dark:bg-gray-900 text-gray-800 dark:text-white border-t border-gray-200 dark:border-gray-700 max-h-[calc(100vh-4.5rem)] overflow-y-auto">
           <div className="py-4 px-6 space-y-1 border-b border-gray-200 dark:border-gray-700">
+            <div className="relative">
+              <div className="relative w-full overflow-hidden rounded-md bg-gray-100 dark:bg-gray-800 border border-transparent focus-within:ring-2 focus-within:ring-sky-500 dark:focus-within:ring-sky-400">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 dark:text-gray-500 z-10" />
+                <input
+                  type="text"
+                  value={searchValue}
+                  onChange={(e) => setSearchValue(e.target.value)}
+                  className="w-full px-4 py-2 pl-10 pr-4 bg-transparent text-gray-700 dark:text-white focus:outline-none placeholder-transparent"
+                />
+                {!searchValue && (
+                  <div className="absolute left-10 top-1/2 -translate-y-1/2 right-4 overflow-hidden pointer-events-none">
+                    <div className="animate-marquee whitespace-nowrap text-gray-400 dark:text-gray-500 text-sm">
+                      Search for products or brands&nbsp;
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
             {Object.keys(dropdownData).map((menu) => (
               <div
                 key={menu}
