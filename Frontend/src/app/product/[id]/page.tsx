@@ -350,7 +350,7 @@ const ProductDetail = () => {
                     product and delivery address
                   </p>
                   <div className="mt-2 inline-block bg-yellow-100 text-yellow-800 text-xs font-semibold px-3 py-1 rounded-full">
-                    🚚 Instant delivery available in selected cities
+                    ⚡ Instant delivery available in selected cities
                   </div>
                   <p className="mt-2 text-sky-600 font-medium cursor-pointer hover:underline">
                     See Shipping Options

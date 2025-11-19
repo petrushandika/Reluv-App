@@ -8,7 +8,7 @@ import Categories from "@/shared/components/organisms/Categories";
 import Promotion from "@/shared/components/organisms/Promotion";
 import { useProduct } from "@/features/products/hooks/useProduct";
 
-export default function Home() {
+export default function Kids() {
   const {
     trendingProducts,
     slashedPriceProducts,
@@ -16,7 +16,7 @@ export default function Home() {
     isLoadingTrending,
     isLoadingSlashed,
     isLoadingRecommended,
-  } = useProduct();
+  } = useProduct({ categoryId: 4 });
 
   return (
     <div>

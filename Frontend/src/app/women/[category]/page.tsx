@@ -7,8 +7,12 @@ import Banner from "@/shared/components/organisms/Banner";
 import Categories from "@/shared/components/organisms/Categories";
 import Promotion from "@/shared/components/organisms/Promotion";
 import { useProduct } from "@/features/products/hooks/useProduct";
+import { useParams } from "next/navigation";
 
-export default function Men() {
+export default function WomenCategory() {
+  const params = useParams();
+  const category = params?.category as string;
+  
   const {
     trendingProducts,
     slashedPriceProducts,
@@ -18,10 +22,21 @@ export default function Men() {
     isLoadingRecommended,
   } = useProduct({ categoryId: 3 });
 
+  // Convert slug back to readable format
+  const categoryTitle = category
+    ? category
+        .split("-")
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(" ")
+    : "Women";
+
   return (
     <div>
       <Banner />
       <Categories />
+      <div className="container mx-auto px-6 md:px-20 xl:px-40 py-8">
+        <h1 className="text-3xl font-bold text-gray-900 mb-6">{categoryTitle}</h1>
+      </div>
       <ProductList
         title="Trending Now"
         products={trendingProducts}
@@ -42,3 +57,4 @@ export default function Men() {
     </div>
   );
 }
+

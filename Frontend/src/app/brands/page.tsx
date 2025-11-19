@@ -8,7 +8,7 @@ import Categories from "@/shared/components/organisms/Categories";
 import Promotion from "@/shared/components/organisms/Promotion";
 import { useProduct } from "@/features/products/hooks/useProduct";
 
-export default function Kids() {
+export default function Brands() {
   const {
     trendingProducts,
     slashedPriceProducts,
@@ -16,12 +16,15 @@ export default function Kids() {
     isLoadingTrending,
     isLoadingSlashed,
     isLoadingRecommended,
-  } = useProduct({ categoryId: 3 });
+  } = useProduct();
 
   return (
     <div>
       <Banner />
       <Categories />
+      <div className="container mx-auto px-6 md:px-20 xl:px-40 py-8">
+        <h1 className="text-3xl font-bold text-gray-900 mb-6">Brands</h1>
+      </div>
       <ProductList
         title="Trending Now"
         products={trendingProducts}
@@ -42,3 +45,4 @@ export default function Kids() {
     </div>
   );
 }
+

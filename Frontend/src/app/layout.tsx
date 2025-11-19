@@ -7,6 +7,7 @@ import './globals.css';
 import 'leaflet/dist/leaflet.css';
 import { AuthProvider } from '@/context/AuthContext';
 import Navbar from '@/shared/components/organisms/Navbar';
+import Footer from '@/shared/components/organisms/Footer';
 import AppInitializer from '@/shared/components/organisms/AppInitializer';
 
 const inter = Inter({
@@ -21,6 +22,7 @@ export default function RootLayout({
 }>) {
   const pathname = usePathname();
   const isAuthPage = pathname.startsWith('/auth');
+  const isDashboardPage = pathname.startsWith('/dashboard');
 
   return (
     <html lang="en" suppressHydrationWarning>
@@ -46,10 +48,11 @@ export default function RootLayout({
               }}
             />
             <div className="relative flex min-h-screen flex-col">
-              {!isAuthPage && <Navbar />}
-              <main className={`flex-1 ${isAuthPage ? '' : 'pt-10 md:pt-20'}`}>
+              {!isAuthPage && !isDashboardPage && <Navbar />}
+              <main className={`flex-1 ${isAuthPage || isDashboardPage ? '' : 'pt-20 md:pt-24'}`}>
                 {children}
               </main>
+              {!isAuthPage && !isDashboardPage && <Footer />}
             </div>
           </AppInitializer>
         </AuthProvider>

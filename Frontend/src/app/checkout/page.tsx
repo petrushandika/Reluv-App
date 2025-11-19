@@ -16,7 +16,7 @@ import {
 import type { LatLngExpression } from "leaflet";
 
 const MapPicker = dynamic(
-  () => import("../../../shared/components/organisms/MapPicker"),
+  () => import("@/shared/components/organisms/MapPicker"),
   {
     ssr: false,
     loading: () => (
