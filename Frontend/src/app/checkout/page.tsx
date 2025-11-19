@@ -172,6 +172,7 @@ const formatPrice = (price: number) =>
 const Checkout = () => {
   const router = useRouter();
   const { cart, isFetchingCart, subtotal } = useCart();
+  const [hasCheckedCart, setHasCheckedCart] = useState(false);
 
   const [formData, setFormData] = useState({
     firstName: "",
@@ -215,10 +216,18 @@ const Checkout = () => {
   const [citySearchTerm, setCitySearchTerm] = useState("");
 
   useEffect(() => {
-    if (!isFetchingCart && (!cart || cart.items.length === 0)) {
-      router.push("/cart");
+    if (!isFetchingCart) {
+      setHasCheckedCart(true);
     }
-  }, [cart, isFetchingCart, router]);
+  }, [isFetchingCart]);
+
+  useEffect(() => {
+    if (hasCheckedCart && !isFetchingCart) {
+      if (!cart || (cart.items && cart.items.length === 0)) {
+        router.push("/cart");
+      }
+    }
+  }, [cart, isFetchingCart, hasCheckedCart, router]);
 
   useEffect(() => {
     const fetchProvinces = async () => {
@@ -675,6 +684,19 @@ const Checkout = () => {
       </div>
     </div>
   );
+
+  // Show loading state while checking cart
+  if (isFetchingCart || !hasCheckedCart) {
+    return (
+      <div className="bg-white dark:bg-gray-900 min-h-screen">
+        <div className="container mx-auto px-6 md:px-20 xl:px-40 py-12 md:py-12">
+          <div className="flex items-center justify-center min-h-[60vh]">
+            <Spinner />
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>
