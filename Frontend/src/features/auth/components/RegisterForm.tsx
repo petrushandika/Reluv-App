@@ -55,10 +55,10 @@ const RegisterForm = ({
   return (
     <div className="max-w-md w-full space-y-8">
       <div className="text-center">
-        <h2 className="text-3xl font-bold text-gray-900 mb-2">
+        <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
           Create Account
         </h2>
-        <p className="text-gray-600">
+        <p className="text-gray-600 dark:text-gray-300">
           Join Reluv and start your sustainable fashion journey.
         </p>
       </div>
@@ -68,7 +68,7 @@ const RegisterForm = ({
           <div>
             <label
               htmlFor="firstName"
-              className="block text-sm font-medium text-gray-700 mb-2"
+              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
             >
               First Name
             </label>
@@ -80,7 +80,7 @@ const RegisterForm = ({
                 type="text"
                 value={formData.firstName}
                 onChange={handleInputChange}
-                className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500"
+                className="block w-full pl-10 pr-3 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400"
                 placeholder="First name"
               />
             </div>
@@ -88,7 +88,7 @@ const RegisterForm = ({
           <div>
             <label
               htmlFor="lastName"
-              className="block text-sm font-medium text-gray-700 mb-2"
+              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
             >
               Last Name
             </label>
@@ -100,7 +100,7 @@ const RegisterForm = ({
                 type="text"
                 value={formData.lastName}
                 onChange={handleInputChange}
-                className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500"
+                className="block w-full pl-10 pr-3 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400"
                 placeholder="Last name"
               />
             </div>
@@ -109,12 +109,12 @@ const RegisterForm = ({
         <div>
           <label
             htmlFor="email"
-            className="block text-sm font-medium text-gray-700 mb-2"
+            className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
           >
             Email Address
           </label>
           <div className="relative">
-            <Mail className="h-5 w-5 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+            <Mail className="h-5 w-5 text-gray-400 dark:text-gray-500 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
             <input
               id="email"
               name="email"
@@ -122,7 +122,7 @@ const RegisterForm = ({
               autoComplete="email"
               value={formData.email}
               onChange={handleInputChange}
-              className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500"
+              className="block w-full pl-10 pr-3 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400"
               placeholder="Enter your email"
             />
           </div>
@@ -130,12 +130,12 @@ const RegisterForm = ({
         <div>
           <label
             htmlFor="password"
-            className="block text-sm font-medium text-gray-700 mb-2"
+            className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
           >
             Password
           </label>
           <div className="relative">
-            <Lock className="h-5 w-5 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+            <Lock className="h-5 w-5 text-gray-400 dark:text-gray-500 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
             <input
               id="password"
               name="password"
@@ -143,13 +143,13 @@ const RegisterForm = ({
               autoComplete="new-password"
               value={formData.password}
               onChange={handleInputChange}
-              className="block w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500"
+              className="block w-full pl-10 pr-12 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400"
               placeholder="Create a password"
             />
             <button
               type="button"
               onClick={togglePasswordVisibility}
-              className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-sky-500 cursor-pointer"
+              className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 dark:text-gray-500 hover:text-sky-500 dark:hover:text-sky-400 cursor-pointer"
             >
               {showPassword ? (
                 <EyeOff className="h-5 w-5" />
@@ -162,12 +162,12 @@ const RegisterForm = ({
         <div>
           <label
             htmlFor="confirmPassword"
-            className="block text-sm font-medium text-gray-700 mb-2"
+            className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
           >
             Confirm Password
           </label>
           <div className="relative">
-            <Lock className="h-5 w-5 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+            <Lock className="h-5 w-5 text-gray-400 dark:text-gray-500 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
             <input
               id="confirmPassword"
               name="confirmPassword"
@@ -175,13 +175,13 @@ const RegisterForm = ({
               autoComplete="new-password"
               value={formData.confirmPassword}
               onChange={handleInputChange}
-              className="block w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500"
+              className="block w-full pl-10 pr-12 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400"
               placeholder="Confirm your password"
             />
             <button
               type="button"
               onClick={toggleConfirmPasswordVisibility}
-              className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-sky-500 cursor-pointer"
+              className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 dark:text-gray-500 hover:text-sky-500 dark:hover:text-sky-400 cursor-pointer"
             >
               {showConfirmPassword ? (
                 <EyeOff className="h-5 w-5" />
@@ -198,23 +198,23 @@ const RegisterForm = ({
             type="checkbox"
             checked={formData.agreeToTerms}
             onChange={handleInputChange}
-            className="h-4 w-4 text-sky-600 focus:ring-sky-500 border-gray-300 rounded mt-1"
+            className="h-4 w-4 text-sky-600 focus:ring-sky-500 border-gray-300 dark:border-gray-600 rounded mt-1 bg-white dark:bg-gray-800"
           />
           <label
             htmlFor="agreeToTerms"
-            className="ml-2 block text-sm text-gray-700"
+            className="ml-2 block text-sm text-gray-700 dark:text-gray-300"
           >
             I agree to the{" "}
             <a
               href="/terms"
-              className="font-medium text-sky-600 hover:text-sky-500"
+              className="font-medium text-sky-600 dark:text-sky-400 hover:text-sky-500 dark:hover:text-sky-300"
             >
               Terms of Service
             </a>{" "}
             &{" "}
             <a
               href="/privacy"
-              className="font-medium text-sky-600 hover:text-sky-500"
+              className="font-medium text-sky-600 dark:text-sky-400 hover:text-sky-500 dark:hover:text-sky-300"
             >
               Privacy Policy
             </a>
@@ -230,17 +230,19 @@ const RegisterForm = ({
       </form>
       <div className="relative">
         <div className="absolute inset-0 flex items-center">
-          <div className="w-full border-t border-gray-300" />
+          <div className="w-full border-t border-gray-300 dark:border-gray-600" />
         </div>
         <div className="relative flex justify-center text-sm">
-          <span className="px-2 bg-white text-gray-500">Or sign up with</span>
+          <span className="px-2 bg-white dark:bg-gray-900 text-gray-500 dark:text-gray-400">
+            Or sign up with
+          </span>
         </div>
       </div>
       <div className="flex space-x-4">
         <button
           type="button"
           onClick={() => onSocialLogin("Google")}
-          className="flex-1 flex justify-center items-center py-3 px-4 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 cursor-pointer"
+          className="flex-1 flex justify-center items-center py-3 px-4 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer"
         >
           <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24">
             <path
@@ -265,7 +267,7 @@ const RegisterForm = ({
         <button
           type="button"
           onClick={() => onSocialLogin("Facebook")}
-          className="flex-1 flex justify-center items-center py-3 px-4 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 cursor-pointer"
+          className="flex-1 flex justify-center items-center py-3 px-4 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer"
         >
           <svg className="w-5 h-5 mr-2" fill="#1877F2" viewBox="0 0 24 24">
             <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
@@ -274,11 +276,11 @@ const RegisterForm = ({
         </button>
       </div>
       <div className="text-center">
-        <p className="text-sm text-gray-600">
+        <p className="text-sm text-gray-600 dark:text-gray-300">
           Already have an account?{" "}
           <a
             href="/auth/login"
-            className="font-medium text-sky-600 hover:text-sky-500"
+            className="font-medium text-sky-600 dark:text-sky-400 hover:text-sky-500 dark:hover:text-sky-300"
           >
             Sign in here
           </a>

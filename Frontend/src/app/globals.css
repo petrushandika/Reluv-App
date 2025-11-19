@@ -1,6 +1,9 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+/* Tailwind CSS v4 Dark Mode Configuration - REQUIRED for dark mode to work */
+@custom-variant dark (&:where(.dark, .dark *));
+
 /* Authentication Style */
 .promo-card-sky {
   position: absolute;

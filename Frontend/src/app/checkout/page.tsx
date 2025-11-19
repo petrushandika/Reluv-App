@@ -20,8 +20,8 @@ const MapPicker = dynamic(
   {
     ssr: false,
     loading: () => (
-      <div className="h-80 w-full bg-gray-200 flex justify-center items-center rounded-lg">
-        <p className="text-gray-500">Loading Map...</p>
+      <div className="h-80 w-full bg-gray-200 dark:bg-gray-700 flex justify-center items-center rounded-lg">
+        <p className="text-gray-500 dark:text-gray-400">Loading Map...</p>
       </div>
     ),
   }
@@ -262,14 +262,14 @@ const Checkout = () => {
     <div>
       <label
         htmlFor={id}
-        className="block text-sm font-medium text-gray-700 mb-1.5"
+        className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5"
       >
         {label}
       </label>
       <div className="relative">
         {Icon && (
           <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5">
-            <Icon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+            <Icon className="h-5 w-5 text-gray-400 dark:text-gray-500" aria-hidden="true" />
           </div>
         )}
         <input
@@ -280,7 +280,7 @@ const Checkout = () => {
           onChange={onChange}
           className={`block w-full ${
             Icon ? "pl-10" : "pl-4"
-          } pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition-colors duration-200 placeholder-gray-400`}
+          } pr-3 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200 placeholder-gray-400 dark:placeholder-gray-500`}
           placeholder={placeholder}
         />
       </div>
@@ -307,7 +307,7 @@ const Checkout = () => {
     <div>
       <label
         htmlFor={id}
-        className="block text-sm font-medium text-gray-700 mb-1.5"
+        className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5"
       >
         {label}
       </label>
@@ -317,7 +317,7 @@ const Checkout = () => {
         value={value}
         onChange={onChange}
         disabled={disabled}
-        className="block w-full pl-3 pr-10 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition-colors duration-200 placeholder-gray-400 disabled:bg-gray-50 disabled:cursor-not-allowed"
+        className="block w-full pl-3 pr-10 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200 placeholder-gray-400 dark:placeholder-gray-500 disabled:bg-gray-50 dark:disabled:bg-gray-700 disabled:cursor-not-allowed"
       >
         <option value="" disabled>
           {placeholder || `Select ${label}`}
@@ -333,16 +333,16 @@ const Checkout = () => {
 
   return (
     <>
-      <div className="bg-white">
+      <div className="bg-white dark:bg-gray-900 min-h-screen">
         <div className="container mx-auto px-6 md:px-20 xl:px-40 py-12 md:py-12">
-          <h1 className="text-xl md:text-2xl font-bold text-black mb-6 md:mb-8">
+          <h1 className="text-xl md:text-2xl font-bold text-black dark:text-white mb-6 md:mb-8">
             Shipping Details
           </h1>
           <div className="flex flex-col lg:grid lg:grid-cols-3 gap-6 md:gap-8">
-            <div className="lg:col-span-2 border border-gray-200 rounded-lg p-6 md:p-8">
+            <div className="lg:col-span-2 border border-gray-200 dark:border-gray-700 rounded-lg p-6 md:p-8 bg-white dark:bg-gray-800">
               <form className="space-y-8">
                 <div className="space-y-6">
-                  <h2 className="text-xl font-semibold text-sky-600 flex items-center gap-3">
+                  <h2 className="text-xl font-semibold text-sky-600 dark:text-sky-400 flex items-center gap-3">
                     <User size={22} /> Contact Information
                   </h2>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -382,7 +382,7 @@ const Checkout = () => {
                 </div>
 
                 <div className="space-y-6">
-                  <h2 className="text-xl font-semibold text-sky-600 flex items-center gap-3">
+                  <h2 className="text-xl font-semibold text-sky-600 dark:text-sky-400 flex items-center gap-3">
                     <MapPin size={22} /> Shipping Address
                   </h2>
                   <FormInput
@@ -431,7 +431,7 @@ const Checkout = () => {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
                       Pinpoint Location
                     </label>
                     <MapPicker
@@ -442,7 +442,7 @@ const Checkout = () => {
                 </div>
 
                 <div className="space-y-6">
-                  <h2 className="text-xl font-semibold text-sky-600 flex items-center gap-3">
+                  <h2 className="text-xl font-semibold text-sky-600 dark:text-sky-400 flex items-center gap-3">
                     <Truck size={22} /> Shipping Method
                   </h2>
                   <FormSelect
@@ -459,7 +459,7 @@ const Checkout = () => {
                   />
                   {selectedCourier && (
                     <div className="pt-2">
-                      <p className="block text-sm font-medium text-gray-700 mb-1.5">
+                      <p className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
                         Select Service
                       </p>
                       <div className="space-y-3">
@@ -469,10 +469,10 @@ const Checkout = () => {
                           <label
                             key={service.id}
                             htmlFor={service.id}
-                            className={`flex items-center p-4 border rounded-lg cursor-pointer transition-all ${
+                            className={`flex items-center p-4 border rounded-lg cursor-pointer transition-all bg-white dark:bg-gray-800 ${
                               selectedService?.id === service.id
-                                ? "border-sky-500 ring-2 ring-sky-500"
-                                : "border-gray-300"
+                                ? "border-sky-500 dark:border-sky-400 ring-2 ring-sky-500 dark:ring-sky-400"
+                                : "border-gray-300 dark:border-gray-600"
                             }`}
                           >
                             <input
@@ -481,18 +481,18 @@ const Checkout = () => {
                               id={service.id}
                               checked={selectedService?.id === service.id}
                               onChange={() => handleServiceChange(service)}
-                              className="h-4 w-4 text-sky-600 focus:ring-sky-500 border-gray-300"
+                              className="h-4 w-4 text-sky-600 dark:text-sky-400 focus:ring-sky-500 dark:focus:ring-sky-400 border-gray-300 dark:border-gray-600"
                             />
                             <div className="ml-4 flex-grow grid grid-cols-2 sm:grid-cols-3 items-center">
                               <div className="col-span-2 sm:col-span-1">
-                                <span className="font-semibold text-sm text-black">
+                                <span className="font-semibold text-sm text-black dark:text-white">
                                   {service.name}
                                 </span>
-                                <span className="block text-xs text-gray-500">
+                                <span className="block text-xs text-gray-500 dark:text-gray-400">
                                   {service.estimation}
                                 </span>
                               </div>
-                              <span className="text-sm font-semibold text-black sm:text-right">
+                              <span className="text-sm font-semibold text-black dark:text-white sm:text-right">
                                 {formatPrice(service.price)}
                               </span>
                             </div>
@@ -506,8 +506,8 @@ const Checkout = () => {
             </div>
 
             <div className="lg:col-span-1">
-              <div className="bg-white rounded-lg shadow-sm p-4 md:p-6 lg:sticky lg:top-4 border border-gray-200">
-                <h2 className="text-base md:text-lg font-semibold text-black mb-6">
+              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-4 md:p-6 lg:sticky lg:top-4 border border-gray-200 dark:border-gray-700">
+                <h2 className="text-base md:text-lg font-semibold text-black dark:text-white mb-6">
                   Order Summary
                 </h2>
                 <div className="space-y-4">
@@ -524,26 +524,26 @@ const Checkout = () => {
                         </span>
                       </div>
                       <div className="flex-grow">
-                        <p className="font-semibold text-black text-sm">
+                        <p className="font-semibold text-black dark:text-white text-sm">
                           {item.name}
                         </p>
-                        <p className="text-gray-500 text-xs">
+                        <p className="text-gray-500 dark:text-gray-400 text-xs">
                           Size: {item.size}
                         </p>
                       </div>
-                      <p className="font-semibold text-black text-sm">
+                      <p className="font-semibold text-black dark:text-white text-sm">
                         {formatPrice(item.price)}
                       </p>
                     </div>
                   ))}
                 </div>
 
-                <div className="my-6 border-t border-gray-200"></div>
+                <div className="my-6 border-t border-gray-200 dark:border-gray-700"></div>
 
                 <div className="space-y-4 mb-4">
                   <div>
                     {selectedVoucher ? (
-                      <div className="flex justify-between items-center bg-sky-50 text-sky-700 p-3 rounded-lg">
+                      <div className="flex justify-between items-center bg-sky-50 dark:bg-sky-900/30 text-sky-700 dark:text-sky-400 p-3 rounded-lg">
                         <div className="flex items-center gap-2">
                           <Ticket size={18} />
                           <p className="font-semibold text-sm">
@@ -552,7 +552,7 @@ const Checkout = () => {
                         </div>
                         <button
                           onClick={() => setSelectedVoucher(null)}
-                          className="p-1 hover:bg-sky-100 rounded-full"
+                          className="p-1 hover:bg-sky-100 dark:hover:bg-sky-800 rounded-full"
                         >
                           <X size={16} />
                         </button>
@@ -560,7 +560,7 @@ const Checkout = () => {
                     ) : (
                       <button
                         onClick={() => setIsVoucherModalOpen(true)}
-                        className="w-full flex items-center justify-center gap-2 border-2 border-dashed border-gray-300 text-gray-500 hover:border-sky-500 hover:text-sky-600 transition-colors p-3 rounded-lg"
+                        className="w-full flex items-center justify-center gap-2 border-2 border-dashed border-gray-300 dark:border-gray-600 text-gray-500 dark:text-gray-400 hover:border-sky-500 dark:hover:border-sky-400 hover:text-sky-600 dark:hover:text-sky-400 transition-colors p-3 rounded-lg"
                       >
                         <Ticket size={18} />
                         <span className="text-sm font-semibold">
@@ -573,7 +573,7 @@ const Checkout = () => {
                   <div>
                     <label
                       htmlFor="orderNotes"
-                      className="block text-sm font-medium text-gray-700 mb-1.5 flex items-center gap-2"
+                      className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5 flex items-center gap-2"
                     >
                       <BookText size={16} /> Note for Seller (Optional)
                     </label>
@@ -584,34 +584,34 @@ const Checkout = () => {
                       onChange={(e) => setOrderNotes(e.target.value)}
                       rows={3}
                       placeholder="e.g., Please pack securely..."
-                      className="block w-full text-sm p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition-colors duration-200 placeholder-gray-400"
+                      className="block w-full text-sm p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200 placeholder-gray-400 dark:placeholder-gray-500"
                     ></textarea>
                   </div>
                 </div>
 
-                <div className="my-6 border-t border-gray-200"></div>
+                <div className="my-6 border-t border-gray-200 dark:border-gray-700"></div>
 
                 <div className="space-y-2 md:space-y-3 mb-4">
                   <div className="flex justify-between text-xs md:text-sm">
-                    <span className="text-gray-600">Subtotal</span>
-                    <span className="font-medium text-black">
+                    <span className="text-gray-600 dark:text-gray-400">Subtotal</span>
+                    <span className="font-medium text-black dark:text-white">
                       {formatPrice(subtotal)}
                     </span>
                   </div>
                   <div className="flex justify-between text-xs md:text-sm">
-                    <span className="text-gray-600">Shipping</span>
-                    <span className="font-medium text-black">
+                    <span className="text-gray-600 dark:text-gray-400">Shipping</span>
+                    <span className="font-medium text-black dark:text-white">
                       {formatPrice(shippingCost)}
                     </span>
                   </div>
                   <div className="flex justify-between text-xs md:text-sm">
-                    <span className="text-gray-600">Tax (VAT 11%)</span>
-                    <span className="font-medium text-black">
+                    <span className="text-gray-600 dark:text-gray-400">Tax (VAT 11%)</span>
+                    <span className="font-medium text-black dark:text-white">
                       {formatPrice(tax)}
                     </span>
                   </div>
                   {totalSavings > 0 && (
-                    <div className="flex justify-between text-xs md:text-sm text-green-600">
+                    <div className="flex justify-between text-xs md:text-sm text-green-600 dark:text-green-400">
                       <span className="font-medium">You Save</span>
                       <span className="font-medium">
                         -{formatPrice(totalSavings)}
@@ -619,7 +619,7 @@ const Checkout = () => {
                     </div>
                   )}
                   {voucherDiscount > 0 && (
-                    <div className="flex justify-between text-xs md:text-sm text-green-600">
+                    <div className="flex justify-between text-xs md:text-sm text-green-600 dark:text-green-400">
                       <span className="font-medium">Voucher Discount</span>
                       <span className="font-medium">
                         -{formatPrice(voucherDiscount)}
@@ -628,16 +628,16 @@ const Checkout = () => {
                   )}
                 </div>
 
-                <div className="border-t border-gray-200 pt-4">
+                <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
                   <div className="flex justify-between text-lg font-bold">
-                    <span className="text-black">Total</span>
-                    <span className="text-sky-600">{formatPrice(total)}</span>
+                    <span className="text-black dark:text-white">Total</span>
+                    <span className="text-sky-600 dark:text-sky-400">{formatPrice(total)}</span>
                   </div>
                 </div>
 
                 <button
                   type="submit"
-                  className="mt-5 block w-full bg-sky-500 text-white text-center py-3 px-4 rounded-md font-medium hover:bg-sky-600 transition-colors text-sm md:text-base cursor-pointer"
+                  className="mt-5 block w-full bg-sky-500 dark:bg-sky-600 text-white text-center py-3 px-4 rounded-md font-medium hover:bg-sky-600 dark:hover:bg-sky-700 transition-colors text-sm md:text-base cursor-pointer"
                 >
                   Pay Now
                 </button>
@@ -653,16 +653,16 @@ const Checkout = () => {
           onClick={() => setIsVoucherModalOpen(false)}
         >
           <div
-            className="bg-white rounded-xl w-full max-w-lg shadow border border-gray-200"
+            className="bg-white dark:bg-gray-800 rounded-xl w-full max-w-lg shadow border border-gray-200 dark:border-gray-700"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex justify-between items-center p-5 border-b border-gray-200">
-              <h3 className="text-lg font-semibold text-gray-800">
+            <div className="flex justify-between items-center p-5 border-b border-gray-200 dark:border-gray-700">
+              <h3 className="text-lg font-semibold text-gray-800 dark:text-white">
                 Select Voucher
               </h3>
               <button
                 onClick={() => setIsVoucherModalOpen(false)}
-                className="p-2 -m-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full"
+                className="p-2 -m-2 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full"
               >
                 <X size={20} />
               </button>
@@ -672,23 +672,23 @@ const Checkout = () => {
                 <div
                   key={voucher.id}
                   onClick={() => handleVoucherSelect(voucher)}
-                  className={`flex items-center p-4 rounded-lg cursor-pointer transition-all duration-300 ease-in-out border-2 ${
+                  className={`flex items-center p-4 rounded-lg cursor-pointer transition-all duration-300 ease-in-out border-2 bg-white dark:bg-gray-800 ${
                     selectedVoucher?.id === voucher.id
-                      ? "border-sky-500 shadow"
-                      : "border-gray-200 shadow hover:border-sky-300"
+                      ? "border-sky-500 dark:border-sky-400 shadow"
+                      : "border-gray-200 dark:border-gray-700 shadow hover:border-sky-300 dark:hover:border-sky-500"
                   }`}
                 >
-                  <div className="flex-shrink-0 flex items-center justify-center w-16 h-16 rounded-full bg-sky-100/70">
-                    <Ticket className="w-8 h-8 text-sky-600" />
+                  <div className="flex-shrink-0 flex items-center justify-center w-16 h-16 rounded-full bg-sky-100/70 dark:bg-sky-900/30">
+                    <Ticket className="w-8 h-8 text-sky-600 dark:text-sky-400" />
                   </div>
                   <div className="ml-4 flex-grow">
-                    <p className="font-bold text-sky-700 text-base">
+                    <p className="font-bold text-sky-700 dark:text-sky-400 text-base">
                       {voucher.code}
                     </p>
-                    <p className="text-gray-600 text-sm mt-1">
+                    <p className="text-gray-600 dark:text-gray-300 text-sm mt-1">
                       {voucher.description}
                     </p>
-                    <div className="flex items-center text-gray-400 text-xs mt-2">
+                    <div className="flex items-center text-gray-400 dark:text-gray-500 text-xs mt-2">
                       <Clock size={14} className="mr-1.5" />
                       <span>{voucher.expiry}</span>
                     </div>

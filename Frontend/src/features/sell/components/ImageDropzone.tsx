@@ -21,25 +21,27 @@ const ImageDropzone = ({
   return (
     <div
       className={`relative flex flex-col items-center justify-center w-full h-80 rounded-lg border-2 border-dashed transition-colors duration-300 ${
-        isDragging ? "border-sky-400 bg-sky-200" : "border-sky-500 bg-sky-100"
-      } text-sky-800 cursor-pointer`}
+        isDragging 
+          ? "border-sky-400 dark:border-sky-500 bg-sky-200 dark:bg-sky-900/30" 
+          : "border-sky-500 dark:border-sky-400 bg-sky-100 dark:bg-sky-900/20"
+      } text-sky-800 dark:text-sky-200 cursor-pointer`}
       onDragOver={onDragOver}
       onDragLeave={onDragLeave}
       onDrop={onDrop}
       onClick={onClick}
     >
       <div className="text-center">
-        <UploadCloud className="mx-auto h-12 w-12 text-sky-500 opacity-80" />
+        <UploadCloud className="mx-auto h-12 w-12 text-sky-500 dark:text-sky-400 opacity-80" />
         <button
           type="button"
-          className="mt-4 px-6 py-2 bg-sky-500 text-white font-semibold rounded-md hover:bg-sky-600 transition-colors"
+          className="mt-4 px-6 py-2 bg-sky-500 dark:bg-sky-600 text-white font-semibold rounded-md hover:bg-sky-600 dark:hover:bg-sky-700 transition-colors cursor-pointer"
         >
           Select photos
         </button>
-        <p className="mt-2 text-sm text-sky-700 opacity-90">
+        <p className="mt-2 text-sm text-sky-700 dark:text-sky-300 opacity-90">
           or drag photos here
         </p>
-        <p className="mt-1 text-xs text-sky-600 opacity-70">(Up to 9 Photos)</p>
+        <p className="mt-1 text-xs text-sky-600 dark:text-sky-400 opacity-70">(Up to 9 Photos)</p>
       </div>
     </div>
   );

@@ -43,11 +43,11 @@ export default function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <div className="w-64 bg-white border-r border-gray-200 flex flex-col">
-      <div className="p-6 border-b">
+    <div className="w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 flex flex-col">
+      <div className="p-6 border-b border-gray-200 dark:border-gray-700">
         <Link href="/" className="flex items-center space-x-2">
           <img src="/logo.png" alt="reluv" className="h-8 w-8" />
-          <span className="font-bold text-xl">reluv</span>
+          <span className="font-bold text-xl text-gray-900 dark:text-white">reluv</span>
         </Link>
       </div>
 
@@ -64,7 +64,7 @@ export default function Sidebar() {
                 "flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors",
                 isActive
                   ? "bg-primary text-primary-foreground"
-                  : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                  : "text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white"
               )}
             >
               <Icon className="h-5 w-5" />

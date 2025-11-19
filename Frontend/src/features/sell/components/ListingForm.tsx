@@ -62,7 +62,7 @@ const ListingForm = ({
   return (
     <form
       onSubmit={handleFormSubmit}
-      className="border border-gray-200 p-6 rounded-lg space-y-6"
+      className="border border-gray-200 dark:border-gray-700 p-6 rounded-lg space-y-6 bg-white dark:bg-gray-800"
     >
       <CategorySelector
         selectedCategoryId={listingData.categoryId}
@@ -76,7 +76,7 @@ const ListingForm = ({
           <div>
             <label
               htmlFor="name"
-              className="block text-sm font-medium text-gray-700 mb-2"
+              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
             >
               Listing Title *
             </label>
@@ -87,18 +87,18 @@ const ListingForm = ({
               value={listingData.name}
               onChange={handleInputChange}
               placeholder="e.g. Vintage Leather Handbag"
-              className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500"
+              className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
               required
             />
           </div>
 
           <div>
-            <h4 className="block text-sm font-medium text-gray-700 mb-2">
+            <h4 className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               About the item
             </h4>
             <div className="space-y-4">
               <div>
-                <label className="block text-xs text-gray-500 mb-2">
+                <label className="block text-xs text-gray-500 dark:text-gray-400 mb-2">
                   Condition *
                 </label>
                 <div className="flex flex-wrap gap-2">
@@ -115,7 +115,7 @@ const ListingForm = ({
                       className={`px-4 py-2 text-sm rounded-full border transition-colors ${
                         listingData.condition === key
                           ? "bg-sky-600 text-white border-sky-600"
-                          : "bg-white text-gray-600 border-gray-300 hover:bg-gray-100"
+                          : "bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-300 border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600"
                       }`}
                     >
                       {value}
@@ -126,7 +126,7 @@ const ListingForm = ({
               <div>
                 <label
                   htmlFor="conditionNote"
-                  className="block text-xs text-gray-500 mb-1"
+                  className="block text-xs text-gray-500 dark:text-gray-400 mb-1"
                 >
                   Condition Note (Optional)
                 </label>
@@ -137,14 +137,14 @@ const ListingForm = ({
                   value={listingData.conditionNote}
                   onChange={handleInputChange}
                   placeholder="e.g. Slight scratch on the buckle"
-                  className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500"
+                  className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
                 />
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label
                     htmlFor="price"
-                    className="block text-xs text-gray-500 mb-1"
+                    className="block text-xs text-gray-500 dark:text-gray-400 mb-1"
                   >
                     Price (IDR) *
                   </label>
@@ -155,14 +155,14 @@ const ListingForm = ({
                     value={listingData.price}
                     onChange={handleInputChange}
                     placeholder="0"
-                    className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500"
+                    className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
                     required
                   />
                 </div>
                 <div>
                   <label
                     htmlFor="stock"
-                    className="block text-xs text-gray-500 mb-1"
+                    className="block text-xs text-gray-500 dark:text-gray-400 mb-1"
                   >
                     Stock
                   </label>
@@ -174,7 +174,7 @@ const ListingForm = ({
                     onChange={handleInputChange}
                     placeholder="1"
                     min="1"
-                    className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500"
+                    className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
                   />
                 </div>
               </div>
@@ -185,7 +185,7 @@ const ListingForm = ({
             <div>
               <label
                 htmlFor="size"
-                className="block text-sm font-medium text-gray-700 mb-2"
+                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
               >
                 Size (Optional)
               </label>
@@ -204,7 +204,7 @@ const ListingForm = ({
                   onFocus={() => setIsSizeOpen(true)}
                   onBlur={() => setIsSizeOpen(false)}
                   onMouseDown={() => setIsSizeOpen(!isSizeOpen)}
-                  className="w-full px-4 py-3 pr-10 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 appearance-none cursor-pointer transition-all"
+                  className="w-full px-4 py-3 pr-10 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 appearance-none cursor-pointer transition-all text-gray-900 dark:text-white"
                 >
                   <option value="">Select a size</option>
                   {sizeOptions.map((s) => (
@@ -214,7 +214,7 @@ const ListingForm = ({
                   ))}
                 </select>
                 <ChevronDown
-                  className={`absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none transition-transform duration-200 ${
+                  className={`absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 dark:text-gray-500 pointer-events-none transition-transform duration-200 ${
                     isSizeOpen ? "rotate-180" : ""
                   }`}
                 />
@@ -226,14 +226,14 @@ const ListingForm = ({
                   value={listingData.customSize}
                   onChange={handleInputChange}
                   placeholder="Enter custom size"
-                  className="mt-2 w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500"
+                  className="mt-2 w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
                 />
               )}
             </div>
             <div>
               <label
                 htmlFor="color"
-                className="block text-sm font-medium text-gray-700 mb-2"
+                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
               >
                 Color (Optional)
               </label>
@@ -252,7 +252,7 @@ const ListingForm = ({
                   onFocus={() => setIsColorOpen(true)}
                   onBlur={() => setIsColorOpen(false)}
                   onMouseDown={() => setIsColorOpen(!isColorOpen)}
-                  className="w-full px-4 py-3 pr-10 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 appearance-none cursor-pointer transition-all"
+                  className="w-full px-4 py-3 pr-10 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 appearance-none cursor-pointer transition-all text-gray-900 dark:text-white"
                 >
                   <option value="">Select a color</option>
                   {colorOptions.map((c) => (
@@ -262,7 +262,7 @@ const ListingForm = ({
                   ))}
                 </select>
                 <ChevronDown
-                  className={`absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none transition-transform duration-200 ${
+                  className={`absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 dark:text-gray-500 pointer-events-none transition-transform duration-200 ${
                     isColorOpen ? "rotate-180" : ""
                   }`}
                 />
@@ -274,7 +274,7 @@ const ListingForm = ({
                   value={listingData.customColor}
                   onChange={handleInputChange}
                   placeholder="Enter custom color"
-                  className="mt-2 w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500"
+                  className="mt-2 w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
                 />
               )}
             </div>
@@ -283,7 +283,7 @@ const ListingForm = ({
           <div>
             <label
               htmlFor="description"
-              className="block text-sm font-medium text-gray-700 mb-2"
+              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
             >
               Description (Optional)
             </label>
@@ -294,19 +294,19 @@ const ListingForm = ({
               onChange={handleInputChange}
               rows={4}
               placeholder="Describe your item in detail..."
-              className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500"
+              className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
             />
           </div>
 
           <div>
-            <h4 className="text-sm font-medium text-gray-700 mb-2">
+            <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Shipping Details (Optional)
             </h4>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div>
                 <label
                   htmlFor="weight"
-                  className="block text-xs text-gray-500 mb-1"
+                  className="block text-xs text-gray-500 dark:text-gray-400 mb-1"
                 >
                   Weight (g)
                 </label>
@@ -318,13 +318,13 @@ const ListingForm = ({
                   onChange={handleInputChange}
                   placeholder="e.g. 500"
                   min="1"
-                  className="w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500 text-sm"
+                  className="w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
                 />
               </div>
               <div>
                 <label
                   htmlFor="length"
-                  className="block text-xs text-gray-500 mb-1"
+                  className="block text-xs text-gray-500 dark:text-gray-400 mb-1"
                 >
                   Length (cm)
                 </label>
@@ -336,13 +336,13 @@ const ListingForm = ({
                   onChange={handleInputChange}
                   placeholder="e.g. 20"
                   min="1"
-                  className="w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500 text-sm"
+                  className="w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
                 />
               </div>
               <div>
                 <label
                   htmlFor="width"
-                  className="block text-xs text-gray-500 mb-1"
+                  className="block text-xs text-gray-500 dark:text-gray-400 mb-1"
                 >
                   Width (cm)
                 </label>
@@ -354,13 +354,13 @@ const ListingForm = ({
                   onChange={handleInputChange}
                   placeholder="e.g. 15"
                   min="1"
-                  className="w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500 text-sm"
+                  className="w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
                 />
               </div>
               <div>
                 <label
                   htmlFor="height"
-                  className="block text-xs text-gray-500 mb-1"
+                  className="block text-xs text-gray-500 dark:text-gray-400 mb-1"
                 >
                   Height (cm)
                 </label>
@@ -372,7 +372,7 @@ const ListingForm = ({
                   onChange={handleInputChange}
                   placeholder="e.g. 10"
                   min="1"
-                  className="w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500 text-sm"
+                  className="w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
                 />
               </div>
             </div>
@@ -390,11 +390,11 @@ const ListingForm = ({
                   isPreloved: e.target.checked,
                 }))
               }
-              className="h-4 w-4 text-sky-600 focus:ring-sky-500 border-gray-300 rounded"
+              className="h-4 w-4 text-sky-600 focus:ring-sky-500 border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700"
             />
             <label
               htmlFor="isPreloved"
-              className="ml-2 block text-sm text-gray-900"
+              className="ml-2 block text-sm text-gray-900 dark:text-gray-300"
             >
               This is a pre-loved item
             </label>
@@ -403,7 +403,7 @@ const ListingForm = ({
           <button
             type="submit"
             disabled={isLoading || !isFormValid()}
-            className="w-full bg-sky-600 text-white font-bold py-3 rounded-lg hover:bg-sky-700 shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+            className="w-full bg-sky-600 dark:bg-sky-500 text-white font-bold py-3 rounded-lg hover:bg-sky-700 dark:hover:bg-sky-600 shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed transition-all"
           >
             {isLoading ? "Selling..." : "Sell Now"}
           </button>

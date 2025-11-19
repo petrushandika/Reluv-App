@@ -52,7 +52,7 @@ const ProductCard = ({ product, containerClassName }: ProductCardProps) => {
     <div className={containerClassName || defaultClasses}>
       <div className="relative group/card">
         <Link href={`/product/${product.id}`}>
-          <div className="bg-gray-50 rounded overflow-hidden cursor-pointer aspect-square">
+          <div className="bg-gray-50 dark:bg-gray-800 rounded overflow-hidden cursor-pointer aspect-square">
             <img
               src={imageUrl}
               alt={product.name}
@@ -69,7 +69,7 @@ const ProductCard = ({ product, containerClassName }: ProductCardProps) => {
 
         <button
           onClick={handleWishlistToggle}
-          className="absolute top-3 right-3 z-10 p-1.5 bg-white/60 backdrop-blur-sm rounded-full text-gray-700 hover:text-red-500 hover:bg-white transition-all duration-200"
+          className="absolute top-3 right-3 z-10 p-1.5 bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm rounded-full text-gray-700 dark:text-gray-300 hover:text-red-500 dark:hover:text-red-400 hover:bg-white dark:hover:bg-gray-700 transition-all duration-200"
           aria-label="Add to wishlist"
         >
           <Heart
@@ -81,21 +81,21 @@ const ProductCard = ({ product, containerClassName }: ProductCardProps) => {
       </div>
       <Link href={`/product/${product.id}`}>
         <div className="pt-4 text-left cursor-pointer">
-          <p className="font-bold text-sm text-gray-800">
+          <p className="font-bold text-sm text-gray-800 dark:text-white">
             {product.store?.name || "Reluv"}
           </p>
-          <p className="text-sm text-gray-600 truncate">{product.name}</p>
+          <p className="text-sm text-gray-600 dark:text-gray-300 truncate">{product.name}</p>
           {firstVariant?.compareAtPrice ? (
             <div className="mt-1 flex items-baseline flex-wrap gap-x-2">
               <p className="font-bold text-red-600 text-base">
                 {formatPrice(firstVariant.price)}
               </p>
-              <p className="text-sm text-gray-400 line-through">
+              <p className="text-sm text-gray-400 dark:text-gray-500 line-through">
                 {formatPrice(firstVariant.compareAtPrice)}
               </p>
             </div>
           ) : (
-            <p className="font-bold text-gray-900 mt-1 text-base">
+            <p className="font-bold text-gray-900 dark:text-white mt-1 text-base">
               {firstVariant
                 ? formatPrice(firstVariant.price)
                 : "Price unavailable"}

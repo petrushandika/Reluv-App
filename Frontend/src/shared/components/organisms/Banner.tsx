@@ -101,10 +101,10 @@ const Banner = () => {
   ];
 
   return (
-    <div className="relative bg-white overflow-hidden">
+    <div className="relative bg-white dark:bg-gray-900 overflow-hidden">
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-sky-50 rounded-full blur-3xl opacity-40"></div>
-        <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-50 rounded-full blur-3xl opacity-40"></div>
+        <div className="absolute top-0 right-0 w-64 h-64 bg-sky-50 dark:bg-sky-900/20 rounded-full blur-3xl opacity-40"></div>
+        <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-50 dark:bg-blue-900/20 rounded-full blur-3xl opacity-40"></div>
       </div>
 
       <div className="relative">
@@ -117,25 +117,25 @@ const Banner = () => {
                     <div className="grid lg:grid-cols-2 gap-6 lg:gap-8 items-center py-8 lg:py-12 min-h-[380px]">
                       <div className="space-y-4 lg:space-y-6 order-2 lg:order-1">
                         <div className="flex flex-col sm:flex-row sm:items-center gap-3">
-                          <div className="inline-flex items-center space-x-2 bg-sky-50 text-sky-700 px-3 py-1.5 rounded-full text-sm font-medium">
+                          <div className="inline-flex items-center space-x-2 bg-sky-50 dark:bg-sky-900/30 text-sky-700 dark:text-sky-300 px-3 py-1.5 rounded-full text-sm font-medium">
                             <span>{slide.badge}</span>
                           </div>
-                          <div className="inline-flex items-center space-x-2 bg-red-50 text-red-600 px-3 py-1.5 rounded-full text-sm font-bold">
+                          <div className="inline-flex items-center space-x-2 bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400 px-3 py-1.5 rounded-full text-sm font-bold">
                             <Percent className="w-4 h-4" />
                             <span>{slide.discount}</span>
                           </div>
                         </div>
 
                         <div className="space-y-2">
-                          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight">
+                          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white leading-tight">
                             {slide.title}
-                            <span className="block text-sky-600 mt-1">
+                            <span className="block text-sky-600 dark:text-sky-400 mt-1">
                               {slide.subtitle}
                             </span>
                           </h1>
                         </div>
 
-                        <p className="text-base sm:text-lg text-gray-600 leading-relaxed">
+                        <p className="text-base sm:text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
                           {slide.description}
                         </p>
 
@@ -148,24 +148,24 @@ const Banner = () => {
                           </Link>
 
                           <Link href="/wishlist" aria-label="Wishlist">
-                            <button className="inline-flex items-center justify-center px-6 py-3 bg-white text-gray-700 font-semibold rounded-xl border border-gray-200 hover:border-gray-300 transition-all duration-200 hover:bg-gray-50 cursor-pointer">
+                            <button className="inline-flex items-center justify-center px-6 py-3 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 font-semibold rounded-xl border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-200 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer">
                               <Heart className="mr-2 w-5 h-5" />
                               <span>Wishlist</span>
                             </button>
                           </Link>
                         </div>
 
-                        <div className="flex items-center gap-6 pt-4 text-sm text-gray-600">
+                        <div className="flex items-center gap-6 pt-4 text-sm text-gray-600 dark:text-gray-300">
                           <div className="flex items-center gap-1">
                             <Star className="w-4 h-4 text-yellow-400 fill-current" />
                             <span className="font-medium">4.8/5</span>
                           </div>
                           <div className="flex items-center gap-1">
-                            <Clock className="w-4 h-4 text-gray-400" />
+                            <Clock className="w-4 h-4 text-gray-400 dark:text-gray-500" />
                             <span>Fast Shipping</span>
                           </div>
                           <div className="flex items-center gap-1">
-                            <Tag className="w-4 h-4 text-green-500" />
+                            <Tag className="w-4 h-4 text-green-500 dark:text-green-400" />
                             <span>Quality Guarantee</span>
                           </div>
                         </div>
@@ -182,8 +182,8 @@ const Banner = () => {
 
                             <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
 
-                            <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm rounded-lg px-3 py-1.5">
-                              <span className="text-sm font-medium text-gray-800">
+                            <div className="absolute top-4 left-4 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-lg px-3 py-1.5">
+                              <span className="text-sm font-medium text-gray-800 dark:text-white">
                                 {slide.category}
                               </span>
                             </div>
@@ -195,14 +195,14 @@ const Banner = () => {
                             </div>
                           </div>
 
-                          <div className="absolute -bottom-4 -right-4 bg-white rounded-xl shadow-lg p-3 border border-gray-100">
+                          <div className="absolute -bottom-4 -right-4 bg-white dark:bg-gray-800 rounded-xl shadow-lg p-3 border border-gray-100 dark:border-gray-700">
                             <div className="flex items-center gap-2">
-                              <ShoppingBag className="w-5 h-5 text-sky-600" />
+                              <ShoppingBag className="w-5 h-5 text-sky-600 dark:text-sky-400" />
                               <div>
-                                <div className="text-xs text-gray-500">
+                                <div className="text-xs text-gray-500 dark:text-gray-400">
                                   Sold Today
                                 </div>
-                                <div className="text-sm font-bold text-gray-900">
+                                <div className="text-sm font-bold text-gray-900 dark:text-white">
                                   150+ Items
                                 </div>
                               </div>

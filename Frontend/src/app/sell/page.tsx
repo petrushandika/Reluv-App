@@ -106,7 +106,7 @@ const Sell = () => {
   }
 
   return (
-    <div className="min-h-screen bg-white w-full flex items-center justify-center p-4">
+    <div className="min-h-screen bg-white dark:bg-gray-900 w-full flex items-center justify-center p-4">
       <div className="container mx-auto px-6 md:px-20 xl:px-40 py-5">
         {!isAuthenticated() ? (
           <AuthWarningModal />

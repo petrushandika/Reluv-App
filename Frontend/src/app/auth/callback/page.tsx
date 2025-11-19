@@ -31,10 +31,12 @@ const CallbackContent = () => {
   }, [searchParams, setToken, router]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center">
+    <div className="min-h-screen flex items-center justify-center bg-white dark:bg-gray-900">
       <div className="text-center">
         <Spinner />
-        <p className="mt-4 text-gray-600">Completing authentication...</p>
+        <p className="mt-4 text-gray-600 dark:text-gray-300">
+          Completing authentication...
+        </p>
       </div>
     </div>
   );
@@ -44,7 +46,7 @@ export default function CallbackPage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen flex items-center justify-center">
+        <div className="min-h-screen flex items-center justify-center bg-white dark:bg-gray-900">
           <Spinner />
         </div>
       }

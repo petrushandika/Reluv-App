@@ -82,22 +82,24 @@ const ShareModal = ({ isOpen, onClose, product }: ShareModalProps) => {
       onClick={onClose}
     >
       <div
-        className="bg-white rounded-xl shadow-xl w-full max-w-sm sm:max-w-md p-6"
+        className="bg-white dark:bg-gray-800 rounded-xl shadow-xl w-full max-w-sm sm:max-w-md p-6"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-lg font-bold text-gray-900">
+          <h2 className="text-lg font-bold text-gray-900 dark:text-white">
             Share this Product
           </h2>
           <button
             onClick={onClose}
-            className="p-1 rounded-full hover:bg-gray-100"
+            className="p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
           >
-            <X className="w-5 h-5 text-gray-500" />
+            <X className="w-5 h-5 text-gray-500 dark:text-gray-400" />
           </button>
         </div>
 
-        <p className="text-gray-600 mb-4 text-sm">Share this link via</p>
+        <p className="text-gray-600 dark:text-gray-300 mb-4 text-sm">
+          Share this link via
+        </p>
         <div className="flex space-x-4 overflow-x-auto pb-3">
           {shareOptions.map((option) => (
             <a
@@ -105,7 +107,7 @@ const ShareModal = ({ isOpen, onClose, product }: ShareModalProps) => {
               href={option.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="group flex-shrink-0 flex flex-col items-center justify-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors w-20"
+              className="group flex-shrink-0 flex flex-col items-center justify-center p-3 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors w-20"
             >
               <div
                 className={`w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center rounded-full text-white ${option.color}`}
@@ -114,24 +116,26 @@ const ShareModal = ({ isOpen, onClose, product }: ShareModalProps) => {
                   className: "w-5 h-5 sm:w-6 sm:h-6",
                 })}
               </div>
-              <span className="text-xs mt-2 text-gray-700 group-hover:text-sky-600">
+              <span className="text-xs mt-2 text-gray-700 dark:text-gray-300 group-hover:text-sky-600 dark:group-hover:text-sky-400">
                 {option.name}
               </span>
             </a>
           ))}
         </div>
 
-        <p className="text-gray-600 my-4 text-sm">Or copy link</p>
+        <p className="text-gray-600 dark:text-gray-300 my-4 text-sm">
+          Or copy link
+        </p>
         <div className="flex items-center">
           <input
             type="text"
             readOnly
             value={productUrl}
-            className="w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-l-md text-sm text-gray-600 focus:outline-none"
+            className="w-full px-3 py-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-l-md text-sm text-gray-600 dark:text-gray-300 focus:outline-none"
           />
           <button
             onClick={copyToClipboard}
-            className="bg-sky-600 text-white px-4 py-2 rounded-r-md hover:bg-sky-700 transition-colors"
+            className="bg-sky-600 dark:bg-sky-500 text-white px-4 py-2 rounded-r-md hover:bg-sky-700 dark:hover:bg-sky-600 transition-colors"
           >
             <Copy className="w-5 h-5" />
           </button>

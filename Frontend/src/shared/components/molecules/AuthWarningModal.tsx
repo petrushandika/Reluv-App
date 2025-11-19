@@ -7,27 +7,27 @@ import { Store } from "lucide-react";
 const AuthWarningModal = () => {
   const router = useRouter();
   return (
-    <div className="flex flex-col items-center justify-center text-center p-12 bg-sky-50 rounded-xl">
-      <div className="relative bg-sky-600 p-5 rounded-full mb-6 shadow-lg shadow-sky-200/50">
+    <div className="flex flex-col items-center justify-center text-center p-12 bg-sky-50 dark:bg-sky-900/20 rounded-xl">
+      <div className="relative bg-sky-600 dark:bg-sky-500 p-5 rounded-full mb-6 shadow-lg shadow-sky-200/50 dark:shadow-sky-900/50">
         <Store className="w-12 h-12 text-white" />
       </div>
-      <h2 className="text-3xl font-bold text-sky-800">
+      <h2 className="text-3xl font-bold text-sky-800 dark:text-sky-300">
         One More Step to Start Selling
       </h2>
-      <p className="mt-4 text-gray-600 max-w-sm">
+      <p className="mt-4 text-gray-600 dark:text-gray-300 max-w-sm">
         Join our community of sellers! Please sign in or create an account to
         list your first item.
       </p>
       <div className="mt-8 flex flex-col sm:flex-row gap-4 w-full max-w-sm">
         <button
           onClick={() => router.push("/auth/login")}
-          className="w-full flex justify-center items-center bg-sky-600 text-white px-4 py-3 rounded-lg font-semibold hover:bg-sky-700 transition-colors"
+          className="w-full flex justify-center items-center bg-sky-600 dark:bg-sky-500 text-white px-4 py-3 rounded-lg font-semibold hover:bg-sky-700 dark:hover:bg-sky-600 transition-colors cursor-pointer"
         >
           Sign In
         </button>
         <button
           onClick={() => router.push("/auth/register")}
-          className="w-full flex justify-center items-center bg-white text-sky-600 px-4 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors border-2 border-sky-600"
+          className="w-full flex justify-center items-center bg-white dark:bg-gray-800 text-sky-600 dark:text-sky-400 px-4 py-3 rounded-lg font-semibold hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors border-2 border-sky-600 dark:border-sky-400 cursor-pointer"
         >
           Create Account
         </button>

@@ -17,6 +17,7 @@ import Link from "next/link";
 import { useAuthStore } from "@/features/auth/store/auth.store";
 import { useCartStore } from "@/features/cart/store/cart.store";
 import { useWishlistStore } from "@/features/wishlist/store/wishlist.store";
+import ThemeToggle from "./ThemeToggle";
 
 interface SubMenuSection {
   title: string;
@@ -420,12 +421,12 @@ const Navbar = () => {
   return (
     <header
       onMouseLeave={handleNavbarLeave}
-      className="fixed top-0 left-0 right-0 w-full z-50 bg-white shadow transition-all duration-300"
+      className="fixed top-0 left-0 right-0 w-full z-50 bg-white dark:bg-gray-900 shadow transition-all duration-300"
     >
-      <div className="w-full text-gray-800 relative">
+      <div className="w-full text-gray-800 dark:text-white relative">
         <div className="container mx-auto flex items-center justify-between px-6 md:px-20 xl:px-40 py-4">
           <Link href="/">
-            <div className="text-xl lg:text-2xl font-bold text-sky-700 hidden lg:block">
+            <div className="text-xl lg:text-2xl font-bold text-sky-700 dark:text-sky-400 hidden lg:block">
               reluv
             </div>
             <img
@@ -440,8 +441,10 @@ const Navbar = () => {
                 key={menu}
                 href={getMainMenuRoute(menu)}
                 onMouseEnter={() => handleMainMenuEnter(menu)}
-                className={`py-4 font-semibold hover:text-sky-600 transition-colors duration-200 ${
-                  activeMainMenu === menu ? "text-sky-600" : ""
+                className={`py-4 font-semibold hover:text-sky-600 dark:hover:text-sky-400 transition-colors duration-200 ${
+                  activeMainMenu === menu
+                    ? "text-sky-600 dark:text-sky-400"
+                    : "text-gray-800 dark:text-white"
                 }`}
               >
                 {menu}
@@ -453,9 +456,9 @@ const Navbar = () => {
               <input
                 type="text"
                 placeholder="Search for products or brands"
-                className="w-60 xl:w-80 px-4 py-2 rounded-md text-gray-700 bg-gray-100 border border-transparent focus:outline-none focus:ring-2 focus:ring-sky-500"
+                className="w-60 xl:w-80 px-4 py-2 rounded-md text-gray-700 dark:text-white bg-gray-100 dark:bg-gray-800 border border-transparent focus:outline-none focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400"
               />
-              <Search className="absolute right-3 top-2.5 w-5 h-5 text-gray-400" />
+              <Search className="absolute right-3 top-2.5 w-5 h-5 text-gray-400 dark:text-gray-500" />
             </div>
 
             <Link href="/sell" passHref>
@@ -465,7 +468,7 @@ const Navbar = () => {
             </Link>
 
             <Link href="/wishlist" aria-label="Wishlist" className="relative">
-              <Heart className="w-6 h-6 text-sky-600 hover:text-sky-700 cursor-pointer transition-colors" />
+              <Heart className="w-6 h-6 text-sky-600 hover:text-sky-700 dark:text-sky-400 dark:hover:text-sky-300 cursor-pointer transition-colors" />
               {wishlistItemCount > 0 && (
                 <span className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-sky-500/90 text-white text-xs font-bold">
                   {wishlistItemCount}
@@ -473,7 +476,7 @@ const Navbar = () => {
               )}
             </Link>
             <Link href="/cart" aria-label="Cart" className="relative">
-              <ShoppingBag className="w-6 h-6 text-sky-600 hover:text-sky-700 cursor-pointer transition-colors" />
+              <ShoppingBag className="w-6 h-6 text-sky-600 hover:text-sky-700 dark:text-sky-400 dark:hover:text-sky-300 cursor-pointer transition-colors" />
               {itemCount > 0 && (
                 <span className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-sky-500/90 text-white text-xs font-bold">
                   {itemCount}
@@ -481,16 +484,16 @@ const Navbar = () => {
               )}
             </Link>
             <Link href="/notifications" aria-label="Notifications">
-              <Bell className="w-6 h-6 text-sky-600 hover:text-sky-700 cursor-pointer transition-colors" />
+              <Bell className="w-6 h-6 text-sky-600 hover:text-sky-700 dark:text-sky-400 dark:hover:text-sky-300 cursor-pointer transition-colors" />
             </Link>
-
+            <ThemeToggle />
             {isAuthenticated ? (
               <div
                 className="relative"
                 onMouseEnter={() => setIsProfileDropdownOpen(true)}
                 onMouseLeave={() => setIsProfileDropdownOpen(false)}
               >
-                <button className="flex items-center space-x-2 text-sm font-semibold hover:text-sky-600 transition-colors">
+                <button className="flex items-center space-x-2 text-sm font-semibold hover:text-sky-600 dark:hover:text-sky-400 text-gray-800 dark:text-white transition-colors">
                   <img
                     src={
                       user?.profile?.avatar ||
@@ -503,8 +506,8 @@ const Navbar = () => {
                 </button>
                 {isProfileDropdownOpen && (
                   <div className="absolute right-0 top-full mt-2 w-64 z-50">
-                    <div className="bg-white rounded-lg shadow-xl overflow-hidden border border-gray-200">
-                      <div className="bg-sky-600 px-6 py-5 relative">
+                    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl overflow-hidden border border-gray-200 dark:border-gray-700">
+                      <div className="bg-sky-600 dark:bg-sky-700 px-6 py-5 relative">
                         <div className="text-white">
                           <h3 className="text-lg font-bold mb-1">
                             {formatUserName() || "User"}
@@ -513,26 +516,26 @@ const Navbar = () => {
                         </div>
                       </div>
 
-                      <div className="bg-white py-2">
+                      <div className="bg-white dark:bg-gray-800 py-2">
                         <Link
                           href="/profile/me"
-                          className="flex items-center px-6 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                          className="flex items-center px-6 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                         >
-                          <User className="w-5 h-5 mr-3 text-gray-600" />
+                          <User className="w-5 h-5 mr-3 text-gray-600 dark:text-gray-400" />
                           <span className="font-medium">My Profile</span>
                         </Link>
                         <Link
                           href="/orders"
-                          className="flex items-center px-6 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                          className="flex items-center px-6 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                         >
-                          <ShoppingBag className="w-5 h-5 mr-3 text-gray-600" />
+                          <ShoppingBag className="w-5 h-5 mr-3 text-gray-600 dark:text-gray-400" />
                           <span className="font-medium">Order History</span>
                         </Link>
                         <button
                           onClick={handleLogout}
-                          className="w-full text-left flex items-center px-6 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                          className="w-full text-left flex items-center px-6 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                         >
-                          <LogOut className="w-5 h-5 mr-3 text-gray-600" />
+                          <LogOut className="w-5 h-5 mr-3 text-gray-600 dark:text-gray-400" />
                           <span className="font-medium">Sign Out</span>
                         </button>
                       </div>
@@ -542,19 +545,19 @@ const Navbar = () => {
               </div>
             ) : (
               <div className="flex items-center space-x-2 text-sm">
-                <User className="w-5 h-5 text-sky-600" />
+                <User className="w-5 h-5 text-sky-600 dark:text-sky-400" />
                 <Link
                   href="/auth/login"
                   aria-label="Sign In"
-                  className="font-semibold hover:text-sky-600 transition-colors"
+                  className="font-semibold hover:text-sky-600 dark:hover:text-sky-400 text-gray-800 dark:text-white transition-colors"
                 >
                   Sign In
                 </Link>
-                <span className="text-gray-400">|</span>
+                <span className="text-gray-400 dark:text-gray-500">|</span>
                 <Link
                   href="/auth/register"
                   aria-label="Register"
-                  className="font-semibold hover:text-sky-600 transition-colors"
+                  className="font-semibold hover:text-sky-600 dark:hover:text-sky-400 text-gray-800 dark:text-white transition-colors"
                 >
                   Register
                 </Link>
@@ -562,16 +565,17 @@ const Navbar = () => {
             )}
           </div>
           <div className="flex lg:hidden items-center space-x-4">
-            <Search className="w-6 h-6 text-sky-600 hover:text-sky-700 cursor-pointer" />
+            <Search className="w-6 h-6 text-sky-600 hover:text-sky-700 dark:text-sky-400 dark:hover:text-sky-300 cursor-pointer" />
             <Link
               href="/notifications"
               aria-label="Notifications"
               className="relative"
             >
-              <Bell className="w-6 h-6 text-sky-600 hover:text-sky-700 cursor-pointer" />
+              <Bell className="w-6 h-6 text-sky-600 hover:text-sky-700 dark:text-sky-400 dark:hover:text-sky-300 cursor-pointer" />
             </Link>
+            <ThemeToggle />
             <Link href="/wishlist" aria-label="Wishlist" className="relative">
-              <Heart className="w-6 h-6 text-sky-600 hover:text-sky-700 cursor-pointer" />
+              <Heart className="w-6 h-6 text-sky-600 hover:text-sky-700 dark:text-sky-400 dark:hover:text-sky-300 cursor-pointer" />
               {wishlistItemCount > 0 && (
                 <span className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-sky-500/90 text-white text-xs font-bold">
                   {wishlistItemCount}
@@ -579,7 +583,7 @@ const Navbar = () => {
               )}
             </Link>
             <Link href="/cart" aria-label="Cart" className="relative">
-              <ShoppingBag className="w-6 h-6 text-sky-600 hover:text-sky-700 cursor-pointer" />
+              <ShoppingBag className="w-6 h-6 text-sky-600 hover:text-sky-700 dark:text-sky-400 dark:hover:text-sky-300 cursor-pointer" />
               {itemCount > 0 && (
                 <span className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-sky-500/90 text-white text-xs font-bold">
                   {itemCount}
@@ -589,9 +593,9 @@ const Navbar = () => {
 
             <button onClick={toggleMobileMenu} className="p-1">
               {isMobileMenuOpen ? (
-                <X className="w-6 h-6 text-gray-800" />
+                <X className="w-6 h-6 text-gray-800 dark:text-white" />
               ) : (
-                <Menu className="w-6 h-6 text-gray-800" />
+                <Menu className="w-6 h-6 text-gray-800 dark:text-white" />
               )}
             </button>
           </div>
@@ -599,12 +603,12 @@ const Navbar = () => {
       </div>
 
       {isMobileMenuOpen && (
-        <div className="absolute top-full left-0 w-full z-10 lg:hidden bg-white text-gray-800 border-t border-gray-200 max-h-[calc(100vh-4.5rem)] overflow-y-auto">
-          <div className="py-4 px-6 space-y-1 border-b border-gray-200">
+        <div className="absolute top-full left-0 w-full z-10 lg:hidden bg-white dark:bg-gray-900 text-gray-800 dark:text-white border-t border-gray-200 dark:border-gray-700 max-h-[calc(100vh-4.5rem)] overflow-y-auto">
+          <div className="py-4 px-6 space-y-1 border-b border-gray-200 dark:border-gray-700">
             {Object.keys(dropdownData).map((menu) => (
               <div
                 key={menu}
-                className="border-b border-gray-200 last:border-b-0"
+                className="border-b border-gray-200 dark:border-gray-700 last:border-b-0"
               >
                 <div
                   onClick={() => toggleMobileMainMenu(menu)}
@@ -612,7 +616,7 @@ const Navbar = () => {
                 >
                   <span
                     onClick={(e) => handleMobileMainMenuClick(e, menu)}
-                    className="hover:text-sky-600"
+                    className="hover:text-sky-600 dark:hover:text-sky-400"
                   >
                     {menu}
                   </span>
@@ -632,11 +636,11 @@ const Navbar = () => {
                       return (
                         <div
                           key={category}
-                          className="border-b border-gray-200 last:border-b-0"
+                          className="border-b border-gray-200 dark:border-gray-700 last:border-b-0"
                         >
                           <Link
                             href={categoryRoute}
-                            className="w-full flex justify-between items-center py-3 text-left text-sm text-gray-700 cursor-pointer hover:text-sky-600"
+                            className="w-full flex justify-between items-center py-3 text-left text-sm text-gray-700 dark:text-gray-300 cursor-pointer hover:text-sky-600 dark:hover:text-sky-400"
                             onClick={() => toggleMobileSubMenu(category)}
                           >
                             <span>{category}</span>
@@ -649,11 +653,11 @@ const Navbar = () => {
                             />
                           </Link>
                           {mobileActiveSubMenu === category && (
-                            <div className="pl-4 py-2 space-y-3 bg-gray-50 rounded-md my-2">
+                            <div className="pl-4 py-2 space-y-3 bg-gray-50 dark:bg-gray-800 rounded-md my-2">
                               {dropdownData[menu].subMenus[category]?.map(
                                 (section) => (
                                   <div key={section.title}>
-                                    <h4 className="font-bold text-sky-700 text-xs uppercase tracking-wider mb-2">
+                                    <h4 className="font-bold text-sky-700 dark:text-sky-400 text-xs uppercase tracking-wider mb-2">
                                       {section.title}
                                     </h4>
                                     <ul className="space-y-2">
@@ -661,7 +665,7 @@ const Navbar = () => {
                                         <li key={itemIndex}>
                                           <a
                                             href="#"
-                                            className="block text-xs text-gray-600 hover:text-sky-600"
+                                            className="block text-xs text-gray-600 dark:text-gray-300 hover:text-sky-600 dark:hover:text-sky-400"
                                           >
                                             {item}
                                           </a>
@@ -698,15 +702,15 @@ const Navbar = () => {
                 </Link>
                 <Link
                   href="/orders"
-                  className="flex items-center py-3 text-sm text-gray-700 font-semibold hover:text-sky-600 hover:bg-gray-50 rounded-md transition-colors"
+                  className="flex items-center py-3 text-sm text-gray-700 dark:text-gray-300 font-semibold hover:text-sky-600 dark:hover:text-sky-400 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md transition-colors"
                 >
-                  <ScrollText className="w-5 h-5 mr-3 text-gray-500" /> Order
-                  History
+                  <ScrollText className="w-5 h-5 mr-3 text-gray-500 dark:text-gray-400" />{" "}
+                  Order History
                 </Link>
                 <div className="">
                   <button
                     onClick={handleLogout}
-                    className="w-full text-left flex items-center py-3 text-sm text-red-600 font-semibold hover:bg-red-50 rounded-md transition-colors"
+                    className="w-full text-left flex items-center py-3 text-sm text-red-600 dark:text-red-400 font-semibold hover:bg-red-50 dark:hover:bg-red-900/20 rounded-md transition-colors"
                   >
                     <LogOut className="w-5 h-5 mr-3" /> Logout
                   </button>
@@ -714,12 +718,18 @@ const Navbar = () => {
               </div>
             ) : (
               <div className="flex items-center space-x-2 text-sm py-3 font-semibold">
-                <User className="w-5 h-5" />
-                <Link href="/auth/login" className="hover:text-sky-600">
+                <User className="w-5 h-5 text-gray-800 dark:text-white" />
+                <Link
+                  href="/auth/login"
+                  className="hover:text-sky-600 dark:hover:text-sky-400 text-gray-800 dark:text-white"
+                >
                   Sign In
                 </Link>
-                <span className="text-gray-300">|</span>
-                <Link href="/auth/register" className="hover:text-sky-600">
+                <span className="text-gray-300 dark:text-gray-600">|</span>
+                <Link
+                  href="/auth/register"
+                  className="hover:text-sky-600 dark:hover:text-sky-400 text-gray-800 dark:text-white"
+                >
                   Register
                 </Link>
               </div>
@@ -733,7 +743,7 @@ const Navbar = () => {
           className="hidden lg:block absolute top-full left-0 w-full"
           onMouseLeave={handleNavbarLeave}
         >
-          <div className="bg-gray-100 border-b border-gray-200">
+          <div className="bg-gray-100 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
             <div className="flex items-center justify-center space-x-6 xl:space-x-8 py-3 px-4">
               {dropdownData[activeMainMenu]?.categories.map((category) => {
                 const categorySlug = categoryToSlug(category);
@@ -744,7 +754,7 @@ const Navbar = () => {
                   <Link
                     key={category}
                     href={categoryRoute}
-                    className={`text-gray-600 font-semibold hover:text-sky-600 transition-colors duration-200 px-3 py-2 text-sm xl:text-base whitespace-nowrap`}
+                    className={`text-gray-600 dark:text-gray-300 font-semibold hover:text-sky-600 dark:hover:text-sky-400 transition-colors duration-200 px-3 py-2 text-sm xl:text-base whitespace-nowrap`}
                     onMouseEnter={() => handleSubMenuEnter(category)}
                   >
                     {category}
@@ -754,7 +764,7 @@ const Navbar = () => {
             </div>
           </div>
           {activeSubMenu && (
-            <div className="w-full bg-white text-gray-800 shadow">
+            <div className="w-full bg-white dark:bg-gray-900 text-gray-800 dark:text-white shadow">
               <div className="container mx-auto px-6 md:px-20 lg:px-40 py-8">
                 <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 xl:gap-12">
                   {dropdownData[activeMainMenu]?.subMenus[activeSubMenu]?.map(
@@ -762,7 +772,7 @@ const Navbar = () => {
                       if (section.title === "Perfect Picks for Beloved Ones") {
                         return (
                           <div key={section.title}>
-                            <h3 className="font-bold text-lg mb-4 text-sky-700 border-b border-gray-200 pb-2">
+                            <h3 className="font-bold text-lg mb-4 text-sky-700 dark:text-sky-400 border-b border-gray-200 dark:border-gray-700 pb-2">
                               {section.title}
                             </h3>
                             <div className="relative mt-4 overflow-hidden w-full">
@@ -820,8 +830,8 @@ const Navbar = () => {
                                     }
                                     className={`h-2 w-2 rounded-full transition-colors ${
                                       currentCardIndex === dotIndex
-                                        ? "bg-sky-600"
-                                        : "bg-gray-300"
+                                        ? "bg-sky-600 dark:bg-sky-400"
+                                        : "bg-gray-300 dark:bg-gray-600"
                                     }`}
                                     aria-label={`Go to slide ${dotIndex + 1}`}
                                   />
@@ -833,7 +843,7 @@ const Navbar = () => {
                       } else {
                         return (
                           <div key={section.title}>
-                            <h3 className="font-bold text-lg mb-4 text-sky-700 border-b border-gray-200 pb-2">
+                            <h3 className="font-bold text-lg mb-4 text-sky-700 dark:text-sky-400 border-b border-gray-200 dark:border-gray-700 pb-2">
                               {section.title}
                             </h3>
                             <ul className="space-y-3">
@@ -841,7 +851,7 @@ const Navbar = () => {
                                 <li key={itemIndex}>
                                   <a
                                     href="#"
-                                    className="text-gray-600 hover:text-sky-600 transition-colors duration-200 text-sm leading-relaxed block py-1"
+                                    className="text-gray-600 dark:text-gray-300 hover:text-sky-600 dark:hover:text-sky-400 transition-colors duration-200 text-sm leading-relaxed block py-1"
                                   >
                                     {item}
                                   </a>

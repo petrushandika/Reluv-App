@@ -67,8 +67,8 @@ const Confirm = () => {
   ];
 
   return (
-    <div className="min-h-screen flex bg-white">
-      <div className="hidden lg:flex items-center justify-center lg:w-1/2 bg-gradient-to-br from-sky-500 to-sky-700 relative overflow-hidden">
+    <div className="min-h-screen flex bg-white dark:bg-gray-900">
+      <div className="hidden lg:flex items-center justify-center lg:w-1/2 bg-gradient-to-br from-sky-500 to-sky-700 dark:from-sky-600 dark:to-sky-800 relative overflow-hidden">
         <div className="absolute inset-0 z-0 flex justify-between opacity-100">
           {[...Array(6)].map((_, i) => (
             <div

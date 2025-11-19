@@ -136,7 +136,7 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ category }) => {
           </div>
 
           <div className="relative z-10 px-2 text-center">
-            <h3 className="text-sky-700 font-semibold text-xs sm:text-sm md:text-base leading-tight">
+            <h3 className="text-sky-700 dark:text-sky-400 font-semibold text-xs sm:text-sm md:text-base leading-tight">
               {category.name}
             </h3>
           </div>
@@ -162,17 +162,17 @@ const Categories: React.FC = () => {
   }, [emblaApi]);
 
   return (
-    <div className="w-full bg-white py-8 md:py-12 lg:py-16">
+    <div className="w-full bg-white dark:bg-gray-900 py-8 md:py-12 lg:py-16">
       <div className="container mx-auto px-6 md:px-20 xl:px-40">
         <div className="flex items-center justify-between mb-8 md:mb-10">
           <div>
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-sky-600 mb-1">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-sky-600 dark:text-sky-400 mb-1">
               What would you like to find?
             </h2>
             <div className="w-16 md:w-20 h-1 bg-gradient-to-r from-sky-400 to-sky-600 rounded-full"></div>
           </div>
 
-          <button className="group flex items-center gap-2 text-sky-500 hover:text-sky-600 transition-all duration-300 font-medium text-sm md:text-base">
+          <button className="group flex items-center gap-2 text-sky-500 dark:text-sky-400 hover:text-sky-600 dark:hover:text-sky-300 transition-all duration-300 font-medium text-sm md:text-base">
             <Grid3X3
               size={18}
               className="group-hover:rotate-90 transition-transform duration-300"
@@ -186,7 +186,7 @@ const Categories: React.FC = () => {
           <button
             onClick={scrollPrev}
             className="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 -translate-x-6 z-20 
-                     text-sky-600 p-2.5 rounded-full transition-all duration-200
+                     text-sky-600 dark:text-sky-400 p-2.5 rounded-full transition-all duration-200
                      items-center justify-center hover:scale-105 group"
             aria-label="Previous categories"
           >
@@ -196,7 +196,7 @@ const Categories: React.FC = () => {
           <button
             onClick={scrollNext}
             className="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 translate-x-6 z-20 
-                     text-sky-600 p-2.5 rounded-full transition-all duration-200
+                     text-sky-600 dark:text-sky-400 p-2.5 rounded-full transition-all duration-200
                      items-center justify-center hover:scale-105 group"
             aria-label="Next categories"
           >

@@ -77,8 +77,8 @@ const ConfirmForms = () => {
 const LoadingState = ({ message = "Loading..." }: { message?: string }) => (
   <div className="text-center p-10 flex flex-col items-center justify-center">
     <Spinner />
-    <h3 className="text-xl font-semibold text-gray-800">Processing...</h3>
-    <p className="text-gray-600 mt-2">{message}</p>
+    <h3 className="text-xl font-semibold text-gray-800 dark:text-white">Processing...</h3>
+    <p className="text-gray-600 dark:text-gray-300 mt-2">{message}</p>
   </div>
 );
 
@@ -89,12 +89,12 @@ const SuccessState = ({
   message: string;
   onNavigate: () => void;
 }) => (
-  <div className="text-center max-w-sm w-full bg-white p-8 border border-gray-200 rounded-lg shadow-md">
-    <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
-    <h2 className="text-2xl font-bold text-gray-900 mb-2">
+  <div className="text-center max-w-sm w-full bg-white dark:bg-gray-800 p-8 border border-gray-200 dark:border-gray-700 rounded-lg shadow-md">
+    <CheckCircle className="w-16 h-16 text-green-500 dark:text-green-400 mx-auto mb-4" />
+    <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
       Verification Successful!
     </h2>
-    <p className="text-gray-600 mb-6">{message}</p>
+    <p className="text-gray-600 dark:text-gray-300 mb-6">{message}</p>
     <button
       onClick={onNavigate}
       className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-sky-600 hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 cursor-pointer"
@@ -105,15 +105,15 @@ const SuccessState = ({
 );
 
 const ErrorState = ({ message }: { message: string }) => (
-  <div className="text-center max-w-sm w-full bg-white p-8 border border-red-200 rounded-lg shadow-md">
-    <AlertTriangle className="w-16 h-16 text-red-500 mx-auto mb-4" />
-    <h2 className="text-2xl font-bold text-gray-900 mb-2">
+  <div className="text-center max-w-sm w-full bg-white dark:bg-gray-800 p-8 border border-red-200 dark:border-red-800 rounded-lg shadow-md">
+    <AlertTriangle className="w-16 h-16 text-red-500 dark:text-red-400 mx-auto mb-4" />
+    <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
       Verification Failed
     </h2>
-    <p className="text-gray-600 mb-6">{message}</p>
+    <p className="text-gray-600 dark:text-gray-300 mb-6">{message}</p>
     <button
       onClick={() => (window.location.href = "/")}
-      className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gray-600 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 cursor-pointer"
+      className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gray-600 dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 dark:focus:ring-gray-400 cursor-pointer"
     >
       Back to Homepage
     </button>

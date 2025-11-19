@@ -19,11 +19,11 @@ export default function Brands() {
   } = useProduct();
 
   return (
-    <div>
+    <div className="bg-white dark:bg-gray-900 min-h-screen">
       <Banner />
       <Categories />
       <div className="container mx-auto px-6 md:px-20 xl:px-40 py-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-6">Brands</h1>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">Brands</h1>
       </div>
       <ProductList
         title="Trending Now"

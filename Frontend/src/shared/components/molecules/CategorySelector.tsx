@@ -64,31 +64,31 @@ const CategorySelector = ({
     <div className="relative" ref={categoryRef}>
       <label
         htmlFor="category"
-        className="block text-sm font-medium text-gray-700 mb-2"
+        className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
       >
         Category
       </label>
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex justify-between items-center text-left px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition-colors"
+        className="w-full flex justify-between items-center text-left px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors text-gray-900 dark:text-white"
       >
         <span>{selectedCategoryName}</span>
         <ChevronDown
-          className={`w-5 h-5 text-gray-400 transition-transform ${
+          className={`w-5 h-5 text-gray-400 dark:text-gray-300 transition-transform ${
             isOpen ? "rotate-180" : ""
           }`}
         />
       </button>
       {isOpen && (
-        <div className="absolute top-full mt-1 w-full bg-white border border-gray-300 rounded-lg shadow-lg z-10">
+        <div className="absolute top-full mt-1 w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg z-10">
           <div className="p-2">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-gray-400" />
               <input
                 type="text"
                 placeholder="Search category..."
-                className="w-full pl-9 pr-3 py-2 border border-gray-200 rounded-md"
+                className="w-full pl-9 pr-3 py-2 border border-gray-200 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-400"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
@@ -98,12 +98,12 @@ const CategorySelector = ({
             {isLoading ? (
               <Spinner />
             ) : error ? (
-              <li className="px-4 py-2 text-red-500">{error}</li>
+              <li className="px-4 py-2 text-red-500 dark:text-red-400">{error}</li>
             ) : (
               filteredCategories.map((cat) => (
                 <li
                   key={cat.id}
-                  className="px-4 py-2 hover:bg-sky-100 cursor-pointer"
+                  className="px-4 py-2 hover:bg-sky-100 dark:hover:bg-gray-700 cursor-pointer text-gray-900 dark:text-white"
                   onClick={() => {
                     onSelectCategory(cat.id);
                     setIsOpen(false);

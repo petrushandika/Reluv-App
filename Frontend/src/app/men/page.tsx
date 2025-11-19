@@ -19,7 +19,7 @@ export default function Men() {
   } = useProduct({ categoryId: 2 });
 
   return (
-    <div>
+    <div className="bg-white dark:bg-gray-900 min-h-screen">
       <Banner />
       <Categories />
       <ProductList
