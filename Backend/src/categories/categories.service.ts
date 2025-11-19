@@ -49,8 +49,17 @@ export class CategoriesService {
       where: {
         parentId: null,
       },
-      include: {
-        childCategories: true,
+      select: {
+        id: true,
+        name: true,
+        slug: true,
+        childCategories: {
+          select: {
+            id: true,
+            name: true,
+            slug: true,
+          },
+        },
       },
     });
   }
@@ -58,10 +67,32 @@ export class CategoriesService {
   async findOne(id: number) {
     const category = await this.prisma.category.findUnique({
       where: { id },
-      include: {
-        parentCategory: true,
-        childCategories: true,
-        products: true,
+      select: {
+        id: true,
+        name: true,
+        slug: true,
+        parentCategory: {
+          select: {
+            id: true,
+            name: true,
+            slug: true,
+          },
+        },
+        childCategories: {
+          select: {
+            id: true,
+            name: true,
+            slug: true,
+          },
+        },
+        products: {
+          select: {
+            id: true,
+            name: true,
+            slug: true,
+          },
+          take: 10,
+        },
       },
     });
 

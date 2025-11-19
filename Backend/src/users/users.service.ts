@@ -10,8 +10,28 @@ export class UsersService {
   async findMe(userId: number) {
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
-      include: {
-        profile: true,
+      select: {
+        id: true,
+        googleId: true,
+        facebookId: true,
+        firstName: true,
+        lastName: true,
+        email: true,
+        phone: true,
+        role: true,
+        isActive: true,
+        isVerified: true,
+        createdAt: true,
+        updatedAt: true,
+        profile: {
+          select: {
+            id: true,
+            avatar: true,
+            bio: true,
+            birth: true,
+            gender: true,
+          },
+        },
       },
     });
 
@@ -19,20 +39,30 @@ export class UsersService {
       throw new NotFoundException('User not found');
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { password, ...result } = user;
-    return result;
+    return user;
   }
 
   async updateMe(userId: number, updateUserDto: UpdateUserDto) {
     const user = await this.prisma.user.update({
       where: { id: userId },
       data: updateUserDto,
+      select: {
+        id: true,
+        googleId: true,
+        facebookId: true,
+        firstName: true,
+        lastName: true,
+        email: true,
+        phone: true,
+        role: true,
+        isActive: true,
+        isVerified: true,
+        createdAt: true,
+        updatedAt: true,
+      },
     });
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { password, ...result } = user;
-    return result;
+    return user;
   }
 
   async updateMyProfile(
@@ -47,6 +77,13 @@ export class UsersService {
       create: {
         ...updateUserProfileDto,
         userId: userId,
+      },
+      select: {
+        id: true,
+        avatar: true,
+        bio: true,
+        birth: true,
+        gender: true,
       },
     });
   }

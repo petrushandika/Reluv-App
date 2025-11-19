@@ -17,26 +17,30 @@ export class ReviewsService {
     productId: number,
     createReviewDto: CreateReviewDto,
   ) {
-    const product = await this.prisma.product.findUnique({
-      where: { id: productId },
-    });
-    if (!product) {
-      throw new NotFoundException(`Product with ID ${productId} not found.`);
-    }
-
-    const validOrder = await this.prisma.order.findFirst({
-      where: {
-        buyerId: authorId,
-        status: { in: [OrderStatus.DELIVERED, OrderStatus.COMPLETED] },
-        items: {
-          some: {
-            variant: {
-              productId: productId,
+    const [product, validOrder] = await Promise.all([
+      this.prisma.product.findUnique({
+        where: { id: productId },
+        select: { id: true },
+      }),
+      this.prisma.order.findFirst({
+        where: {
+          buyerId: authorId,
+          status: { in: [OrderStatus.DELIVERED, OrderStatus.COMPLETED] },
+          items: {
+            some: {
+              variant: {
+                productId: productId,
+              },
             },
           },
         },
-      },
-    });
+        select: { id: true },
+      }),
+    ]);
+
+    if (!product) {
+      throw new NotFoundException(`Product with ID ${productId} not found.`);
+    }
 
     if (!validOrder) {
       throw new ForbiddenException(
@@ -66,13 +70,22 @@ export class ReviewsService {
   async findAllForProduct(productId: number) {
     return this.prisma.review.findMany({
       where: { productId },
-      include: {
+      select: {
+        id: true,
+        rating: true,
+        comment: true,
+        images: true,
+        createdAt: true,
         author: {
           select: {
             id: true,
             firstName: true,
             lastName: true,
-            profile: { select: { avatar: true } },
+            profile: {
+              select: {
+                avatar: true,
+              },
+            },
           },
         },
       },

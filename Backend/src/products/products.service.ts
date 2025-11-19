@@ -19,6 +19,7 @@ export class ProductsService {
   private async checkProductOwnership(productId: number, userId: number) {
     const product = await this.prisma.product.findUnique({
       where: { id: productId },
+      select: { id: true, sellerId: true },
     });
     if (!product) {
       throw new NotFoundException(`Product with ID ${productId} not found.`);
@@ -34,20 +35,25 @@ export class ProductsService {
   async create(user: User, createProductDto: CreateProductDto) {
     const { variants, categoryId, ...productData } = createProductDto;
 
-    const categoryExists = await this.prisma.category.findUnique({
-      where: { id: categoryId },
-    });
+    const [categoryExists, store, existingProduct] = await Promise.all([
+      this.prisma.category.findUnique({
+        where: { id: categoryId },
+        select: { id: true },
+      }),
+      this.prisma.store.findUnique({
+        where: { userId: user.id },
+        select: { id: true },
+      }),
+      this.prisma.product.findUnique({
+        where: { slug: productData.slug },
+        select: { id: true },
+      }),
+    ]);
+
     if (!categoryExists) {
       throw new NotFoundException(`Category with ID ${categoryId} not found.`);
     }
 
-    const store = await this.prisma.store.findUnique({
-      where: { userId: user.id },
-    });
-
-    const existingProduct = await this.prisma.product.findUnique({
-      where: { slug: productData.slug },
-    });
     if (existingProduct) {
       throw new ConflictException(
         `Product with slug '${productData.slug}' already exists`,
@@ -88,10 +94,43 @@ export class ProductsService {
         where,
         skip,
         take: limit,
-        include: {
-          variants: { where: { isActive: true }, orderBy: { price: 'asc' } },
-          category: true,
-          store: { select: { name: true, slug: true } },
+        select: {
+          id: true,
+          name: true,
+          slug: true,
+          description: true,
+          images: true,
+          isPreloved: true,
+          viewCount: true,
+          createdAt: true,
+          variants: {
+            where: { isActive: true },
+            orderBy: { price: 'asc' },
+            select: {
+              id: true,
+              size: true,
+              color: true,
+              price: true,
+              compareAtPrice: true,
+              stock: true,
+              condition: true,
+              image: true,
+            },
+          },
+          category: {
+            select: {
+              id: true,
+              name: true,
+              slug: true,
+            },
+          },
+          store: {
+            select: {
+              id: true,
+              name: true,
+              slug: true,
+            },
+          },
         },
         orderBy: { createdAt: 'desc' },
       }),
@@ -112,12 +151,80 @@ export class ProductsService {
   async findOne(id: number) {
     const product = await this.prisma.product.findUnique({
       where: { id },
-      include: {
-        seller: { select: { id: true, firstName: true } },
-        category: true,
-        store: true,
-        variants: { where: { isActive: true } },
-        reviews: true,
+      select: {
+        id: true,
+        name: true,
+        slug: true,
+        description: true,
+        images: true,
+        isPreloved: true,
+        isPublished: true,
+        viewCount: true,
+        createdAt: true,
+        updatedAt: true,
+        seller: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+          },
+        },
+        category: {
+          select: {
+            id: true,
+            name: true,
+            slug: true,
+          },
+        },
+        store: {
+          select: {
+            id: true,
+            name: true,
+            slug: true,
+            isVerified: true,
+          },
+        },
+        variants: {
+          where: { isActive: true },
+          select: {
+            id: true,
+            size: true,
+            color: true,
+            sku: true,
+            image: true,
+            price: true,
+            compareAtPrice: true,
+            stock: true,
+            condition: true,
+            conditionNote: true,
+            weight: true,
+            length: true,
+            width: true,
+            height: true,
+          },
+        },
+        reviews: {
+          select: {
+            id: true,
+            rating: true,
+            comment: true,
+            images: true,
+            createdAt: true,
+            author: {
+              select: {
+                id: true,
+                firstName: true,
+                lastName: true,
+                profile: {
+                  select: {
+                    avatar: true,
+                  },
+                },
+              },
+            },
+          },
+          orderBy: { createdAt: 'desc' },
+        },
       },
     });
     if (!product) {
@@ -125,7 +232,7 @@ export class ProductsService {
     }
     this.prisma.product
       .update({ where: { id }, data: { viewCount: { increment: 1 } } })
-      .catch(console.error);
+      .catch(() => {});
     return product;
   }
 

@@ -19,7 +19,21 @@ export class StoreService {
   async create(userId: number, createStoreDto: CreateStoreDto) {
     const { locationId, ...storeData } = createStoreDto;
 
-    const user = await this.prisma.user.findUnique({ where: { id: userId } });
+    const [user, existingStore, storeWithSameSlug] = await Promise.all([
+      this.prisma.user.findUnique({
+        where: { id: userId },
+        select: { id: true, role: true },
+      }),
+      this.prisma.store.findUnique({
+        where: { userId },
+        select: { id: true },
+      }),
+      this.prisma.store.findUnique({
+        where: { slug: storeData.slug },
+        select: { id: true },
+      }),
+    ]);
+
     if (!user) {
       throw new NotFoundException('User not found.');
     }
@@ -29,16 +43,10 @@ export class StoreService {
       );
     }
 
-    const existingStore = await this.prisma.store.findUnique({
-      where: { userId },
-    });
     if (existingStore) {
       throw new ConflictException('User already owns a store.');
     }
 
-    const storeWithSameSlug = await this.prisma.store.findUnique({
-      where: { slug: storeData.slug },
-    });
     if (storeWithSameSlug) {
       throw new ConflictException('Store slug is already taken.');
     }
@@ -56,16 +64,21 @@ export class StoreService {
   async createStoreForUser(adminCreateStoreDto: AdminCreateStoreDto) {
     const { userId, locationId, ...storeData } = adminCreateStoreDto;
 
-    const userToOwnStore = await this.prisma.user.findUnique({
-      where: { id: userId },
-    });
+    const [userToOwnStore, existingStore] = await Promise.all([
+      this.prisma.user.findUnique({
+        where: { id: userId },
+        select: { id: true },
+      }),
+      this.prisma.store.findUnique({
+        where: { userId },
+        select: { id: true },
+      }),
+    ]);
+
     if (!userToOwnStore) {
       throw new NotFoundException(`User with ID ${userId} not found.`);
     }
 
-    const existingStore = await this.prisma.store.findUnique({
-      where: { userId },
-    });
     if (existingStore) {
       throw new ConflictException(
         `User with ID ${userId} already owns a store.`,
@@ -102,7 +115,14 @@ export class StoreService {
         where,
         skip,
         take: limit,
-        include: {
+        select: {
+          id: true,
+          name: true,
+          slug: true,
+          totalProducts: true,
+          totalSales: true,
+          rating: true,
+          createdAt: true,
           profile: {
             select: { avatar: true, banner: true },
           },
@@ -128,9 +148,35 @@ export class StoreService {
   async findBySlug(slug: string) {
     const store = await this.prisma.store.findUnique({
       where: { slug },
-      include: {
-        profile: true,
-        location: true,
+      select: {
+        id: true,
+        name: true,
+        slug: true,
+        isActive: true,
+        isVerified: true,
+        totalProducts: true,
+        totalSales: true,
+        rating: true,
+        createdAt: true,
+        updatedAt: true,
+        profile: {
+          select: {
+            id: true,
+            avatar: true,
+            banner: true,
+            bio: true,
+            operational: true,
+          },
+        },
+        location: {
+          select: {
+            id: true,
+            city: true,
+            province: true,
+            district: true,
+            subDistrict: true,
+          },
+        },
         user: {
           select: {
             id: true,
@@ -140,12 +186,32 @@ export class StoreService {
         },
         products: {
           where: { isPublished: true, isActive: true },
-          include: {
+          select: {
+            id: true,
+            name: true,
+            slug: true,
+            description: true,
+            images: true,
+            isPreloved: true,
+            viewCount: true,
+            createdAt: true,
             variants: {
               where: { isActive: true },
               orderBy: { price: 'asc' },
+              select: {
+                id: true,
+                size: true,
+                color: true,
+                price: true,
+                compareAtPrice: true,
+                stock: true,
+                condition: true,
+                image: true,
+              },
             },
           },
+          orderBy: { createdAt: 'desc' },
+          take: 20,
         },
       },
     });
@@ -158,7 +224,39 @@ export class StoreService {
   async findMyStore(userId: number) {
     const store = await this.prisma.store.findUnique({
       where: { userId },
-      include: { profile: true, location: true },
+      select: {
+        id: true,
+        name: true,
+        slug: true,
+        isActive: true,
+        isVerified: true,
+        totalProducts: true,
+        totalSales: true,
+        rating: true,
+        createdAt: true,
+        updatedAt: true,
+        profile: {
+          select: {
+            id: true,
+            avatar: true,
+            banner: true,
+            bio: true,
+            operational: true,
+          },
+        },
+        location: {
+          select: {
+            id: true,
+            label: true,
+            city: true,
+            province: true,
+            district: true,
+            subDistrict: true,
+            postalCode: true,
+            address: true,
+          },
+        },
+      },
     });
     if (!store) {
       throw new NotFoundException('You do not have a store yet.');
@@ -195,6 +293,13 @@ export class StoreService {
     return this.prisma.storeProfile.update({
       where: { storeId: store.id },
       data: updateStoreProfileDto,
+      select: {
+        id: true,
+        avatar: true,
+        banner: true,
+        bio: true,
+        operational: true,
+      },
     });
   }
 }

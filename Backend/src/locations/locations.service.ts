@@ -32,6 +32,24 @@ export class LocationsService {
     const { page, limit } = pagination;
     return this.prisma.location.findMany({
       where: { userId },
+      select: {
+        id: true,
+        label: true,
+        recipient: true,
+        phone: true,
+        province: true,
+        city: true,
+        district: true,
+        subDistrict: true,
+        postalCode: true,
+        address: true,
+        isDefault: true,
+        latitude: true,
+        longitude: true,
+        biteship_area_id: true,
+        createdAt: true,
+        updatedAt: true,
+      },
       orderBy: { isDefault: 'desc' },
       skip: (page - 1) * limit,
       take: limit,
@@ -41,6 +59,24 @@ export class LocationsService {
   async findOne(id: number, userId: number) {
     const location = await this.prisma.location.findFirst({
       where: { id, userId },
+      select: {
+        id: true,
+        label: true,
+        recipient: true,
+        phone: true,
+        province: true,
+        city: true,
+        district: true,
+        subDistrict: true,
+        postalCode: true,
+        address: true,
+        isDefault: true,
+        latitude: true,
+        longitude: true,
+        biteship_area_id: true,
+        createdAt: true,
+        updatedAt: true,
+      },
     });
 
     if (!location) {

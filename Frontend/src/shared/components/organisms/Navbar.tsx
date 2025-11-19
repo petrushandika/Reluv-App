@@ -505,7 +505,7 @@ const Navbar = () => {
                       "https://res.cloudinary.com/dqcyabvc2/image/upload/v1753019800/user_nxnpv1.webp"
                     }
                     alt="User Avatar"
-                    className="w-7 h-7 rounded-full object-cover border-2 border-sky-100"
+                    className="w-7 h-7 rounded-full object-cover"
                   />
                   <span>Hi, {formatUserName()}!</span>
                 </button>

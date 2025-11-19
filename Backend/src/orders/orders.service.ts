@@ -22,7 +22,23 @@ export class OrdersService {
 
     const cart = await this.prisma.cart.findUnique({
       where: { userId },
-      include: { items: { include: { variant: true } } },
+      select: {
+        id: true,
+        items: {
+          select: {
+            id: true,
+            variantId: true,
+            quantity: true,
+            variant: {
+              select: {
+                id: true,
+                price: true,
+                stock: true,
+              },
+            },
+          },
+        },
+      },
     });
 
     if (!cart || cart.items.length === 0) {
@@ -112,14 +128,36 @@ export class OrdersService {
   async findAllForUser(userId: number) {
     return this.prisma.order.findMany({
       where: { buyerId: userId },
-      include: {
+      select: {
+        id: true,
+        orderNumber: true,
+        totalAmount: true,
+        itemsAmount: true,
+        shippingCost: true,
+        discountAmount: true,
+        status: true,
+        createdAt: true,
+        updatedAt: true,
         items: {
-          include: {
+          select: {
+            id: true,
+            quantity: true,
+            price: true,
+            total: true,
             variant: {
               select: {
+                id: true,
                 size: true,
                 color: true,
-                product: { select: { name: true } },
+                image: true,
+                product: {
+                  select: {
+                    id: true,
+                    name: true,
+                    slug: true,
+                    images: true,
+                  },
+                },
               },
             },
           },
@@ -132,11 +170,87 @@ export class OrdersService {
   async findOneForUser(id: number, userId: number) {
     const order = await this.prisma.order.findFirst({
       where: { id, buyerId: userId },
-      include: {
-        items: { include: { variant: true } },
-        payment: true,
-        shipment: true,
-        location: true,
+      select: {
+        id: true,
+        orderNumber: true,
+        totalAmount: true,
+        itemsAmount: true,
+        shippingCost: true,
+        discountAmount: true,
+        voucherCode: true,
+        status: true,
+        notes: true,
+        createdAt: true,
+        updatedAt: true,
+        items: {
+          select: {
+            id: true,
+            quantity: true,
+            price: true,
+            total: true,
+            variant: {
+              select: {
+                id: true,
+                size: true,
+                color: true,
+                sku: true,
+                image: true,
+                price: true,
+                condition: true,
+                product: {
+                  select: {
+                    id: true,
+                    name: true,
+                    slug: true,
+                    images: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+        payment: {
+          select: {
+            id: true,
+            method: true,
+            amount: true,
+            status: true,
+            snap_token: true,
+            snap_redirect_url: true,
+            midtrans_order_id: true,
+            paidAt: true,
+            expiresAt: true,
+            createdAt: true,
+          },
+        },
+        shipment: {
+          select: {
+            id: true,
+            courier: true,
+            service: true,
+            trackingNumber: true,
+            status: true,
+            estimatedDays: true,
+            shippingCost: true,
+            shippedAt: true,
+            deliveredAt: true,
+            createdAt: true,
+          },
+        },
+        location: {
+          select: {
+            id: true,
+            label: true,
+            recipient: true,
+            phone: true,
+            province: true,
+            city: true,
+            district: true,
+            subDistrict: true,
+            postalCode: true,
+            address: true,
+          },
+        },
       },
     });
 

@@ -15,6 +15,15 @@ export class NotificationsService {
         where: { userId },
         skip,
         take: limit,
+        select: {
+          id: true,
+          title: true,
+          body: true,
+          type: true,
+          data: true,
+          isRead: true,
+          createdAt: true,
+        },
         orderBy: { createdAt: 'desc' },
       }),
       this.prisma.notification.count({ where: { userId } }),
@@ -34,6 +43,7 @@ export class NotificationsService {
   async markAsRead(userId: number, notificationId: number) {
     const notification = await this.prisma.notification.findFirst({
       where: { id: notificationId, userId },
+      select: { id: true, isRead: true },
     });
 
     if (!notification) {
@@ -43,12 +53,32 @@ export class NotificationsService {
     }
 
     if (notification.isRead) {
-      return notification;
+      return this.prisma.notification.findUnique({
+        where: { id: notificationId },
+        select: {
+          id: true,
+          title: true,
+          body: true,
+          type: true,
+          data: true,
+          isRead: true,
+          createdAt: true,
+        },
+      });
     }
 
     return this.prisma.notification.update({
       where: { id: notificationId },
       data: { isRead: true },
+      select: {
+        id: true,
+        title: true,
+        body: true,
+        type: true,
+        data: true,
+        isRead: true,
+        createdAt: true,
+      },
     });
   }
 

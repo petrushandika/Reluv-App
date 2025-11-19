@@ -15,11 +15,13 @@ export class CartService {
   private async getOrCreateCart(userId: number) {
     let cart = await this.prisma.cart.findUnique({
       where: { userId },
+      select: { id: true },
     });
 
     if (!cart) {
       cart = await this.prisma.cart.create({
         data: { userId },
+        select: { id: true },
       });
     }
     return cart;
@@ -29,16 +31,41 @@ export class CartService {
     const cart = await this.getOrCreateCart(userId);
     return this.prisma.cart.findUnique({
       where: { id: cart.id },
-      include: {
+      select: {
+        id: true,
         items: {
-          include: {
+          select: {
+            id: true,
+            quantity: true,
+            createdAt: true,
             variant: {
-              include: {
+              select: {
+                id: true,
+                size: true,
+                color: true,
+                price: true,
+                compareAtPrice: true,
+                stock: true,
+                condition: true,
+                image: true,
                 product: {
-                  include: {
+                  select: {
+                    id: true,
+                    name: true,
+                    slug: true,
+                    images: true,
                     store: {
-                      include: {
-                        location: true,
+                      select: {
+                        id: true,
+                        name: true,
+                        slug: true,
+                        location: {
+                          select: {
+                            id: true,
+                            city: true,
+                            province: true,
+                          },
+                        },
                       },
                     },
                   },
@@ -58,6 +85,7 @@ export class CartService {
 
     const variant = await this.prisma.variant.findUnique({
       where: { id: variantId },
+      select: { id: true, stock: true },
     });
     if (!variant) {
       throw new NotFoundException(`Variant with ID ${variantId} not found.`);
@@ -68,6 +96,7 @@ export class CartService {
 
     const existingCartItem = await this.prisma.cartItem.findFirst({
       where: { cartId: cart.id, variantId },
+      select: { id: true },
     });
 
     if (existingCartItem) {
@@ -93,7 +122,14 @@ export class CartService {
   ) {
     const cartItem = await this.prisma.cartItem.findFirst({
       where: { id: cartItemId, cart: { userId } },
-      include: { variant: true },
+      select: {
+        id: true,
+        variant: {
+          select: {
+            stock: true,
+          },
+        },
+      },
     });
 
     if (!cartItem) {
@@ -115,6 +151,7 @@ export class CartService {
   async removeItem(userId: number, cartItemId: number) {
     const cartItem = await this.prisma.cartItem.findFirst({
       where: { id: cartItemId, cart: { userId } },
+      select: { id: true },
     });
 
     if (!cartItem) {
