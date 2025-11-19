@@ -29,7 +29,9 @@ const ConfirmationModal = ({
         className="bg-white dark:bg-gray-800 rounded-xl shadow-xl w-full max-w-sm sm:max-w-md p-6"
         onClick={(e) => e.stopPropagation()}
       >
-        <h2 className="text-lg font-bold text-black dark:text-white mb-4">Confirm Removal</h2>
+        <h2 className="text-lg font-bold text-black dark:text-white mb-4">
+          Confirm Removal
+        </h2>
         <p className="text-gray-600 dark:text-gray-300 mb-8">
           Are you sure you want to remove &ldquo;{itemName}&rdquo; from your
           cart?
@@ -147,7 +149,7 @@ const Cart = () => {
               <div className="divide-y divide-gray-200 dark:divide-gray-700">
                 {cart.items.map((item) => (
                   <div key={item.id} className="p-4 md:p-6">
-                    <div className="flex flex-col sm:flex-row items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                    <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4">
                       <div className="flex-shrink-0 w-full sm:w-auto">
                         <img
                           src={
@@ -252,21 +254,27 @@ const Cart = () => {
 
               <div className="space-y-2 md:space-y-3 mb-4">
                 <div className="flex justify-between text-xs md:text-sm">
-                  <span className="text-gray-600 dark:text-gray-400">Subtotal</span>
+                  <span className="text-gray-600 dark:text-gray-400">
+                    Subtotal
+                  </span>
                   <span className="font-medium text-black dark:text-white">
                     {formatPrice(subtotal)}
                   </span>
                 </div>
 
                 <div className="flex justify-between text-xs md:text-sm">
-                  <span className="text-gray-600 dark:text-gray-400">Shipping</span>
+                  <span className="text-gray-600 dark:text-gray-400">
+                    Shipping
+                  </span>
                   <span className="font-medium text-black dark:text-white">
                     {formatPrice(SHIPPING_COST)}
                   </span>
                 </div>
 
                 <div className="flex justify-between text-xs md:text-sm">
-                  <span className="text-gray-600 dark:text-gray-400">Tax (PPN 11%)</span>
+                  <span className="text-gray-600 dark:text-gray-400">
+                    Tax (PPN 11%)
+                  </span>
                   <span className="font-medium text-black dark:text-white">
                     {formatPrice(tax)}
                   </span>
@@ -274,7 +282,9 @@ const Cart = () => {
 
                 {totalSavings > 0 && (
                   <div className="flex justify-between text-xs md:text-sm">
-                    <span className="text-green-600 dark:text-green-400">You Save</span>
+                    <span className="text-green-600 dark:text-green-400">
+                      You Save
+                    </span>
                     <span className="font-medium text-green-600 dark:text-green-400">
                       -{formatPrice(totalSavings)}
                     </span>

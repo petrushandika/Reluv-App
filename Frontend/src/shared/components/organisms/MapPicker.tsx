@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useEffect, useState, useCallback } from "react";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from "react-leaflet";
 import L, {
   type LatLngExpression,
   type Marker as LeafletMarker,
@@ -19,6 +19,20 @@ const redIcon = new L.Icon({
   popupAnchor: [1, -34],
   shadowSize: [41, 41],
 });
+
+const MapClickHandler = ({
+  setPosition,
+}: {
+  setPosition: (pos: LatLngExpression) => void;
+}) => {
+  useMapEvents({
+    click: (e) => {
+      const { lat, lng } = e.latlng;
+      setPosition([lat, lng]);
+    },
+  });
+  return null;
+};
 
 const DraggableMarkerWithPopup = ({
   position,
@@ -62,11 +76,17 @@ const DraggableMarkerWithPopup = ({
   useEffect(() => {
     const marker = markerRef.current;
     if (marker) {
-      marker.on("dragend", () => {
+      const handleDragEnd = () => {
         const newPos = marker.getLatLng();
         setPosition([newPos.lat, newPos.lng]);
         fetchAddress(newPos.lat, newPos.lng);
-      });
+      };
+      
+      marker.on("dragend", handleDragEnd);
+      
+      return () => {
+        marker.off("dragend", handleDragEnd);
+      };
     }
   }, [setPosition, fetchAddress]);
 
@@ -113,6 +133,7 @@ const MapPicker = ({ position, setPosition }: MapPickerProps) => {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
+        <MapClickHandler setPosition={setPosition} />
         <DraggableMarkerWithPopup
           position={position}
           setPosition={setPosition}

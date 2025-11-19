@@ -13,6 +13,7 @@ import {
   X,
   BookText,
   Clock,
+  ChevronDown,
 } from "lucide-react";
 import type { LatLngExpression } from "leaflet";
 import { useCart } from "@/features/cart/hooks/useCart";
@@ -161,6 +162,11 @@ const Checkout = () => {
     (typeof voucherData)[0] | null
   >(null);
 
+  const [isCountryOpen, setIsCountryOpen] = useState(false);
+  const [isProvinceOpen, setIsProvinceOpen] = useState(false);
+  const [isCityOpen, setIsCityOpen] = useState(false);
+  const [isCourierOpen, setIsCourierOpen] = useState(false);
+
   useEffect(() => {
     if (!isFetchingCart && (!cart || cart.items.length === 0)) {
       router.push("/cart");
@@ -299,6 +305,8 @@ const Checkout = () => {
     onChange,
     disabled = false,
     placeholder,
+    isOpen,
+    setIsOpen,
   }: {
     id: string;
     label: string;
@@ -307,6 +315,8 @@ const Checkout = () => {
     onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
     disabled?: boolean;
     placeholder?: string;
+    isOpen: boolean;
+    setIsOpen: (open: boolean) => void;
   }) => (
     <div>
       <label
@@ -315,23 +325,33 @@ const Checkout = () => {
       >
         {label}
       </label>
-      <select
-        id={id}
-        name={id}
-        value={value}
-        onChange={onChange}
-        disabled={disabled}
-        className="block w-full pl-3 pr-10 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200 placeholder-gray-400 dark:placeholder-gray-500 disabled:bg-gray-50 dark:disabled:bg-gray-700 disabled:cursor-not-allowed"
-      >
-        <option value="" disabled>
-          {placeholder || `Select ${label}`}
-        </option>
-        {options.map((option) => (
-          <option key={option.value} value={option.value}>
-            {option.label}
+      <div className="relative">
+        <select
+          id={id}
+          name={id}
+          value={value}
+          onChange={onChange}
+          disabled={disabled}
+          onFocus={() => setIsOpen(true)}
+          onBlur={() => setIsOpen(false)}
+          onMouseDown={() => setIsOpen(!isOpen)}
+          className="block w-full pl-4 pr-12 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200 placeholder-gray-400 dark:placeholder-gray-500 disabled:bg-gray-50 dark:disabled:bg-gray-700 disabled:cursor-not-allowed appearance-none cursor-pointer"
+        >
+          <option value="" disabled>
+            {placeholder || `Select ${label}`}
           </option>
-        ))}
-      </select>
+          {options.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select>
+        <ChevronDown
+          className={`absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 dark:text-gray-500 pointer-events-none transition-transform duration-200 ${
+            isOpen ? "rotate-180" : ""
+          }`}
+        />
+      </div>
     </div>
   );
 
@@ -403,6 +423,8 @@ const Checkout = () => {
                       options={locationData.countries}
                       value={formData.country}
                       onChange={handleInputChange}
+                      isOpen={isCountryOpen}
+                      setIsOpen={setIsCountryOpen}
                     />
                     <FormSelect
                       id="province"
@@ -410,6 +432,8 @@ const Checkout = () => {
                       options={locationData.provinces}
                       value={formData.province}
                       onChange={handleProvinceChange}
+                      isOpen={isProvinceOpen}
+                      setIsOpen={setIsProvinceOpen}
                     />
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -424,6 +448,8 @@ const Checkout = () => {
                       value={formData.city}
                       onChange={handleInputChange}
                       disabled={!formData.province}
+                      isOpen={isCityOpen}
+                      setIsOpen={setIsCityOpen}
                     />
                     <FormInput
                       id="zip"
@@ -460,6 +486,8 @@ const Checkout = () => {
                       label:
                         shippingData[key as keyof typeof shippingData].name,
                     }))}
+                    isOpen={isCourierOpen}
+                    setIsOpen={setIsCourierOpen}
                   />
                   {selectedCourier && (
                     <div className="pt-2">
