@@ -102,7 +102,7 @@ const ResetForm = ({
                 <button
                   type="button"
                   onClick={togglePasswordVisibility}
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-sky-500 transition-colors duration-200"
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-sky-500 transition-colors duration-200 cursor-pointer"
                 >
                   {showPassword ? (
                     <EyeOff className="h-5 w-5" />
@@ -155,7 +155,7 @@ const ResetForm = ({
                 <button
                   type="button"
                   onClick={toggleConfirmPasswordVisibility}
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-sky-500 transition-colors duration-200"
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-sky-500 transition-colors duration-200 cursor-pointer"
                 >
                   {showConfirmPassword ? (
                     <EyeOff className="h-5 w-5" />
@@ -260,7 +260,7 @@ const ResetForm = ({
                 !formData.confirmPassword ||
                 formData.password !== formData.confirmPassword
               }
-              className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-sky-600 hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 transition-all duration-200 transform disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-sky-600 hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 transition-all duration-200 transform disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
             >
               {isLoading ? "Resetting Password..." : "Reset Password"}
             </button>
@@ -269,7 +269,7 @@ const ResetForm = ({
               <button
                 type="button"
                 onClick={onBackToLogin}
-                className="inline-flex items-center text-sm text-gray-600 hover:text-sky-600 transition-colors duration-200"
+                className="inline-flex items-center text-sm text-gray-600 hover:text-sky-600 transition-colors duration-200 cursor-pointer"
               >
                 Back to Sign In
               </button>
@@ -295,7 +295,7 @@ const ResetForm = ({
             <button
               type="button"
               onClick={onBackToLogin}
-              className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-sky-600 hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 transition-all duration-200"
+              className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-sky-600 hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 transition-all duration-200 cursor-pointer"
             >
               Continue to Sign In
             </button>

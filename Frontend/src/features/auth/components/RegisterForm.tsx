@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import { Eye, EyeOff, Mail, Lock, User } from 'lucide-react';
+import React, { useState } from "react";
+import { Eye, EyeOff, Mail, Lock, User } from "lucide-react";
 
 interface RegisterFormData {
   firstName: string;
@@ -14,7 +14,7 @@ interface RegisterFormData {
 
 interface RegisterFormProps {
   onSubmit: (formData: RegisterFormData) => void;
-  onSocialLogin: (provider: 'Google' | 'Facebook') => void;
+  onSocialLogin: (provider: "Google" | "Facebook") => void;
   isLoading: boolean;
 }
 
@@ -27,11 +27,11 @@ const RegisterForm = ({
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const [formData, setFormData] = useState<RegisterFormData>({
-    firstName: '',
-    lastName: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
     agreeToTerms: false,
   });
 
@@ -43,7 +43,7 @@ const RegisterForm = ({
     const { name, value, type, checked } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : value,
+      [name]: type === "checkbox" ? checked : value,
     }));
   };
 
@@ -139,7 +139,7 @@ const RegisterForm = ({
             <input
               id="password"
               name="password"
-              type={showPassword ? 'text' : 'password'}
+              type={showPassword ? "text" : "password"}
               autoComplete="new-password"
               value={formData.password}
               onChange={handleInputChange}
@@ -149,7 +149,7 @@ const RegisterForm = ({
             <button
               type="button"
               onClick={togglePasswordVisibility}
-              className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-sky-500"
+              className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-sky-500 cursor-pointer"
             >
               {showPassword ? (
                 <EyeOff className="h-5 w-5" />
@@ -171,7 +171,7 @@ const RegisterForm = ({
             <input
               id="confirmPassword"
               name="confirmPassword"
-              type={showConfirmPassword ? 'text' : 'password'}
+              type={showConfirmPassword ? "text" : "password"}
               autoComplete="new-password"
               value={formData.confirmPassword}
               onChange={handleInputChange}
@@ -181,7 +181,7 @@ const RegisterForm = ({
             <button
               type="button"
               onClick={toggleConfirmPasswordVisibility}
-              className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-sky-500"
+              className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-sky-500 cursor-pointer"
             >
               {showConfirmPassword ? (
                 <EyeOff className="h-5 w-5" />
@@ -204,14 +204,14 @@ const RegisterForm = ({
             htmlFor="agreeToTerms"
             className="ml-2 block text-sm text-gray-700"
           >
-            I agree to the{' '}
+            I agree to the{" "}
             <a
               href="/terms"
               className="font-medium text-sky-600 hover:text-sky-500"
             >
               Terms of Service
-            </a>{' '}
-            &{' '}
+            </a>{" "}
+            &{" "}
             <a
               href="/privacy"
               className="font-medium text-sky-600 hover:text-sky-500"
@@ -223,9 +223,9 @@ const RegisterForm = ({
         <button
           type="submit"
           disabled={isLoading}
-          className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-sky-600 hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 disabled:opacity-50"
+          className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-sky-600 hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 disabled:opacity-50 cursor-pointer"
         >
-          {isLoading ? 'Creating Account...' : 'Create Account'}
+          {isLoading ? "Creating Account..." : "Create Account"}
         </button>
       </form>
       <div className="relative">
@@ -239,8 +239,8 @@ const RegisterForm = ({
       <div className="flex space-x-4">
         <button
           type="button"
-          onClick={() => onSocialLogin('Google')}
-          className="flex-1 flex justify-center items-center py-3 px-4 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
+          onClick={() => onSocialLogin("Google")}
+          className="flex-1 flex justify-center items-center py-3 px-4 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 cursor-pointer"
         >
           <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24">
             <path
@@ -264,8 +264,8 @@ const RegisterForm = ({
         </button>
         <button
           type="button"
-          onClick={() => onSocialLogin('Facebook')}
-          className="flex-1 flex justify-center items-center py-3 px-4 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
+          onClick={() => onSocialLogin("Facebook")}
+          className="flex-1 flex justify-center items-center py-3 px-4 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 cursor-pointer"
         >
           <svg className="w-5 h-5 mr-2" fill="#1877F2" viewBox="0 0 24 24">
             <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
@@ -275,7 +275,7 @@ const RegisterForm = ({
       </div>
       <div className="text-center">
         <p className="text-sm text-gray-600">
-          Already have an account?{' '}
+          Already have an account?{" "}
           <a
             href="/auth/login"
             className="font-medium text-sky-600 hover:text-sky-500"

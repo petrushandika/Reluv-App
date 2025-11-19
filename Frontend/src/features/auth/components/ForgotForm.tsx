@@ -75,7 +75,7 @@ const ForgotForm = ({
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-sky-600 hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 transition-all duration-200 transform disabled:opacity-50"
+              className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-sky-600 hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 transition-all duration-200 transform disabled:opacity-50 cursor-pointer"
             >
               {isLoading ? "Sending..." : "Send Reset Instructions"}
             </button>
@@ -84,7 +84,7 @@ const ForgotForm = ({
               <button
                 type="button"
                 onClick={onBackToLogin}
-                className="inline-flex items-center text-sm text-gray-600 hover:text-sky-600 transition-colors duration-200"
+                className="inline-flex items-center text-sm text-gray-600 hover:text-sky-600 transition-colors duration-200 cursor-pointer"
               >
                 Back to Sign In
               </button>
@@ -114,7 +114,7 @@ const ForgotForm = ({
             <button
               type="button"
               onClick={onTryAnotherEmail}
-              className="w-full flex justify-center py-3 px-4 border border-sky-600 rounded-lg shadow-sm text-sm font-medium text-sky-600 bg-white hover:bg-sky-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 transition-all duration-200"
+              className="w-full flex justify-center py-3 px-4 border border-sky-600 rounded-lg shadow-sm text-sm font-medium text-sky-600 bg-white hover:bg-sky-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 transition-all duration-200 cursor-pointer"
             >
               Try Another Email
             </button>
@@ -123,7 +123,7 @@ const ForgotForm = ({
               <button
                 type="button"
                 onClick={onBackToLogin}
-                className="inline-flex items-center text-sm text-gray-600 hover:text-sky-600 transition-colors duration-200"
+                className="inline-flex items-center text-sm text-gray-600 hover:text-sky-600 transition-colors duration-200 cursor-pointer"
               >
                 Back to Sign In
               </button>
