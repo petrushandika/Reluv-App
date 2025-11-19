@@ -1,14 +1,13 @@
-"use client";
+'use client';
 
-import ImageDropzone from "@/features/sell/components/ImageDropzone";
-import ListingEditor from "@/features/sell/components/ListingEditor";
-import { useSellProduct } from "@/features/sell/hooks/useSellProduct";
-import { ListingData } from "@/features/sell/types";
-import React, { useState, useRef } from "react";
-import { useAuthStore } from "@/features/auth/store/auth.store";
-import AuthWarningModal from "@/shared/components/molecules/AuthWarningModal";
-import Spinner from "@/shared/components/atoms/Spinner";
-import { toast } from "sonner";
+import ImageDropzone from '@/features/sell/components/ImageDropzone';
+import ListingEditor from '@/features/sell/components/ListingEditor';
+import { useSellProduct } from '@/features/sell/hooks/useSellProduct';
+import { ListingData } from '@/features/sell/types';
+import React, { useState, useRef } from 'react';
+import { useAuthStore } from '@/features/auth/store/auth.store';
+import AuthWarningModal from '@/shared/components/molecules/AuthWarningModal';
+import { toast } from 'sonner';
 
 const Sell = () => {
   const { isAuthenticated, isHydrated } = useAuthStore();
@@ -17,20 +16,20 @@ const Sell = () => {
   const [isDragging, setIsDragging] = useState(false);
   const [listingData, setListingData] = useState<ListingData>({
     categoryId: null,
-    name: "",
-    description: "",
-    price: "",
-    condition: "",
+    name: '',
+    description: '',
+    price: '',
+    condition: '',
     stock: 1,
-    weight: "",
-    length: "",
-    width: "",
-    height: "",
-    size: "",
-    customSize: "",
-    color: "",
-    customColor: "",
-    conditionNote: "",
+    weight: '',
+    length: '',
+    width: '',
+    height: '',
+    size: '',
+    customSize: '',
+    color: '',
+    customColor: '',
+    conditionNote: '',
     isPreloved: true,
   });
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -45,7 +44,7 @@ const Sell = () => {
       const remainingSlots = maxImages - currentCount;
 
       if (remainingSlots <= 0) {
-        toast.warning("Maximum upload limit", {
+        toast.warning('Maximum upload limit', {
           description: `Maximum ${maxImages} images allowed. No images were added.`,
         });
         return;
@@ -57,7 +56,7 @@ const Sell = () => {
 
         setFiles((prev) => [...prev, ...filesToAdd]);
 
-        toast.warning("Maximum upload limit", {
+        toast.warning('Maximum upload limit', {
           description: `Maximum ${maxImages} images allowed. ${rejectedCount} image(s) were not added.`,
         });
       } else {
@@ -102,7 +101,11 @@ const Sell = () => {
   };
 
   if (!isHydrated) {
-    return <Spinner />;
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-white dark:bg-gray-900">
+        <div className="w-12 h-12 border-4 border-sky-500 border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
   }
 
   return (

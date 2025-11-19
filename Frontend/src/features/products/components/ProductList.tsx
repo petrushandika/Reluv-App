@@ -4,25 +4,9 @@ import React, { useState, useEffect, useCallback } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import type { EmblaCarouselType } from "embla-carousel";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { Product } from "@/features/products/types";
-import ProductCard from "./ProductCard";
-
-const SkeletonCard = () => (
-  <div
-    className={`flex-grow-0 flex-shrink-0 w-1/2 md:w-1/3 lg:w-1/5 pl-4 animate-pulse`}
-  >
-    <div className={`bg-gray-200 dark:bg-gray-700 rounded aspect-square`}></div>
-    <div className={`pt-4`}>
-      <div
-        className={`h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/4 mb-2`}
-      ></div>
-      <div
-        className={`h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mb-2`}
-      ></div>
-      <div className={`h-5 bg-gray-200 dark:bg-gray-700 rounded w-1/2`}></div>
-    </div>
-  </div>
-);
+import { Product } from '@/features/products/types';
+import ProductCard from './ProductCard';
+import ProductCardSkeleton from '@/shared/components/molecules/ProductCardSkeleton';
 
 const PrevButton = (props: { onClick: () => void; enabled: boolean }) => (
   <button
@@ -132,7 +116,7 @@ const ProductList = ({
             <div className={`flex -ml-4`}>
               {isLoading
                 ? Array.from({ length: 5 }).map((_, index) => (
-                    <SkeletonCard key={index} />
+                    <ProductCardSkeleton key={index} />
                   ))
                 : safeProducts.map((product) => (
                     <ProductCard key={product.id} product={product} />

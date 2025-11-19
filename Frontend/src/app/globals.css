@@ -168,3 +168,42 @@
 .share-modal-scroll::-webkit-scrollbar-thumb:hover {
   background-color: rgb(3 105 161); /* sky-700 */
 }
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.skeleton-shimmer {
+  background: linear-gradient(
+    90deg,
+    #e5e7eb 0%,
+    #f3f4f6 20%,
+    #ffffff 40%,
+    #f3f4f6 60%,
+    #e5e7eb 80%,
+    #e5e7eb 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+  position: relative;
+  overflow: hidden;
+}
+
+.dark .skeleton-shimmer {
+  background: linear-gradient(
+    90deg,
+    #374151 0%,
+    #4b5563 20%,
+    #6b7280 40%,
+    #4b5563 60%,
+    #374151 80%,
+    #374151 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}

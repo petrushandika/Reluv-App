@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Heart, Trash2 } from "lucide-react";
 import { useWishlist } from "@/features/wishlist/hooks/useWishlist";
 import { WishlistItem } from "@/features/wishlist/types";
-import Spinner from "@/shared/components/atoms/Spinner";
+import WishlistSkeleton from '@/shared/components/molecules/WishlistSkeleton';
 
 const formatPrice = (price: number) => {
   return `Rp${new Intl.NumberFormat("id-ID").format(price)}`;
@@ -34,11 +34,7 @@ const Wishlist = () => {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-white dark:bg-gray-900">
-        <div className="container mx-auto px-4 sm:px-6 md:px-10 xl:px-20 2xl:px-40 py-6 sm:py-8 md:py-12">
-          <div className="flex justify-center items-center h-48 sm:h-64">
-            <Spinner />
-          </div>
-        </div>
+        <WishlistSkeleton />
       </div>
     );
   }
@@ -127,9 +123,7 @@ const Wishlist = () => {
                       aria-label="Remove from wishlist"
                     >
                       {removingId === product.id ? (
-                        <div className="w-5 h-5">
-                          <Spinner />
-                        </div>
+                        <div className="w-5 h-5 border-2 border-red-500 border-t-transparent rounded-full animate-spin" />
                       ) : (
                         <Trash2 className="w-5 h-5" />
                       )}

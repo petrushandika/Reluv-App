@@ -82,7 +82,7 @@ const Cart = () => {
   };
 
   if (isFetchingCart) {
-    return <Spinner />;
+    return <CartSkeleton />;
   }
 
   if (!cart || cart.items.length === 0) {

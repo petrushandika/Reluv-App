@@ -9,7 +9,6 @@ import {
   Share,
   MessageCircle,
   Smartphone,
-  Loader2,
   Plus,
   Minus,
 } from 'lucide-react';
@@ -20,6 +19,7 @@ import { useProduct } from '@/features/products/hooks/useProduct';
 import { useCart } from '@/features/cart/hooks/useCart';
 import { useWishlist } from '@/features/wishlist/hooks/useWishlist';
 import ShareModal from '@/shared/components/molecules/ShareModal';
+import ProductDetailSkeleton from '@/shared/components/molecules/ProductDetailSkeleton';
 
 const formatPrice = (price: number) => {
   return `Rp${new Intl.NumberFormat('id-ID').format(price)}`;
@@ -54,11 +54,7 @@ const ProductDetail = () => {
   const isWishlisted = product ? isInWishlist(product.id) : false;
 
   if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-white dark:bg-gray-900">
-        <Loader2 className="w-12 h-12 animate-spin text-sky-500 dark:text-sky-400" />
-      </div>
-    );
+    return <ProductDetailSkeleton />;
   }
 
   if (error || !product) {
