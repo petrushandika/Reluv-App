@@ -8,6 +8,7 @@ import React, { useState, useRef } from "react";
 import { useAuthStore } from "@/features/auth/store/auth.store";
 import AuthWarningModal from "@/shared/components/molecules/AuthWarningModal";
 import Spinner from "@/shared/components/atoms/Spinner";
+import { toast } from "sonner";
 
 const Sell = () => {
   const { isAuthenticated, isHydrated } = useAuthStore();
@@ -39,7 +40,29 @@ const Sell = () => {
   const handleFileSelect = (selectedFiles: FileList | null) => {
     if (selectedFiles) {
       const newFiles = Array.from(selectedFiles);
-      setFiles((prev) => [...prev, ...newFiles].slice(0, 10));
+      const maxImages = 9;
+      const currentCount = files.length;
+      const remainingSlots = maxImages - currentCount;
+
+      if (remainingSlots <= 0) {
+        toast.warning("Batas maksimal upload", {
+          description: `Maksimal hanya ${maxImages} gambar. Tidak ada gambar yang ditambahkan.`,
+        });
+        return;
+      }
+
+      if (newFiles.length > remainingSlots) {
+        const filesToAdd = newFiles.slice(0, remainingSlots);
+        const rejectedCount = newFiles.length - remainingSlots;
+
+        setFiles((prev) => [...prev, ...filesToAdd]);
+
+        toast.warning("Batas maksimal upload", {
+          description: `Maksimal hanya ${maxImages} gambar. ${rejectedCount} gambar tidak ditambahkan.`,
+        });
+      } else {
+        setFiles((prev) => [...prev, ...newFiles]);
+      }
     }
   };
 

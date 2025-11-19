@@ -39,9 +39,7 @@ const ImageDropzone = ({
         <p className="mt-2 text-sm text-sky-700 opacity-90">
           or drag photos here
         </p>
-        <p className="mt-1 text-xs text-sky-600 opacity-70">
-          (Up to 10 photos)
-        </p>
+        <p className="mt-1 text-xs text-sky-600 opacity-70">(Up to 9 Photos)</p>
       </div>
     </div>
   );
