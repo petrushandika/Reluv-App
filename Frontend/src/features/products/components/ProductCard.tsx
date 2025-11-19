@@ -51,7 +51,7 @@ const ProductCard = ({ product, containerClassName }: ProductCardProps) => {
   return (
     <div className={containerClassName || defaultClasses}>
       <div className="relative group/card">
-        <Link href={`/products/${product.id}`}>
+        <Link href={`/product/${product.id}`}>
           <div className="bg-gray-50 rounded overflow-hidden cursor-pointer aspect-square">
             <img
               src={imageUrl}
@@ -79,7 +79,7 @@ const ProductCard = ({ product, containerClassName }: ProductCardProps) => {
           />
         </button>
       </div>
-      <Link href={`/products/${product.id}`}>
+      <Link href={`/product/${product.id}`}>
         <div className="pt-4 text-left cursor-pointer">
           <p className="font-bold text-sm text-gray-800">
             {product.store?.name || "Reluv"}

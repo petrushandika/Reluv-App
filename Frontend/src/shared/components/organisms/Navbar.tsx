@@ -343,6 +343,22 @@ const Navbar = () => {
     }
   }, [activeMainMenu]);
 
+  // Helper function to convert category name to slug
+  const categoryToSlug = (category: string): string => {
+    return category.toLowerCase().replace(/\s+/g, "-");
+  };
+
+  // Helper function to get base route for main menu
+  const getMainMenuRoute = (menu: string): string => {
+    const menuRoutes: { [key: string]: string } = {
+      Women: "/women",
+      Men: "/men",
+      Kids: "/kids",
+      Brands: "/brands",
+    };
+    return menuRoutes[menu] || "/";
+  };
+
   const handleMainMenuEnter = (menu: string) => {
     setActiveMainMenu(menu);
     setActiveSubMenu(null);
@@ -353,9 +369,6 @@ const Navbar = () => {
   const handleNavbarLeave = () => {
     setActiveMainMenu(null);
     setActiveSubMenu(null);
-  };
-  const handleMainMenuClick = (menu: string) => {
-    window.location.href = `/main/${menu.toLowerCase()}`;
   };
 
   const toggleMobileMenu = () => {
@@ -384,7 +397,8 @@ const Navbar = () => {
   };
   const handleMobileMainMenuClick = (e: React.MouseEvent, menu: string) => {
     e.stopPropagation();
-    window.location.href = `/main/${menu.toLowerCase()}`;
+    const route = getMainMenuRoute(menu);
+    window.location.href = route;
   };
 
   const handleLogout = () => {
@@ -422,16 +436,16 @@ const Navbar = () => {
           </Link>
           <nav className="hidden lg:flex items-center space-x-8">
             {Object.keys(dropdownData).map((menu) => (
-              <button
+              <Link
                 key={menu}
+                href={getMainMenuRoute(menu)}
                 onMouseEnter={() => handleMainMenuEnter(menu)}
-                onClick={() => handleMainMenuClick(menu)}
                 className={`py-4 font-semibold hover:text-sky-600 transition-colors duration-200 ${
                   activeMainMenu === menu ? "text-sky-600" : ""
                 }`}
               >
                 {menu}
-              </button>
+              </Link>
             ))}
           </nav>
           <div className="hidden lg:flex items-center space-x-4">
@@ -450,11 +464,7 @@ const Navbar = () => {
               </div>
             </Link>
 
-            <Link
-              href="/main/wishlist"
-              aria-label="Wishlist"
-              className="relative"
-            >
+            <Link href="/wishlist" aria-label="Wishlist" className="relative">
               <Heart className="w-6 h-6 text-sky-600 hover:text-sky-700 cursor-pointer transition-colors" />
               {wishlistItemCount > 0 && (
                 <span className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-sky-500/90 text-white text-xs font-bold">
@@ -462,7 +472,7 @@ const Navbar = () => {
                 </span>
               )}
             </Link>
-            <Link href="/main/cart" aria-label="Cart" className="relative">
+            <Link href="/cart" aria-label="Cart" className="relative">
               <ShoppingBag className="w-6 h-6 text-sky-600 hover:text-sky-700 cursor-pointer transition-colors" />
               {itemCount > 0 && (
                 <span className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-sky-500/90 text-white text-xs font-bold">
@@ -546,11 +556,7 @@ const Navbar = () => {
             >
               <Bell className="w-6 h-6 text-sky-600 hover:text-sky-700 cursor-pointer" />
             </Link>
-            <Link
-              href="/main/wishlist"
-              aria-label="Wishlist"
-              className="relative"
-            >
+            <Link href="/wishlist" aria-label="Wishlist" className="relative">
               <Heart className="w-6 h-6 text-sky-600 hover:text-sky-700 cursor-pointer" />
               {wishlistItemCount > 0 && (
                 <span className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-sky-500/90 text-white text-xs font-bold">
@@ -558,7 +564,7 @@ const Navbar = () => {
                 </span>
               )}
             </Link>
-            <Link href="/main/cart" aria-label="Cart" className="relative">
+            <Link href="/cart" aria-label="Cart" className="relative">
               <ShoppingBag className="w-6 h-6 text-sky-600 hover:text-sky-700 cursor-pointer" />
               {itemCount > 0 && (
                 <span className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-sky-500/90 text-white text-xs font-bold">
@@ -604,51 +610,58 @@ const Navbar = () => {
                 </div>
                 {mobileActiveMainMenu === menu && (
                   <div className="pl-4 pb-2">
-                    {dropdownData[menu].categories.map((category) => (
-                      <div
-                        key={category}
-                        className="border-b border-gray-200 last:border-b-0"
-                      >
+                    {dropdownData[menu].categories.map((category) => {
+                      const categorySlug = categoryToSlug(category);
+                      const categoryRoute = `${getMainMenuRoute(
+                        menu
+                      )}/${categorySlug}`;
+                      return (
                         <div
-                          onClick={() => toggleMobileSubMenu(category)}
-                          className="w-full flex justify-between items-center py-3 text-left text-sm text-gray-700 cursor-pointer"
+                          key={category}
+                          className="border-b border-gray-200 last:border-b-0"
                         >
-                          <span>{category}</span>
-                          <ChevronDown
-                            className={`w-5 h-5 transition-transform duration-300 ${
-                              mobileActiveSubMenu === category
-                                ? "rotate-180"
-                                : ""
-                            }`}
-                          />
+                          <Link
+                            href={categoryRoute}
+                            className="w-full flex justify-between items-center py-3 text-left text-sm text-gray-700 cursor-pointer hover:text-sky-600"
+                            onClick={() => toggleMobileSubMenu(category)}
+                          >
+                            <span>{category}</span>
+                            <ChevronDown
+                              className={`w-5 h-5 transition-transform duration-300 ${
+                                mobileActiveSubMenu === category
+                                  ? "rotate-180"
+                                  : ""
+                              }`}
+                            />
+                          </Link>
+                          {mobileActiveSubMenu === category && (
+                            <div className="pl-4 py-2 space-y-3 bg-gray-50 rounded-md my-2">
+                              {dropdownData[menu].subMenus[category]?.map(
+                                (section) => (
+                                  <div key={section.title}>
+                                    <h4 className="font-bold text-sky-700 text-xs uppercase tracking-wider mb-2">
+                                      {section.title}
+                                    </h4>
+                                    <ul className="space-y-2">
+                                      {section.items.map((item, itemIndex) => (
+                                        <li key={itemIndex}>
+                                          <a
+                                            href="#"
+                                            className="block text-xs text-gray-600 hover:text-sky-600"
+                                          >
+                                            {item}
+                                          </a>
+                                        </li>
+                                      ))}
+                                    </ul>
+                                  </div>
+                                )
+                              )}
+                            </div>
+                          )}
                         </div>
-                        {mobileActiveSubMenu === category && (
-                          <div className="pl-4 py-2 space-y-3 bg-gray-50 rounded-md my-2">
-                            {dropdownData[menu].subMenus[category]?.map(
-                              (section) => (
-                                <div key={section.title}>
-                                  <h4 className="font-bold text-sky-700 text-xs uppercase tracking-wider mb-2">
-                                    {section.title}
-                                  </h4>
-                                  <ul className="space-y-2">
-                                    {section.items.map((item, itemIndex) => (
-                                      <li key={itemIndex}>
-                                        <a
-                                          href="#"
-                                          className="block text-xs text-gray-600 hover:text-sky-600"
-                                        >
-                                          {item}
-                                        </a>
-                                      </li>
-                                    ))}
-                                  </ul>
-                                </div>
-                              )
-                            )}
-                          </div>
-                        )}
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 )}
               </div>
@@ -708,15 +721,22 @@ const Navbar = () => {
         >
           <div className="bg-gray-100 border-b border-gray-200">
             <div className="flex items-center justify-center space-x-6 xl:space-x-8 py-3 px-4">
-              {dropdownData[activeMainMenu]?.categories.map((category) => (
-                <button
-                  key={category}
-                  className={`text-gray-600 font-semibold hover:text-sky-600 transition-colors duration-200 px-3 py-2 text-sm xl:text-base whitespace-nowrap`}
-                  onMouseEnter={() => handleSubMenuEnter(category)}
-                >
-                  {category}
-                </button>
-              ))}
+              {dropdownData[activeMainMenu]?.categories.map((category) => {
+                const categorySlug = categoryToSlug(category);
+                const categoryRoute = `${getMainMenuRoute(
+                  activeMainMenu
+                )}/${categorySlug}`;
+                return (
+                  <Link
+                    key={category}
+                    href={categoryRoute}
+                    className={`text-gray-600 font-semibold hover:text-sky-600 transition-colors duration-200 px-3 py-2 text-sm xl:text-base whitespace-nowrap`}
+                    onMouseEnter={() => handleSubMenuEnter(category)}
+                  >
+                    {category}
+                  </Link>
+                );
+              })}
             </div>
           </div>
           {activeSubMenu && (
