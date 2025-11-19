@@ -47,8 +47,6 @@ export class LocationsService {
         latitude: true,
         longitude: true,
         biteship_area_id: true,
-        createdAt: true,
-        updatedAt: true,
       },
       orderBy: { isDefault: 'desc' },
       skip: (page - 1) * limit,
@@ -74,8 +72,6 @@ export class LocationsService {
         latitude: true,
         longitude: true,
         biteship_area_id: true,
-        createdAt: true,
-        updatedAt: true,
       },
     });
 
