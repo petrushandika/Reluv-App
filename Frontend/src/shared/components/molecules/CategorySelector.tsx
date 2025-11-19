@@ -30,7 +30,7 @@ const CategorySelector = ({
         setCategories(data);
         setError(null);
       } catch (err) {
-        setError("Gagal memuat kategori.");
+        setError("Failed to load categories.");
         console.error(err);
       } finally {
         setIsLoading(false);

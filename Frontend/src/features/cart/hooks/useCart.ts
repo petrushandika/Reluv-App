@@ -43,21 +43,21 @@ export const useCart = () => {
 
   const handleAddItem = async (data: AddToCartPayload) => {
     if (!isAuthenticated()) {
-      toast.error("Silakan masuk", {
-        description: "Anda harus masuk untuk menambahkan item ke keranjang.",
+      toast.error("Please sign in", {
+        description: "You must sign in to add items to your cart.",
       });
       router.push("/auth/login");
       return;
     }
 
     setIsAdding(true);
-    const toastId = toast.loading("Menambahkan item ke keranjang...");
+    const toastId = toast.loading("Adding item to cart...");
     try {
       await addItem(data);
-      toast.success("Item ditambahkan ke keranjang!", { id: toastId });
+      toast.success("Item added to cart!", { id: toastId });
     } catch (error) {
-      console.error("Gagal menambah item:", error);
-      toast.error("Gagal menambahkan item", { id: toastId });
+      console.error("Failed to add item:", error);
+      toast.error("Failed to add item", { id: toastId });
     } finally {
       setIsAdding(false);
     }
@@ -68,13 +68,13 @@ export const useCart = () => {
     data: UpdateCartItemPayload
   ) => {
     setIsUpdating(itemId);
-    const toastId = toast.loading("Memperbarui kuantitas...");
+    const toastId = toast.loading("Updating quantity...");
     try {
       await updateItemQuantity(itemId, data);
-      toast.success("Kuantitas diperbarui", { id: toastId });
+      toast.success("Quantity updated", { id: toastId });
     } catch (error) {
-      console.error("Gagal memperbarui kuantitas:", error);
-      toast.error("Gagal memperbarui kuantitas", { id: toastId });
+      console.error("Failed to update quantity:", error);
+      toast.error("Failed to update quantity", { id: toastId });
     } finally {
       setIsUpdating(null);
     }
@@ -82,13 +82,13 @@ export const useCart = () => {
 
   const handleRemoveItem = async (itemId: number) => {
     setIsRemoving(itemId);
-    const toastId = toast.loading("Menghapus item...");
+    const toastId = toast.loading("Removing item...");
     try {
       await removeItem(itemId);
-      toast.success("Item dihapus dari keranjang", { id: toastId });
+      toast.success("Item removed from cart", { id: toastId });
     } catch (error) {
-      console.error("Gagal menghapus item:", error);
-      toast.error("Gagal menghapus item", { id: toastId });
+      console.error("Failed to remove item:", error);
+      toast.error("Failed to remove item", { id: toastId });
     } finally {
       setIsRemoving(null);
     }

@@ -39,6 +39,6 @@ export const getProductById = async (id: number): Promise<Product> => {
     const response = await api.get<Product>(`/products/${id}`);
     return response.data;
   } catch {
-    throw new Error("Tidak dapat memuat produk.");
+    throw new Error("Unable to load product.");
   }
 };

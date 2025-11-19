@@ -45,8 +45,8 @@ const Sell = () => {
       const remainingSlots = maxImages - currentCount;
 
       if (remainingSlots <= 0) {
-        toast.warning("Batas maksimal upload", {
-          description: `Maksimal hanya ${maxImages} gambar. Tidak ada gambar yang ditambahkan.`,
+        toast.warning("Maximum upload limit", {
+          description: `Maximum ${maxImages} images allowed. No images were added.`,
         });
         return;
       }
@@ -57,8 +57,8 @@ const Sell = () => {
 
         setFiles((prev) => [...prev, ...filesToAdd]);
 
-        toast.warning("Batas maksimal upload", {
-          description: `Maksimal hanya ${maxImages} gambar. ${rejectedCount} gambar tidak ditambahkan.`,
+        toast.warning("Maximum upload limit", {
+          description: `Maximum ${maxImages} images allowed. ${rejectedCount} image(s) were not added.`,
         });
       } else {
         setFiles((prev) => [...prev, ...newFiles]);

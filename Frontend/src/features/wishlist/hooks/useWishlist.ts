@@ -32,31 +32,31 @@ export const useWishlist = () => {
 
   const handleAddItem = async (data: AddToWishlistPayload) => {
     if (!isAuthenticated()) {
-      toast.error("Silakan masuk", {
-        description: "Anda harus masuk untuk menambahkan item ke wishlist.",
+      toast.error("Please sign in", {
+        description: "You must sign in to add items to your wishlist.",
       });
       router.push("/auth/login");
       return;
     }
 
-    const toastId = toast.loading("Menambahkan ke wishlist...");
+    const toastId = toast.loading("Adding to wishlist...");
     try {
       await addItem(data);
-      toast.success("Item ditambahkan ke wishlist!", { id: toastId });
+      toast.success("Item added to wishlist!", { id: toastId });
     } catch (error) {
-      console.error("Gagal menambahkan item ke wishlist:", error);
-      toast.error("Gagal menambahkan item", { id: toastId });
+      console.error("Failed to add item to wishlist:", error);
+      toast.error("Failed to add item", { id: toastId });
     }
   };
 
   const handleRemoveItem = async (productId: number) => {
-    const toastId = toast.loading("Menghapus dari wishlist...");
+    const toastId = toast.loading("Removing from wishlist...");
     try {
       await removeItem(productId);
-      toast.success("Item dihapus dari wishlist", { id: toastId });
+      toast.success("Item removed from wishlist", { id: toastId });
     } catch (error) {
-      console.error("Gagal menghapus item dari wishlist:", error);
-      toast.error("Gagal menghapus item", { id: toastId });
+      console.error("Failed to remove item from wishlist:", error);
+      toast.error("Failed to remove item", { id: toastId });
     }
   };
 

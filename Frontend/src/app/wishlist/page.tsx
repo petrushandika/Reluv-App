@@ -124,7 +124,7 @@ const Wishlist = () => {
                       onClick={() => handleRemoveItem(product.id)}
                       disabled={removingId === product.id}
                       className="absolute top-3 right-3 z-10 p-1.5 bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm rounded-full text-red-500 dark:text-red-400 hover:bg-white dark:hover:bg-gray-700 transition-all duration-200 disabled:opacity-50"
-                      aria-label="Hapus dari wishlist"
+                      aria-label="Remove from wishlist"
                     >
                       {removingId === product.id ? (
                         <div className="w-5 h-5">

@@ -36,7 +36,7 @@ export const useCartStore = create<CartState>((set, get) => ({
         isLoading: false,
       });
     } catch (error) {
-      console.error("Gagal mengambil data keranjang:", error);
+      console.error("Failed to fetch cart data:", error);
       set({ isLoading: false, cart: null, itemCount: 0 });
     }
   },
@@ -50,7 +50,7 @@ export const useCartStore = create<CartState>((set, get) => ({
       await get().fetchCart();
     } catch (error) {
       await get().fetchCart();
-      console.error("Gagal menambah item ke keranjang:", error);
+      console.error("Failed to add item to cart:", error);
       throw error;
     }
   },
@@ -73,7 +73,7 @@ export const useCartStore = create<CartState>((set, get) => ({
       await get().fetchCart();
     } catch (error) {
       await get().fetchCart();
-      console.error("Gagal memperbarui item keranjang:", error);
+      console.error("Failed to update cart item:", error);
       throw error;
     }
   },
@@ -93,7 +93,7 @@ export const useCartStore = create<CartState>((set, get) => ({
       await get().fetchCart();
     } catch (error) {
       await get().fetchCart();
-      console.error("Gagal menghapus item dari keranjang:", error);
+      console.error("Failed to remove item from cart:", error);
       throw error;
     }
   },

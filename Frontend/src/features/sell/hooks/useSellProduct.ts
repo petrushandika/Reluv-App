@@ -28,7 +28,7 @@ export const useSellProduct = () => {
 
   const listProduct = async (listingData: ListingData, files: File[]) => {
     if (files.length === 0) {
-      toast.error("Silakan unggah setidaknya satu foto.");
+      toast.error("Please upload at least one photo.");
       return;
     }
     if (
@@ -37,16 +37,16 @@ export const useSellProduct = () => {
       !listingData.price ||
       !listingData.condition
     ) {
-      toast.error("Harap lengkapi semua kolom yang wajib diisi.");
+      toast.error("Please fill in all required fields.");
       return;
     }
 
     setIsLoading(true);
     try {
-      toast.info("Mengunggah gambar...", { id: "upload-toast" });
+      toast.info("Uploading images...", { id: "upload-toast" });
       const uploadPromises = files.map((file) => uploadImage(file));
       const imageUrls = await Promise.all(uploadPromises);
-      toast.success("Gambar berhasil diunggah!", { id: "upload-toast" });
+      toast.success("Images uploaded successfully!", { id: "upload-toast" });
 
       const finalSize =
         listingData.size === "OTHER"
@@ -80,20 +80,20 @@ export const useSellProduct = () => {
         variants: [variantPayload],
       };
 
-      toast.info("Membuat listing Anda...");
+      toast.info("Creating your listing...");
       await createProduct(productPayload);
 
-      toast.success("Listing berhasil dibuat!", {
-        description: "Anda akan segera diarahkan.",
+      toast.success("Listing created successfully!", {
+        description: "You will be redirected shortly.",
       });
 
       router.push("/");
     } catch (error: unknown) {
-      let errorMessage = "Terjadi kesalahan yang tidak terduga.";
+      let errorMessage = "An unexpected error occurred.";
       if (axios.isAxiosError(error)) {
         console.error("Backend validation error:", error.response?.data);
         errorMessage =
-          error.response?.data?.message || "Gagal membuat listing.";
+          error.response?.data?.message || "Failed to create listing.";
         if (Array.isArray(errorMessage)) {
           errorMessage = errorMessage.join(" ");
         }
@@ -101,8 +101,8 @@ export const useSellProduct = () => {
         errorMessage = error.message;
       }
 
-      console.error("Gagal membuat listing:", error);
-      toast.error("Gagal membuat listing", {
+      console.error("Failed to create listing:", error);
+      toast.error("Failed to create listing", {
         description: errorMessage,
       });
     } finally {
