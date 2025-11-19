@@ -139,18 +139,26 @@ const Banner = () => {
                           {slide.description}
                         </p>
 
-                        <div className="flex flex-col sm:flex-row gap-3 pt-2">
-                          <Link href="/cart" aria-label="Cart">
-                            <button className="inline-flex items-center justify-center px-6 py-3 bg-sky-600 text-white font-semibold rounded-xl hover:bg-sky-700 transition-all duration-200 shadow-lg hover:shadow-xl cursor-pointer">
-                              <ShoppingBag className="mr-2 w-5 h-5" />
-                              <span>{slide.cta}</span>
+                        <div className="flex flex-wrap sm:flex-nowrap gap-2 sm:gap-3 pt-2">
+                          <Link
+                            href="/cart"
+                            aria-label="Cart"
+                            className="flex-1 sm:flex-none min-w-0"
+                          >
+                            <button className="w-full sm:w-auto inline-flex items-center justify-center px-3 sm:px-6 py-2 sm:py-3 bg-sky-600 text-white text-sm sm:text-base font-semibold rounded-xl hover:bg-sky-700 transition-all duration-200 shadow-lg hover:shadow-xl cursor-pointer">
+                              <ShoppingBag className="mr-1.5 sm:mr-2 w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />
+                              <span className="truncate">{slide.cta}</span>
                             </button>
                           </Link>
 
-                          <Link href="/wishlist" aria-label="Wishlist">
-                            <button className="inline-flex items-center justify-center px-6 py-3 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 font-semibold rounded-xl border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-200 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer">
-                              <Heart className="mr-2 w-5 h-5" />
-                              <span>Wishlist</span>
+                          <Link
+                            href="/wishlist"
+                            aria-label="Wishlist"
+                            className="flex-1 sm:flex-none min-w-0"
+                          >
+                            <button className="w-full sm:w-auto inline-flex items-center justify-center px-3 sm:px-6 py-2 sm:py-3 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 text-sm sm:text-base font-semibold rounded-xl border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-200 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer">
+                              <Heart className="mr-1.5 sm:mr-2 w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />
+                              <span className="truncate">Wishlist</span>
                             </button>
                           </Link>
                         </div>
