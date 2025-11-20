@@ -26,6 +26,7 @@ export class UsersService {
         lastName: true,
         email: true,
         phone: true,
+        birth: true,
         role: true,
         isActive: true,
         isVerified: true,
@@ -37,11 +38,10 @@ export class UsersService {
             avatar: true,
             banner: true,
             bio: true,
-            birth: true,
             gender: true,
           } as any,
         },
-      },
+      } as any,
     });
 
     if (!user) {
@@ -63,12 +63,22 @@ export class UsersService {
         lastName: true,
         email: true,
         phone: true,
+        birth: true,
         role: true,
         isActive: true,
         isVerified: true,
         createdAt: true,
         updatedAt: true,
-      },
+        profile: {
+          select: {
+            id: true,
+            avatar: true,
+            banner: true,
+            bio: true,
+            gender: true,
+          } as any,
+        },
+      } as any,
     });
 
     return user;
@@ -152,7 +162,6 @@ export class UsersService {
         avatar: true,
         banner: true,
         bio: true,
-        birth: true,
         gender: true,
       } as any,
     });

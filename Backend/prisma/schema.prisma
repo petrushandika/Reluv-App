@@ -63,6 +63,7 @@ model User {
   email     String   @unique
   password  String?
   phone     String?
+  birth     DateTime?
   role      UserRole @default(USER)
   isActive  Boolean  @default(true)
   isVerified Boolean @default(false)
@@ -94,7 +95,6 @@ model UserProfile {
   avatar String?
   banner String?
   bio    String?
-  birth  DateTime?
   gender String?
 
   user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
