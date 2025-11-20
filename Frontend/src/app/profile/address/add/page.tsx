@@ -378,7 +378,7 @@ const AddAddressPage = () => {
                 </button>
               </div>
 
-              <div className="w-full lg:w-1/2 relative bg-gray-100 dark:bg-gray-900">
+              <div className="w-full lg:w-1/2 relative bg-gray-100 dark:bg-gray-900 min-h-[400px] lg:min-h-[600px] lg:h-full">
                 <button
                   onClick={() => setShowPinpointModal(false)}
                   className="lg:hidden absolute top-4 left-4 z-[1000] p-2 bg-white dark:bg-gray-800 rounded-full shadow-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer"
@@ -396,12 +396,16 @@ const AddAddressPage = () => {
                   </span>
                 </button>
 
-                <div className="h-full min-h-[400px] lg:min-h-[600px]">
-                  <MapPicker
-                    position={mapPosition}
-                    setPosition={setMapPosition}
-                  />
-                </div>
+                <MapPicker
+                  key={
+                    showPinpointModal
+                      ? 'pinpoint-map-open'
+                      : 'pinpoint-map-closed'
+                  }
+                  position={mapPosition}
+                  setPosition={setMapPosition}
+                  fullHeight={true}
+                />
               </div>
             </div>
           </div>

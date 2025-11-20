@@ -14,7 +14,6 @@ import L, {
 } from 'leaflet';
 import type { SearchResult } from 'leaflet-geosearch/dist/providers/provider.js';
 import GeoSearch from './GeoSearch';
-import { api } from '@/shared/lib/axios';
 
 const redIcon = new L.Icon({
   iconUrl:
@@ -57,19 +56,6 @@ const DraggableMarkerWithPopup = ({
     setAddress('Loading address...');
 
     try {
-      try {
-        const response = await api.get('/geocode/reverse', {
-          params: { lat, lon: lng },
-        });
-
-        if (response.data && response.data.display_name) {
-          setAddress(response.data.display_name);
-          return;
-        }
-      } catch {
-        console.log('Backend geocode failed, using Nominatim fallback');
-      }
-
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
       const response = await fetch(
@@ -90,14 +76,29 @@ const DraggableMarkerWithPopup = ({
 
       if (data && data.display_name) {
         setAddress(data.display_name);
-      } else if (data && data.error) {
-        setAddress('Location not found');
+      } else if (data && data.address) {
+        const addr = data.address;
+        const parts: string[] = [];
+        if (addr.road) parts.push(addr.road);
+        if (addr.neighbourhood) parts.push(addr.neighbourhood);
+        if (addr.suburb) parts.push(addr.suburb);
+        if (addr.city || addr.town || addr.village) {
+          parts.push(addr.city || addr.town || addr.village);
+        }
+        if (addr.state) parts.push(addr.state);
+        if (addr.country) parts.push(addr.country);
+
+        if (parts.length > 0) {
+          setAddress(parts.join(', '));
+        } else {
+          setAddress('Location selected');
+        }
       } else {
-        setAddress('Address not available');
+        setAddress('Location selected');
       }
     } catch (error) {
       console.error('Reverse geocoding error:', error);
-      setAddress('Failed to fetch address. Please try again.');
+      setAddress('Location selected');
     } finally {
       setIsFetchingAddress(false);
     }
@@ -147,9 +148,29 @@ const DraggableMarkerWithPopup = ({
 interface MapPickerProps {
   position: LatLngExpression;
   setPosition: (position: LatLngExpression) => void;
+  fullHeight?: boolean;
+  className?: string;
 }
 
-const MapPicker = ({ position, setPosition }: MapPickerProps) => {
+const MapSizeUpdater = ({ map }: { map: React.RefObject<L.Map | null> }) => {
+  useEffect(() => {
+    if (map.current) {
+      const timer = setTimeout(() => {
+        map.current?.invalidateSize();
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [map]);
+
+  return null;
+};
+
+const MapPicker = ({
+  position,
+  setPosition,
+  fullHeight = false,
+  className = '',
+}: MapPickerProps) => {
   const map = useRef<L.Map>(null);
 
   const handleLocationSelect = (location: SearchResult) => {
@@ -160,8 +181,40 @@ const MapPicker = ({ position, setPosition }: MapPickerProps) => {
     }
   };
 
+  useEffect(() => {
+    if (map.current) {
+      const timers: NodeJS.Timeout[] = [];
+
+      timers.push(
+        setTimeout(() => {
+          map.current?.invalidateSize();
+        }, 100)
+      );
+
+      timers.push(
+        setTimeout(() => {
+          map.current?.invalidateSize();
+        }, 500)
+      );
+
+      timers.push(
+        setTimeout(() => {
+          map.current?.invalidateSize();
+        }, 1000)
+      );
+
+      return () => {
+        timers.forEach((timer) => clearTimeout(timer));
+      };
+    }
+  }, [fullHeight]);
+
+  const containerClasses = fullHeight
+    ? `absolute inset-0 w-full h-full overflow-hidden z-0 ${className}`
+    : `relative h-80 w-full rounded-lg overflow-hidden border border-gray-300 z-0 ${className}`;
+
   return (
-    <div className="relative h-80 w-full rounded-lg overflow-hidden border border-gray-300 z-0">
+    <div className={containerClasses}>
       <div className="absolute top-4 right-4 z-[1000] w-11/12 sm:w-auto">
         <GeoSearch onLocationSelect={handleLocationSelect} />
       </div>
@@ -170,8 +223,10 @@ const MapPicker = ({ position, setPosition }: MapPickerProps) => {
         center={position}
         zoom={15}
         scrollWheelZoom={true}
-        style={{ height: '100%', width: '100%' }}
+        style={{ height: '100%', width: '100%', zIndex: 0 }}
+        key={fullHeight ? 'full-height' : 'normal'}
       >
+        <MapSizeUpdater map={map} />
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

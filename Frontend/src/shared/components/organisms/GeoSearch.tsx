@@ -11,6 +11,18 @@ interface GeoSearchProps {
   onLocationSelect: (location: SearchResult) => void;
 }
 
+interface BackendSearchItem {
+  lat: string | number;
+  lon: string | number;
+  display_name?: string;
+  name?: string;
+  address?: {
+    city?: string;
+    country?: string;
+  };
+  boundingbox?: [string, string, string, string];
+}
+
 const GeoSearch = ({ onLocationSelect }: GeoSearchProps) => {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<SearchResult[]>([]);
@@ -46,28 +58,63 @@ const GeoSearch = ({ onLocationSelect }: GeoSearchProps) => {
               params: { q: trimmedQuery },
             });
 
-            if (response.data && Array.isArray(response.data) && response.data.length > 0) {
-              const formattedResults: SearchResult[] = response.data.map((item: any) => ({
-                x: parseFloat(item.lon),
-                y: parseFloat(item.lat),
-                label: item.display_name || `${item.name || ''}, ${item.address?.city || ''}, ${item.address?.country || ''}`.trim(),
-                raw: item,
-              }));
-              
+            if (
+              response.data &&
+              Array.isArray(response.data) &&
+              response.data.length > 0
+            ) {
+              const formattedResults: SearchResult[] = response.data.map(
+                (item: BackendSearchItem) => {
+                  const lat = parseFloat(String(item.lat));
+                  const lng = parseFloat(String(item.lon));
+                  const bounds = item.boundingbox
+                    ? [
+                        [
+                          parseFloat(item.boundingbox[0]),
+                          parseFloat(item.boundingbox[2]),
+                        ],
+                        [
+                          parseFloat(item.boundingbox[1]),
+                          parseFloat(item.boundingbox[3]),
+                        ],
+                      ]
+                    : [
+                        [lat - 0.01, lng - 0.01],
+                        [lat + 0.01, lng + 0.01],
+                      ];
+
+                  return {
+                    x: lng,
+                    y: lat,
+                    label:
+                      item.display_name ||
+                      `${item.name || ''}, ${item.address?.city || ''}, ${
+                        item.address?.country || ''
+                      }`.trim(),
+                    bounds: bounds as [[number, number], [number, number]],
+                    raw: item,
+                  };
+                }
+              );
+
               if (!abortController.signal.aborted) {
                 setResults(formattedResults);
                 setIsLoading(false);
                 return;
               }
             }
-          } catch (backendError) {
+          } catch {
             console.log('Backend search failed, using OpenStreetMap provider');
           }
 
           const search_results = await provider.search({ query: trimmedQuery });
-          
+
           if (!abortController.signal.aborted) {
-            if (search_results && Array.isArray(search_results) && search_results.length > 0) {
+            if (
+              search_results &&
+              Array.isArray(search_results) &&
+              search_results.length > 0
+            ) {
               setResults(search_results);
             } else {
               setResults([]);
@@ -179,7 +226,7 @@ const GeoSearch = ({ onLocationSelect }: GeoSearchProps) => {
             }
           }}
           placeholder="Search Location"
-          className="w-full rounded-lg border border-white/30 dark:border-white/20 bg-white/20 dark:bg-black/20 backdrop-blur-md py-3 pl-10 pr-10 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 transition-all focus:border-white/50 dark:focus:border-white/30 focus:bg-white/30 dark:focus:bg-black/30 focus:outline-none focus:ring-2 focus:ring-white/20 dark:focus:ring-white/10"
+          className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white/20 dark:bg-black/20 backdrop-blur-md py-3 pl-10 pr-10 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 transition-all focus:border-sky-500 dark:focus:border-sky-400 focus:bg-white/30 dark:focus:bg-black/30 focus:outline-none focus:ring-2 focus:ring-sky-500/20 dark:focus:ring-sky-400/20 shadow-lg"
         />
         {isLoading && (
           <div className="absolute right-3 top-1/2 -translate-y-1/2">
