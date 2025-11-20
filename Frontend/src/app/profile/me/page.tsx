@@ -546,22 +546,12 @@ const ProfilePage = () => {
                       {user?.lastName || authUser?.lastName || "-"}
                     </p>
                   </div>
-                  <div className="border-b border-gray-200 dark:border-gray-700 pb-4">
+                  <div>
                     <label className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1 block">
                       Date of Birth
                     </label>
                     <p className="text-gray-900 dark:text-white font-semibold">
                       {formatDate(user?.profile?.birth || null)}
-                    </p>
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1 block">
-                      Gender
-                    </label>
-                    <p className="text-gray-900 dark:text-white font-semibold">
-                      {user?.profile?.gender ||
-                        authUser?.profile?.gender ||
-                        "-"}
                     </p>
                   </div>
                 </div>
@@ -593,7 +583,7 @@ const ProfilePage = () => {
                     <label className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1 block">
                       Email
                     </label>
-                    <p className="text-gray-900 dark:text-white font-semibold">
+                    <p className="text-gray-900 dark:text-white font-semibold break-words">
                       {displayEmail || "-"}
                     </p>
                   </div>
@@ -835,7 +825,7 @@ const ProfilePage = () => {
                     <span className="text-gray-900 dark:text-white font-medium">
                       Change Email
                     </span>
-                    <span className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                    <span className="text-sm text-gray-500 dark:text-gray-400 mt-1 break-words">
                       {displayEmail || "-"}
                     </span>
                   </div>
