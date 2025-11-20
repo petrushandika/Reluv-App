@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Search,
   Heart,
@@ -57,6 +57,11 @@ const Navbar = () => {
   );
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
   const [searchValue, setSearchValue] = useState('');
+  const [subMenuOpacity, setSubMenuOpacity] = useState(1);
+  const [activeCategoryMenu, setActiveCategoryMenu] = useState<string>('Women');
+  const [isSubMenuVisible, setIsSubMenuVisible] = useState(true);
+  const lastScrollYRef = useRef(0);
+  const scrollDirectionRef = useRef<'up' | 'down'>('up');
 
   const dropdownData: { [key: string]: DropdownContent } = {
     Women: {
@@ -350,6 +355,62 @@ const Navbar = () => {
     }
   }, [activeMainMenu]);
 
+  useEffect(() => {
+    let ticking = false;
+
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const currentScrollY = window.scrollY;
+          const heroSectionHeight = 600;
+          const maxScroll = 100;
+          const scrollThreshold = 5;
+
+          if (
+            Math.abs(currentScrollY - lastScrollYRef.current) > scrollThreshold
+          ) {
+            if (currentScrollY < lastScrollYRef.current) {
+              scrollDirectionRef.current = 'up';
+            } else if (currentScrollY > lastScrollYRef.current) {
+              scrollDirectionRef.current = 'down';
+            }
+            lastScrollYRef.current = currentScrollY;
+          }
+
+          if (currentScrollY > heroSectionHeight) {
+            if (activeMainMenu) {
+              setIsSubMenuVisible(true);
+            } else {
+              if (scrollDirectionRef.current === 'up') {
+                setIsSubMenuVisible(true);
+              } else if (scrollDirectionRef.current === 'down') {
+                setIsSubMenuVisible(false);
+              }
+            }
+          } else {
+            setIsSubMenuVisible(true);
+          }
+
+          if (currentScrollY > maxScroll) {
+            setSubMenuOpacity(0);
+          } else {
+            const newOpacity = 1 - currentScrollY / maxScroll;
+            setSubMenuOpacity(Math.max(0, newOpacity));
+          }
+
+          ticking = false;
+        });
+
+        ticking = true;
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [activeMainMenu]);
+
   const categoryToSlug = (category: string): string => {
     return category.toLowerCase().replace(/\s+/g, '-');
   };
@@ -374,6 +435,8 @@ const Navbar = () => {
   const handleMainMenuEnter = (menu: string) => {
     setActiveMainMenu(menu);
     setActiveSubMenu(null);
+    setActiveCategoryMenu(menu);
+    setIsSubMenuVisible(true);
   };
   const handleSubMenuEnter = (subMenu: string) => {
     setActiveSubMenu(subMenu);
@@ -381,6 +444,11 @@ const Navbar = () => {
   const handleNavbarLeave = () => {
     setActiveMainMenu(null);
     setActiveSubMenu(null);
+    const currentScrollY = window.scrollY;
+    const heroSectionHeight = 600;
+    if (currentScrollY > heroSectionHeight) {
+      setIsSubMenuVisible(false);
+    }
   };
 
   const toggleMobileMenu = () => {
@@ -665,6 +733,44 @@ const Navbar = () => {
           </div>
         </div>
       </div>
+      <div
+        className="hidden lg:block w-full bg-gray-100 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 overflow-hidden"
+        style={{
+          maxHeight: isSubMenuVisible ? '100px' : '0',
+          opacity: isSubMenuVisible ? Math.max(0, subMenuOpacity) : 0,
+          transition:
+            'max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1), transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
+          transform: isSubMenuVisible ? 'translateY(0)' : 'translateY(-100%)',
+          pointerEvents:
+            isSubMenuVisible && subMenuOpacity > 0 ? 'auto' : 'none',
+        }}
+      >
+        <div className="flex items-center justify-center space-x-6 xl:space-x-8 py-3 px-4 overflow-x-auto">
+          {dropdownData[activeCategoryMenu]?.categories.map((category) => {
+            const categorySlug = categoryToSlug(category);
+            const categoryRoute = `${getMainMenuRoute(
+              activeCategoryMenu
+            )}/${categorySlug}`;
+            return (
+              <Link
+                key={category}
+                href={categoryRoute}
+                prefetch={true}
+                className={`text-gray-600 dark:text-gray-300 font-semibold hover:text-sky-600 dark:hover:text-sky-400 transition-all duration-300 px-3 py-2 text-sm xl:text-base whitespace-nowrap hover:scale-105`}
+                onMouseEnter={() => {
+                  if (!activeMainMenu) {
+                    setActiveMainMenu(activeCategoryMenu);
+                  }
+                  handleSubMenuEnter(category);
+                  router.prefetch(categoryRoute);
+                }}
+              >
+                {category}
+              </Link>
+            );
+          })}
+        </div>
+      </div>
 
       {isMobileMenuOpen && (
         <div className="absolute top-full left-0 w-full z-10 lg:hidden bg-white/95 dark:bg-gray-900/95 backdrop-blur-md text-gray-800 dark:text-white border-t border-gray-200/50 dark:border-gray-700/50 max-h-[calc(100vh-4.5rem)] overflow-y-auto animate-[slideDown_0.4s_cubic-bezier(0.4,0,0.2,1)] shadow-lg">
@@ -842,30 +948,6 @@ const Navbar = () => {
           className="hidden lg:block absolute top-full left-0 w-full animate-in fade-in slide-in-from-top-2 duration-300"
           onMouseLeave={handleNavbarLeave}
         >
-          <div className="bg-gray-100 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 transition-all duration-300">
-            <div className="flex items-center justify-center space-x-6 xl:space-x-8 py-3 px-4">
-              {dropdownData[activeMainMenu]?.categories.map((category) => {
-                const categorySlug = categoryToSlug(category);
-                const categoryRoute = `${getMainMenuRoute(
-                  activeMainMenu
-                )}/${categorySlug}`;
-                return (
-                  <Link
-                    key={category}
-                    href={categoryRoute}
-                    prefetch={true}
-                    className={`text-gray-600 dark:text-gray-300 font-semibold hover:text-sky-600 dark:hover:text-sky-400 transition-all duration-300 px-3 py-2 text-sm xl:text-base whitespace-nowrap hover:scale-105`}
-                    onMouseEnter={() => {
-                      handleSubMenuEnter(category);
-                      router.prefetch(categoryRoute);
-                    }}
-                  >
-                    {category}
-                  </Link>
-                );
-              })}
-            </div>
-          </div>
           {activeSubMenu && (
             <div className="w-full bg-white dark:bg-gray-900 text-gray-800 dark:text-white shadow animate-in fade-in slide-in-from-top-2 duration-300">
               <div className="container mx-auto px-6 md:px-20 lg:px-40 py-8">
