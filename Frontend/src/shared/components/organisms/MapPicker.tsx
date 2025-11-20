@@ -14,6 +14,7 @@ import L, {
 } from 'leaflet';
 import type { SearchResult } from 'leaflet-geosearch/dist/providers/provider.js';
 import GeoSearch from './GeoSearch';
+import { api } from '@/shared/lib/axios';
 
 const redIcon = new L.Icon({
   iconUrl:
@@ -56,28 +57,14 @@ const DraggableMarkerWithPopup = ({
     setAddress('Loading address...');
 
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const response = await api.get('/geocode/reverse', {
+        params: { lat, lon: lng },
+      });
 
-      const response = await fetch(
-        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&addressdetails=1&zoom=18`,
-        {
-          headers: {
-            'User-Agent': 'Reluv-App/1.0 (contact@reluv.app)',
-            'Accept-Language': 'en-US,en;q=0.9',
-          },
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const data = await response.json();
-
-      if (data && data.display_name) {
-        setAddress(data.display_name);
-      } else if (data && data.address) {
-        const addr = data.address;
+      if (response.data && response.data.display_name) {
+        setAddress(response.data.display_name);
+      } else if (response.data && response.data.address) {
+        const addr = response.data.address;
         const parts: string[] = [];
         if (addr.road) parts.push(addr.road);
         if (addr.neighbourhood) parts.push(addr.neighbourhood);
