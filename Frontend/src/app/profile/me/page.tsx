@@ -11,6 +11,7 @@ import {
   Check,
   Edit,
   ChevronRight,
+  ChevronLeft,
 } from "lucide-react";
 import { useAuthStore } from "@/features/auth/store/auth.store";
 import { getMe } from "@/features/user/api/userApi";
@@ -112,9 +113,21 @@ const ProfilePage = () => {
     <PrivateRoute>
       <div className="min-h-screen bg-white dark:bg-gray-900">
         <div className="container mx-auto px-4 sm:px-6 md:px-10 xl:px-20 2xl:px-40 py-10 sm:py-12 md:py-14">
-          <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
-            {/* Left Sidebar */}
-            <aside className="w-full lg:w-80 flex-shrink-0">
+          <div className="flex flex-col lg:flex-row lg:gap-8">
+            <div className="lg:hidden">
+              <button
+                onClick={() => router.back()}
+                className="flex items-center gap-2 text-gray-700 dark:text-gray-300 mb-4"
+              >
+                <ChevronLeft className="w-5 h-5" />
+                <h1 className="text-lg font-bold text-gray-900 dark:text-white">
+                  My Profile
+                </h1>
+              </button>
+            </div>
+
+            {/* Left Sidebar - Hidden on mobile */}
+            <aside className="hidden lg:block w-full lg:w-80 shrink-0">
               {/* User Card */}
               <div className="bg-gradient-to-br from-sky-500 to-sky-700 dark:from-sky-600 dark:to-sky-800 rounded-lg p-4 sm:p-6 mb-6 relative overflow-hidden">
                 <div
@@ -244,7 +257,7 @@ const ProfilePage = () => {
 
             {/* Right Content Area */}
             <main className="flex-1 min-w-0">
-              <div className="mb-6">
+              <div className="hidden lg:block mb-6">
                 <div className="flex items-center gap-3 mb-2">
                   <User className="w-6 h-6 text-sky-600 dark:text-sky-400" />
                   <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 dark:text-white">
@@ -265,33 +278,35 @@ const ProfilePage = () => {
                   </button>
                 </div>
                 <div className="space-y-4 sm:space-y-5">
-                  <div>
+                  <div className="border-b border-gray-200 dark:border-gray-700 pb-4">
                     <label className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1 block">
                       Title
                     </label>
-                    <p className="text-gray-900 dark:text-white">-</p>
+                    <p className="text-gray-900 dark:text-white font-semibold">
+                      -
+                    </p>
                   </div>
-                  <div>
+                  <div className="border-b border-gray-200 dark:border-gray-700 pb-4">
                     <label className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1 block">
                       First Name
                     </label>
-                    <p className="text-gray-900 dark:text-white">
+                    <p className="text-gray-900 dark:text-white font-semibold">
                       {user?.firstName || authUser?.firstName || "-"}
                     </p>
                   </div>
-                  <div>
+                  <div className="border-b border-gray-200 dark:border-gray-700 pb-4">
                     <label className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1 block">
                       Last Name
                     </label>
-                    <p className="text-gray-900 dark:text-white">
+                    <p className="text-gray-900 dark:text-white font-semibold">
                       {user?.lastName || authUser?.lastName || "-"}
                     </p>
                   </div>
-                  <div>
+                  <div className="border-b border-gray-200 dark:border-gray-700 pb-4">
                     <label className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1 block">
                       Date of Birth
                     </label>
-                    <p className="text-gray-900 dark:text-white">
+                    <p className="text-gray-900 dark:text-white font-semibold">
                       {formatDate(user?.profile?.birth || null)}
                     </p>
                   </div>
@@ -299,7 +314,7 @@ const ProfilePage = () => {
                     <label className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1 block">
                       Gender
                     </label>
-                    <p className="text-gray-900 dark:text-white">
+                    <p className="text-gray-900 dark:text-white font-semibold">
                       {user?.profile?.gender ||
                         authUser?.profile?.gender ||
                         "-"}
@@ -320,11 +335,11 @@ const ProfilePage = () => {
                   </button>
                 </div>
                 <div className="space-y-4 sm:space-y-5">
-                  <div>
+                  <div className="border-b border-gray-200 dark:border-gray-700 pb-4">
                     <label className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1 block">
                       Phone Number
                     </label>
-                    <p className="text-gray-900 dark:text-white">
+                    <p className="text-gray-900 dark:text-white font-semibold">
                       {user?.phone || "-"}
                     </p>
                   </div>
@@ -332,7 +347,7 @@ const ProfilePage = () => {
                     <label className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1 block">
                       Email
                     </label>
-                    <p className="text-gray-900 dark:text-white">
+                    <p className="text-gray-900 dark:text-white font-semibold">
                       {displayEmail || "-"}
                     </p>
                   </div>
