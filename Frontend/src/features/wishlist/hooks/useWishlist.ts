@@ -19,18 +19,29 @@ export const useWishlist = () => {
   const clearWishlist = useWishlistStore((state) => state.clearWishlist);
 
   useEffect(() => {
+    console.log(
+      "[Wishlist Hook] useEffect triggered, isAuthenticated:",
+      isAuthenticated()
+    );
     if (isAuthenticated()) {
+      console.log("[Wishlist Hook] Fetching wishlist...");
       fetchWishlist();
     } else {
+      console.log("[Wishlist Hook] Not authenticated, clearing wishlist");
       clearWishlist();
     }
   }, [isAuthenticated, fetchWishlist, clearWishlist]);
 
   const wishlistProductIds = useMemo(() => {
-    return new Set(items.map((item) => item.productId));
+    const ids = new Set(
+      items.map((item) => item.productId || item.product?.id)
+    );
+    console.log("[Wishlist Hook] wishlistProductIds updated:", Array.from(ids));
+    return ids;
   }, [items]);
 
   const handleAddItem = async (data: AddToWishlist) => {
+    console.log("[Wishlist Hook] handleAddItem called with:", data);
     if (!isAuthenticated()) {
       toast.error("Please sign in", {
         description: "You must sign in to add items to your wishlist.",
@@ -42,27 +53,40 @@ export const useWishlist = () => {
     const toastId = toast.loading("Adding to wishlist...");
     try {
       await addItem(data);
+      console.log("[Wishlist Hook] handleAddItem success");
       toast.success("Item added to wishlist!", { id: toastId });
     } catch (error) {
-      console.error("Failed to add item to wishlist:", error);
+      console.error("[Wishlist Hook] Failed to add item to wishlist:", error);
       toast.error("Failed to add item", { id: toastId });
     }
   };
 
   const handleRemoveItem = async (data: RemoveFromWishlist) => {
+    console.log("[Wishlist Hook] handleRemoveItem called with:", data);
     const toastId = toast.loading("Removing from wishlist...");
     try {
       await removeItem(data);
+      console.log("[Wishlist Hook] handleRemoveItem success");
       toast.success("Item removed from wishlist", { id: toastId });
     } catch (error) {
-      console.error("Failed to remove item from wishlist:", error);
+      console.error(
+        "[Wishlist Hook] Failed to remove item from wishlist:",
+        error
+      );
       toast.error("Failed to remove item", { id: toastId });
     }
   };
 
   const isInWishlist = useCallback(
     (data: AddToWishlist) => {
-      return wishlistProductIds.has(data.productId);
+      const result = wishlistProductIds.has(data.productId);
+      console.log(
+        "[Wishlist Hook] isInWishlist check:",
+        data.productId,
+        "->",
+        result
+      );
+      return result;
     },
     [wishlistProductIds]
   );

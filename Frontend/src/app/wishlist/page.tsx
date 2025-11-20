@@ -22,10 +22,24 @@ const Wishlist = () => {
   const { wishlistItems, isLoading, removeItem } = useWishlist();
   const [removingId, setRemovingId] = useState<number | null>(null);
 
-  const handleRemoveItem = async (productId: number) => {
+  const handleRemoveItem = async (e: React.MouseEvent, productId: number) => {
+    console.log(
+      "[Wishlist Page] handleRemoveItem called, productId:",
+      productId
+    );
+    e.preventDefault();
+    e.stopPropagation();
+    if (removingId === productId) {
+      console.log("[Wishlist Page] Already removing, skipping");
+      return;
+    }
     setRemovingId(productId);
     try {
-      await removeItem({ productId: productId });
+      console.log("[Wishlist Page] Calling removeItem with:", { productId });
+      await removeItem({ productId });
+      console.log("[Wishlist Page] removeItem completed successfully");
+    } catch (error) {
+      console.error("[Wishlist Page] Failed to remove item:", error);
     } finally {
       setRemovingId(null);
     }
@@ -117,9 +131,10 @@ const Wishlist = () => {
                     )}
 
                     <button
-                      onClick={() => handleRemoveItem(product.id)}
+                      type="button"
+                      onClick={(e) => handleRemoveItem(e, product.id)}
                       disabled={removingId === product.id}
-                      className="absolute top-3 right-3 z-10 p-1.5 bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm rounded-full text-red-500 dark:text-red-400 hover:bg-white dark:hover:bg-gray-700 transition-all duration-200 disabled:opacity-50"
+                      className="absolute top-3 right-3 z-20 p-1.5 bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm rounded-full text-red-500 dark:text-red-400 hover:bg-white dark:hover:bg-gray-700 transition-all duration-200 disabled:opacity-50 cursor-pointer"
                       aria-label="Remove from wishlist"
                     >
                       {removingId === product.id ? (

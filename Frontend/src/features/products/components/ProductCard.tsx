@@ -25,6 +25,12 @@ interface ProductCardProps {
 const ProductCard = ({ product, containerClassName }: ProductCardProps) => {
   const { addItem, removeItem, isInWishlist } = useWishlist();
   const isWishlisted = isInWishlist({ productId: product.id });
+  console.log(
+    "[ProductCard] productId:",
+    product.id,
+    "isWishlisted:",
+    isWishlisted
+  );
 
   const firstVariant =
     product.variants && product.variants.length > 0
@@ -36,11 +42,19 @@ const ProductCard = ({ product, containerClassName }: ProductCardProps) => {
       : "https://placehold.co/400x400/e2e8f0/e2e8f0?text=Image";
 
   const handleWishlistToggle = (e: React.MouseEvent) => {
+    console.log(
+      "[ProductCard] handleWishlistToggle called, productId:",
+      product.id,
+      "isWishlisted:",
+      isWishlisted
+    );
     e.preventDefault();
     e.stopPropagation();
     if (isWishlisted) {
+      console.log("[ProductCard] Removing from wishlist");
       removeItem({ productId: product.id });
     } else {
+      console.log("[ProductCard] Adding to wishlist");
       addItem({ productId: product.id });
     }
   };

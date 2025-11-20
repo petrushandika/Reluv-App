@@ -11,10 +11,11 @@ export class WishlistService {
   constructor(private prisma: PrismaService) {}
 
   async getMyWishlist(userId: number) {
-    return this.prisma.wishlist.findMany({
+    const wishlistItems = await this.prisma.wishlist.findMany({
       where: { userId },
       select: {
         id: true,
+        productId: true,
         createdAt: true,
         product: {
           select: {
@@ -62,6 +63,8 @@ export class WishlistService {
         createdAt: 'desc',
       },
     });
+
+    return wishlistItems;
   }
 
   async addToWishlist(userId: number, productId: number) {
@@ -85,7 +88,7 @@ export class WishlistService {
     });
 
     if (existingWishlistItem) {
-      return existingWishlistItem;
+      throw new ConflictException('This product is already in your wishlist.');
     }
 
     return this.prisma.wishlist.create({
