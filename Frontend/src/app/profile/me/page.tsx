@@ -111,9 +111,12 @@ const ProfilePage = () => {
       title: "",
       firstName: user?.firstName || authUser?.firstName || "",
       lastName: user?.lastName || authUser?.lastName || "",
-      dateOfBirth: user?.profile?.birth
-        ? new Date(user.profile.birth).toISOString().split("T")[0]
-        : "",
+      dateOfBirth:
+        user?.birth || authUser?.birth
+          ? new Date(user?.birth || authUser?.birth || "")
+              .toISOString()
+              .split("T")[0]
+          : "",
     });
     setIsEditPersonalInfoOpen(true);
   };
@@ -130,22 +133,12 @@ const ProfilePage = () => {
       const updateUserData: any = {};
       if (formData.firstName) updateUserData.firstName = formData.firstName;
       if (formData.lastName) updateUserData.lastName = formData.lastName;
-
-      const updateProfileData: any = {};
       if (formData.dateOfBirth) {
-        updateProfileData.birth = new Date(formData.dateOfBirth);
+        updateUserData.birth = formData.dateOfBirth;
       }
 
-      const promises = [];
       if (Object.keys(updateUserData).length > 0) {
-        promises.push(updateMe(updateUserData));
-      }
-      if (Object.keys(updateProfileData).length > 0) {
-        promises.push(updateMyProfile(updateProfileData));
-      }
-
-      if (promises.length > 0) {
-        await Promise.all(promises);
+        await updateMe(updateUserData);
       }
 
       await fetchAndSetUser();
@@ -247,7 +240,7 @@ const ProfilePage = () => {
                 <form onSubmit={handleSubmitPersonalInfo} className="space-y-5">
                   <div>
                     <label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block">
-                      Title<span className="text-red-500">*</span>
+                      Title
                     </label>
                     <div className="flex gap-4">
                       <label className="flex items-center gap-2 cursor-pointer">
@@ -259,7 +252,7 @@ const ProfilePage = () => {
                           onChange={(e) =>
                             setFormData({ ...formData, title: e.target.value })
                           }
-                          className="w-4 h-4 text-sky-600 border-gray-300 focus:ring-sky-500 dark:focus:ring-sky-400 dark:bg-gray-700 dark:border-gray-600"
+                          className="w-4 h-4 text-sky-600 bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 focus:ring-sky-500 dark:focus:ring-sky-400 focus:ring-2"
                         />
                         <span className="text-gray-700 dark:text-gray-300">
                           Mr.
@@ -274,7 +267,7 @@ const ProfilePage = () => {
                           onChange={(e) =>
                             setFormData({ ...formData, title: e.target.value })
                           }
-                          className="w-4 h-4 text-sky-600 border-gray-300 focus:ring-sky-500 dark:focus:ring-sky-400 dark:bg-gray-700 dark:border-gray-600"
+                          className="w-4 h-4 text-sky-600 bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 focus:ring-sky-500 dark:focus:ring-sky-400 focus:ring-2"
                         />
                         <span className="text-gray-700 dark:text-gray-300">
                           Mrs./Ms.
@@ -345,7 +338,11 @@ const ProfilePage = () => {
                     disabled={
                       isSubmitting || !formData.firstName || !formData.lastName
                     }
-                    className="w-full py-3 bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg font-medium hover:bg-gray-400 dark:hover:bg-gray-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    className={`w-full py-3 rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
+                      formData.firstName && formData.lastName && !isSubmitting
+                        ? "bg-sky-600 dark:bg-sky-500 text-white hover:bg-sky-700 dark:hover:bg-sky-600"
+                        : "bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-400 dark:hover:bg-gray-500"
+                    }`}
                   >
                     {isSubmitting ? "Saving..." : "Save"}
                   </button>
@@ -551,7 +548,7 @@ const ProfilePage = () => {
                       Date of Birth
                     </label>
                     <p className="text-gray-900 dark:text-white font-semibold">
-                      {formatDate(user?.profile?.birth || null)}
+                      {formatDate(user?.birth || authUser?.birth || null)}
                     </p>
                   </div>
                 </div>
@@ -623,7 +620,7 @@ const ProfilePage = () => {
             >
               <div>
                 <label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block">
-                  Title<span className="text-red-500">*</span>
+                  Title
                 </label>
                 <div className="flex gap-4">
                   <label className="flex items-center gap-2 cursor-pointer">

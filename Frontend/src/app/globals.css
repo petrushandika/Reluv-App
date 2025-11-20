@@ -1,5 +1,5 @@
-@import 'tailwindcss';
-@import 'tw-animate-css';
+@import "tailwindcss";
+@import "tw-animate-css";
 
 /* Tailwind CSS v4 Dark Mode Configuration - REQUIRED for dark mode to work */
 @custom-variant dark (&:where(.dark, .dark *));
@@ -134,6 +134,20 @@
   animation: marquee 720s linear infinite;
   display: flex;
   width: fit-content;
+}
+
+@keyframes smooth-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}
+
+.animate-smooth-blink {
+  animation: smooth-blink 3s ease-in-out infinite;
 }
 
 /* Hide scrollbar but keep scroll functionality */

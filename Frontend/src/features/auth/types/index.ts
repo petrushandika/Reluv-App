@@ -4,6 +4,7 @@ export interface User {
   lastName: string | null;
   email: string;
   phone: string | null;
+  birth: Date | string | null;
   profile: UserProfile | null;
 }
 
@@ -11,7 +12,6 @@ export interface UserProfile {
   avatar: string | null;
   banner: string | null;
   bio: string | null;
-  birth: Date | null;
   gender: string | null;
 }
 
