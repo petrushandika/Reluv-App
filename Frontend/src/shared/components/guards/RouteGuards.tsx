@@ -1,8 +1,8 @@
 'use client';
 
-import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
+import { useAuthStore } from '@/features/auth/store/auth.store';
 import Spinner from '@/shared/components/atoms/Spinner';
 
 interface RouteGuardProps {
@@ -10,16 +10,17 @@ interface RouteGuardProps {
 }
 
 export function PrivateRoute({ children }: RouteGuardProps) {
-  const { isAuthenticated, isLoading } = useAuth();
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated());
+  const isHydrated = useAuthStore((state) => state.isHydrated);
   const router = useRouter();
 
   useEffect(() => {
-    if (!isLoading && !isAuthenticated) {
-      router.replace('/');
+    if (isHydrated && !isAuthenticated) {
+      router.replace('/auth/login');
     }
-  }, [isAuthenticated, isLoading, router]);
+  }, [isAuthenticated, isHydrated, router]);
 
-  if (isLoading) {
+  if (!isHydrated) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <Spinner />
@@ -35,9 +36,9 @@ export function PrivateRoute({ children }: RouteGuardProps) {
 }
 
 export function PublicRoute({ children }: RouteGuardProps) {
-  const { isLoading } = useAuth();
+  const isHydrated = useAuthStore((state) => state.isHydrated);
 
-  if (isLoading) {
+  if (!isHydrated) {
     return (
       <>
         <div className="flex items-center justify-center min-h-screen fixed inset-0 bg-white dark:bg-gray-900 z-50">
@@ -52,16 +53,17 @@ export function PublicRoute({ children }: RouteGuardProps) {
 }
 
 export function AuthOnlyRoute({ children }: RouteGuardProps) {
-  const { isAuthenticated, isLoading } = useAuth();
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated());
+  const isHydrated = useAuthStore((state) => state.isHydrated);
   const router = useRouter();
 
   useEffect(() => {
-    if (!isLoading && isAuthenticated) {
+    if (isHydrated && isAuthenticated) {
       router.replace('/');
     }
-  }, [isAuthenticated, isLoading, router]);
+  }, [isAuthenticated, isHydrated, router]);
 
-  if (isLoading) {
+  if (!isHydrated) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <Spinner />

@@ -160,7 +160,7 @@ const ProductDetail = () => {
   return (
     <PublicRoute>
       <div className="min-h-screen bg-white dark:bg-gray-900">
-        <div className="container mx-auto px-4 sm:px-6 md:px-10 xl:px-20 2xl:px-40 py-6 sm:py-8 md:py-12">
+        <div className="container mx-auto px-4 sm:px-6 md:px-10 xl:px-20 2xl:px-40 py-10 sm:py-12 md:py-14">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-16">
             <div className="space-y-4 lg:sticky top-8 self-start">
               <div className="relative bg-gray-50 dark:bg-gray-800 rounded-lg overflow-hidden">

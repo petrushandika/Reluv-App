@@ -89,7 +89,7 @@ const Cart = () => {
   if (!cart || cart.items.length === 0) {
     return (
       <div className="min-h-screen bg-white dark:bg-gray-900">
-        <div className="container mx-auto px-4 sm:px-6 md:px-10 xl:px-20 2xl:px-40 py-6 sm:py-8 md:py-12">
+        <div className="container mx-auto px-4 sm:px-6 md:px-10 xl:px-20 2xl:px-40 py-10 sm:py-12 md:py-14">
           <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-black dark:text-white mb-4 sm:mb-6 md:mb-8">
             Shopping Cart
           </h1>
@@ -133,7 +133,7 @@ const Cart = () => {
         itemName={itemToRemove?.variant.product.name || ""}
       />
 
-      <div className="container mx-auto px-4 sm:px-6 md:px-10 xl:px-20 2xl:px-40 py-6 sm:py-8 md:py-12">
+      <div className="container mx-auto px-4 sm:px-6 md:px-10 xl:px-20 2xl:px-40 py-10 sm:py-12 md:py-14">
         <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-black dark:text-white mb-4 sm:mb-6 md:mb-8">
           Shopping Cart
         </h1>
