@@ -2,14 +2,16 @@
 
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { MapPin, ChevronLeft, X, Search, Navigation } from 'lucide-react';
+import { MapPin, ChevronLeft, X, Navigation } from 'lucide-react';
 import { useAuthStore } from '@/features/auth/store/auth.store';
 import { getMe } from '@/features/user/api/userApi';
 import { User as UserType } from '@/features/auth/types';
 import { PrivateRoute } from '@/shared/components/guards/RouteGuards';
 import ProfileSidebar from '@/shared/components/organisms/ProfileSidebar';
 import MapPicker from '@/shared/components/organisms/MapPicker';
+import GeoSearch from '@/shared/components/organisms/GeoSearch';
 import type { LatLngExpression } from 'leaflet';
+import type { SearchResult } from 'leaflet-geosearch/dist/providers/provider.js';
 import { toast } from 'sonner';
 
 const AddAddressPage = () => {
@@ -25,7 +27,6 @@ const AddAddressPage = () => {
     name: string;
     fullAddress: string;
   } | null>(null);
-  const [searchLocation, setSearchLocation] = useState('');
 
   const [formData, setFormData] = useState({
     label: '',
@@ -299,7 +300,7 @@ const AddAddressPage = () => {
               className="bg-white dark:bg-gray-800 rounded-xl shadow-xl w-full max-w-6xl max-h-[90vh] overflow-hidden flex flex-col lg:flex-row"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="w-full lg:w-1/2 p-6 flex flex-col overflow-y-auto">
+              <div className="w-full lg:w-1/2 p-6 flex flex-col overflow-y-auto relative">
                 <div className="flex items-center justify-between mb-6">
                   <h2 className="text-xl font-bold text-gray-900 dark:text-white">
                     Add Pinpoint
@@ -312,15 +313,22 @@ const AddAddressPage = () => {
                   </button>
                 </div>
 
-                <div className="relative mb-6">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                  <input
-                    type="text"
-                    value={searchLocation}
-                    onChange={(e) => setSearchLocation(e.target.value)}
-                    placeholder="Search Location"
-                    className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-transparent transition-colors"
-                  />
+                <div className="mb-6">
+                  <div className="relative w-full">
+                    <GeoSearch
+                      onLocationSelect={(location: SearchResult) => {
+                        const newPos: LatLngExpression = [
+                          location.y,
+                          location.x,
+                        ];
+                        setMapPosition(newPos);
+                        setSelectedLocation({
+                          name: location.label.split(',')[0],
+                          fullAddress: location.label,
+                        });
+                      }}
+                    />
+                  </div>
                 </div>
 
                 {selectedLocation ? (
@@ -353,16 +361,18 @@ const AddAddressPage = () => {
                 <button
                   type="button"
                   onClick={() => {
-                    if (mapPosition) {
-                      setSelectedLocation({
-                        name: 'Selected Location',
-                        fullAddress:
-                          'Jl. Tugu Monas No.1, Gambir, Kecamatan Gambir, Kota Jakarta Pusat, Daerah Khusus Ibukota Jakarta 10110, Indonesia',
-                      });
+                    if (selectedLocation || mapPosition) {
+                      if (!selectedLocation) {
+                        setSelectedLocation({
+                          name: 'Selected Location',
+                          fullAddress: 'Location selected',
+                        });
+                      }
                       setShowPinpointModal(false);
                     }
                   }}
-                  className="mt-auto w-full px-6 py-3 bg-sky-600 dark:bg-sky-500 text-white font-semibold rounded-lg hover:bg-sky-700 dark:hover:bg-sky-600 transition-colors cursor-pointer"
+                  disabled={!selectedLocation && !mapPosition}
+                  className="mt-auto w-full px-6 py-3 bg-sky-600 dark:bg-sky-500 text-white font-semibold rounded-lg hover:bg-sky-700 dark:hover:bg-sky-600 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Select Location
                 </button>
