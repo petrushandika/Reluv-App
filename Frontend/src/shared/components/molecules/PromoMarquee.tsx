@@ -58,7 +58,7 @@ const PromoMarquee = () => {
 
   return (
     <div
-      className="relative w-full bg-gradient-to-r from-sky-600/95 via-sky-500/95 to-sky-600/95 dark:from-sky-700/95 dark:via-sky-600/95 dark:to-sky-700/95 backdrop-blur-md text-white py-3 overflow-hidden border-b border-sky-400/40 dark:border-sky-500/40 shadow-md"
+      className="relative w-full bg-gradient-to-r from-sky-600/95 via-sky-500/95 to-sky-600/95 dark:from-sky-700/95 dark:via-sky-600/95 dark:to-sky-700/95 backdrop-blur-md text-white py-2 overflow-hidden border-b border-sky-400/40 dark:border-sky-500/40 shadow-md"
       style={{
         opacity,
         transition: "opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1)",

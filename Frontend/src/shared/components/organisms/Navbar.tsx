@@ -507,7 +507,7 @@ const Navbar = () => {
     >
       <PromoMarquee />
       <div className="w-full text-gray-800 dark:text-white relative">
-        <div className="container mx-auto flex items-center justify-between px-6 md:px-10 xl:px-20 2xl:px-40 py-4">
+        <div className="container mx-auto flex items-center justify-between px-6 md:px-10 xl:px-20 2xl:px-40 py-2.5">
           <Link
             href="/"
             className="transition-opacity duration-300 hover:opacity-80"
@@ -531,7 +531,7 @@ const Navbar = () => {
                   handleMainMenuEnter(menu);
                   handleMenuHover(menu);
                 }}
-                className={`py-4 font-semibold hover:text-sky-600 dark:hover:text-sky-400 transition-colors duration-200 ${
+                className={`py-2.5 font-semibold hover:text-sky-600 dark:hover:text-sky-400 transition-colors duration-200 ${
                   activeMainMenu === menu
                     ? 'text-sky-600 dark:text-sky-400'
                     : 'text-gray-800 dark:text-white'
@@ -736,7 +736,7 @@ const Navbar = () => {
       <div
         className="hidden lg:block w-full bg-gray-100 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 overflow-hidden"
         style={{
-          maxHeight: isSubMenuVisible ? '100px' : '0',
+          maxHeight: isSubMenuVisible ? '60px' : '0',
           opacity: isSubMenuVisible ? Math.max(0, subMenuOpacity) : 0,
           transition:
             'max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1), transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
@@ -745,7 +745,7 @@ const Navbar = () => {
             isSubMenuVisible && subMenuOpacity > 0 ? 'auto' : 'none',
         }}
       >
-        <div className="flex items-center justify-center space-x-6 xl:space-x-8 py-3 px-4 overflow-x-auto">
+        <div className="flex items-center justify-center space-x-6 xl:space-x-8 py-2 px-4 overflow-x-auto">
           {dropdownData[activeCategoryMenu]?.categories.map((category) => {
             const categorySlug = categoryToSlug(category);
             const categoryRoute = `${getMainMenuRoute(
@@ -756,7 +756,7 @@ const Navbar = () => {
                 key={category}
                 href={categoryRoute}
                 prefetch={true}
-                className={`text-gray-600 dark:text-gray-300 font-semibold hover:text-sky-600 dark:hover:text-sky-400 transition-all duration-300 px-3 py-2 text-sm xl:text-base whitespace-nowrap hover:scale-105`}
+                className={`text-gray-600 dark:text-gray-300 font-semibold hover:text-sky-600 dark:hover:text-sky-400 transition-all duration-300 px-2.5 py-1.5 text-sm xl:text-base whitespace-nowrap hover:scale-105`}
                 onMouseEnter={() => {
                   if (!activeMainMenu) {
                     setActiveMainMenu(activeCategoryMenu);

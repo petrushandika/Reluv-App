@@ -92,7 +92,7 @@ export default function RootLayout({
               {!isAuthPage && !isDashboardPage && <Navbar />}
               <main
                 className={`flex-1 ${
-                  isAuthPage || isDashboardPage ? '' : 'pt-24 md:pt-28 lg:pt-44'
+                  isAuthPage || isDashboardPage ? '' : 'pt-20 md:pt-24 lg:pt-36'
                 }`}
               >
                 {children}
