@@ -23,23 +23,16 @@ const Wishlist = () => {
   const [removingId, setRemovingId] = useState<number | null>(null);
 
   const handleRemoveItem = async (e: React.MouseEvent, productId: number) => {
-    console.log(
-      "[Wishlist Page] handleRemoveItem called, productId:",
-      productId
-    );
     e.preventDefault();
     e.stopPropagation();
     if (removingId === productId) {
-      console.log("[Wishlist Page] Already removing, skipping");
       return;
     }
     setRemovingId(productId);
     try {
-      console.log("[Wishlist Page] Calling removeItem with:", { productId });
       await removeItem({ productId });
-      console.log("[Wishlist Page] removeItem completed successfully");
     } catch (error) {
-      console.error("[Wishlist Page] Failed to remove item:", error);
+      console.error("Failed to remove item:", error);
     } finally {
       setRemovingId(null);
     }
