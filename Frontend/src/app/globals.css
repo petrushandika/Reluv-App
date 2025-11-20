@@ -342,3 +342,35 @@
   background-size: 200% 100%;
   animation: shimmer 1.5s ease-in-out infinite;
 }
+
+@keyframes buttonShine {
+  0% {
+    transform: translateX(-100%) translateY(-50%) rotate(25deg);
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(200%) translateY(-50%) rotate(25deg);
+    opacity: 0;
+  }
+}
+
+.sell-button-shine::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    25deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.5) 50%,
+    transparent 70%
+  );
+  animation: buttonShine 2.5s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 1;
+}

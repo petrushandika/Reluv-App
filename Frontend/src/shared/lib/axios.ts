@@ -12,10 +12,13 @@ export const api = axios.create({
 
 api.interceptors.request.use(
   (config) => {
-    const token = useAuthStore.getState().token;
-
-    if (token) {
-      config.headers["Authorization"] = `Bearer ${token}`;
+    const authStore = useAuthStore.getState();
+    
+    if (authStore.token) {
+      if (!authStore.checkSessionExpiry()) {
+        return Promise.reject(new Error('Session expired'));
+      }
+      config.headers["Authorization"] = `Bearer ${authStore.token}`;
     }
 
     return config;

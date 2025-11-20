@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import type { LatLngExpression } from "leaflet";
 import { useCart } from "@/features/cart/hooks/useCart";
+import Spinner from "@/shared/components/atoms/Spinner";
 
 const MapPicker = dynamic(
   () => import("@/shared/components/organisms/MapPicker"),
@@ -311,11 +312,7 @@ const Checkout = () => {
   };
 
   if (isFetchingCart) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-white dark:bg-gray-900">
-        <div className="w-12 h-12 border-4 border-sky-500 border-t-transparent rounded-full animate-spin" />
-      </div>
-    );
+    return <Spinner />;
   }
 
   if (!cart || cart.items.length === 0) {
@@ -503,7 +500,7 @@ const Checkout = () => {
             <ul className="max-h-60 overflow-y-auto scrollbar-hide">
               {isLoading ? (
                 <li className="px-4 py-3 text-center">
-                  <div className="w-5 h-5 border-2 border-sky-500 border-t-transparent rounded-full animate-spin mx-auto" />
+                  <Spinner size="sm" fullScreen={false} className="mx-auto" />
                 </li>
               ) : filteredOptions.length === 0 ? (
                 <li className="px-4 py-3 text-gray-500 dark:text-gray-400 text-sm text-center">
@@ -693,7 +690,7 @@ const Checkout = () => {
     <>
       {isLoading && (
         <div className="fixed inset-0 bg-white/90 dark:bg-gray-900/90 backdrop-blur-md z-50 flex items-center justify-center">
-          <div className="w-12 h-12 border-4 border-sky-500 border-t-transparent rounded-full animate-spin" />
+          <Spinner size="lg" fullScreen={false} />
         </div>
       )}
       <div className="bg-white dark:bg-gray-900 min-h-screen">

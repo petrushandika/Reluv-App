@@ -8,6 +8,7 @@ import React, { useState, useRef } from 'react';
 import { useAuthStore } from '@/features/auth/store/auth.store';
 import AuthWarningModal from '@/shared/components/molecules/AuthWarningModal';
 import { toast } from 'sonner';
+import Spinner from '@/shared/components/atoms/Spinner';
 
 const Sell = () => {
   const { isAuthenticated, isHydrated } = useAuthStore();
@@ -101,11 +102,7 @@ const Sell = () => {
   };
 
   if (!isHydrated) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-white dark:bg-gray-900">
-        <div className="w-12 h-12 border-4 border-sky-500 border-t-transparent rounded-full animate-spin" />
-      </div>
-    );
+    return <Spinner />;
   }
 
   return (

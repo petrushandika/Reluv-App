@@ -5,6 +5,7 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import { useAuthStore } from '@/features/auth/store/auth.store';
 import { useCartStore } from '@/features/cart/store/cart.store';
 import { useWishlistStore } from '@/features/wishlist/store/wishlist.store';
+import Spinner from '@/shared/components/atoms/Spinner';
 
 const CallbackContent = () => {
   const searchParams = useSearchParams();
@@ -37,7 +38,7 @@ const CallbackContent = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-white dark:bg-gray-900">
       <div className="text-center space-y-4">
-        <div className="w-12 h-12 border-4 border-sky-500 border-t-transparent rounded-full animate-spin mx-auto" />
+        <Spinner size="lg" fullScreen={false} className="mx-auto" />
         <p className="text-gray-600 dark:text-gray-300">
           Completing authentication...
         </p>
@@ -49,11 +50,7 @@ const CallbackContent = () => {
 export default function CallbackPage() {
   return (
     <Suspense
-      fallback={
-        <div className="min-h-screen flex items-center justify-center bg-white dark:bg-gray-900">
-          <div className="w-12 h-12 border-4 border-sky-500 border-t-transparent rounded-full animate-spin" />
-        </div>
-      }
+      fallback={<Spinner />}
     >
       <CallbackContent />
     </Suspense>

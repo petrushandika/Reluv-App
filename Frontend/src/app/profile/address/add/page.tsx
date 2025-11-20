@@ -13,6 +13,7 @@ import GeoSearch from '@/shared/components/organisms/GeoSearch';
 import type { LatLngExpression } from 'leaflet';
 import type { SearchResult } from 'leaflet-geosearch/dist/providers/provider.js';
 import { toast } from 'sonner';
+import Spinner from '@/shared/components/atoms/Spinner';
 
 const AddAddressPage = () => {
   const router = useRouter();
@@ -81,11 +82,7 @@ const AddAddressPage = () => {
   };
 
   if (isLoading) {
-    return (
-      <div className="min-h-screen bg-white dark:bg-gray-900 flex items-center justify-center">
-        <div className="w-8 h-8 border-4 border-sky-600 border-t-transparent rounded-full animate-spin" />
-      </div>
-    );
+    return <Spinner />;
   }
 
   return (

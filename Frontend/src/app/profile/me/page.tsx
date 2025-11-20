@@ -18,6 +18,7 @@ import { User as UserType } from '@/features/auth/types';
 import { PrivateRoute } from '@/shared/components/guards/RouteGuards';
 import { toast } from 'sonner';
 import ProfileSidebar from '@/shared/components/organisms/ProfileSidebar';
+import Spinner from '@/shared/components/atoms/Spinner';
 
 const ProfilePage = () => {
   const router = useRouter();
@@ -165,11 +166,7 @@ const ProfilePage = () => {
   const displayEmail = user?.email || authUser?.email || '';
 
   if (isLoading) {
-    return (
-      <div className="min-h-screen bg-white dark:bg-gray-900 flex items-center justify-center">
-        <div className="w-8 h-8 border-4 border-sky-600 border-t-transparent rounded-full animate-spin" />
-      </div>
-    );
+    return <Spinner />;
   }
 
   return (
