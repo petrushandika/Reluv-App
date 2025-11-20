@@ -503,7 +503,7 @@ const Navbar = () => {
   return (
     <header
       onMouseLeave={handleNavbarLeave}
-      className="fixed top-0 left-0 right-0 w-full z-40 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-b border-gray-200/50 dark:border-gray-700/50 shadow-sm transition-all duration-300"
+      className="fixed top-0 left-0 right-0 w-full z-40 bg-white/95 dark:bg-gray-900/95 backdrop-blur border-b border-gray-200 dark:border-gray-700 shadow-sm transition-all duration-300"
     >
       <PromoMarquee />
       <div className="w-full text-gray-800 dark:text-white relative">
@@ -553,8 +553,18 @@ const Navbar = () => {
                 />
                 {!searchValue && (
                   <div className="absolute left-10 top-1/2 -translate-y-1/2 right-4 overflow-hidden pointer-events-none">
-                    <div className="animate-marquee whitespace-nowrap text-gray-400 dark:text-gray-500 text-sm">
-                      Search for products or brands&nbsp;
+                    <div
+                      className="flex whitespace-nowrap text-gray-400 dark:text-gray-500 text-sm"
+                      style={{
+                        animation: 'marquee 15s linear infinite',
+                        width: 'fit-content',
+                      }}
+                    >
+                      {[1, 2].map((repeat) => (
+                        <span key={repeat} className="inline-block mr-8">
+                          Search for products or brands
+                        </span>
+                      ))}
                     </div>
                   </div>
                 )}
@@ -734,7 +744,7 @@ const Navbar = () => {
         </div>
       </div>
       <div
-        className="hidden lg:block w-full bg-gray-100 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 overflow-hidden"
+        className="hidden lg:block w-full bg-gray-100/95 dark:bg-gray-800/95 border-b border-gray-200 dark:border-gray-700 overflow-hidden"
         style={{
           maxHeight: isSubMenuVisible ? '60px' : '0',
           opacity: isSubMenuVisible ? Math.max(0, subMenuOpacity) : 0,
@@ -798,8 +808,18 @@ const Navbar = () => {
                 />
                 {!searchValue && (
                   <div className="absolute left-10 top-1/2 -translate-y-1/2 right-4 overflow-hidden pointer-events-none">
-                    <div className="animate-marquee whitespace-nowrap text-gray-400 dark:text-gray-500 text-sm">
-                      Search for products or brands&nbsp;
+                    <div
+                      className="flex whitespace-nowrap text-gray-400 dark:text-gray-500 text-sm"
+                      style={{
+                        animation: 'marquee 15s linear infinite',
+                        width: 'fit-content',
+                      }}
+                    >
+                      {[1, 2].map((repeat) => (
+                        <span key={repeat} className="inline-block mr-8">
+                          Search for products or brands
+                        </span>
+                      ))}
                     </div>
                   </div>
                 )}
