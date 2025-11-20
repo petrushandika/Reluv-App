@@ -29,7 +29,14 @@ export class UsersController {
   @Patch('me')
   updateMe(
     @GetUser() user: User,
-    @Body(new ValidationPipe()) updateUserDto: UpdateUserDto,
+    @Body(
+      new ValidationPipe({
+        transform: true,
+        whitelist: true,
+        forbidNonWhitelisted: false,
+      }),
+    )
+    updateUserDto: UpdateUserDto,
   ) {
     return this.usersService.updateMe(user.id, updateUserDto);
   }

@@ -52,9 +52,18 @@ export class UsersService {
   }
 
   async updateMe(userId: number, updateUserDto: UpdateUserDto) {
+    const updateData: any = { ...updateUserDto };
+    if (updateData.birth) {
+      if (typeof updateData.birth === 'string') {
+        updateData.birth = new Date(updateData.birth);
+      } else if (updateData.birth instanceof Date) {
+        updateData.birth = updateData.birth;
+      }
+    }
+
     const user = await this.prisma.user.update({
       where: { id: userId },
-      data: updateUserDto,
+      data: updateData,
       select: {
         id: true,
         googleId: true,
