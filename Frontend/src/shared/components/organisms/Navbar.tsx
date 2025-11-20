@@ -575,7 +575,7 @@ const Navbar = () => {
                             <span className="font-medium">My Profile</span>
                           </Link>
                           <Link
-                            href="/orders"
+                            href="/profile/orders"
                             className="flex items-center px-6 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300 hover:pl-8 cursor-pointer"
                           >
                             <ShoppingBag className="w-5 h-5 mr-3 text-gray-600 dark:text-gray-400 transition-colors duration-300" />
@@ -798,7 +798,7 @@ const Navbar = () => {
                   My Profile
                 </Link>
                 <Link
-                  href="/orders"
+                  href="/profile/orders"
                   className="flex items-center py-3 text-sm text-gray-700 dark:text-gray-300 font-semibold hover:text-sky-600 dark:hover:text-sky-400 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md transition-all duration-300 hover:pl-2"
                 >
                   <ScrollText className="w-5 h-5 mr-3 text-gray-500 dark:text-gray-400 transition-colors duration-300" />{" "}

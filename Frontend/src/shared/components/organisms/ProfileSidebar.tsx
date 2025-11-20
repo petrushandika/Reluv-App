@@ -45,7 +45,7 @@ const ProfileSidebar: React.FC<ProfileSidebarProps> = ({ user }) => {
     },
     {
       title: 'Order History',
-      href: '/orders',
+      href: '/profile/orders',
       icon: ShoppingBag,
       category: 'My Purchases',
     },
@@ -158,14 +158,28 @@ const ProfileSidebar: React.FC<ProfileSidebarProps> = ({ user }) => {
                     menuItems
                       .filter((item) => item.category === 'My Purchases')
                       .map((item) => {
+                        const isActive = pathname === item.href;
                         const Icon = item.icon;
                         return (
                           <Link
                             key={item.href}
                             href={item.href}
-                            className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                            className={`relative flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors ${
+                              isActive
+                                ? 'bg-sky-50 dark:bg-sky-900/20 text-sky-600 dark:text-sky-400'
+                                : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800'
+                            }`}
                           >
-                            <Icon className="w-5 h-5 text-gray-500 dark:text-gray-400" />
+                            {isActive && (
+                              <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-sky-600 dark:bg-sky-400 rounded-r-full" />
+                            )}
+                            <Icon
+                              className={`w-5 h-5 ${
+                                isActive
+                                  ? 'text-sky-600 dark:text-sky-400'
+                                  : 'text-gray-500 dark:text-gray-400'
+                              }`}
+                            />
                             <span className="font-medium">{item.title}</span>
                           </Link>
                         );
