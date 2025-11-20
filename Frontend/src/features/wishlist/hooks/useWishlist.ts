@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useCallback } from "react";
 import { useAuthStore } from "@/features/auth/store/auth.store";
 import { useWishlistStore } from "../store/wishlist.store";
 import { AddToWishlist, RemoveFromWishlist } from "../types";
@@ -60,9 +60,12 @@ export const useWishlist = () => {
     }
   };
 
-  const isInWishlist = (data: AddToWishlist) => {
-    return wishlistProductIds.has(data.productId);
-  };
+  const isInWishlist = useCallback(
+    (data: AddToWishlist) => {
+      return wishlistProductIds.has(data.productId);
+    },
+    [wishlistProductIds]
+  );
 
   return {
     wishlistItems: items,

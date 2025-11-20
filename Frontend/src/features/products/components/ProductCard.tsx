@@ -69,12 +69,18 @@ const ProductCard = ({ product, containerClassName }: ProductCardProps) => {
 
         <button
           onClick={handleWishlistToggle}
-          className="absolute top-3 right-3 z-10 p-1.5 bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm rounded-full text-gray-700 dark:text-gray-300 hover:text-red-500 dark:hover:text-red-400 hover:bg-white dark:hover:bg-gray-700 transition-all duration-200"
-          aria-label="Add to wishlist"
+          className={`absolute top-3 right-3 z-10 p-1.5 bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm rounded-full transition-all duration-200 ${
+            isWishlisted
+              ? "text-red-500 dark:text-red-400 fill-red-500 dark:fill-red-400 hover:bg-white dark:hover:bg-gray-700"
+              : "text-gray-700 dark:text-gray-300 hover:text-red-500 dark:hover:text-red-400 hover:bg-white dark:hover:bg-gray-700"
+          }`}
+          aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
         >
           <Heart
             className={`w-5 h-5 ${
-              isWishlisted ? "text-red-500 fill-red-500" : ""
+              isWishlisted
+                ? "text-red-500 dark:text-red-400 fill-red-500 dark:fill-red-400"
+                : ""
             }`}
           />
         </button>

@@ -31,46 +31,52 @@ export const useWishlistStore = create<WishlistState>((set, get) => ({
   },
 
   addItem: async (data) => {
-    try {
-      const currentItems = get().items;
-      if (currentItems.some((item) => item.productId === data.productId)) {
-        await get().fetchWishlist();
-        return;
-      }
-      const newItem: WishlistItem = {
-        id: Date.now(),
-        productId: data.productId,
-        product: {
-          id: 0,
-          name: "",
-          description: "",
-          storeId: 0,
-          createdAt: "",
-          updatedAt: "",
-        } as WishlistItem["product"],
-      };
-      set({ items: [...currentItems, newItem] });
+    const currentItems = get().items;
 
+    if (currentItems.some((item) => item.productId === data.productId)) {
+      return;
+    }
+
+    const newItem: WishlistItem = {
+      id: Date.now(),
+      productId: data.productId,
+      product: {
+        id: 0,
+        name: "",
+        description: "",
+        storeId: 0,
+        createdAt: "",
+        updatedAt: "",
+      } as WishlistItem["product"],
+    };
+
+    set({ items: [...currentItems, newItem] });
+
+    try {
       await addToWishlist(data);
-      await get().fetchWishlist();
     } catch (error) {
-      await get().fetchWishlist();
+      set({ items: currentItems });
       console.error("Failed to add item to wishlist:", error);
       throw error;
     }
   },
 
   removeItem: async (data) => {
-    try {
-      const currentItems = get().items;
-      set({
-        items: currentItems.filter((item) => item.productId !== data.productId),
-      });
+    const currentItems = get().items;
 
+    if (!currentItems.some((item) => item.productId === data.productId)) {
+      return;
+    }
+
+    const updatedItems = currentItems.filter(
+      (item) => item.productId !== data.productId
+    );
+    set({ items: updatedItems });
+
+    try {
       await removeFromWishlist(data.productId);
-      await get().fetchWishlist();
     } catch (error) {
-      await get().fetchWishlist();
+      set({ items: currentItems });
       console.error("Failed to remove item from wishlist:", error);
       throw error;
     }
