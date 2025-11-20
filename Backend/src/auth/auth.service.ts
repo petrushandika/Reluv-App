@@ -63,6 +63,10 @@ export class AuthService {
   }
 
   async confirm(token: string): Promise<{ message: string }> {
+    if (!token || token.trim().length === 0) {
+      throw new UnauthorizedException('Token is required.');
+    }
+
     const user = await this._validateAndFindUserByToken(token);
 
     await this.prisma.user.update({
@@ -159,6 +163,10 @@ export class AuthService {
   }
 
   private async _validateAndFindUserByToken(token: string): Promise<User> {
+    if (!token || token.trim().length === 0) {
+      throw new UnauthorizedException('Token is required.');
+    }
+
     const hashedToken = createHash('sha256').update(token).digest('hex');
 
     const user = await this.prisma.user.findFirst({
@@ -169,7 +177,19 @@ export class AuthService {
     });
 
     if (!user) {
-      throw new UnauthorizedException('Token is invalid or has expired.');
+      const expiredUser = await this.prisma.user.findFirst({
+        where: {
+          verificationToken: hashedToken,
+        },
+      });
+
+      if (expiredUser) {
+        throw new UnauthorizedException(
+          'Token has expired. Please request a new verification email.',
+        );
+      }
+
+      throw new UnauthorizedException('Token is invalid.');
     }
 
     return user;

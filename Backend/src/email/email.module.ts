@@ -25,7 +25,7 @@ import { join } from 'path';
           from: configService.get<string>('MAIL_FROM'),
         },
         template: {
-          dir: join(__dirname, 'templates'),
+          dir: join(__dirname, '..', '..', 'templates'),
           adapter: new HandlebarsAdapter(),
           options: {
             strict: true,

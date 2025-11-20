@@ -37,8 +37,16 @@ export class AuthController {
     @Query(new ValidationPipe()) query: ConfirmDto,
     @Res() res: Response,
   ) {
-    await this.authService.confirm(query.token);
-    return res.redirect('http://localhost:3000/');
+    try {
+      await this.authService.confirm(query.token);
+      return res.redirect('http://localhost:3000/auth/login?verified=true');
+    } catch (error) {
+      return res.redirect(
+        `http://localhost:3000/auth/login?error=${encodeURIComponent(
+          error.message || 'Token is invalid or has expired.',
+        )}`,
+      );
+    }
   }
 
   @Post('forgot')

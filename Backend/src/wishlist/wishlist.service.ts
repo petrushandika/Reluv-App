@@ -65,28 +65,27 @@ export class WishlistService {
   }
 
   async addToWishlist(userId: number, productId: number) {
-    const [product, existingWishlistItem] = await Promise.all([
-      this.prisma.product.findUnique({
-        where: { id: productId },
-        select: { id: true },
-      }),
-      this.prisma.wishlist.findUnique({
-        where: {
-          userId_productId: {
-            userId,
-            productId,
-          },
-        },
-        select: { id: true },
-      }),
-    ]);
+    const product = await this.prisma.product.findUnique({
+      where: { id: productId },
+      select: { id: true },
+    });
 
     if (!product) {
       throw new NotFoundException(`Product with ID ${productId} not found.`);
     }
 
+    const existingWishlistItem = await this.prisma.wishlist.findUnique({
+      where: {
+        userId_productId: {
+          userId,
+          productId,
+        },
+      },
+      select: { id: true },
+    });
+
     if (existingWishlistItem) {
-      throw new ConflictException('This product is already in your wishlist.');
+      return existingWishlistItem;
     }
 
     return this.prisma.wishlist.create({
