@@ -5,7 +5,10 @@ import {
   Body,
   UseGuards,
   ValidationPipe,
+  UseInterceptors,
+  UploadedFiles,
 } from '@nestjs/common';
+import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { UsersService } from './users.service';
 import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
 import { GetUser } from '../common/decorators/get-user.decorator';
@@ -32,10 +35,32 @@ export class UsersController {
   }
 
   @Patch('me/profile')
-  updateMyProfile(
+  @UseInterceptors(
+    FileFieldsInterceptor([
+      { name: 'avatar', maxCount: 1 },
+      { name: 'banner', maxCount: 1 },
+    ]),
+  )
+  async updateMyProfile(
     @GetUser() user: User,
-    @Body(new ValidationPipe()) updateUserProfileDto: UpdateUserProfileDto,
+    @Body(
+      new ValidationPipe({
+        transform: true,
+        whitelist: true,
+        forbidNonWhitelisted: false,
+      }),
+    )
+    updateUserProfileDto: UpdateUserProfileDto,
+    @UploadedFiles()
+    files?: {
+      avatar?: Express.Multer.File[];
+      banner?: Express.Multer.File[];
+    },
   ) {
-    return this.usersService.updateMyProfile(user.id, updateUserProfileDto);
+    return this.usersService.updateMyProfile(
+      user.id,
+      updateUserProfileDto,
+      files,
+    );
   }
 }

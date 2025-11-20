@@ -1,14 +1,6 @@
-import { IsDateString, IsOptional, IsString, IsUrl } from 'class-validator';
+import { IsDateString, IsOptional, IsString } from 'class-validator';
 
 export class UpdateUserProfileDto {
-  @IsUrl()
-  @IsOptional()
-  avatar?: string;
-
-  @IsUrl()
-  @IsOptional()
-  banner?: string;
-
   @IsString()
   @IsOptional()
   bio?: string;
