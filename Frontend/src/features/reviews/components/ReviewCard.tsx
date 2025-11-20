@@ -25,7 +25,7 @@ interface ReviewCardProps {
 const ReviewCard = ({ review }: ReviewCardProps) => {
   return (
     <div className="flex-none w-full sm:w-1/2 lg:w-1/3 xl:w-1/4 pl-4">
-      <div className="h-full flex flex-col bg-gray-50 dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-lg p-6">
+      <div className="h-full flex flex-col bg-gray-50/90 dark:bg-gray-800/90 backdrop-blur-sm border border-gray-100/50 dark:border-gray-700/50 rounded-lg p-6 shadow-sm">
         <div className="flex justify-between items-start mb-2">
           <div className="flex flex-col">
             <div className="flex items-center">
@@ -40,7 +40,7 @@ const ReviewCard = ({ review }: ReviewCardProps) => {
           </div>
           <GoogleIcon />
         </div>
-        <p className="text-gray-600 dark:text-gray-300 text-sm flex-grow mb-4">{review.text}</p>
+        <p className="text-gray-600 dark:text-gray-300 text-sm flex-grow mb-4 glossy-text">{review.text}</p>
         <div className="flex items-center mt-auto">
           <img
             src={review.avatarUrl}
@@ -48,8 +48,8 @@ const ReviewCard = ({ review }: ReviewCardProps) => {
             className="w-10 h-10 rounded-full mr-3"
           />
           <div>
-            <p className="font-semibold text-sm text-gray-800 dark:text-white">{review.name}</p>
-            <p className="text-xs text-gray-500 dark:text-gray-400">{review.location}</p>
+            <p className="font-semibold text-sm text-gray-800 dark:text-white glossy-text-strong">{review.name}</p>
+            <p className="text-xs text-gray-500 dark:text-gray-400 glossy-text">{review.location}</p>
           </div>
         </div>
       </div>

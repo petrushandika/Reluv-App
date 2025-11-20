@@ -435,7 +435,7 @@ const Navbar = () => {
   return (
     <header
       onMouseLeave={handleNavbarLeave}
-      className="fixed top-0 left-0 right-0 w-full z-40 bg-white dark:bg-gray-900 shadow transition-all duration-300"
+      className="fixed top-0 left-0 right-0 w-full z-40 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-b border-gray-200/50 dark:border-gray-700/50 shadow-sm transition-all duration-300"
     >
       <PromoMarquee />
       <div className="w-full text-gray-800 dark:text-white relative">
@@ -444,7 +444,7 @@ const Navbar = () => {
             href="/"
             className="transition-opacity duration-300 hover:opacity-80"
           >
-            <div className="text-xl lg:text-2xl font-bold text-sky-700 dark:text-sky-400 hidden lg:block transition-colors duration-300">
+            <div className="text-xl lg:text-2xl font-bold text-sky-700 dark:text-sky-400 hidden lg:block transition-colors duration-300 glossy-text-title">
               reluv
             </div>
             <img
@@ -475,7 +475,7 @@ const Navbar = () => {
           </nav>
           <div className="hidden lg:flex items-center space-x-4">
             <div className="relative">
-              <div className="relative w-60 xl:w-80 overflow-hidden rounded-md bg-gray-100 dark:bg-gray-800 border border-transparent focus-within:ring-2 focus-within:ring-sky-500 dark:focus-within:ring-sky-400 transition-all duration-300 hover:bg-gray-200 dark:hover:bg-gray-700">
+              <div className="relative w-60 xl:w-80 overflow-hidden rounded-md bg-gray-100/80 dark:bg-gray-800/80 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 focus-within:ring-2 focus-within:ring-sky-500 dark:focus-within:ring-sky-400 transition-all duration-300 hover:bg-gray-200/90 dark:hover:bg-gray-700/90 shadow-sm">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 dark:text-gray-500 z-10 transition-colors duration-300" />
                 <input
                   type="text"
@@ -552,7 +552,7 @@ const Navbar = () => {
                 </button>
                 {isProfileDropdownOpen && (
                   <div className="absolute right-0 top-full mt-2 w-64 z-50 animate-in fade-in slide-in-from-top-2 duration-300">
-                    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl overflow-hidden border border-gray-200 dark:border-gray-700 transition-all duration-300">
+                    <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-md rounded-lg shadow-xl overflow-hidden border border-gray-200/50 dark:border-gray-700/50 transition-all duration-300">
                       <div className="bg-sky-600 dark:bg-sky-700 px-6 py-5 relative">
                         <div className="text-white">
                           <h3 className="text-lg font-bold mb-1">
@@ -662,7 +662,7 @@ const Navbar = () => {
       </div>
 
       {isMobileMenuOpen && (
-        <div className="absolute top-full left-0 w-full z-10 lg:hidden bg-white dark:bg-gray-900 text-gray-800 dark:text-white border-t border-gray-200 dark:border-gray-700 max-h-[calc(100vh-4.5rem)] overflow-y-auto animate-[slideDown_0.4s_cubic-bezier(0.4,0,0.2,1)]">
+        <div className="absolute top-full left-0 w-full z-10 lg:hidden bg-white/95 dark:bg-gray-900/95 backdrop-blur-md text-gray-800 dark:text-white border-t border-gray-200/50 dark:border-gray-700/50 max-h-[calc(100vh-4.5rem)] overflow-y-auto animate-[slideDown_0.4s_cubic-bezier(0.4,0,0.2,1)] shadow-lg">
           <style jsx>{`
             @keyframes slideDown {
               from {
@@ -677,7 +677,7 @@ const Navbar = () => {
           `}</style>
           <div className="py-4 px-6 space-y-1 border-b border-gray-200 dark:border-gray-700">
             <div className="relative">
-              <div className="relative w-full overflow-hidden rounded-md bg-gray-100 dark:bg-gray-800 border border-transparent focus-within:ring-2 focus-within:ring-sky-500 dark:focus-within:ring-sky-400">
+              <div className="relative w-full overflow-hidden rounded-md bg-gray-100/80 dark:bg-gray-800/80 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 focus-within:ring-2 focus-within:ring-sky-500 dark:focus-within:ring-sky-400 shadow-sm">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 dark:text-gray-500 z-10" />
                 <input
                   type="text"

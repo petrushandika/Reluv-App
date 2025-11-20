@@ -52,7 +52,7 @@ const ProductCard = ({ product, containerClassName }: ProductCardProps) => {
     <div className={containerClassName || defaultClasses}>
       <div className="relative group/card">
         <Link href={`/product/${product.id}`} prefetch={true}>
-          <div className="bg-gray-50 dark:bg-gray-800 rounded overflow-hidden cursor-pointer aspect-square">
+          <div className="bg-gray-50/90 dark:bg-gray-800/90 backdrop-blur-sm rounded overflow-hidden cursor-pointer aspect-square border border-gray-200/30 dark:border-gray-700/30 shadow-sm">
             <img
               src={imageUrl}
               alt={product.name}
@@ -69,7 +69,7 @@ const ProductCard = ({ product, containerClassName }: ProductCardProps) => {
 
         <button
           onClick={handleWishlistToggle}
-          className={`absolute top-3 right-3 z-10 p-1.5 bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm rounded-full transition-all duration-200 ${
+          className={`absolute top-3 right-3 z-10 p-1.5 bg-white/80 dark:bg-gray-800/80 backdrop-blur-md rounded-full border border-white/30 dark:border-gray-700/30 shadow-md transition-all duration-200 cursor-pointer ${
             isWishlisted
               ? "text-red-500 dark:text-red-400 fill-red-500 dark:fill-red-400 hover:bg-white dark:hover:bg-gray-700"
               : "text-gray-700 dark:text-gray-300 hover:text-red-500 dark:hover:text-red-400 hover:bg-white dark:hover:bg-gray-700"
@@ -87,27 +87,27 @@ const ProductCard = ({ product, containerClassName }: ProductCardProps) => {
       </div>
       <Link href={`/product/${product.id}`} prefetch={true}>
         <div className="pt-3 sm:pt-4 text-left cursor-pointer">
-          <p className="font-bold text-xs sm:text-sm text-gray-800 dark:text-white">
+          <p className="font-bold text-xs sm:text-sm text-gray-800 dark:text-white glossy-text-strong">
             {product.store?.name || "Reluv"}
           </p>
-          <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 truncate mt-0.5">
+          <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 truncate mt-0.5 glossy-text">
             {product.name}
           </p>
           {firstVariant?.compareAtPrice ? (
             <div className="mt-1 flex items-baseline flex-wrap gap-x-1.5 sm:gap-x-2">
-              <p className="font-bold text-red-600 text-sm sm:text-base">
+              <p className="font-bold text-red-600 text-sm sm:text-base glossy-text-strong">
                 {formatPrice(firstVariant.price)}
               </p>
-              <p className="text-xs sm:text-sm text-gray-400 dark:text-gray-500 line-through">
+              <p className="text-xs sm:text-sm text-gray-400 dark:text-gray-500 line-through glossy-text">
                 {formatPrice(firstVariant.compareAtPrice)}
               </p>
             </div>
           ) : (
-            <p className="font-bold text-gray-900 dark:text-white mt-1 text-sm sm:text-base">
-              {firstVariant
-                ? formatPrice(firstVariant.price)
-                : "Price unavailable"}
-            </p>
+            <p className="font-bold text-gray-900 dark:text-white mt-1 text-sm sm:text-base glossy-text-strong">
+                {firstVariant
+                  ? formatPrice(firstVariant.price)
+                  : "Price unavailable"}
+              </p>
           )}
         </div>
       </Link>

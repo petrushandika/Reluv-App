@@ -67,38 +67,38 @@ const Footer = () => {
     "relative w-fit block text-gray-600 dark:text-gray-300 after:block after:content-[''] after:absolute after:h-[1px] after:bg-sky-600 dark:after:bg-sky-400 after:w-full after:scale-x-0 after:hover:scale-x-100 after:transition after:duration-300 after:origin-left";
 
   return (
-    <footer className="bg-white dark:bg-gray-900">
-      <div className="bg-gray-50 dark:bg-gray-800 border-t border-b border-gray-200 dark:border-gray-700">
+    <footer className="bg-white/95 dark:bg-gray-900/95 backdrop-blur-md border-t border-gray-200/50 dark:border-gray-700/50">
+      <div className="bg-gray-50/90 dark:bg-gray-800/90 backdrop-blur-sm border-t border-b border-gray-200/50 dark:border-gray-700/50">
         <div className="container mx-auto px-6 md:px-10 xl:px-20 2xl:px-40 py-12 md:py-12 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
           <div className="flex flex-col items-center space-y-2">
             <ShieldCheck className="w-8 h-8 text-sky-600 dark:text-sky-400" />
-            <h4 className="font-semibold text-gray-800 dark:text-white">
+            <h4 className="font-semibold text-gray-800 dark:text-white glossy-text-strong">
               Authenticity Guaranteed
             </h4>
-            <p className="text-xs text-gray-500 dark:text-gray-400">
+            <p className="text-xs text-gray-500 dark:text-gray-400 glossy-text">
               Every item is 100% verified by our experts.
             </p>
           </div>
           <div className="flex flex-col items-center space-y-2">
             <Truck className="w-8 h-8 text-sky-600 dark:text-sky-400" />
-            <h4 className="font-semibold text-gray-800 dark:text-white">
+            <h4 className="font-semibold text-gray-800 dark:text-white glossy-text-strong">
               Fast & Free Shipping
             </h4>
-            <p className="text-xs text-gray-500 dark:text-gray-400">
+            <p className="text-xs text-gray-500 dark:text-gray-400 glossy-text">
               On all domestic orders above IDR 1,000,000.
             </p>
           </div>
           <div className="flex flex-col items-center space-y-2">
             <Lock className="w-8 h-8 text-sky-600 dark:text-sky-400" />
-            <h4 className="font-semibold text-gray-800 dark:text-white">Secure Payments</h4>
-            <p className="text-xs text-gray-500 dark:text-gray-400">
+            <h4 className="font-semibold text-gray-800 dark:text-white glossy-text-strong">Secure Payments</h4>
+            <p className="text-xs text-gray-500 dark:text-gray-400 glossy-text">
               Your information is protected with us.
             </p>
           </div>
           <div className="flex flex-col items-center space-y-2">
             <Mail className="w-8 h-8 text-sky-600 dark:text-sky-400" />
-            <h4 className="font-semibold text-gray-800 dark:text-white">24/7 Support</h4>
-            <p className="text-xs text-gray-500 dark:text-gray-400">
+            <h4 className="font-semibold text-gray-800 dark:text-white glossy-text-strong">24/7 Support</h4>
+            <p className="text-xs text-gray-500 dark:text-gray-400 glossy-text">
               We are here to help you anytime.
             </p>
           </div>
@@ -108,26 +108,26 @@ const Footer = () => {
       <div className="container mx-auto px-6 md:px-10 xl:px-20 2xl:px-40 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
           <div className="space-y-4">
-            <h3 className="text-2xl font-bold text-sky-700 dark:text-sky-400">reluv</h3>
-            <p className="text-sm text-gray-600 dark:text-gray-300">
+            <h3 className="text-2xl font-bold text-sky-700 dark:text-sky-400 glossy-text-title">reluv</h3>
+            <p className="text-sm text-gray-600 dark:text-gray-300 glossy-text">
               Your premier destination for authentic, pre-loved luxury fashion.
             </p>
             <div className="flex space-x-3 pt-2">
               <a
                 href="#"
-                className="p-2 border border-gray-200 dark:border-gray-700 rounded-full text-gray-500 dark:text-gray-400 hover:bg-sky-600 dark:hover:bg-sky-500 hover:text-white hover:border-sky-600 dark:hover:border-sky-500 transition-all duration-300"
+                className="p-2 border border-gray-200/50 dark:border-gray-700/50 rounded-full text-gray-500 dark:text-gray-400 hover:bg-sky-600/90 dark:hover:bg-sky-500/90 backdrop-blur-sm hover:text-white hover:border-sky-600/50 dark:hover:border-sky-500/50 transition-all duration-300 shadow-sm"
               >
                 <Facebook size={18} />
               </a>
               <a
                 href="#"
-                className="p-2 border border-gray-200 dark:border-gray-700 rounded-full text-gray-500 dark:text-gray-400 hover:bg-sky-600 dark:hover:bg-sky-500 hover:text-white hover:border-sky-600 dark:hover:border-sky-500 transition-all duration-300"
+                className="p-2 border border-gray-200/50 dark:border-gray-700/50 rounded-full text-gray-500 dark:text-gray-400 hover:bg-sky-600/90 dark:hover:bg-sky-500/90 backdrop-blur-sm hover:text-white hover:border-sky-600/50 dark:hover:border-sky-500/50 transition-all duration-300 shadow-sm"
               >
                 <Instagram size={18} />
               </a>
               <a
                 href="#"
-                className="p-2 border border-gray-200 dark:border-gray-700 rounded-full text-gray-500 dark:text-gray-400 hover:bg-sky-600 dark:hover:bg-sky-500 hover:text-white hover:border-sky-600 dark:hover:border-sky-500 transition-all duration-300"
+                className="p-2 border border-gray-200/50 dark:border-gray-700/50 rounded-full text-gray-500 dark:text-gray-400 hover:bg-sky-600/90 dark:hover:bg-sky-500/90 backdrop-blur-sm hover:text-white hover:border-sky-600/50 dark:hover:border-sky-500/50 transition-all duration-300 shadow-sm"
               >
                 <Twitter size={18} />
               </a>
@@ -135,7 +135,7 @@ const Footer = () => {
           </div>
 
           <div className="space-y-4">
-            <h4 className="font-bold text-gray-800 dark:text-white uppercase tracking-wider">
+            <h4 className="font-bold text-gray-800 dark:text-white uppercase tracking-wider glossy-text-strong">
               Customer Service
             </h4>
             <ul className="space-y-3 text-sm">
@@ -163,7 +163,7 @@ const Footer = () => {
           </div>
 
           <div className="space-y-4">
-            <h4 className="font-bold text-gray-800 dark:text-white uppercase tracking-wider">
+            <h4 className="font-bold text-gray-800 dark:text-white uppercase tracking-wider glossy-text-strong">
               About Us
             </h4>
             <ul className="space-y-3 text-sm">
@@ -191,7 +191,7 @@ const Footer = () => {
           </div>
 
           <div className="space-y-4">
-            <h4 className="font-bold text-gray-800 dark:text-white uppercase tracking-wider">
+            <h4 className="font-bold text-gray-800 dark:text-white uppercase tracking-wider glossy-text-strong">
               Stay in the Loop
             </h4>
             <p className="text-sm text-gray-600 dark:text-gray-300">
@@ -202,11 +202,11 @@ const Footer = () => {
                 <input
                   type="email"
                   placeholder="Your email address"
-                  className="w-full bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 pl-4 pr-24 py-3 border border-gray-200 dark:border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-transparent transition-all"
+                  className="w-full bg-gray-100/80 dark:bg-gray-800/80 backdrop-blur-sm text-gray-800 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 pl-4 pr-24 py-3 border border-gray-200/50 dark:border-gray-700/50 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-transparent transition-all shadow-sm glossy-text"
                 />
                 <button
                   type="submit"
-                  className="absolute right-1.5 bg-sky-600 text-white font-semibold px-4 py-2 rounded-md hover:bg-sky-700 transition-colors"
+                  className="absolute right-1.5 bg-sky-600 text-white font-semibold px-4 py-2 rounded-md hover:bg-sky-700 transition-colors cursor-pointer"
                 >
                   Join
                 </button>

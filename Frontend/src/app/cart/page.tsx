@@ -27,26 +27,26 @@ const ConfirmationModal = ({
       onClick={onClose}
     >
       <div
-        className="bg-white dark:bg-gray-800 rounded-xl shadow-xl w-full max-w-sm sm:max-w-md p-6"
+        className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-lg rounded-xl shadow-xl w-full max-w-sm sm:max-w-md p-6 border border-gray-200/50 dark:border-gray-700/50"
         onClick={(e) => e.stopPropagation()}
       >
-        <h2 className="text-lg font-bold text-black dark:text-white mb-4">
+        <h2 className="text-lg font-bold text-black dark:text-white mb-4 glossy-text-title">
           Confirm Removal
         </h2>
-        <p className="text-gray-600 dark:text-gray-300 mb-8">
+        <p className="text-gray-600 dark:text-gray-300 mb-8 glossy-text">
           Are you sure you want to remove &ldquo;{itemName}&rdquo; from your
           cart?
         </p>
         <div className="flex justify-end items-center space-x-3">
           <button
             onClick={onClose}
-            className="px-5 py-2.5 rounded-md text-sm font-medium text-black dark:text-white border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+            className="px-5 py-2.5 rounded-md text-sm font-medium text-black dark:text-white border border-gray-300/50 dark:border-gray-600/50 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm hover:bg-gray-50/90 dark:hover:bg-gray-700/90 transition-colors shadow-sm glossy-text-strong"
           >
             Cancel
           </button>
           <button
             onClick={onConfirm}
-            className="px-5 py-2.5 rounded-md bg-red-600 dark:bg-red-500 text-sm font-medium text-white hover:bg-red-700 dark:hover:bg-red-600 transition-colors"
+            className="px-5 py-2.5 rounded-md bg-red-600/90 dark:bg-red-500/90 backdrop-blur-sm text-sm font-medium text-white hover:bg-red-700/90 dark:hover:bg-red-600/90 transition-colors shadow-md glossy-text-strong"
           >
             Remove
           </button>
@@ -90,20 +90,20 @@ const Cart = () => {
     return (
       <div className="min-h-screen bg-white dark:bg-gray-900">
         <div className="container mx-auto px-4 sm:px-6 md:px-10 xl:px-20 2xl:px-40 py-10 sm:py-12 md:py-14">
-          <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-black dark:text-white mb-4 sm:mb-6 md:mb-8">
+          <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-black dark:text-white mb-4 sm:mb-6 md:mb-8 glossy-text-title">
             Shopping Cart
           </h1>
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 sm:p-8 md:p-12 text-center border border-gray-200 dark:border-gray-700">
+          <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-md rounded-lg shadow-sm p-6 sm:p-8 md:p-12 text-center border border-gray-200/50 dark:border-gray-700/50">
             <ShoppingBag className="w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 text-gray-300 dark:text-gray-600 mx-auto mb-3 sm:mb-4" />
-            <h2 className="text-base sm:text-lg md:text-xl font-semibold text-black dark:text-white mb-2">
+            <h2 className="text-base sm:text-lg md:text-xl font-semibold text-black dark:text-white mb-2 glossy-text-strong">
               Your cart is empty
             </h2>
-            <p className="text-sm sm:text-base text-gray-500 dark:text-gray-400 mb-4 sm:mb-6">
+            <p className="text-sm sm:text-base text-gray-500 dark:text-gray-400 mb-4 sm:mb-6 glossy-text">
               Add some products to get started
             </p>
             <Link
               href="/"
-              className="bg-sky-500 dark:bg-sky-600 text-white px-5 sm:px-6 py-2.5 sm:py-3 rounded-md hover:bg-sky-600 dark:hover:bg-sky-700 transition-colors w-full sm:w-auto inline-block text-center cursor-pointer text-sm sm:text-base touch-manipulation"
+              className="bg-sky-500/90 dark:bg-sky-600/90 backdrop-blur-sm text-white px-5 sm:px-6 py-2.5 sm:py-3 rounded-md hover:bg-sky-600/90 dark:hover:bg-sky-700/90 transition-colors w-full sm:w-auto inline-block text-center cursor-pointer text-sm sm:text-base touch-manipulation shadow-md glossy-text-strong"
             >
               Continue Shopping
             </Link>
@@ -134,15 +134,15 @@ const Cart = () => {
       />
 
       <div className="container mx-auto px-4 sm:px-6 md:px-10 xl:px-20 2xl:px-40 py-10 sm:py-12 md:py-14">
-        <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-black dark:text-white mb-4 sm:mb-6 md:mb-8">
+        <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-black dark:text-white mb-4 sm:mb-6 md:mb-8 glossy-text-title">
           Shopping Cart
         </h1>
 
         <div className="flex flex-col lg:grid lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
           <div className="lg:col-span-2">
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+            <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-md rounded-lg shadow-sm border border-gray-200/50 dark:border-gray-700/50">
               <div className="p-4 md:p-6 border-b border-gray-200 dark:border-gray-700">
-                <h2 className="text-base sm:text-lg md:text-xl font-semibold text-sky-600 dark:text-sky-400 flex items-center gap-2 sm:gap-3">
+                <h2 className="text-base sm:text-lg md:text-xl font-semibold text-sky-600 dark:text-sky-400 flex items-center gap-2 sm:gap-3 glossy-text-strong">
                   <ShoppingBag className="w-5 h-5 sm:w-6 sm:h-6" /> Cart Items (
                   {cart.items.length})
                 </h2>
@@ -166,10 +166,10 @@ const Cart = () => {
                       <div className="flex-grow w-full">
                         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start space-y-2 sm:space-y-0">
                           <div className="flex-grow min-w-0">
-                            <p className="text-xs sm:text-sm font-medium text-sky-600 dark:text-sky-400">
+                            <p className="text-xs sm:text-sm font-medium text-sky-600 dark:text-sky-400 glossy-text-strong">
                               {item.variant.product.store?.name || "Reluv"}
                             </p>
-                            <h3 className="text-sm sm:text-base font-semibold text-black dark:text-white mt-1 line-clamp-2">
+                            <h3 className="text-sm sm:text-base font-semibold text-black dark:text-white mt-1 line-clamp-2 glossy-text-strong">
                               {item.variant.product.name}
                             </h3>
                             <div className="flex flex-wrap items-center gap-x-3 sm:gap-x-4 mt-1.5 sm:mt-2 text-xs sm:text-sm text-gray-500 dark:text-gray-400">
@@ -184,7 +184,7 @@ const Cart = () => {
 
                           <button
                             onClick={() => requestRemoveItem(item)}
-                            className="text-gray-400 dark:text-gray-500 hover:text-red-500 dark:hover:text-red-400 transition-colors self-start sm:self-auto"
+                            className="text-gray-400 dark:text-gray-500 hover:text-red-500 dark:hover:text-red-400 transition-colors self-start sm:self-auto cursor-pointer"
                             aria-label="Remove item"
                           >
                             <Trash2 className="w-4 h-4 md:w-5 md:h-5" />
@@ -198,7 +198,7 @@ const Cart = () => {
                                 {formatPrice(item.variant.compareAtPrice)}
                               </span>
                             )}
-                            <span className="text-sm sm:text-base md:text-lg font-bold text-black dark:text-white">
+                            <span className="text-sm sm:text-base md:text-lg font-bold text-black dark:text-white glossy-text-title">
                               {formatPrice(item.variant.price)}
                             </span>
                           </div>
@@ -218,7 +218,7 @@ const Cart = () => {
                                     requestRemoveItem(item);
                                   }
                                 }}
-                                className="p-1.5 sm:p-2 rounded-md border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 touch-manipulation"
+                                className="p-1.5 sm:p-2 rounded-md border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 touch-manipulation cursor-pointer"
                                 aria-label="Decrease quantity"
                               >
                                 <Minus className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-700 dark:text-gray-300" />
@@ -234,7 +234,7 @@ const Cart = () => {
                                     quantity: item.quantity + 1,
                                   })
                                 }
-                                className="p-1.5 sm:p-2 rounded-md border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 touch-manipulation"
+                                className="p-1.5 sm:p-2 rounded-md border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 touch-manipulation cursor-pointer"
                                 aria-label="Increase quantity"
                               >
                                 <Plus className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-700 dark:text-gray-300" />
@@ -251,7 +251,7 @@ const Cart = () => {
           </div>
 
           <div className="lg:col-span-1">
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-4 sm:p-5 md:p-6 lg:sticky lg:top-4 border border-gray-200 dark:border-gray-700">
+            <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-md rounded-lg shadow-sm p-4 sm:p-5 md:p-6 lg:sticky lg:top-4 border border-gray-200/50 dark:border-gray-700/50">
               <h2 className="text-base sm:text-lg font-semibold text-black dark:text-white mb-3 sm:mb-4">
                 Order Summary
               </h2>

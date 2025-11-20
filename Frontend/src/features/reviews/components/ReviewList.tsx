@@ -67,14 +67,16 @@ const ReviewList = () => {
     <div className="w-full bg-white dark:bg-gray-900 py-8 md:py-12 lg:py-16">
       <div className="container mx-auto px-6 md:px-10 xl:px-20 2xl:px-40">
         <div className="mb-10 md:mb-12">
-          <h2 className="text-3xl md:text-4xl font-semibold text-sky-600 dark:text-sky-400">
+          <h2 className="text-3xl md:text-4xl font-semibold text-sky-600 dark:text-sky-400 glossy-text-title">
             What{" "}
             <span className="relative inline-block">
               <span className="relative z-10">Everyone</span>
               <span className="absolute left-0 bottom-0 w-full h-2 bg-sky-200/70 dark:bg-sky-800/70 -z-0 -mb-1"></span>
             </span>{" "}
             is Saying About{" "}
-            <span className="text-sky-600 dark:text-sky-400 font-bold">reluv</span>
+            <span className="text-sky-600 dark:text-sky-400 font-bold">
+              reluv
+            </span>
           </h2>
         </div>
 
@@ -91,7 +93,7 @@ const ReviewList = () => {
         </div>
 
         <div className="text-center mt-12">
-          <button className="bg-white dark:bg-gray-800 text-sky-600 dark:text-sky-400 font-semibold py-3 px-8 border border-sky-600 dark:border-sky-400 rounded-md hover:bg-sky-600 dark:hover:bg-sky-500 hover:text-white transition-all duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:ring-opacity-50">
+          <button className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm text-sky-600 dark:text-sky-400 font-semibold py-3 px-8 border border-sky-600/50 dark:border-sky-400/50 rounded-md hover:bg-sky-600/90 dark:hover:bg-sky-500/90 hover:text-white transition-all duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:ring-opacity-50 shadow-md hover:shadow-lg">
             More About reluv
           </button>
         </div>

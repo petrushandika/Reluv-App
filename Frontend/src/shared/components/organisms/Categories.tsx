@@ -110,9 +110,11 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ category }) => {
           rounded-2xl
           flex flex-col items-center justify-center
           transition-all duration-300
-          hover:scale-105 hover:shadow-lg hover:shadow-gray-200
+          hover:scale-105 hover:shadow-lg hover:shadow-gray-200/50
           group-hover:border-opacity-60
           relative overflow-hidden
+          backdrop-blur-sm
+          shadow-md
         `}
         >
           <div className="absolute inset-0 opacity-5">

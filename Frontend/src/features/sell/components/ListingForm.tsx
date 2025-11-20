@@ -62,7 +62,7 @@ const ListingForm = ({
   return (
     <form
       onSubmit={handleFormSubmit}
-      className="border border-gray-200 dark:border-gray-700 p-6 rounded-lg space-y-6 bg-white dark:bg-gray-800"
+      className="border border-gray-200 dark:border-gray-700 p-6 rounded-lg space-y-6 bg-white dark:bg-gray-800 shadow-sm"
     >
       <CategorySelector
         selectedCategoryId={listingData.categoryId}
@@ -87,7 +87,7 @@ const ListingForm = ({
               value={listingData.name}
               onChange={handleInputChange}
               placeholder="e.g. Vintage Leather Handbag"
-              className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 dark:focus:bg-gray-700 transition-colors duration-200 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
+              className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
               required
             />
           </div>
@@ -137,7 +137,7 @@ const ListingForm = ({
                   value={listingData.conditionNote}
                   onChange={handleInputChange}
                   placeholder="e.g. Slight scratch on the buckle"
-                  className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 dark:focus:bg-gray-700 transition-colors duration-200 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
+                  className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
                 />
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -155,7 +155,7 @@ const ListingForm = ({
                     value={listingData.price}
                     onChange={handleInputChange}
                     placeholder="0"
-                    className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 dark:focus:bg-gray-700 transition-colors duration-200 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
+                    className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
                     required
                   />
                 </div>
@@ -174,7 +174,7 @@ const ListingForm = ({
                     onChange={handleInputChange}
                     placeholder="1"
                     min="1"
-                    className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
+                    className="w-full px-4 py-3 bg-gray-50/80 dark:bg-gray-700/80 backdrop-blur-sm border border-gray-300/50 dark:border-gray-600/50 rounded-lg focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 shadow-sm glossy-text"
                   />
                 </div>
               </div>
@@ -204,7 +204,7 @@ const ListingForm = ({
                   onFocus={() => setIsSizeOpen(true)}
                   onBlur={() => setIsSizeOpen(false)}
                   onMouseDown={() => setIsSizeOpen(!isSizeOpen)}
-                  className="w-full px-4 py-3 pr-10 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 dark:focus:bg-gray-700 appearance-none cursor-pointer transition-all text-gray-900 dark:text-white"
+                  className="w-full px-4 py-3 pr-10 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 appearance-none cursor-pointer transition-all text-gray-900 dark:text-white"
                 >
                   <option value="">Select a size</option>
                   {sizeOptions.map((s) => (
@@ -252,7 +252,7 @@ const ListingForm = ({
                   onFocus={() => setIsColorOpen(true)}
                   onBlur={() => setIsColorOpen(false)}
                   onMouseDown={() => setIsColorOpen(!isColorOpen)}
-                  className="w-full px-4 py-3 pr-10 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 dark:focus:bg-gray-700 appearance-none cursor-pointer transition-all text-gray-900 dark:text-white"
+                  className="w-full px-4 py-3 pr-10 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 appearance-none cursor-pointer transition-all text-gray-900 dark:text-white"
                 >
                   <option value="">Select a color</option>
                   {colorOptions.map((c) => (
@@ -294,7 +294,7 @@ const ListingForm = ({
               onChange={handleInputChange}
               rows={4}
               placeholder="Describe your item in detail..."
-              className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 dark:focus:bg-gray-700 transition-colors duration-200 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
+              className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
             />
           </div>
 

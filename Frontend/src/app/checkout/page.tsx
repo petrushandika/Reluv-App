@@ -398,7 +398,7 @@ const Checkout = () => {
           onChange={onChange}
           className={`block w-full ${
             Icon ? "pl-10" : "pl-4"
-          } pr-3 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 dark:focus:bg-gray-800 transition-colors duration-200 placeholder-gray-400 dark:placeholder-gray-500`}
+          } pr-3 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200 placeholder-gray-400 dark:placeholder-gray-500`}
           placeholder={placeholder}
         />
       </div>
@@ -467,7 +467,7 @@ const Checkout = () => {
             type="button"
             onClick={() => !disabled && setIsOpen(!isOpen)}
             disabled={disabled}
-            className="w-full flex justify-between items-center text-left px-4 pr-12 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200 disabled:bg-gray-50 dark:disabled:bg-gray-700 disabled:cursor-not-allowed"
+            className="w-full flex justify-between items-center text-left px-4 pr-12 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200 disabled:bg-gray-50 dark:disabled:bg-gray-700 disabled:cursor-not-allowed cursor-pointer"
           >
             <span
               className={
@@ -583,7 +583,7 @@ const Checkout = () => {
             type="button"
             onClick={() => !disabled && setIsOpen(!isOpen)}
             disabled={disabled}
-            className="w-full flex justify-between items-center text-left px-4 pr-12 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200 disabled:bg-gray-50 dark:disabled:bg-gray-700 disabled:cursor-not-allowed"
+            className="w-full flex justify-between items-center text-left px-4 pr-12 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200 disabled:bg-gray-50 dark:disabled:bg-gray-700 disabled:cursor-not-allowed cursor-pointer"
           >
             <span
               className={
@@ -667,7 +667,7 @@ const Checkout = () => {
           onFocus={() => setIsOpen(true)}
           onBlur={() => setIsOpen(false)}
           onMouseDown={() => setIsOpen(!isOpen)}
-          className="block w-full pl-4 pr-12 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200 placeholder-gray-400 dark:placeholder-gray-500 disabled:bg-gray-50 dark:disabled:bg-gray-700 disabled:cursor-not-allowed appearance-none cursor-pointer"
+          className="block w-full pl-4 pr-12 py-3 border border-gray-300/50 dark:border-gray-600/50 rounded-lg bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200 placeholder-gray-400 dark:placeholder-gray-500 disabled:bg-gray-50/80 dark:disabled:bg-gray-700/80 disabled:cursor-not-allowed appearance-none cursor-pointer shadow-sm glossy-text"
         >
           <option value="" disabled>
             {placeholder || `Select ${label}`}
@@ -692,7 +692,7 @@ const Checkout = () => {
   return (
     <>
       {isLoading && (
-        <div className="fixed inset-0 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm z-50 flex items-center justify-center">
+        <div className="fixed inset-0 bg-white dark:bg-gray-900 z-50 flex items-center justify-center">
           <div className="w-12 h-12 border-4 border-sky-500 border-t-transparent rounded-full animate-spin" />
         </div>
       )}
@@ -702,7 +702,7 @@ const Checkout = () => {
             Shipping Details
           </h1>
           <div className="flex flex-col lg:grid lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
-            <div className="lg:col-span-2 border border-gray-200 dark:border-gray-700 rounded-lg p-4 sm:p-6 md:p-8 bg-white dark:bg-gray-800">
+            <div className="lg:col-span-2 border border-gray-200 dark:border-gray-700 rounded-lg p-4 sm:p-6 md:p-8 bg-white dark:bg-gray-800 shadow-sm">
               <form className="space-y-6 sm:space-y-8">
                 <div className="space-y-4 sm:space-y-6">
                   <h2 className="text-base sm:text-lg md:text-xl font-semibold text-sky-600 dark:text-sky-400 flex items-center gap-2 sm:gap-3">
@@ -1057,7 +1057,7 @@ const Checkout = () => {
               </h3>
               <button
                 onClick={() => setIsVoucherModalOpen(false)}
-                className="p-2 -m-2 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full"
+                className="p-2 -m-2 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full cursor-pointer"
               >
                 <X size={20} />
               </button>

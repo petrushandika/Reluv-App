@@ -101,7 +101,7 @@ const Banner = () => {
   ];
 
   return (
-    <div className="relative bg-white dark:bg-gray-900 overflow-hidden">
+    <div className="relative bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm overflow-hidden">
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-sky-50 dark:bg-sky-900/20 rounded-full blur-3xl opacity-40"></div>
         <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-50 dark:bg-blue-900/20 rounded-full blur-3xl opacity-40"></div>
@@ -127,7 +127,7 @@ const Banner = () => {
                         </div>
 
                         <div className="space-y-2">
-                          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white leading-tight">
+                          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white leading-tight glossy-text-title">
                             {slide.title}
                             <span className="block text-sky-600 dark:text-sky-400 mt-1">
                               {slide.subtitle}
@@ -135,7 +135,7 @@ const Banner = () => {
                           </h1>
                         </div>
 
-                        <p className="text-base sm:text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
+                        <p className="text-base sm:text-lg text-gray-600 dark:text-gray-300 leading-relaxed glossy-text">
                           {slide.description}
                         </p>
 
@@ -145,7 +145,7 @@ const Banner = () => {
                             aria-label="Cart"
                             className="flex-1 sm:flex-none min-w-0"
                           >
-                            <button className="w-full sm:w-auto inline-flex items-center justify-center px-3 sm:px-6 py-2 sm:py-3 bg-sky-600 text-white text-sm sm:text-base font-semibold rounded-xl hover:bg-sky-700 transition-all duration-200 shadow-lg hover:shadow-xl cursor-pointer">
+                            <button className="w-full sm:w-auto inline-flex items-center justify-center px-3 sm:px-6 py-2 sm:py-3 bg-sky-600/90 text-white text-sm sm:text-base font-semibold rounded-xl hover:bg-sky-700/90 backdrop-blur-sm transition-all duration-200 shadow-lg hover:shadow-xl cursor-pointer glossy-text-strong">
                               <ShoppingBag className="mr-1.5 sm:mr-2 w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />
                               <span className="truncate">{slide.cta}</span>
                             </button>
@@ -156,7 +156,7 @@ const Banner = () => {
                             aria-label="Wishlist"
                             className="flex-1 sm:flex-none min-w-0"
                           >
-                            <button className="w-full sm:w-auto inline-flex items-center justify-center px-3 sm:px-6 py-2 sm:py-3 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 text-sm sm:text-base font-semibold rounded-xl border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-200 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer">
+                            <button className="w-full sm:w-auto inline-flex items-center justify-center px-3 sm:px-6 py-2 sm:py-3 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm text-gray-700 dark:text-gray-300 text-sm sm:text-base font-semibold rounded-xl border border-gray-200/50 dark:border-gray-700/50 hover:border-gray-300/50 dark:hover:border-gray-600/50 transition-all duration-200 hover:bg-gray-50/90 dark:hover:bg-gray-700/90 cursor-pointer shadow-md glossy-text-strong">
                               <Heart className="mr-1.5 sm:mr-2 w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />
                               <span className="truncate">Wishlist</span>
                             </button>
@@ -203,7 +203,7 @@ const Banner = () => {
                             </div>
                           </div>
 
-                          <div className="absolute -bottom-4 -right-4 bg-white dark:bg-gray-800 rounded-xl shadow-lg p-3 border border-gray-100 dark:border-gray-700">
+                          <div className="absolute -bottom-4 -right-4 bg-white/90 dark:bg-gray-800/90 backdrop-blur-md rounded-xl shadow-lg p-3 border border-gray-100/50 dark:border-gray-700/50">
                             <div className="flex items-center gap-2">
                               <ShoppingBag className="w-5 h-5 text-sky-600 dark:text-sky-400" />
                               <div>

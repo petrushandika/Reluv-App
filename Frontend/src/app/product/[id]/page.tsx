@@ -163,7 +163,7 @@ const ProductDetail = () => {
         <div className="container mx-auto px-4 sm:px-6 md:px-10 xl:px-20 2xl:px-40 py-10 sm:py-12 md:py-14">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-16">
             <div className="space-y-4 lg:sticky top-8 self-start">
-              <div className="relative bg-gray-50 dark:bg-gray-800 rounded-lg overflow-hidden">
+              <div className="relative bg-gray-50/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-lg overflow-hidden border border-gray-200/30 dark:border-gray-700/30 shadow-sm">
                 <div
                   ref={imageRef}
                   className="aspect-square relative overflow-hidden cursor-zoom-in"
@@ -210,7 +210,7 @@ const ProductDetail = () => {
                   <button
                     onClick={prevImage}
                     onMouseEnter={() => setIsHovering(false)}
-                    className="hidden md:flex absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 dark:bg-gray-800/80 hover:bg-white dark:hover:bg-gray-700 rounded-full p-2 shadow-md transition-all duration-200 z-10 touch-manipulation items-center justify-center"
+                    className="hidden md:flex absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 dark:bg-gray-800/80 hover:bg-white dark:hover:bg-gray-700 rounded-full p-2 shadow-md transition-all duration-200 z-10 touch-manipulation items-center justify-center cursor-pointer"
                     aria-label="Previous image"
                   >
                     <ChevronLeft className="w-5 h-5 text-gray-700 dark:text-white" />
@@ -218,7 +218,7 @@ const ProductDetail = () => {
                   <button
                     onClick={nextImage}
                     onMouseEnter={() => setIsHovering(false)}
-                    className="hidden md:flex absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 dark:bg-gray-800/80 hover:bg-white dark:hover:bg-gray-700 rounded-full p-2 shadow-md transition-all duration-200 z-10 touch-manipulation items-center justify-center"
+                    className="hidden md:flex absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 dark:bg-gray-800/80 hover:bg-white dark:hover:bg-gray-700 rounded-full p-2 shadow-md transition-all duration-200 z-10 touch-manipulation items-center justify-center cursor-pointer"
                     aria-label="Next image"
                   >
                     <ChevronRight className="w-5 h-5 text-gray-700 dark:text-white" />
@@ -229,7 +229,7 @@ const ProductDetail = () => {
                     <button
                       key={index}
                       onClick={() => setSelectedImageIndex(index)}
-                      className={`w-2 h-2 rounded-full transition-all duration-200 ${
+                      className={`w-2 h-2 rounded-full transition-all duration-200 cursor-pointer ${
                         index === selectedImageIndex
                           ? "bg-sky-600"
                           : "bg-gray-300 dark:bg-gray-600"
@@ -243,7 +243,7 @@ const ProductDetail = () => {
                   <button
                     key={index}
                     onClick={() => setSelectedImageIndex(index)}
-                    className={`aspect-square bg-gray-50 dark:bg-gray-800 rounded-lg overflow-hidden border-2 transition-all duration-200 ${
+                    className={`aspect-square bg-gray-50/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-lg overflow-hidden border-2 transition-all duration-200 shadow-sm cursor-pointer ${
                       index === selectedImageIndex
                         ? "border-sky-600 dark:border-sky-400"
                         : "border-transparent hover:border-gray-300 dark:hover:border-gray-600"
@@ -257,7 +257,7 @@ const ProductDetail = () => {
                   </button>
                 ))}
               </div>
-              <div className="flex items-center space-x-3 bg-gray-50 dark:bg-gray-800 rounded-lg p-4">
+              <div className="flex items-center space-x-3 bg-gray-50/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-lg p-4 border border-gray-200/30 dark:border-gray-700/30 shadow-sm">
                 <div className="w-12 h-12 bg-yellow-100 dark:bg-yellow-900/30 rounded-full flex items-center justify-center">
                   <div className="w-6 h-6 bg-yellow-400 dark:bg-yellow-500 rounded-full flex items-center justify-center">
                     <span className="text-xs font-bold text-yellow-800 dark:text-yellow-200">
@@ -281,10 +281,10 @@ const ProductDetail = () => {
             </div>
             <div className="space-y-4 sm:space-y-6">
               <div>
-                <h1 className="text-base sm:text-lg md:text-xl font-bold text-gray-800 dark:text-white mb-1 sm:mb-2">
+                <h1 className="text-base sm:text-lg md:text-xl font-bold text-gray-800 dark:text-white mb-1 sm:mb-2 glossy-text-title">
                   {product.store?.name || "Reluv"}
                 </h1>
-                <h2 className="text-xl sm:text-2xl lg:text-3xl font-light text-gray-800 dark:text-white leading-tight">
+                <h2 className="text-xl sm:text-2xl lg:text-3xl font-light text-gray-800 dark:text-white leading-tight glossy-text-strong">
                   {product.name}
                 </h2>
               </div>
@@ -292,7 +292,7 @@ const ProductDetail = () => {
                 <div className="flex items-baseline flex-wrap gap-2 sm:gap-3">
                   {selectedVariant.compareAtPrice ? (
                     <>
-                      <span className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
+                      <span className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white glossy-text-title">
                         {formatPrice(selectedVariant.price)}
                       </span>
                       <span className="text-base sm:text-lg text-gray-400 dark:text-gray-500 line-through">
@@ -344,7 +344,7 @@ const ProductDetail = () => {
                       <button
                         key={variant.id}
                         onClick={() => setSelectedVariantIndex(index)}
-                        className={`relative w-12 h-12 sm:w-16 sm:h-16 rounded-lg border-2 overflow-hidden transition-all duration-200 ${
+                        className={`relative w-12 h-12 sm:w-16 sm:h-16 rounded-lg border-2 overflow-hidden transition-all duration-200 cursor-pointer ${
                           index === selectedVariantIndex
                             ? "border-sky-600 dark:border-sky-400"
                             : "border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600"
@@ -369,7 +369,7 @@ const ProductDetail = () => {
                   <p className="text-sm text-gray-700 dark:text-gray-300">
                     Try virtual try-on and see size on the app to see how the
                     product fits you.{" "}
-                    <button className="text-sky-600 dark:text-sky-400 font-medium hover:underline">
+                    <button className="text-sky-600 dark:text-sky-400 font-medium hover:underline cursor-pointer">
                       Learn more
                     </button>
                   </p>
@@ -382,7 +382,7 @@ const ProductDetail = () => {
                 <div className="flex items-center border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-800">
                   <button
                     onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-                    className="px-3 sm:px-4 py-2.5 sm:py-3 text-sky-600 dark:text-sky-400 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-l-lg transition-colors touch-manipulation"
+                    className="px-3 sm:px-4 py-2.5 sm:py-3 text-sky-600 dark:text-sky-400 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-l-lg transition-colors touch-manipulation cursor-pointer"
                     aria-label="Decrease quantity"
                   >
                     <Minus className="w-4 h-4" />
@@ -394,7 +394,7 @@ const ProductDetail = () => {
                     onClick={() =>
                       setQuantity((q) => Math.min(selectedVariant.stock, q + 1))
                     }
-                    className="px-3 sm:px-4 py-2.5 sm:py-3 text-sky-600 dark:text-sky-400 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-r-lg transition-colors touch-manipulation"
+                    className="px-3 sm:px-4 py-2.5 sm:py-3 text-sky-600 dark:text-sky-400 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-r-lg transition-colors touch-manipulation cursor-pointer"
                     aria-label="Increase quantity"
                   >
                     <Plus className="w-4 h-4" />
@@ -405,13 +405,13 @@ const ProductDetail = () => {
                 <button
                   onClick={handleAddToCart}
                   disabled={isAdding}
-                  className="w-full sm:w-auto flex-1 bg-white dark:bg-gray-800 border-2 border-sky-600 dark:border-sky-400 text-sky-600 dark:text-sky-400 font-semibold py-3 sm:py-3 px-4 sm:px-6 rounded-lg transition-colors hover:bg-sky-50 dark:hover:bg-sky-900/20 text-sm sm:text-base cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation"
+                  className="w-full sm:w-auto flex-1 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm border-2 border-sky-600/50 dark:border-sky-400/50 text-sky-600 dark:text-sky-400 font-semibold py-3 sm:py-3 px-4 sm:px-6 rounded-lg transition-colors hover:bg-sky-50/90 dark:hover:bg-sky-900/30 text-sm sm:text-base cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation shadow-md glossy-text-strong"
                 >
                   {isAdding ? "Adding..." : "Add To Cart"}
                 </button>
                 <button
                   onClick={handleBuyNow}
-                  className="w-full sm:w-auto flex-1 bg-sky-600 dark:bg-sky-500 hover:bg-sky-700 dark:hover:bg-sky-600 text-white font-semibold py-3 sm:py-3 px-4 sm:px-6 rounded-lg transition-transform text-sm sm:text-base cursor-pointer touch-manipulation"
+                  className="w-full sm:w-auto flex-1 bg-sky-600/90 dark:bg-sky-500/90 backdrop-blur-sm hover:bg-sky-700/90 dark:hover:bg-sky-600/90 text-white font-semibold py-3 sm:py-3 px-4 sm:px-6 rounded-lg transition-transform text-sm sm:text-base cursor-pointer touch-manipulation shadow-md glossy-text-strong"
                 >
                   Buy Now
                 </button>
@@ -506,7 +506,7 @@ const ProductDetail = () => {
                 <button className="text-sky-600 dark:text-sky-400 font-medium text-xs sm:text-sm mt-2 hover:underline">
                   Read More
                 </button>
-                <div className="mt-4 sm:mt-6 p-3 sm:p-4 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800">
+                <div className="mt-4 sm:mt-6 p-3 sm:p-4 border border-gray-200/50 dark:border-gray-700/50 rounded-lg bg-white/90 dark:bg-gray-800/90 backdrop-blur-md shadow-sm">
                   <div className="flex items-center space-x-3 sm:space-x-4">
                     <img
                       src={
@@ -522,7 +522,7 @@ const ProductDetail = () => {
                       </p>
                     </div>
                   </div>
-                  <button className="mt-3 w-full bg-white dark:bg-gray-800 text-sky-600 dark:text-sky-400 border border-sky-600 dark:border-sky-400 font-semibold py-2.5 sm:py-2 px-4 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-xs sm:text-sm cursor-pointer touch-manipulation">
+                  <button className="mt-3 w-full bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm text-sky-600 dark:text-sky-400 border border-sky-600/50 dark:border-sky-400/50 font-semibold py-2.5 sm:py-2 px-4 rounded-lg hover:bg-gray-50/90 dark:hover:bg-gray-700/90 transition-colors text-xs sm:text-sm cursor-pointer touch-manipulation shadow-sm glossy-text-strong">
                     See All Products
                   </button>
                 </div>

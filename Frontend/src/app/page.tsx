@@ -19,7 +19,7 @@ export default function Home() {
   } = useProduct();
 
   return (
-    <div className="bg-white dark:bg-gray-900 min-h-screen">
+    <div className="bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm min-h-screen">
       <Banner />
       <Categories />
       <ProductList
