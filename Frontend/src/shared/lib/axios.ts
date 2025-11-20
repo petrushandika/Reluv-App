@@ -40,7 +40,6 @@ api.interceptors.response.use(
         }
       }
     }
-    // Silently handle errors without logging
     return Promise.reject(error);
   }
 );

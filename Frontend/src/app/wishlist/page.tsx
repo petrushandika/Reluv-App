@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Heart, Trash2 } from "lucide-react";
 import { useWishlist } from "@/features/wishlist/hooks/useWishlist";
 import { WishlistItem } from "@/features/wishlist/types";
-import WishlistSkeleton from '@/shared/components/molecules/WishlistSkeleton';
+import WishlistSkeleton from "@/shared/components/molecules/WishlistSkeleton";
 
 const formatPrice = (price: number) => {
   return `Rp${new Intl.NumberFormat("id-ID").format(price)}`;
@@ -25,7 +25,7 @@ const Wishlist = () => {
   const handleRemoveItem = async (productId: number) => {
     setRemovingId(productId);
     try {
-      await removeItem(productId);
+      await removeItem({ productId: productId });
     } finally {
       setRemovingId(null);
     }

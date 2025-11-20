@@ -3,7 +3,7 @@
 import { useEffect, useMemo } from "react";
 import { useAuthStore } from "@/features/auth/store/auth.store";
 import { useWishlistStore } from "../store/wishlist.store";
-import { AddToWishlistPayload } from "../types";
+import { AddToWishlist, RemoveFromWishlist } from "../types";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
@@ -30,7 +30,7 @@ export const useWishlist = () => {
     return new Set(items.map((item) => item.productId));
   }, [items]);
 
-  const handleAddItem = async (data: AddToWishlistPayload) => {
+  const handleAddItem = async (data: AddToWishlist) => {
     if (!isAuthenticated()) {
       toast.error("Please sign in", {
         description: "You must sign in to add items to your wishlist.",
@@ -49,10 +49,10 @@ export const useWishlist = () => {
     }
   };
 
-  const handleRemoveItem = async (productId: number) => {
+  const handleRemoveItem = async (data: RemoveFromWishlist) => {
     const toastId = toast.loading("Removing from wishlist...");
     try {
-      await removeItem(productId);
+      await removeItem(data);
       toast.success("Item removed from wishlist", { id: toastId });
     } catch (error) {
       console.error("Failed to remove item from wishlist:", error);
@@ -60,8 +60,8 @@ export const useWishlist = () => {
     }
   };
 
-  const isInWishlist = (productId: number) => {
-    return wishlistProductIds.has(productId);
+  const isInWishlist = (data: AddToWishlist) => {
+    return wishlistProductIds.has(data.productId);
   };
 
   return {

@@ -48,7 +48,7 @@ const ResetForm = ({
 
   const getPasswordStrength = (password: string) => {
     let strength = 0;
-    if (password.length >= 8) strength++;
+    if (password.length >= 6) strength++;
     if (/[a-z]/.test(password)) strength++;
     if (/[A-Z]/.test(password)) strength++;
     if (/[0-9]/.test(password)) strength++;
@@ -96,7 +96,7 @@ const ResetForm = ({
                   required
                   value={formData.password}
                   onChange={handleInputChange}
-                  className="block w-full pl-10 pr-12 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200 placeholder-gray-400 dark:placeholder-gray-500"
+                  className="block w-full pl-10 pr-12 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 dark:focus:bg-gray-800 transition-colors duration-200 placeholder-gray-400 dark:placeholder-gray-500"
                   placeholder="Enter new password"
                 />
                 <button
@@ -149,7 +149,7 @@ const ResetForm = ({
                   required
                   value={formData.confirmPassword}
                   onChange={handleInputChange}
-                  className="block w-full pl-10 pr-12 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200 placeholder-gray-400 dark:placeholder-gray-500"
+                  className="block w-full pl-10 pr-12 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 dark:focus:bg-gray-800 transition-colors duration-200 placeholder-gray-400 dark:placeholder-gray-500"
                   placeholder="Confirm new password"
                 />
                 <button
@@ -195,17 +195,17 @@ const ResetForm = ({
               <ul className="space-y-1 text-sm text-gray-600 dark:text-gray-300">
                 <li
                   className={`flex items-center ${
-                    formData.password.length >= 8 ? "text-green-600 dark:text-green-400" : ""
+                    formData.password.length >= 6 ? "text-green-600 dark:text-green-400" : ""
                   }`}
                 >
                   <div
                     className={`w-2 h-2 rounded-full mr-2 ${
-                      formData.password.length >= 8
+                      formData.password.length >= 6
                         ? "bg-green-500"
                         : "bg-gray-300 dark:bg-gray-600"
                     }`}
                   ></div>
-                  At least 8 characters
+                  At least 6 characters
                 </li>
                 <li
                   className={`flex items-center ${

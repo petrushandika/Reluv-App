@@ -6,6 +6,7 @@ import { Minus, Plus, Trash2, ShoppingBag } from "lucide-react";
 import { useCart } from "@/features/cart/hooks/useCart";
 import { CartItem } from "@/features/cart/types";
 import Spinner from "@/shared/components/atoms/Spinner";
+import CartSkeleton from "@/shared/components/molecules/CartSkeleton";
 
 const ConfirmationModal = ({
   isOpen,

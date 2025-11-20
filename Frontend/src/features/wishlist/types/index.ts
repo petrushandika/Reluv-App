@@ -6,6 +6,10 @@ export interface WishlistItem {
   product: Product;
 }
 
-export interface AddToWishlistPayload {
+export interface AddToWishlist {
+  productId: number;
+}
+
+export interface RemoveFromWishlist {
   productId: number;
 }

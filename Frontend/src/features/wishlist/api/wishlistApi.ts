@@ -1,15 +1,15 @@
 "use client";
 
 import { api } from "@/shared/lib/axios";
-import { AddToWishlistPayload, WishlistItem } from "../types";
+import { AddToWishlist, WishlistItem } from "../types";
 
 export const getWishlist = async (): Promise<WishlistItem[]> => {
   const response = await api.get("/wishlist");
   return response.data;
 };
 
-export const addToWishlist = async (data: AddToWishlistPayload) => {
-  const response = await api.post("/wishlist", data);
+export const addToWishlist = async (data: AddToWishlist) => {
+  const response = await api.post(`/wishlist/${data.productId}`);
   return response.data;
 };
 

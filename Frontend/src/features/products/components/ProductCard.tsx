@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
-import React from 'react';
-import Link from 'next/link';
-import { Heart } from 'lucide-react';
-import { Product } from '@/features/products/types';
-import { useWishlist } from '@/features/wishlist/hooks/useWishlist';
+import React from "react";
+import Link from "next/link";
+import { Heart } from "lucide-react";
+import { Product } from "@/features/products/types";
+import { useWishlist } from "@/features/wishlist/hooks/useWishlist";
 
 const formatPrice = (price: number) => {
-  return `Rp${new Intl.NumberFormat('id-ID').format(price)}`;
+  return `Rp${new Intl.NumberFormat("id-ID").format(price)}`;
 };
 
 const isNewProduct = (createdAt: string) => {
@@ -24,7 +24,7 @@ interface ProductCardProps {
 
 const ProductCard = ({ product, containerClassName }: ProductCardProps) => {
   const { addItem, removeItem, isInWishlist } = useWishlist();
-  const isWishlisted = isInWishlist(product.id);
+  const isWishlisted = isInWishlist({ productId: product.id });
 
   const firstVariant =
     product.variants && product.variants.length > 0
@@ -33,20 +33,20 @@ const ProductCard = ({ product, containerClassName }: ProductCardProps) => {
   const imageUrl =
     product.images && product.images.length > 0
       ? product.images[0]
-      : 'https://placehold.co/400x400/e2e8f0/e2e8f0?text=Image';
+      : "https://placehold.co/400x400/e2e8f0/e2e8f0?text=Image";
 
   const handleWishlistToggle = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     if (isWishlisted) {
-      removeItem(product.id);
+      removeItem({ productId: product.id });
     } else {
       addItem({ productId: product.id });
     }
   };
 
   const defaultClasses =
-    'flex-grow-0 flex-shrink-0 w-1/2 md:w-1/3 lg:w-1/5 pl-4';
+    "flex-grow-0 flex-shrink-0 w-1/2 md:w-1/3 lg:w-1/5 pl-4";
 
   return (
     <div className={containerClassName || defaultClasses}>
@@ -74,7 +74,7 @@ const ProductCard = ({ product, containerClassName }: ProductCardProps) => {
         >
           <Heart
             className={`w-5 h-5 ${
-              isWishlisted ? 'text-red-500 fill-red-500' : ''
+              isWishlisted ? "text-red-500 fill-red-500" : ""
             }`}
           />
         </button>
@@ -82,7 +82,7 @@ const ProductCard = ({ product, containerClassName }: ProductCardProps) => {
       <Link href={`/product/${product.id}`} prefetch={true}>
         <div className="pt-3 sm:pt-4 text-left cursor-pointer">
           <p className="font-bold text-xs sm:text-sm text-gray-800 dark:text-white">
-            {product.store?.name || 'Reluv'}
+            {product.store?.name || "Reluv"}
           </p>
           <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 truncate mt-0.5">
             {product.name}
@@ -100,7 +100,7 @@ const ProductCard = ({ product, containerClassName }: ProductCardProps) => {
             <p className="font-bold text-gray-900 dark:text-white mt-1 text-sm sm:text-base">
               {firstVariant
                 ? formatPrice(firstVariant.price)
-                : 'Price unavailable'}
+                : "Price unavailable"}
             </p>
           )}
         </div>

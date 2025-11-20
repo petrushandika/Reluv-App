@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { WishlistItem, AddToWishlistPayload } from "../types";
+import { WishlistItem, AddToWishlist, RemoveFromWishlist } from "../types";
 import {
   getWishlist,
   addToWishlist,
@@ -10,8 +10,8 @@ interface WishlistState {
   items: WishlistItem[];
   isLoading: boolean;
   fetchWishlist: () => Promise<void>;
-  addItem: (data: AddToWishlistPayload) => Promise<void>;
-  removeItem: (productId: number) => Promise<void>;
+  addItem: (data: AddToWishlist) => Promise<void>;
+  removeItem: (data: RemoveFromWishlist) => Promise<void>;
   clearWishlist: () => void;
 }
 
@@ -60,14 +60,14 @@ export const useWishlistStore = create<WishlistState>((set, get) => ({
     }
   },
 
-  removeItem: async (productId) => {
+  removeItem: async (data) => {
     try {
       const currentItems = get().items;
       set({
-        items: currentItems.filter((item) => item.productId !== productId),
+        items: currentItems.filter((item) => item.productId !== data.productId),
       });
 
-      await removeFromWishlist(productId);
+      await removeFromWishlist(data.productId);
       await get().fetchWishlist();
     } catch (error) {
       await get().fetchWishlist();

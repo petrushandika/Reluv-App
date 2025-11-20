@@ -22,10 +22,14 @@ const Wishlist = () => {
   const { wishlistItems, isLoading, removeItem } = useWishlist();
   const [removingId, setRemovingId] = useState<number | null>(null);
 
-  const handleRemoveItem = async (productId: number) => {
+  const handleRemoveItem = async (e: React.MouseEvent, productId: number) => {
+    e.preventDefault();
+    e.stopPropagation();
     setRemovingId(productId);
     try {
       await removeItem(productId);
+    } catch (error) {
+      console.error("Failed to remove item:", error);
     } finally {
       setRemovingId(null);
     }
@@ -117,9 +121,10 @@ const Wishlist = () => {
                     )}
 
                     <button
-                      onClick={() => handleRemoveItem(product.id)}
+                      type="button"
+                      onClick={(e) => handleRemoveItem(e, product.id)}
                       disabled={removingId === product.id}
-                      className="absolute top-3 right-3 z-10 p-1.5 bg-white/60 backdrop-blur-sm rounded-full text-red-500 hover:bg-white transition-all duration-200 disabled:opacity-50"
+                      className="absolute top-3 right-3 z-20 p-1.5 bg-white/60 backdrop-blur-sm rounded-full text-red-500 hover:bg-white transition-all duration-200 disabled:opacity-50 cursor-pointer"
                       aria-label="Hapus dari wishlist"
                     >
                       {removingId === product.id ? (

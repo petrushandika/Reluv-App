@@ -13,7 +13,7 @@ const resetSchema = z
   .object({
     password: z
       .string()
-      .min(8, { message: "Password must be at least 8 characters long." }),
+      .min(6, { message: "Password must be at least 6 characters long." }),
     confirmPassword: z.string(),
   })
   .refine((data) => data.password === data.confirmPassword, {
@@ -60,6 +60,7 @@ const ResetComponent = () => {
       await resetPassword({
         token,
         newPassword: validationResult.data.password,
+        confirmNewPassword: validationResult.data.confirmPassword,
       });
       toast.success("Password Reset Successful!", {
         description: "You can now log in with your new password.",
