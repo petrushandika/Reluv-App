@@ -505,7 +505,7 @@ const ProfilePage = () => {
                 </div>
               </div>
 
-              <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 sm:p-6 mb-6 shadow-sm">
+              <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 sm:p-6 mb-6">
                 <div className="flex items-center justify-between mb-4 sm:mb-6">
                   <h2 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">
                     Personal Info
@@ -593,7 +593,7 @@ const ProfilePage = () => {
 
       {isEditPersonalInfoOpen && (
         <div
-          className="hidden lg:flex fixed inset-0 bg-gray-900/40 z-50 items-center justify-center p-4"
+          className="hidden lg:flex fixed inset-0 bg-gray-900/40 backdrop-blur-sm z-50 items-center justify-center p-4"
           onClick={handleCloseEditPersonalInfo}
         >
           <div
@@ -728,7 +728,7 @@ const ProfilePage = () => {
 
       {isEditAccountInfoOpen && (
         <div
-          className="fixed inset-0 bg-gray-900/40 z-50 flex flex-col justify-end lg:flex lg:items-center lg:justify-center lg:p-4"
+          className="fixed inset-0 bg-gray-900/40 backdrop-blur-sm z-50 flex flex-col justify-end lg:flex lg:items-center lg:justify-center lg:p-4"
           onClick={handleCloseEditAccountInfo}
         >
           <div

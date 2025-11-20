@@ -41,7 +41,7 @@ export function PublicRoute({ children }: RouteGuardProps) {
   if (!isHydrated) {
     return (
       <>
-        <div className="flex items-center justify-center min-h-screen fixed inset-0 bg-white dark:bg-gray-900 z-50">
+        <div className="flex items-center justify-center min-h-screen fixed inset-0 bg-white/90 dark:bg-gray-900/90 backdrop-blur-md z-50">
           <Spinner />
         </div>
         {children}

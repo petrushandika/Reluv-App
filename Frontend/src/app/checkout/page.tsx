@@ -692,7 +692,7 @@ const Checkout = () => {
   return (
     <>
       {isLoading && (
-        <div className="fixed inset-0 bg-white dark:bg-gray-900 z-50 flex items-center justify-center">
+        <div className="fixed inset-0 bg-white/90 dark:bg-gray-900/90 backdrop-blur-md z-50 flex items-center justify-center">
           <div className="w-12 h-12 border-4 border-sky-500 border-t-transparent rounded-full animate-spin" />
         </div>
       )}

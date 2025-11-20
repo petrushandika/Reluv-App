@@ -539,52 +539,56 @@ const Navbar = () => {
                 onMouseEnter={() => setIsProfileDropdownOpen(true)}
                 onMouseLeave={() => setIsProfileDropdownOpen(false)}
               >
-                <button className="flex items-center space-x-2 text-sm font-semibold hover:text-sky-600 dark:hover:text-sky-400 text-gray-800 dark:text-white transition-all duration-300">
+                <button className="flex items-center space-x-2 text-sm font-semibold hover:text-sky-600 dark:hover:text-sky-400 text-gray-800 dark:text-white transition-all duration-300 cursor-pointer">
                   <img
                     src={
                       user?.profile?.avatar ||
                       "https://res.cloudinary.com/dqcyabvc2/image/upload/v1753019800/user_nxnpv1.webp"
                     }
                     alt="User Avatar"
-                    className="w-7 h-7 rounded-full object-cover transition-all duration-300 hover:ring-2 hover:ring-sky-500 dark:hover:ring-sky-400"
+                    className="w-7 h-7 rounded-full object-cover transition-all duration-300 hover:ring-2 hover:ring-sky-500 dark:hover:ring-sky-400 cursor-pointer"
                   />
-                  <span>Hi, {formatUserName()}!</span>
+                  <span className="cursor-pointer">
+                    Hi, {formatUserName()}!
+                  </span>
                 </button>
                 {isProfileDropdownOpen && (
-                  <div className="absolute right-0 top-full mt-2 w-64 z-50 animate-in fade-in slide-in-from-top-2 duration-300">
-                    <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-md rounded-lg shadow-xl overflow-hidden border border-gray-200/50 dark:border-gray-700/50 transition-all duration-300">
-                      <div className="bg-sky-600 dark:bg-sky-700 px-6 py-5 relative">
-                        <div className="text-white">
-                          <h3 className="text-lg font-bold mb-1">
-                            {formatUserName() || "User"}
-                          </h3>
-                          <p className="text-sm text-gray-200">0 VP</p>
+                  <div className="absolute right-0 top-full w-64 z-50 animate-in fade-in slide-in-from-top-2 duration-300 pointer-events-auto">
+                    <div className="pt-2">
+                      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl overflow-hidden border border-gray-200 dark:border-gray-700 transition-all duration-300">
+                        <div className="bg-sky-600 dark:bg-sky-700 px-6 py-5 relative">
+                          <div className="text-white">
+                            <h3 className="text-lg font-bold mb-1">
+                              {formatUserName() || "User"}
+                            </h3>
+                            <p className="text-sm text-gray-200">0 VP</p>
+                          </div>
                         </div>
-                      </div>
 
-                      <div className="bg-white dark:bg-gray-800 py-2">
-                        <Link
-                          href="/profile/me"
-                          onClick={() => setIsMobileMenuOpen(false)}
-                          className="flex items-center px-6 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300 hover:pl-8"
-                        >
-                          <User className="w-5 h-5 mr-3 text-gray-600 dark:text-gray-400 transition-colors duration-300" />
-                          <span className="font-medium">My Profile</span>
-                        </Link>
-                        <Link
-                          href="/orders"
-                          className="flex items-center px-6 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300 hover:pl-8"
-                        >
-                          <ShoppingBag className="w-5 h-5 mr-3 text-gray-600 dark:text-gray-400 transition-colors duration-300" />
-                          <span className="font-medium">Order History</span>
-                        </Link>
-                        <button
-                          onClick={handleLogout}
-                          className="w-full text-left flex items-center px-6 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300 hover:pl-8"
-                        >
-                          <LogOut className="w-5 h-5 mr-3 text-gray-600 dark:text-gray-400 transition-colors duration-300" />
-                          <span className="font-medium">Sign Out</span>
-                        </button>
+                        <div className="bg-white dark:bg-gray-800 py-2">
+                          <Link
+                            href="/profile/me"
+                            onClick={() => setIsMobileMenuOpen(false)}
+                            className="flex items-center px-6 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300 hover:pl-8 cursor-pointer"
+                          >
+                            <User className="w-5 h-5 mr-3 text-gray-600 dark:text-gray-400 transition-colors duration-300" />
+                            <span className="font-medium">My Profile</span>
+                          </Link>
+                          <Link
+                            href="/orders"
+                            className="flex items-center px-6 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300 hover:pl-8 cursor-pointer"
+                          >
+                            <ShoppingBag className="w-5 h-5 mr-3 text-gray-600 dark:text-gray-400 transition-colors duration-300" />
+                            <span className="font-medium">Order History</span>
+                          </Link>
+                          <button
+                            onClick={handleLogout}
+                            className="w-full text-left flex items-center px-6 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300 hover:pl-8 cursor-pointer"
+                          >
+                            <LogOut className="w-5 h-5 mr-3 text-gray-600 dark:text-gray-400 transition-colors duration-300" />
+                            <span className="font-medium">Sign Out</span>
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </div>
