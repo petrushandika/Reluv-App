@@ -140,7 +140,7 @@ export class StoreService {
         total,
         page,
         limit,
-        lastPage: Math.ceil(total / limit),
+        totalPages: Math.ceil(total / limit),
       },
     };
   }
