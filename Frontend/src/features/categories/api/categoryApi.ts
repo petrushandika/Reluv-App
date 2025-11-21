@@ -1,6 +1,6 @@
 "use client";
 
-import { api } from "@/features/auth/api/authApi";
+import { api } from "@/shared/lib/axios";
 import { Category } from "../types";
 
 export const getCategories = async (): Promise<Category[]> => {

@@ -57,10 +57,13 @@ export const useSellProduct = () => {
           ? listingData.customColor
           : listingData.color;
 
+      const numericPrice = listingData.price.replace(/\./g, "");
+      const priceValue = parseInt(numericPrice, 10) || 0;
+
       const variantPayload: CreateVariantPayload = {
         size: finalSize || undefined,
         color: finalColor || undefined,
-        price: parseInt(listingData.price, 10) || 0,
+        price: priceValue,
         stock: Number(listingData.stock) || 1,
         condition: listingData.condition as Condition,
         conditionNote: listingData.conditionNote || undefined,

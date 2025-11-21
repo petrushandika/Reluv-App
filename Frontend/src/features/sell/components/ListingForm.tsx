@@ -1,9 +1,9 @@
 "use client";
 
 import React from "react";
-import { ChevronDown } from "lucide-react";
 import { ListingData, Condition } from "../types";
 import CategorySelector from "@/shared/components/molecules/CategorySelector";
+import CustomSelect from "@/shared/components/molecules/CustomSelect";
 
 const conditionOptions: Record<Condition, string> = {
   NEW: "New",
@@ -13,15 +13,23 @@ const conditionOptions: Record<Condition, string> = {
   POOR: "Poor",
 };
 
-const sizeOptions = ["S", "M", "L", "XL", "XXL", "OTHER"];
+const sizeOptions = [
+  { value: "S", label: "S" },
+  { value: "M", label: "M" },
+  { value: "L", label: "L" },
+  { value: "XL", label: "XL" },
+  { value: "XXL", label: "XXL" },
+  { value: "OTHER", label: "Another Size..." },
+];
+
 const colorOptions = [
-  "Red",
-  "Blue",
-  "Black",
-  "White",
-  "Green",
-  "Yellow",
-  "OTHER",
+  { value: "Red", label: "Red" },
+  { value: "Blue", label: "Blue" },
+  { value: "Black", label: "Black" },
+  { value: "White", label: "White" },
+  { value: "Green", label: "Green" },
+  { value: "Yellow", label: "Yellow" },
+  { value: "OTHER", label: "Another Color..." },
 ];
 
 interface ListingFormProps {
@@ -41,8 +49,19 @@ const ListingForm = ({
   handleSubmit,
   isLoading,
 }: ListingFormProps) => {
-  const [isSizeOpen, setIsSizeOpen] = React.useState(false);
-  const [isColorOpen, setIsColorOpen] = React.useState(false);
+  const formatPrice = (value: string): string => {
+    const numericValue = value.replace(/\./g, "");
+    if (!numericValue) return "";
+    const number = parseInt(numericValue, 10);
+    if (isNaN(number)) return "";
+    return number.toLocaleString("id-ID");
+  };
+
+  const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    const formattedValue = formatPrice(value);
+    setListingData((prev) => ({ ...prev, price: formattedValue }));
+  };
 
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -50,12 +69,13 @@ const ListingForm = ({
   };
 
   const isFormValid = () => {
+    const numericPrice = listingData.price.replace(/\./g, "");
     return (
       listingData.categoryId &&
       listingData.name.trim() &&
       listingData.condition &&
       listingData.price &&
-      parseFloat(listingData.price) > 0
+      parseFloat(numericPrice) > 0
     );
   };
 
@@ -148,16 +168,21 @@ const ListingForm = ({
                   >
                     Price (IDR) *
                   </label>
-                  <input
-                    type="number"
-                    id="price"
-                    name="price"
-                    value={listingData.price}
-                    onChange={handleInputChange}
-                    placeholder="0"
-                    className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
-                    required
-                  />
+                  <div className="relative">
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400">
+                      Rp
+                    </span>
+                    <input
+                      type="text"
+                      id="price"
+                      name="price"
+                      value={listingData.price}
+                      onChange={handlePriceChange}
+                      placeholder="0"
+                      className="w-full pl-12 pr-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
+                      required
+                    />
+                  </div>
                 </div>
                 <div>
                   <label
@@ -174,7 +199,7 @@ const ListingForm = ({
                     onChange={handleInputChange}
                     placeholder="1"
                     min="1"
-                    className="w-full px-4 py-3 bg-gray-50/80 dark:bg-gray-700/80 backdrop-blur-sm border border-gray-300/50 dark:border-gray-600/50 rounded-lg focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 shadow-sm glossy-text"
+                    className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
                   />
                 </div>
               </div>
@@ -182,102 +207,36 @@ const ListingForm = ({
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label
-                htmlFor="size"
-                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
-              >
-                Size (Optional)
-              </label>
-              <div className="relative">
-                <select
-                  id="size"
-                  name="size"
-                  value={listingData.size}
-                  onChange={(e) => {
-                    setListingData((prev) => ({
-                      ...prev,
-                      size: e.target.value,
-                    }));
-                    setIsSizeOpen(false);
-                  }}
-                  onFocus={() => setIsSizeOpen(true)}
-                  onBlur={() => setIsSizeOpen(false)}
-                  onMouseDown={() => setIsSizeOpen(!isSizeOpen)}
-                  className="w-full px-4 py-3 pr-10 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 appearance-none cursor-pointer transition-all text-gray-900 dark:text-white"
-                >
-                  <option value="">Select a size</option>
-                  {sizeOptions.map((s) => (
-                    <option key={s} value={s}>
-                      {s === "OTHER" ? "Another Size..." : s}
-                    </option>
-                  ))}
-                </select>
-                <ChevronDown
-                  className={`absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 dark:text-gray-500 pointer-events-none transition-transform duration-200 ${
-                    isSizeOpen ? "rotate-180" : ""
-                  }`}
-                />
-              </div>
-              {listingData.size === "OTHER" && (
-                <input
-                  type="text"
-                  name="customSize"
-                  value={listingData.customSize}
-                  onChange={handleInputChange}
-                  placeholder="Enter custom size"
-                  className="mt-2 w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
-                />
-              )}
-            </div>
-            <div>
-              <label
-                htmlFor="color"
-                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
-              >
-                Color (Optional)
-              </label>
-              <div className="relative">
-                <select
-                  id="color"
-                  name="color"
-                  value={listingData.color}
-                  onChange={(e) => {
-                    setListingData((prev) => ({
-                      ...prev,
-                      color: e.target.value,
-                    }));
-                    setIsColorOpen(false);
-                  }}
-                  onFocus={() => setIsColorOpen(true)}
-                  onBlur={() => setIsColorOpen(false)}
-                  onMouseDown={() => setIsColorOpen(!isColorOpen)}
-                  className="w-full px-4 py-3 pr-10 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 appearance-none cursor-pointer transition-all text-gray-900 dark:text-white"
-                >
-                  <option value="">Select a color</option>
-                  {colorOptions.map((c) => (
-                    <option key={c} value={c}>
-                      {c === "OTHER" ? "Another Color..." : c}
-                    </option>
-                  ))}
-                </select>
-                <ChevronDown
-                  className={`absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 dark:text-gray-500 pointer-events-none transition-transform duration-200 ${
-                    isColorOpen ? "rotate-180" : ""
-                  }`}
-                />
-              </div>
-              {listingData.color === "OTHER" && (
-                <input
-                  type="text"
-                  name="customColor"
-                  value={listingData.customColor}
-                  onChange={handleInputChange}
-                  placeholder="Enter custom color"
-                  className="mt-2 w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
-                />
-              )}
-            </div>
+            <CustomSelect
+              label="Size (Optional)"
+              placeholder="Select a size"
+              options={sizeOptions}
+              value={listingData.size}
+              onChange={(value) =>
+                setListingData((prev) => ({ ...prev, size: value }))
+              }
+              allowCustom={true}
+              customPlaceholder="Enter custom size"
+              onCustomChange={(value) =>
+                setListingData((prev) => ({ ...prev, customSize: value }))
+              }
+              customValue={listingData.customSize}
+            />
+            <CustomSelect
+              label="Color (Optional)"
+              placeholder="Select a color"
+              options={colorOptions}
+              value={listingData.color}
+              onChange={(value) =>
+                setListingData((prev) => ({ ...prev, color: value }))
+              }
+              allowCustom={true}
+              customPlaceholder="Enter custom color"
+              onCustomChange={(value) =>
+                setListingData((prev) => ({ ...prev, customColor: value }))
+              }
+              customValue={listingData.customColor}
+            />
           </div>
 
           <div>

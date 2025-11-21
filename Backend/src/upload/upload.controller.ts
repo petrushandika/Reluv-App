@@ -20,10 +20,7 @@ export class UploadController {
     }
 
     try {
-      const result = await this.cloudinaryService.uploadFile(
-        file,
-        'general-uploads',
-      );
+      const result = await this.cloudinaryService.uploadFile(file, 'products');
       return {
         message: 'Image uploaded successfully',
         url: result.secure_url,

@@ -33,13 +33,37 @@ export class ProductsService {
   }
 
   async create(user: User, createProductDto: CreateProductDto) {
-    const { variants, categoryId, ...productData } = createProductDto;
+    const {
+      variants,
+      categoryId,
+      parentCategoryId,
+      childCategoryId,
+      ...productData
+    } = createProductDto;
 
-    const [categoryExists, store, existingProduct] = await Promise.all([
+    const [
+      categoryExists,
+      parentCategoryExists,
+      childCategoryExists,
+      store,
+      existingProduct,
+    ] = await Promise.all([
       this.prisma.category.findUnique({
         where: { id: categoryId },
         select: { id: true },
       }),
+      parentCategoryId
+        ? this.prisma.category.findUnique({
+            where: { id: parentCategoryId },
+            select: { id: true },
+          })
+        : Promise.resolve(null),
+      childCategoryId
+        ? this.prisma.category.findUnique({
+            where: { id: childCategoryId },
+            select: { id: true },
+          })
+        : Promise.resolve(null),
       this.prisma.store.findUnique({
         where: { userId: user.id },
         select: { id: true },
@@ -54,6 +78,18 @@ export class ProductsService {
       throw new NotFoundException(`Category with ID ${categoryId} not found.`);
     }
 
+    if (parentCategoryId && !parentCategoryExists) {
+      throw new NotFoundException(
+        `Parent category with ID ${parentCategoryId} not found.`,
+      );
+    }
+
+    if (childCategoryId && !childCategoryExists) {
+      throw new NotFoundException(
+        `Child category with ID ${childCategoryId} not found.`,
+      );
+    }
+
     if (existingProduct) {
       throw new ConflictException(
         `Product with slug '${productData.slug}' already exists`,
@@ -65,6 +101,12 @@ export class ProductsService {
         ...productData,
         seller: { connect: { id: user.id } },
         category: { connect: { id: categoryId } },
+        ...(parentCategoryId && {
+          parentCategory: { connect: { id: parentCategoryId } },
+        }),
+        ...(childCategoryId && {
+          childCategory: { connect: { id: childCategoryId } },
+        }),
         ...(store && { store: { connect: { id: store.id } } }),
         variants: {
           create: variants,
@@ -176,6 +218,20 @@ export class ProductsService {
             slug: true,
           },
         },
+        parentCategory: {
+          select: {
+            id: true,
+            name: true,
+            slug: true,
+          },
+        },
+        childCategory: {
+          select: {
+            id: true,
+            name: true,
+            slug: true,
+          },
+        },
         store: {
           select: {
             id: true,
@@ -238,9 +294,55 @@ export class ProductsService {
 
   async update(user: User, id: number, updateProductDto: UpdateProductDto) {
     await this.checkProductOwnership(id, user.id);
+
+    const { categoryId, parentCategoryId, childCategoryId, ...otherData } =
+      updateProductDto;
+
+    const [parentCategoryExists, childCategoryExists] = await Promise.all([
+      parentCategoryId
+        ? this.prisma.category.findUnique({
+            where: { id: parentCategoryId },
+            select: { id: true },
+          })
+        : Promise.resolve(null),
+      childCategoryId
+        ? this.prisma.category.findUnique({
+            where: { id: childCategoryId },
+            select: { id: true },
+          })
+        : Promise.resolve(null),
+    ]);
+
+    if (parentCategoryId && !parentCategoryExists) {
+      throw new NotFoundException(
+        `Parent category with ID ${parentCategoryId} not found.`,
+      );
+    }
+
+    if (childCategoryId && !childCategoryExists) {
+      throw new NotFoundException(
+        `Child category with ID ${childCategoryId} not found.`,
+      );
+    }
+
+    const updateData: any = {
+      ...otherData,
+      ...(categoryId && { category: { connect: { id: categoryId } } }),
+      ...(parentCategoryId !== undefined && {
+        parentCategory: parentCategoryId
+          ? { connect: { id: parentCategoryId } }
+          : { disconnect: true },
+      }),
+      ...(childCategoryId !== undefined && {
+        childCategory: childCategoryId
+          ? { connect: { id: childCategoryId } }
+          : { disconnect: true },
+      }),
+    };
+
     return this.prisma.product.update({
       where: { id },
-      data: updateProductDto,
+      data: updateData,
     });
   }
 

@@ -40,6 +40,14 @@ export class CreateProductDto {
   @IsNotEmpty()
   categoryId: number;
 
+  @IsInt()
+  @IsOptional()
+  parentCategoryId?: number;
+
+  @IsInt()
+  @IsOptional()
+  childCategoryId?: number;
+
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => CreateVariantDto)

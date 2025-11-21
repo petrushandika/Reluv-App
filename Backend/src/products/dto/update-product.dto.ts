@@ -35,4 +35,12 @@ export class UpdateProductDto {
   @IsInt()
   @IsOptional()
   categoryId?: number;
+
+  @IsInt()
+  @IsOptional()
+  parentCategoryId?: number;
+
+  @IsInt()
+  @IsOptional()
+  childCategoryId?: number;
 }

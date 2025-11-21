@@ -55,18 +55,18 @@ enum VoucherType {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  googleId   String? @unique
-  facebookId String? @unique
-  firstName String?
-  lastName  String?
-  email     String   @unique
-  password  String?
-  phone     String?
-  birth     DateTime?
-  role      UserRole @default(USER)
-  isActive  Boolean  @default(true)
-  isVerified Boolean @default(false)
+  id         Int       @id @default(autoincrement())
+  googleId   String?   @unique
+  facebookId String?   @unique
+  firstName  String?
+  lastName   String?
+  email      String    @unique
+  password   String?
+  phone      String?
+  birth      DateTime?
+  role       UserRole  @default(USER)
+  isActive   Boolean   @default(true)
+  isVerified Boolean   @default(false)
 
   verificationToken       String?
   verificationTokenExpiry DateTime?
@@ -76,8 +76,8 @@ model User {
 
   locations     Location[]
   products      Product[]
-  reviews       Review[]       
-  orders        Order[]        
+  reviews       Review[]
+  orders        Order[]
   cart          Cart?
   profile       UserProfile?
   wishlist      Wishlist[]
@@ -104,23 +104,23 @@ model UserProfile {
 }
 
 model Store {
-  id          Int     @id @default(autoincrement())
-  name        String
-  slug        String  @unique
-  isActive    Boolean @default(true)
-  isVerified  Boolean @default(false)
+  id         Int     @id @default(autoincrement())
+  name       String
+  slug       String  @unique
+  isActive   Boolean @default(true)
+  isVerified Boolean @default(false)
 
   totalProducts Int    @default(0)
   totalSales    Int    @default(0)
   rating        Float? @db.Real
 
-  profile   StoreProfile?
-  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId Int  @unique
-  products  Product[]
-  
+  profile  StoreProfile?
+  user     User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId   Int           @unique
+  products Product[]
+
   location   Location? @relation(fields: [locationId], references: [id])
-  locationId Int?     @unique
+  locationId Int?      @unique
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -132,12 +132,12 @@ model Store {
 }
 
 model StoreProfile {
-  id     Int     @id @default(autoincrement())
-  avatar String?
-  banner String?
-  bio    String?
+  id          Int     @id @default(autoincrement())
+  avatar      String?
+  banner      String?
+  bio         String?
   operational String?
-  
+
   store   Store @relation(fields: [storeId], references: [id], onDelete: Cascade)
   storeId Int   @unique
 
@@ -145,28 +145,28 @@ model StoreProfile {
 }
 
 model Location {
-  id            Int     @id @default(autoincrement())
-  label         String
-  recipient     String
-  phone         String
-  province      String
-  city          String
-  district      String
-  subDistrict   String
-  postalCode    String
-  address       String  @db.Text
-  isDefault     Boolean @default(false)
+  id          Int     @id @default(autoincrement())
+  label       String
+  recipient   String
+  phone       String
+  province    String
+  city        String
+  district    String
+  subDistrict String
+  postalCode  String
+  address     String  @db.Text
+  isDefault   Boolean @default(false)
 
   latitude         Float?
   longitude        Float?
   biteship_area_id String?
 
-  user    User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId  Int?
-  
-  store   Store?
+  user   User? @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId Int?
 
-  orders  Order[]
+  store Store?
+
+  orders Order[]
 
   @@map("locations")
 }
@@ -176,7 +176,9 @@ model Category {
   name String
   slug String @unique
 
-  products Product[]
+  products       Product[] @relation("ProductCategory")
+  parentProducts Product[] @relation("ProductParentCategory")
+  childProducts  Product[] @relation("ProductChildCategory")
 
   parentId        Int?
   parentCategory  Category?  @relation("SubCategories", fields: [parentId], references: [id], onDelete: Restrict)
@@ -196,17 +198,23 @@ model Product {
   isActive    Boolean  @default(true)
   viewCount   Int      @default(0)
 
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  seller     User     @relation(fields: [sellerId], references: [id])
-  sellerId   Int
+  seller   User @relation(fields: [sellerId], references: [id])
+  sellerId Int
 
-  category   Category @relation(fields: [categoryId], references: [id])
+  category   Category @relation("ProductCategory", fields: [categoryId], references: [id])
   categoryId Int
-  
-  store      Store?   @relation(fields: [storeId], references: [id])
-  storeId    Int?
+
+  parentCategory   Category? @relation("ProductParentCategory", fields: [parentCategoryId], references: [id])
+  parentCategoryId Int?
+
+  childCategory   Category? @relation("ProductChildCategory", fields: [childCategoryId], references: [id])
+  childCategoryId Int?
+
+  store   Store? @relation(fields: [storeId], references: [id])
+  storeId Int?
 
   variants Variant[]
   reviews  Review[]
@@ -214,6 +222,8 @@ model Product {
 
   @@index([sellerId, isPublished, isActive])
   @@index([categoryId])
+  @@index([parentCategoryId])
+  @@index([childCategoryId])
   @@index([slug])
   @@index([isPublished, isActive, createdAt])
   @@map("products")
@@ -224,10 +234,10 @@ model Variant {
   product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
   productId Int
 
-  size      String?
-  color     String?
-  sku       String? @unique
-  image     String?
+  size  String?
+  color String?
+  sku   String? @unique
+  image String?
 
   price          Int
   compareAtPrice Int?
@@ -277,10 +287,10 @@ model Cart {
 }
 
 model CartItem {
-  id        Int     @id @default(autoincrement())
-  cart      Cart    @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  id        Int      @id @default(autoincrement())
+  cart      Cart     @relation(fields: [cartId], references: [id], onDelete: Cascade)
   cartId    Int
-  variant   Variant @relation(fields: [variantId], references: [id], onDelete: Cascade)
+  variant   Variant  @relation(fields: [variantId], references: [id], onDelete: Cascade)
   variantId Int
   quantity  Int
   createdAt DateTime @default(now())
@@ -322,14 +332,14 @@ model VoucherUsage {
 }
 
 model Review {
-  id      Int    @id @default(autoincrement())
-  rating  Int    @db.SmallInt
-  comment String? @db.Text
+  id      Int      @id @default(autoincrement())
+  rating  Int      @db.SmallInt
+  comment String?  @db.Text
   images  String[]
 
   product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
   productId Int
-  author    User    @relation(fields: [authorId], references: [id]) 
+  author    User    @relation(fields: [authorId], references: [id])
   authorId  Int
 
   createdAt DateTime @default(now())
@@ -352,8 +362,8 @@ model Order {
   createdAt      DateTime    @default(now())
   updatedAt      DateTime    @updatedAt
 
-  buyer     User    @relation(fields: [buyerId], references: [id])
-  buyerId   Int
+  buyer      User     @relation(fields: [buyerId], references: [id])
+  buyerId    Int
   location   Location @relation(fields: [locationId], references: [id])
   locationId Int
 
@@ -389,22 +399,22 @@ model Payment {
   amount Int
   status PaymentStatus @default(PENDING)
 
-  snap_token          String? @unique
-  snap_redirect_url   String?
-  midtrans_order_id   String  @unique
-  midtrans_tx_id      String? @unique @map("midtrans_transaction_id")
+  snap_token            String? @unique
+  snap_redirect_url     String?
+  midtrans_order_id     String  @unique
+  midtrans_tx_id        String? @unique @map("midtrans_transaction_id")
   midtrans_payment_type String?
   midtrans_va_number    String?
   midtrans_bank         String?
   midtrans_tx_status    String? @map("midtrans_transaction_status")
   midtrans_fraud_status String?
-  
+
   gatewayResponse Json?
 
   paidAt    DateTime?
   expiresAt DateTime?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 
   order   Order @relation(fields: [orderId], references: [id])
   orderId Int   @unique
@@ -416,14 +426,14 @@ model Payment {
 }
 
 model Notification {
-  id      Int      @id @default(autoincrement())
-  user    User     @relation(fields: [userId], references: [id])
-  userId  Int
-  title   String
-  body    String   @db.Text
-  type    String?
-  data    Json?
-  isRead  Boolean  @default(false)
+  id        Int      @id @default(autoincrement())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+  title     String
+  body      String   @db.Text
+  type      String?
+  data      Json?
+  isRead    Boolean  @default(false)
   createdAt DateTime @default(now())
 
   @@index([userId, isRead])
@@ -441,18 +451,18 @@ model Shipment {
   biteship_order_id     String? @unique
   biteship_courier_code String?
   biteship_service_code String?
-  
-  estimatedDays  String?
-  shippingCost   Int?    @map("shipping_cost")
-  insuranceCost  Int?    @default(0) @map("insurance_cost")
+
+  estimatedDays String?
+  shippingCost  Int?    @map("shipping_cost")
+  insuranceCost Int?    @default(0) @map("insurance_cost")
 
   biteshipResponse Json?
   trackingHistory  Json[]
 
   shippedAt   DateTime?
   deliveredAt DateTime?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 
   order   Order @relation(fields: [orderId], references: [id])
   orderId Int   @unique

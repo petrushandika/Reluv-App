@@ -6,11 +6,11 @@ import { Heart } from "lucide-react";
 import { Product } from "@/features/products/types";
 import { useWishlist } from "@/features/wishlist/hooks/useWishlist";
 
-const formatPrice = (price: number) => {
+const formatPrice = (price: number): string => {
   return `Rp${new Intl.NumberFormat("id-ID").format(price)}`;
 };
 
-const isNewProduct = (createdAt: string) => {
+const isNewProduct = (createdAt: string): boolean => {
   const productDate = new Date(createdAt);
   const sevenDaysAgo = new Date();
   sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
@@ -30,10 +30,16 @@ const ProductCard = ({ product, containerClassName }: ProductCardProps) => {
     product.variants && product.variants.length > 0
       ? product.variants[0]
       : null;
+
   const imageUrl =
     product.images && product.images.length > 0
       ? product.images[0]
       : "https://placehold.co/400x400/e2e8f0/e2e8f0?text=Image";
+
+  const storeName = product.store?.name || "Reluv";
+  const productName = product.name || "Unnamed Product";
+  const productPrice = firstVariant?.price || 0;
+  const compareAtPrice = firstVariant?.compareAtPrice || null;
 
   const handleWishlistToggle = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -55,7 +61,7 @@ const ProductCard = ({ product, containerClassName }: ProductCardProps) => {
           <div className="bg-gray-50/90 dark:bg-gray-800/90 backdrop-blur-sm rounded overflow-hidden cursor-pointer aspect-square border border-gray-200/30 dark:border-gray-700/30 shadow-sm">
             <img
               src={imageUrl}
-              alt={product.name}
+              alt={productName}
               className="w-full h-full object-cover rounded group-hover/card:scale-105 transition-transform duration-300"
             />
           </div>
@@ -88,26 +94,26 @@ const ProductCard = ({ product, containerClassName }: ProductCardProps) => {
       <Link href={`/product/${product.id}`} prefetch={true}>
         <div className="pt-3 sm:pt-4 text-left cursor-pointer">
           <p className="font-bold text-xs sm:text-sm text-gray-800 dark:text-white glossy-text-strong">
-            {product.store?.name || "Reluv"}
+            {storeName}
           </p>
           <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 truncate mt-0.5 glossy-text">
-            {product.name}
+            {productName}
           </p>
-          {firstVariant?.compareAtPrice ? (
+          {compareAtPrice ? (
             <div className="mt-1 flex items-baseline flex-wrap gap-x-1.5 sm:gap-x-2">
               <p className="font-bold text-red-600 text-sm sm:text-base glossy-text-strong">
-                {formatPrice(firstVariant.price)}
+                {formatPrice(productPrice)}
               </p>
               <p className="text-xs sm:text-sm text-gray-400 dark:text-gray-500 line-through glossy-text">
-                {formatPrice(firstVariant.compareAtPrice)}
+                {formatPrice(compareAtPrice)}
               </p>
             </div>
           ) : (
             <p className="font-bold text-gray-900 dark:text-white mt-1 text-sm sm:text-base glossy-text-strong">
-                {firstVariant
-                  ? formatPrice(firstVariant.price)
-                  : "Price unavailable"}
-              </p>
+              {productPrice > 0
+                ? formatPrice(productPrice)
+                : "Price unavailable"}
+            </p>
           )}
         </div>
       </Link>
