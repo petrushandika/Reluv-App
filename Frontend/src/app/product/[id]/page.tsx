@@ -20,6 +20,7 @@ import { useProduct } from "@/features/products/hooks/useProduct";
 import { useCart } from "@/features/cart/hooks/useCart";
 import { useWishlist } from "@/features/wishlist/hooks/useWishlist";
 import { useWishlistStore } from "@/features/wishlist/store/wishlist.store";
+import { useBuyStore } from "@/features/checkout/store/buy.store";
 import ShareModal from "@/shared/components/molecules/ShareModal";
 import ProductDetailSkeleton from "@/shared/components/molecules/ProductDetailSkeleton";
 
@@ -39,6 +40,7 @@ const ProductDetail = () => {
   const { addItem: addItemToCart, isAdding } = useCart();
   const { addItem: addItemToWishlist, removeItem: removeItemFromWishlist } =
     useWishlist();
+  const { setBuyItem } = useBuyStore();
 
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [selectedVariantIndex, setSelectedVariantIndex] = useState(0);
@@ -158,6 +160,21 @@ const ProductDetail = () => {
   };
 
   const handleBuyNow = () => {
+    if (!selectedVariant || !product) {
+      return;
+    }
+
+    setBuyItem({
+      variantId: selectedVariant.id,
+      productId: product.id,
+      productName: product.name || "Product",
+      productImage: product.images[0] || "",
+      variantPrice: selectedVariant.price || 0,
+      variantSize: selectedVariant.size || undefined,
+      variantColor: selectedVariant.color || undefined,
+      quantity: quantity,
+    });
+
     router.prefetch("/checkout");
     router.push("/checkout");
   };
