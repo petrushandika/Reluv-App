@@ -10,6 +10,8 @@ import {
   ParseIntPipe,
   ValidationPipe,
   Query,
+  HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
 import { LocationsService } from './locations.service';
 import { CreateLocationDto } from './dto/create-location.dto';
@@ -24,6 +26,7 @@ export class LocationsController {
   constructor(private readonly locationsService: LocationsService) {}
 
   @Post()
+  @HttpCode(HttpStatus.CREATED)
   create(
     @GetUser() user: User,
     @Body(new ValidationPipe()) createLocationDto: CreateLocationDto,
@@ -32,6 +35,7 @@ export class LocationsController {
   }
 
   @Get()
+  @HttpCode(HttpStatus.OK)
   findAll(
     @GetUser() user: User,
     @Query('page', new ParseIntPipe({ optional: true })) page: number = 1,
@@ -41,11 +45,13 @@ export class LocationsController {
   }
 
   @Get(':id')
+  @HttpCode(HttpStatus.OK)
   findOne(@Param('id', ParseIntPipe) id: number, @GetUser() user: User) {
     return this.locationsService.findOne(id, user.id);
   }
 
   @Patch(':id')
+  @HttpCode(HttpStatus.OK)
   update(
     @Param('id', ParseIntPipe) id: number,
     @GetUser() user: User,
@@ -55,6 +61,7 @@ export class LocationsController {
   }
 
   @Delete(':id')
+  @HttpCode(HttpStatus.OK)
   remove(@Param('id', ParseIntPipe) id: number, @GetUser() user: User) {
     return this.locationsService.remove(id, user.id);
   }

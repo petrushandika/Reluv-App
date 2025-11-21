@@ -8,6 +8,8 @@ import {
   UseGuards,
   ValidationPipe,
   Query,
+  HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
 import { StoreService } from './store.service';
 import { CreateStoreDto } from './dto/create-store.dto';
@@ -25,6 +27,7 @@ export class StoreController {
   constructor(private readonly storeService: StoreService) {}
 
   @Get()
+  @HttpCode(HttpStatus.OK)
   findAllPublic(
     @Query(new ValidationPipe({ transform: true })) queryDto: QueryStoreDto,
   ) {
@@ -32,12 +35,14 @@ export class StoreController {
   }
 
   @Get(':slug')
+  @HttpCode(HttpStatus.OK)
   findBySlug(@Param('slug') slug: string) {
     return this.storeService.findBySlug(slug);
   }
 
   @UseGuards(JwtAuthGuard)
   @Post()
+  @HttpCode(HttpStatus.CREATED)
   create(
     @GetUser() user: User,
     @Body(new ValidationPipe()) createStoreDto: CreateStoreDto,
@@ -47,12 +52,14 @@ export class StoreController {
 
   @UseGuards(JwtAuthGuard)
   @Get('me/my-store')
+  @HttpCode(HttpStatus.OK)
   findMyStore(@GetUser() user: User) {
     return this.storeService.findMyStore(user.id);
   }
 
   @UseGuards(JwtAuthGuard, AdminGuard)
   @Post('/admin/create-for-user')
+  @HttpCode(HttpStatus.CREATED)
   createStoreForUser(
     @Body(
       new ValidationPipe({
@@ -68,6 +75,7 @@ export class StoreController {
 
   @UseGuards(JwtAuthGuard)
   @Patch('me/my-store')
+  @HttpCode(HttpStatus.OK)
   updateMyStore(
     @GetUser() user: User,
     @Body(new ValidationPipe()) updateStoreDto: UpdateStoreDto,
@@ -77,6 +85,7 @@ export class StoreController {
 
   @UseGuards(JwtAuthGuard)
   @Patch('me/my-store/profile')
+  @HttpCode(HttpStatus.OK)
   updateMyStoreProfile(
     @GetUser() user: User,
     @Body(new ValidationPipe()) updateStoreProfileDto: UpdateStoreProfileDto,

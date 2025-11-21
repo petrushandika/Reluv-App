@@ -9,6 +9,8 @@ import {
   UseGuards,
   ParseIntPipe,
   ValidationPipe,
+  HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
 import { CartService } from './cart.service';
 import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
@@ -23,11 +25,13 @@ export class CartController {
   constructor(private readonly cartService: CartService) {}
 
   @Get()
+  @HttpCode(HttpStatus.OK)
   getMyCart(@GetUser() user: User) {
     return this.cartService.getMyCart(user.id);
   }
 
   @Post('items')
+  @HttpCode(HttpStatus.CREATED)
   addItem(
     @GetUser() user: User,
     @Body(new ValidationPipe()) addToCartDto: AddToCartDto,
@@ -36,6 +40,7 @@ export class CartController {
   }
 
   @Patch('items/:id')
+  @HttpCode(HttpStatus.OK)
   updateItemQuantity(
     @GetUser() user: User,
     @Param('id', ParseIntPipe) cartItemId: number,
@@ -49,6 +54,7 @@ export class CartController {
   }
 
   @Delete('items/:id')
+  @HttpCode(HttpStatus.OK)
   removeItem(
     @GetUser() user: User,
     @Param('id', ParseIntPipe) cartItemId: number,

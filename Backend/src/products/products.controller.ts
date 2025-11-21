@@ -10,6 +10,8 @@ import {
   Query,
   ValidationPipe,
   UseGuards,
+  HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
@@ -27,6 +29,7 @@ export class ProductsController {
 
   @UseGuards(JwtAuthGuard)
   @Post()
+  @HttpCode(HttpStatus.CREATED)
   create(
     @GetUser() user: User,
     @Body(new ValidationPipe()) createProductDto: CreateProductDto,
@@ -36,6 +39,7 @@ export class ProductsController {
 
   @UseGuards(JwtAuthGuard)
   @Patch(':id')
+  @HttpCode(HttpStatus.OK)
   update(
     @GetUser() user: User,
     @Param('id', ParseIntPipe) id: number,
@@ -46,11 +50,13 @@ export class ProductsController {
 
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
+  @HttpCode(HttpStatus.OK)
   remove(@GetUser() user: User, @Param('id', ParseIntPipe) id: number) {
     return this.productsService.remove(user, id);
   }
 
   @Get()
+  @HttpCode(HttpStatus.OK)
   findAll(
     @Query(new ValidationPipe({ transform: true })) queryDto: QueryProductDto,
   ) {
@@ -58,12 +64,14 @@ export class ProductsController {
   }
 
   @Get(':id')
+  @HttpCode(HttpStatus.OK)
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.productsService.findOne(id);
   }
 
   @UseGuards(JwtAuthGuard)
   @Post(':productId/variants')
+  @HttpCode(HttpStatus.CREATED)
   addVariant(
     @GetUser() user: User,
     @Param('productId', ParseIntPipe) productId: number,
@@ -74,6 +82,7 @@ export class ProductsController {
 
   @UseGuards(JwtAuthGuard)
   @Patch(':productId/variants/:variantId')
+  @HttpCode(HttpStatus.OK)
   updateVariant(
     @GetUser() user: User,
     @Param('productId', ParseIntPipe) productId: number,
@@ -90,6 +99,7 @@ export class ProductsController {
 
   @UseGuards(JwtAuthGuard)
   @Delete(':productId/variants/:variantId')
+  @HttpCode(HttpStatus.OK)
   removeVariant(
     @GetUser() user: User,
     @Param('productId', ParseIntPipe) productId: number,

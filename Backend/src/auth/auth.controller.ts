@@ -22,6 +22,7 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('register')
+  @HttpCode(HttpStatus.CREATED)
   register(@Body(new ValidationPipe()) registerDto: RegisterDto) {
     return this.authService.register(registerDto);
   }

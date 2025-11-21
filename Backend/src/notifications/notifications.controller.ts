@@ -8,6 +8,8 @@ import {
   Query,
   ValidationPipe,
   Post,
+  HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
 import { NotificationsService } from './notifications.service';
 import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
@@ -21,6 +23,7 @@ export class NotificationsController {
   constructor(private readonly notificationsService: NotificationsService) {}
 
   @Get()
+  @HttpCode(HttpStatus.OK)
   findAll(
     @GetUser() user: User,
     @Query(new ValidationPipe({ transform: true }))
@@ -30,6 +33,7 @@ export class NotificationsController {
   }
 
   @Patch(':id/read')
+  @HttpCode(HttpStatus.OK)
   markAsRead(
     @GetUser() user: User,
     @Param('id', ParseIntPipe) notificationId: number,
@@ -38,6 +42,7 @@ export class NotificationsController {
   }
 
   @Post('read-all')
+  @HttpCode(HttpStatus.OK)
   markAllAsRead(@GetUser() user: User) {
     return this.notificationsService.markAllAsRead(user.id);
   }

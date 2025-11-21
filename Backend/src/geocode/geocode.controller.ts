@@ -1,4 +1,4 @@
-import { Controller, Get, Query, ValidationPipe } from '@nestjs/common';
+import { Controller, Get, Query, ValidationPipe, HttpCode, HttpStatus } from '@nestjs/common';
 import { GeocodeService } from './geocode.service';
 import { ReverseGeocodeQueryDto } from './dto/create-geocode.dto';
 
@@ -7,6 +7,7 @@ export class GeocodeController {
   constructor(private readonly geocodeService: GeocodeService) {}
 
   @Get('reverse')
+  @HttpCode(HttpStatus.OK)
   reverseGeocode(
     @Query(new ValidationPipe({ transform: true }))
     query: ReverseGeocodeQueryDto,

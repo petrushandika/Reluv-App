@@ -7,6 +7,8 @@ import {
   UseGuards,
   ParseIntPipe,
   ValidationPipe,
+  HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
@@ -20,6 +22,7 @@ export class OrdersController {
   constructor(private readonly ordersService: OrdersService) {}
 
   @Post()
+  @HttpCode(HttpStatus.CREATED)
   createOrder(
     @GetUser() user: User,
     @Body(new ValidationPipe()) createOrderDto: CreateOrderDto,
@@ -28,11 +31,13 @@ export class OrdersController {
   }
 
   @Get()
+  @HttpCode(HttpStatus.OK)
   findAllForUser(@GetUser() user: User) {
     return this.ordersService.findAllForUser(user.id);
   }
 
   @Get(':id')
+  @HttpCode(HttpStatus.OK)
   findOneForUser(@GetUser() user: User, @Param('id', ParseIntPipe) id: number) {
     return this.ordersService.findOneForUser(id, user.id);
   }

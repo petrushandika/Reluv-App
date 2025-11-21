@@ -1,9 +1,14 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, HttpCode, HttpStatus } from '@nestjs/common';
 
 @Controller()
 export class AppController {
   @Get()
-  getHello(): string {
-    return 'Hello from NestJS!';
+  @HttpCode(HttpStatus.OK)
+  getHello() {
+    return {
+      message: 'Welcome to Reluv API',
+      version: '1.0.0',
+      status: 'running',
+    };
   }
 }

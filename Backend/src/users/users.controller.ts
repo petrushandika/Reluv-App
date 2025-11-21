@@ -7,6 +7,8 @@ import {
   ValidationPipe,
   UseInterceptors,
   UploadedFiles,
+  HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { UsersService } from './users.service';
@@ -22,11 +24,13 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get('me')
+  @HttpCode(HttpStatus.OK)
   findMe(@GetUser() user: User) {
     return this.usersService.findMe(user.id);
   }
 
   @Patch('me')
+  @HttpCode(HttpStatus.OK)
   updateMe(
     @GetUser() user: User,
     @Body(
@@ -42,6 +46,7 @@ export class UsersController {
   }
 
   @Patch('me/profile')
+  @HttpCode(HttpStatus.OK)
   @UseInterceptors(
     FileFieldsInterceptor([
       { name: 'avatar', maxCount: 1 },

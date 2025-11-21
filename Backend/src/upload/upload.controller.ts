@@ -4,15 +4,21 @@ import {
   UploadedFile,
   UseInterceptors,
   BadRequestException,
+  UseGuards,
+  HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
+import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
 
+@UseGuards(JwtAuthGuard)
 @Controller('upload')
 export class UploadController {
   constructor(private readonly cloudinaryService: CloudinaryService) {}
 
   @Post('image')
+  @HttpCode(HttpStatus.CREATED)
   @UseInterceptors(FileInterceptor('file'))
   async uploadImage(@UploadedFile() file: Express.Multer.File) {
     if (!file) {
@@ -22,7 +28,6 @@ export class UploadController {
     try {
       const result = await this.cloudinaryService.uploadFile(file, 'products');
       return {
-        message: 'Image uploaded successfully',
         url: result.secure_url,
         public_id: result.public_id,
       };

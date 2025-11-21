@@ -9,6 +9,8 @@ import {
   ParseIntPipe,
   UseGuards,
   ValidationPipe,
+  HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
 import { CategoriesService } from './categories.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
@@ -22,22 +24,26 @@ export class CategoriesController {
 
   @UseGuards(JwtAuthGuard, AdminGuard)
   @Post()
+  @HttpCode(HttpStatus.CREATED)
   create(@Body(new ValidationPipe()) createCategoryDto: CreateCategoryDto) {
     return this.categoriesService.create(createCategoryDto);
   }
 
   @Get()
+  @HttpCode(HttpStatus.OK)
   findAll() {
     return this.categoriesService.findAll();
   }
 
   @Get(':id')
+  @HttpCode(HttpStatus.OK)
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.categoriesService.findOne(id);
   }
 
   @UseGuards(JwtAuthGuard, AdminGuard)
   @Patch(':id')
+  @HttpCode(HttpStatus.OK)
   update(
     @Param('id', ParseIntPipe) id: number,
     @Body(new ValidationPipe()) updateCategoryDto: UpdateCategoryDto,
@@ -47,6 +53,7 @@ export class CategoriesController {
 
   @UseGuards(JwtAuthGuard, AdminGuard)
   @Delete(':id')
+  @HttpCode(HttpStatus.OK)
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.categoriesService.remove(id);
   }

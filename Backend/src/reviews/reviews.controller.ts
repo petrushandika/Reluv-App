@@ -7,6 +7,8 @@ import {
   UseGuards,
   ParseIntPipe,
   ValidationPipe,
+  HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
 import { ReviewsService } from './reviews.service';
 import { CreateReviewDto } from './dto/create-review.dto';
@@ -20,6 +22,7 @@ export class ReviewsController {
 
   @UseGuards(JwtAuthGuard)
   @Post()
+  @HttpCode(HttpStatus.CREATED)
   create(
     @GetUser() user: User,
     @Param('productId', ParseIntPipe) productId: number,
@@ -29,6 +32,7 @@ export class ReviewsController {
   }
 
   @Get()
+  @HttpCode(HttpStatus.OK)
   findAllForProduct(@Param('productId', ParseIntPipe) productId: number) {
     return this.reviewsService.findAllForProduct(productId);
   }
