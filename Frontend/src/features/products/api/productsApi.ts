@@ -5,31 +5,23 @@ import { Product, ProductQuery } from "../types";
 
 export const getProducts = async (query?: ProductQuery): Promise<Product[]> => {
   try {
-    const response = await api.get<Product[] | { data: Product[] }>(
-      "/products",
-      {
-        params: query,
-      }
-    );
+    const response = await api.get<Product[]>("/products", {
+      params: query,
+    });
 
     if (!response || !response.data) {
+      console.warn("No data in response");
       return [];
     }
 
-    const data = response.data;
-    if (Array.isArray(data)) {
-      return data;
+    if (Array.isArray(response.data)) {
+      return response.data;
     }
-    if (
-      data &&
-      typeof data === "object" &&
-      "data" in data &&
-      Array.isArray(data.data)
-    ) {
-      return data.data;
-    }
+
+    console.warn("Response data is not an array:", response.data);
     return [];
-  } catch {
+  } catch (error) {
+    console.error("Failed to fetch products:", error);
     return [];
   }
 };
@@ -37,8 +29,15 @@ export const getProducts = async (query?: ProductQuery): Promise<Product[]> => {
 export const getProductById = async (id: number): Promise<Product> => {
   try {
     const response = await api.get<Product>(`/products/${id}`);
+    if (!response || !response.data) {
+      throw new Error("Product not found");
+    }
     return response.data;
-  } catch {
-    throw new Error("Unable to load product.");
+  } catch (error: any) {
+    console.error("Failed to fetch product:", error);
+    if (error.response?.status === 404) {
+      throw new Error("Product not found");
+    }
+    throw new Error(error.message || "Unable to load product.");
   }
 };

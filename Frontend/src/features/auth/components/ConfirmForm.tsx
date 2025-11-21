@@ -38,16 +38,17 @@ const ConfirmForms = () => {
       try {
         const response = await api.get(`/auth/confirm?token=${token}`);
         setStatus("success");
-        setMessage(
-          response.data.message || "Your email has been successfully verified!"
-        );
+        const message = typeof response.data === 'string' 
+          ? response.data 
+          : (response.data?.message || "Your email has been successfully verified!");
+        setMessage(message);
       } catch (err: unknown) {
         setStatus("error");
         if (axios.isAxiosError(err)) {
-          setMessage(
-            err.response?.data?.message ||
-              "Verification failed. The link may be invalid or expired."
-          );
+          const errorMessage = typeof err.response?.data === 'string'
+            ? err.response.data
+            : (err.response?.data?.message || "Verification failed. The link may be invalid or expired.");
+          setMessage(errorMessage);
         } else {
           setMessage("An unexpected error occurred during verification.");
         }

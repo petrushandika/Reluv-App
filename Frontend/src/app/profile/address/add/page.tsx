@@ -77,7 +77,9 @@ const AddAddressPage = () => {
     e.preventDefault();
     console.log('Form data:', formData);
     console.log('Map position:', mapPosition);
-    toast.success('Address saved successfully');
+    toast.success('Address Saved', {
+      description: 'Your address has been saved successfully.',
+    });
     router.push('/profile/address');
   };
 

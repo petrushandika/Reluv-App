@@ -31,7 +31,13 @@ const ShareModal = ({ isOpen, onClose, product }: ShareModalProps) => {
   );
   const fullShareText = `${shareText} ${productUrl}`;
 
-  const shareOptions = [
+  const shareOptions: Array<{
+    name: string;
+    icon: React.ReactElement;
+    href?: string;
+    color: string;
+    onClick?: (e: React.MouseEvent) => void;
+  }> = [
     {
       name: "WhatsApp",
       icon: <MessageCircle />,
@@ -62,15 +68,29 @@ const ShareModal = ({ isOpen, onClose, product }: ShareModalProps) => {
       href: `mailto:?subject=Check out this product from Reluv&body=${fullShareText}`,
       color: "bg-gray-500",
     },
+    {
+      name: "Copy",
+      icon: <Copy />,
+      href: "#",
+      color: "bg-purple-500",
+      onClick: (e: React.MouseEvent) => {
+        e.preventDefault();
+        copyToClipboard();
+      },
+    },
   ];
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(productUrl).then(
       () => {
-        toast.success("Link copied to clipboard!");
+        toast.success("Link Copied", {
+          description: "Product link has been copied to your clipboard!",
+        });
       },
       (err) => {
-        toast.error("Failed to copy link.");
+        toast.error("Copy Failed", {
+          description: "Unable to copy link to clipboard. Please try again.",
+        });
         console.error("Could not copy text: ", err);
       }
     );
@@ -100,14 +120,26 @@ const ShareModal = ({ isOpen, onClose, product }: ShareModalProps) => {
         <p className="text-gray-600 dark:text-gray-300 mb-4 text-sm glossy-text">
           Share this link via
         </p>
-        <div className="flex space-x-4 overflow-x-auto pb-3 share-modal-scroll">
-          {shareOptions.map((option) => (
-            <a
+        <div className="flex space-x-4 overflow-x-auto overflow-y-hidden pb-3 share-modal-scroll snap-x snap-mandatory">
+          {shareOptions.map((option) => {
+            const isCopyButton = option.name === "Copy";
+            const Component = isCopyButton ? "button" : "a";
+            const props = isCopyButton
+              ? {
+                  onClick: option.onClick,
+                  type: "button" as const,
+                }
+              : {
+                  href: option.href,
+                  target: "_blank",
+                  rel: "noopener noreferrer",
+                };
+
+            return (
+              <Component
               key={option.name}
-              href={option.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group flex-shrink-0 flex flex-col items-center justify-center p-3 bg-gray-50/80 dark:bg-gray-700/80 backdrop-blur-sm rounded-lg hover:bg-gray-100/90 dark:hover:bg-gray-600/90 transition-colors w-20 shadow-sm cursor-pointer"
+                {...props}
+                className="group flex-shrink-0 flex flex-col items-center justify-center p-3 bg-gray-50/80 dark:bg-gray-700/80 backdrop-blur-sm rounded-lg hover:bg-gray-100/90 dark:hover:bg-gray-600/90 transition-colors w-20 shadow-sm cursor-pointer snap-start"
             >
               <div
                 className={`w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center rounded-full text-white ${option.color}`}
@@ -119,8 +151,9 @@ const ShareModal = ({ isOpen, onClose, product }: ShareModalProps) => {
               <span className="text-xs mt-2 text-gray-700 dark:text-gray-300 group-hover:text-sky-600 dark:group-hover:text-sky-400">
                 {option.name}
               </span>
-            </a>
-          ))}
+              </Component>
+            );
+          })}
         </div>
 
         <p className="text-gray-600 dark:text-gray-300 my-4 text-sm">

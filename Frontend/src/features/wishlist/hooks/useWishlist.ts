@@ -27,36 +27,55 @@ export const useWishlist = () => {
   }, [isAuthenticated, fetchWishlist, clearWishlist]);
 
   const wishlistProductIds = useMemo(() => {
+    if (!Array.isArray(items)) {
+      return new Set();
+    }
     return new Set(items.map((item) => item.productId || item.product?.id));
   }, [items]);
 
   const handleAddItem = async (data: AddToWishlist) => {
     if (!isAuthenticated()) {
-      toast.error("Please sign in", {
+      toast.error("Sign In Required", {
         description: "You must sign in to add items to your wishlist.",
       });
       router.push("/auth/login");
       return;
     }
 
-    const toastId = toast.loading("Adding to wishlist...");
+    const toastId = toast.loading("Adding to Wishlist", {
+      description: "Please wait...",
+    });
     try {
       await addItem(data);
-      toast.success("Item added to wishlist!", { id: toastId });
+      toast.success("Item Added", {
+        description: "Item has been added to your wishlist successfully!",
+        id: toastId,
+      });
     } catch (error) {
       console.error("Failed to add item to wishlist:", error);
-      toast.error("Failed to add item", { id: toastId });
+      toast.error("Failed to Add Item", {
+        description: "Unable to add item to wishlist. Please try again.",
+        id: toastId,
+      });
     }
   };
 
   const handleRemoveItem = async (data: RemoveFromWishlist) => {
-    const toastId = toast.loading("Removing from wishlist...");
+    const toastId = toast.loading("Removing from Wishlist", {
+      description: "Please wait...",
+    });
     try {
       await removeItem(data);
-      toast.success("Item removed from wishlist", { id: toastId });
+      toast.success("Item Removed", {
+        description: "Item has been removed from your wishlist.",
+        id: toastId,
+      });
     } catch (error) {
       console.error("Failed to remove item from wishlist:", error);
-      toast.error("Failed to remove item", { id: toastId });
+      toast.error("Failed to Remove Item", {
+        description: "Unable to remove item from wishlist. Please try again.",
+        id: toastId,
+      });
     }
   };
 

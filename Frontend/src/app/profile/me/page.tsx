@@ -106,10 +106,14 @@ const ProfilePage = () => {
       const userData = await getMe();
       setUser(userData);
       setIsEditPersonalInfoOpen(false);
-      toast.success('Personal info updated successfully');
+      toast.success('Profile Updated', {
+        description: 'Your personal information has been updated successfully.',
+      });
     } catch (error) {
       console.error('Failed to update personal info:', error);
-      toast.error('Failed to update personal info');
+      toast.error('Update Failed', {
+        description: 'Unable to update personal information. Please try again.',
+      });
     } finally {
       setIsSubmitting(false);
     }
@@ -144,10 +148,14 @@ const ProfilePage = () => {
       const userData = await getMe();
       setUser(userData);
       setIsPhoneInputOpen(false);
-      toast.success('Phone number updated successfully');
+      toast.success('Phone Updated', {
+        description: 'Your phone number has been updated successfully.',
+      });
     } catch (error) {
       console.error('Failed to update phone number:', error);
-      toast.error('Failed to update phone number');
+      toast.error('Update Failed', {
+        description: 'Unable to update phone number. Please try again.',
+      });
     } finally {
       setIsSubmittingPhone(false);
     }

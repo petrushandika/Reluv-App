@@ -5,7 +5,7 @@ import { AddToWishlist, WishlistItem } from "../types";
 
 export const getWishlist = async (): Promise<WishlistItem[]> => {
   const response = await api.get("/wishlist");
-  return response.data;
+  return response.data || [];
 };
 
 export const addToWishlist = async (data: AddToWishlist) => {

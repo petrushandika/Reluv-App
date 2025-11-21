@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import type { LatLngExpression } from "leaflet";
 import { useCart } from "@/features/cart/hooks/useCart";
+import { useBuyStore } from "@/features/checkout/store/buy.store";
 import Spinner from "@/shared/components/atoms/Spinner";
 
 const MapPicker = dynamic(
@@ -172,6 +173,7 @@ const formatPrice = (price: number) =>
 const Checkout = () => {
   const router = useRouter();
   const { cart, isFetchingCart, subtotal } = useCart();
+  const { item: buyItem, clearBuyItem } = useBuyStore();
   const [hasCheckedCart, setHasCheckedCart] = useState(false);
 
   const [formData, setFormData] = useState({
@@ -223,14 +225,15 @@ const Checkout = () => {
 
   useEffect(() => {
     if (hasCheckedCart && !isFetchingCart) {
-      if (!cart || (cart.items && cart.items.length === 0)) {
+      // Only redirect if no buy item and cart is empty
+      if (!buyItem && (!cart || (cart.items && cart.items.length === 0))) {
         const timer = setTimeout(() => {
           router.push("/cart");
         }, 0);
         return () => clearTimeout(timer);
       }
     }
-  }, [cart, isFetchingCart, hasCheckedCart, router]);
+  }, [cart, isFetchingCart, hasCheckedCart, router, buyItem]);
 
   useEffect(() => {
     const fetchProvinces = async () => {
@@ -311,29 +314,55 @@ const Checkout = () => {
     setIsVoucherModalOpen(false);
   };
 
-  if (isFetchingCart) {
+  // If buy item exists, use it; otherwise use cart
+  const checkoutItems = buyItem
+    ? [
+        {
+          id: `buy-${buyItem.variantId}`,
+          variant: {
+            id: buyItem.variantId,
+            product: {
+              id: buyItem.productId,
+              name: buyItem.productName,
+              images: [buyItem.productImage],
+            },
+            price: buyItem.variantPrice,
+            compareAtPrice: null,
+            size: buyItem.variantSize,
+            color: buyItem.variantColor,
+          },
+          quantity: buyItem.quantity,
+        },
+      ]
+    : cart?.items || [];
+
+  const checkoutSubtotal = buyItem
+    ? buyItem.variantPrice * buyItem.quantity
+    : subtotal;
+
+  if (isFetchingCart && !buyItem) {
     return <Spinner />;
   }
 
-  if (!cart || cart.items.length === 0) {
+  if (!buyItem && (!cart || cart.items.length === 0)) {
     return null;
   }
 
   const shippingCost = selectedService?.price || 0;
   const TAX_RATE = 0.11;
-  const tax = subtotal * TAX_RATE;
+  const tax = checkoutSubtotal * TAX_RATE;
 
   let voucherDiscount = 0;
   if (selectedVoucher) {
     switch (selectedVoucher.type) {
       case "percentage":
         voucherDiscount = Math.min(
-          subtotal * selectedVoucher.value,
+          checkoutSubtotal * selectedVoucher.value,
           selectedVoucher.maxDiscount || Infinity
         );
         break;
       case "fixed":
-        voucherDiscount = Math.min(selectedVoucher.value, subtotal);
+        voucherDiscount = Math.min(selectedVoucher.value, checkoutSubtotal);
         break;
       case "shipping":
         voucherDiscount = Math.min(shippingCost, selectedVoucher.value);
@@ -343,7 +372,7 @@ const Checkout = () => {
     }
   }
 
-  const totalSavings = cart.items.reduce((sum, item) => {
+  const totalSavings = checkoutItems.reduce((sum, item) => {
     if (item.variant.compareAtPrice) {
       return (
         sum + (item.variant.compareAtPrice - item.variant.price) * item.quantity
@@ -352,7 +381,10 @@ const Checkout = () => {
     return sum;
   }, 0);
 
-  const total = Math.max(0, subtotal + shippingCost + tax - voucherDiscount);
+  const total = Math.max(
+    0,
+    checkoutSubtotal + shippingCost + tax - voucherDiscount
+  );
 
   const FormInput = ({
     id,
@@ -664,7 +696,7 @@ const Checkout = () => {
           onFocus={() => setIsOpen(true)}
           onBlur={() => setIsOpen(false)}
           onMouseDown={() => setIsOpen(!isOpen)}
-          className="block w-full pl-4 pr-12 py-3 border border-gray-300/50 dark:border-gray-600/50 rounded-lg bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200 placeholder-gray-400 dark:placeholder-gray-500 disabled:bg-gray-50/80 dark:disabled:bg-gray-700/80 disabled:cursor-not-allowed appearance-none cursor-pointer shadow-sm glossy-text"
+          className="block w-full pl-4 pr-12 py-3 border border-gray-300/50 dark:border-gray-600/50 rounded-lg bg-white/80 dark:bg-gray-800/80 text-gray-900 dark:text-white focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200 placeholder-gray-400 dark:placeholder-gray-500 disabled:bg-gray-50/80 dark:disabled:bg-gray-700/80 disabled:cursor-not-allowed appearance-none cursor-pointer glossy-text"
         >
           <option value="" disabled>
             {placeholder || `Select ${label}`}
@@ -885,7 +917,7 @@ const Checkout = () => {
                   Order Summary
                 </h2>
                 <div className="space-y-3 sm:space-y-4">
-                  {cart.items.map((item) => (
+                  {checkoutItems.map((item) => (
                     <div
                       key={item.id}
                       className="flex items-center gap-3 sm:gap-4"
@@ -981,7 +1013,7 @@ const Checkout = () => {
                       Subtotal
                     </span>
                     <span className="font-medium text-black dark:text-white">
-                      {formatPrice(subtotal)}
+                      {formatPrice(checkoutSubtotal)}
                     </span>
                   </div>
                   <div className="flex justify-between text-xs sm:text-sm">

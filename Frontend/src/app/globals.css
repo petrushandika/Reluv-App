@@ -1,10 +1,7 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
 
-/* Tailwind CSS v4 Dark Mode Configuration - REQUIRED for dark mode to work */
 @custom-variant dark (&:where(.dark, .dark *));
-
-/* Authentication Style */
 .promo-card-sky {
   position: absolute;
   display: flex;
@@ -258,24 +255,23 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Hide scrollbar but keep scroll functionality */
 .scrollbar-hide {
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 .scrollbar-hide::-webkit-scrollbar {
-  display: none; /* Chrome, Safari and Opera */
+  display: none;
 }
 
-/* Custom thin scrollbar for Share Modal */
 .share-modal-scroll {
-  scrollbar-width: thin; /* Firefox */
-  scrollbar-color: rgb(2 132 199) transparent; /* sky-600 */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(156, 163, 175, 0.3) transparent;
+  -webkit-overflow-scrolling: touch;
 }
 
 .share-modal-scroll::-webkit-scrollbar {
-  height: 2px; /* Very thin scrollbar */
+  height: 1px;
 }
 
 .share-modal-scroll::-webkit-scrollbar-track {
@@ -283,12 +279,12 @@
 }
 
 .share-modal-scroll::-webkit-scrollbar-thumb {
-  background-color: rgb(2 132 199); /* sky-600 */
-  border-radius: 10px;
+  background-color: rgba(156, 163, 175, 0.3);
+  border-radius: 1px;
 }
 
 .share-modal-scroll::-webkit-scrollbar-thumb:hover {
-  background-color: rgb(3 105 161); /* sky-700 */
+  background-color: rgba(156, 163, 175, 0.5);
 }
 
 @keyframes shimmer {

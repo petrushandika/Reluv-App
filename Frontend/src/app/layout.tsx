@@ -82,9 +82,12 @@ export default function RootLayout({
                 },
                 classNames: {
                   toast: 'p-4',
-                  title: 'text-base',
-                  description: 'text-sm',
-                  success: 'bg-sky-600 border-sky-700 text-white',
+                  title: 'text-base font-semibold',
+                  description: 'text-sm opacity-90',
+                  success: 'bg-green-600 border-green-700 text-white',
+                  error: 'bg-red-600 border-red-700 text-white',
+                  warning: 'bg-yellow-500 border-yellow-600 text-white',
+                  info: 'bg-blue-600 border-blue-700 text-white',
                 },
               }}
             />

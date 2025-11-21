@@ -30,11 +30,15 @@ export const useCartStore = create<CartState>((set, get) => ({
     set({ isLoading: true });
     try {
       const cartData = await getCart();
-      set({
-        cart: cartData,
-        itemCount: cartData.items.reduce((sum, item) => sum + item.quantity, 0),
-        isLoading: false,
-      });
+      if (cartData && cartData.items && Array.isArray(cartData.items)) {
+        set({
+          cart: cartData,
+          itemCount: cartData.items.reduce((sum, item) => sum + item.quantity, 0),
+          isLoading: false,
+        });
+      } else {
+        set({ isLoading: false, cart: null, itemCount: 0 });
+      }
     } catch (error) {
       console.error("Failed to fetch cart data:", error);
       set({ isLoading: false, cart: null, itemCount: 0 });

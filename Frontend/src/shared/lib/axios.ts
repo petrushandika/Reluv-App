@@ -13,10 +13,10 @@ export const api = axios.create({
 api.interceptors.request.use(
   (config) => {
     const authStore = useAuthStore.getState();
-    
+
     if (authStore.token) {
       if (!authStore.checkSessionExpiry()) {
-        return Promise.reject(new Error('Session expired'));
+        return Promise.reject(new Error("Session expired"));
       }
       config.headers["Authorization"] = `Bearer ${authStore.token}`;
     }
@@ -30,13 +30,38 @@ api.interceptors.request.use(
 
 api.interceptors.response.use(
   (response) => {
+    if (response.data && typeof response.data === "object") {
+      if ("data" in response.data && "success" in response.data) {
+        const extractedData = response.data.data;
+        if ("meta" in response.data) {
+          return {
+            ...response,
+            data: extractedData,
+          };
+        }
+        return {
+          ...response,
+          data: extractedData,
+        };
+      }
+    }
     return response;
   },
   (error) => {
     if (error.response) {
-      // Server responded with error status
+      if (error.response.data && typeof error.response.data === "object") {
+        if (
+          "message" in error.response.data &&
+          "error" in error.response.data
+        ) {
+          const errorMessage = Array.isArray(error.response.data.message)
+            ? error.response.data.message.join(", ")
+            : error.response.data.message || error.response.data.error;
+          error.message = errorMessage;
+          error.response.data = errorMessage;
+        }
+      }
       if (error.response.status === 401) {
-        // Unauthorized - clear token
         const authStore = useAuthStore.getState();
         if (authStore.logout) {
           authStore.logout();

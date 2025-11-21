@@ -23,7 +23,11 @@ export const useWishlistStore = create<WishlistState>((set, get) => ({
     set({ isLoading: true });
     try {
       const items = await getWishlist();
-      set({ items, isLoading: false });
+      if (Array.isArray(items)) {
+        set({ items, isLoading: false });
+      } else {
+        set({ isLoading: false, items: [] });
+      }
     } catch (error) {
       console.error("Failed to fetch wishlist data:", error);
       set({ isLoading: false, items: [] });

@@ -45,7 +45,7 @@ const Sell = () => {
       const remainingSlots = maxImages - currentCount;
 
       if (remainingSlots <= 0) {
-        toast.warning('Maximum upload limit', {
+        toast.warning('Upload Limit Reached', {
           description: `Maximum ${maxImages} images allowed. No images were added.`,
         });
         return;
@@ -57,7 +57,7 @@ const Sell = () => {
 
         setFiles((prev) => [...prev, ...filesToAdd]);
 
-        toast.warning('Maximum upload limit', {
+        toast.warning('Upload Limit Reached', {
           description: `Maximum ${maxImages} images allowed. ${rejectedCount} image(s) were not added.`,
         });
       } else {

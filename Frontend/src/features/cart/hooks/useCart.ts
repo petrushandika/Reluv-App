@@ -43,7 +43,7 @@ export const useCart = () => {
 
   const handleAddItem = async (data: AddToCartPayload) => {
     if (!isAuthenticated()) {
-      toast.error("Please sign in", {
+      toast.error("Sign In Required", {
         description: "You must sign in to add items to your cart.",
       });
       router.push("/auth/login");
@@ -51,13 +51,21 @@ export const useCart = () => {
     }
 
     setIsAdding(true);
-    const toastId = toast.loading("Adding item to cart...");
+    const toastId = toast.loading("Adding to Cart", {
+      description: "Please wait...",
+    });
     try {
       await addItem(data);
-      toast.success("Item added to cart!", { id: toastId });
+      toast.success("Item Added", {
+        description: "Item has been added to your cart successfully!",
+        id: toastId,
+      });
     } catch (error) {
       console.error("Failed to add item:", error);
-      toast.error("Failed to add item", { id: toastId });
+      toast.error("Failed to Add Item", {
+        description: "Unable to add item to cart. Please try again.",
+        id: toastId,
+      });
     } finally {
       setIsAdding(false);
     }
@@ -68,13 +76,21 @@ export const useCart = () => {
     data: UpdateCartItemPayload
   ) => {
     setIsUpdating(itemId);
-    const toastId = toast.loading("Updating quantity...");
+    const toastId = toast.loading("Updating Quantity", {
+      description: "Please wait...",
+    });
     try {
       await updateItemQuantity(itemId, data);
-      toast.success("Quantity updated", { id: toastId });
+      toast.success("Quantity Updated", {
+        description: "Cart quantity has been updated successfully!",
+        id: toastId,
+      });
     } catch (error) {
       console.error("Failed to update quantity:", error);
-      toast.error("Failed to update quantity", { id: toastId });
+      toast.error("Failed to Update Quantity", {
+        description: "Unable to update quantity. Please try again.",
+        id: toastId,
+      });
     } finally {
       setIsUpdating(null);
     }
@@ -82,13 +98,21 @@ export const useCart = () => {
 
   const handleRemoveItem = async (itemId: number) => {
     setIsRemoving(itemId);
-    const toastId = toast.loading("Removing item...");
+    const toastId = toast.loading("Removing Item", {
+      description: "Please wait...",
+    });
     try {
       await removeItem(itemId);
-      toast.success("Item removed from cart", { id: toastId });
+      toast.success("Item Removed", {
+        description: "Item has been removed from your cart.",
+        id: toastId,
+      });
     } catch (error) {
       console.error("Failed to remove item:", error);
-      toast.error("Failed to remove item", { id: toastId });
+      toast.error("Failed to Remove Item", {
+        description: "Unable to remove item. Please try again.",
+        id: toastId,
+      });
     } finally {
       setIsRemoving(null);
     }

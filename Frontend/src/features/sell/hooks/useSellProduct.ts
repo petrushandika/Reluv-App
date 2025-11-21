@@ -28,7 +28,9 @@ export const useSellProduct = () => {
 
   const listProduct = async (listingData: ListingData, files: File[]) => {
     if (files.length === 0) {
-      toast.error("Please upload at least one photo.");
+      toast.error("Photo Required", {
+        description: "Please upload at least one photo to continue.",
+      });
       return;
     }
 
@@ -36,55 +38,75 @@ export const useSellProduct = () => {
     const priceValue = parseFloat(numericPrice) || 0;
 
     if (!listingData.categoryId) {
-      toast.error("Please select a category.");
+      toast.error("Category Required", {
+        description: "Please select a category for your listing.",
+      });
       return;
     }
 
     if (!listingData.name || !listingData.name.trim()) {
-      toast.error("Please enter a listing title.");
+      toast.error("Title Required", {
+        description: "Please enter a listing title.",
+      });
       return;
     }
 
     if (listingData.name.trim().length > 255) {
-      toast.error("Listing title must be at most 255 characters.");
+      toast.error("Title Too Long", {
+        description: "Listing title must be at most 255 characters.",
+      });
       return;
     }
 
     if (!listingData.condition) {
-      toast.error("Please select a condition.");
+      toast.error("Condition Required", {
+        description: "Please select a condition for your item.",
+      });
       return;
     }
 
     if (!listingData.price || numericPrice === "" || priceValue <= 0) {
-      toast.error("Please enter a valid price (must be greater than 0).");
+      toast.error("Invalid Price", {
+        description: "Please enter a valid price (must be greater than 0).",
+      });
       return;
     }
 
     if (priceValue > 999999999) {
-      toast.error("Price must be less than 1 billion.");
+      toast.error("Price Too High", {
+        description: "Price must be less than 1 billion.",
+      });
       return;
     }
 
     if (listingData.description && listingData.description.length > 10000) {
-      toast.error("Description must be at most 10000 characters.");
+      toast.error("Description Too Long", {
+        description: "Description must be at most 10000 characters.",
+      });
       return;
     }
 
     if (listingData.conditionNote && listingData.conditionNote.length > 500) {
-      toast.error("Condition note must be at most 500 characters.");
+      toast.error("Note Too Long", {
+        description: "Condition note must be at most 500 characters.",
+      });
       return;
     }
 
     if (listingData.size === "OTHER" && listingData.customSize) {
       if (listingData.customSize.length > 50) {
-        toast.error("Custom size must be at most 50 characters.");
+        toast.error("Custom Size Too Long", {
+          description: "Custom size must be at most 50 characters.",
+        });
         return;
       }
     }
 
     if (listingData.color === "OTHER" && listingData.customColor) {
       if (listingData.customColor.length > 50) {
-        toast.error("Custom color must be at most 50 characters.");
+        toast.error("Custom Color Too Long", {
+          description: "Custom color must be at most 50 characters.",
+        });
         return;
       }
     }
@@ -92,10 +114,14 @@ export const useSellProduct = () => {
     const weight = parseInt(listingData.weight, 10);
     if (listingData.weight && !isNaN(weight)) {
       if (weight < 1) {
-        toast.error("Weight must be at least 1 gram.");
+        toast.error("Invalid Weight", {
+          description: "Weight must be at least 1 gram.",
+        });
         return;
       } else if (weight > 999999) {
-        toast.error("Weight must be less than 1 million grams.");
+        toast.error("Weight Too High", {
+          description: "Weight must be less than 1 million grams.",
+        });
         return;
       }
     }
@@ -103,10 +129,14 @@ export const useSellProduct = () => {
     const length = parseInt(listingData.length, 10);
     if (listingData.length && !isNaN(length)) {
       if (length < 1) {
-        toast.error("Length must be at least 1 cm.");
+        toast.error("Invalid Length", {
+          description: "Length must be at least 1 cm.",
+        });
         return;
       } else if (length > 9999) {
-        toast.error("Length must be less than 10000 cm.");
+        toast.error("Length Too High", {
+          description: "Length must be less than 10000 cm.",
+        });
         return;
       }
     }
@@ -114,10 +144,14 @@ export const useSellProduct = () => {
     const width = parseInt(listingData.width, 10);
     if (listingData.width && !isNaN(width)) {
       if (width < 1) {
-        toast.error("Width must be at least 1 cm.");
+        toast.error("Invalid Width", {
+          description: "Width must be at least 1 cm.",
+        });
         return;
       } else if (width > 9999) {
-        toast.error("Width must be less than 10000 cm.");
+        toast.error("Width Too High", {
+          description: "Width must be less than 10000 cm.",
+        });
         return;
       }
     }
@@ -125,29 +159,43 @@ export const useSellProduct = () => {
     const height = parseInt(listingData.height, 10);
     if (listingData.height && !isNaN(height)) {
       if (height < 1) {
-        toast.error("Height must be at least 1 cm.");
+        toast.error("Invalid Height", {
+          description: "Height must be at least 1 cm.",
+        });
         return;
       } else if (height > 9999) {
-        toast.error("Height must be less than 10000 cm.");
+        toast.error("Height Too High", {
+          description: "Height must be less than 10000 cm.",
+        });
         return;
       }
     }
 
     const stock = Number(listingData.stock);
     if (!isNaN(stock) && stock < 0) {
-      toast.error("Stock must be 0 or greater.");
+      toast.error("Invalid Stock", {
+        description: "Stock must be 0 or greater.",
+      });
       return;
     } else if (!isNaN(stock) && stock > 999999) {
-      toast.error("Stock must be less than 1 million.");
+      toast.error("Stock Too High", {
+        description: "Stock must be less than 1 million.",
+      });
       return;
     }
 
     setIsLoading(true);
     try {
-      toast.info("Uploading images...", { id: "upload-toast" });
+      toast.info("Uploading Images", {
+        description: "Please wait while we upload your images...",
+        id: "upload-toast",
+      });
       const uploadPromises = files.map((file) => uploadImage(file));
       const imageUrls = await Promise.all(uploadPromises);
-      toast.success("Images uploaded successfully!", { id: "upload-toast" });
+      toast.success("Images Uploaded", {
+        description: "All images have been uploaded successfully!",
+        id: "upload-toast",
+      });
 
       const finalSize =
         listingData.size === "OTHER"
@@ -184,11 +232,13 @@ export const useSellProduct = () => {
         variants: [variantPayload],
       };
 
-      toast.info("Creating your listing...");
+      toast.info("Creating Listing", {
+        description: "Please wait while we create your listing...",
+      });
       await createProduct(productPayload);
 
-      toast.success("Listing created successfully!", {
-        description: "You will be redirected shortly.",
+      toast.success("Listing Created", {
+        description: "Your listing has been created successfully! You will be redirected shortly.",
       });
 
       router.push("/");
@@ -206,7 +256,7 @@ export const useSellProduct = () => {
       }
 
       console.error("Failed to create listing:", error);
-      toast.error("Failed to create listing", {
+      toast.error("Failed to Create Listing", {
         description: errorMessage,
       });
     } finally {

@@ -64,7 +64,9 @@ const Register = () => {
 
     if (!validationResult.success) {
       const firstError = validationResult.error.errors[0].message;
-      toast.error(firstError);
+      toast.error("Validation Failed", {
+        description: firstError,
+      });
       return;
     }
 
@@ -80,8 +82,9 @@ const Register = () => {
 
     try {
       await registerUser(payload);
-      toast.success("Registration successful!", {
-        description: "Please check your email for verification.",
+      toast.success("Registration Successful", {
+        description:
+          "Your account has been created! Please check your email for verification.",
       });
       router.push("/auth/login");
     } catch (err: unknown) {
@@ -95,7 +98,9 @@ const Register = () => {
       } else if (err instanceof Error) {
         errorMessage = err.message;
       }
-      toast.error(errorMessage);
+      toast.error("Registration Failed", {
+        description: errorMessage,
+      });
     } finally {
       setLoading(false);
     }
