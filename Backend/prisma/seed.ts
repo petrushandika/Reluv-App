@@ -44,7 +44,7 @@ interface UserSeed {
 interface CategorySeed {
   name: string;
   slug: string;
-  children: { name: string; slug: string }[];
+  children: CategorySeed[];
 }
 
 interface StoreSeed {
@@ -150,7 +150,6 @@ async function main() {
         (loc) => loc.ownerEmail === userData.email,
       );
       if (userLocations.length > 0) {
-        // <<< PERBAIKAN FINAL DI SINI
         const locationsToCreate = userLocations.map((loc) => ({
           label: loc.label,
           recipient: loc.recipient,
@@ -169,7 +168,6 @@ async function main() {
         await prisma.location.createMany({
           data: locationsToCreate,
         });
-        // <<< AKHIR PERBAIKAN FINAL
 
         console.log(
           `📍 Created ${userLocations.length} locations for ${user.email}`,
@@ -183,27 +181,47 @@ async function main() {
       throw new Error('Seller user (user@gmail.com) not found in seed data.');
 
     console.log('Creating categories from categories.json...');
-    type CategoryWithChildren = Category & { childCategories: Category[] };
-    const createdCategories: Record<string, CategoryWithChildren> = {};
-    for (const categoryData of categoriesData) {
-      const parent = await prisma.category.create({
+
+    async function createCategoryRecursive(
+      categoryData: CategorySeed,
+      parentId?: number,
+      parentSlug?: string,
+    ): Promise<Category> {
+      const uniqueSlug = parentSlug
+        ? `${parentSlug}-${categoryData.slug}`
+        : categoryData.slug;
+
+      const category = await prisma.category.create({
         data: {
           name: categoryData.name,
-          slug: categoryData.slug,
-          childCategories: { create: categoryData.children },
+          slug: uniqueSlug,
+          parentId: parentId,
         },
-        include: { childCategories: true },
       });
-      createdCategories[parent.slug] = parent;
+
+      if (categoryData.children && categoryData.children.length > 0) {
+        for (const childData of categoryData.children) {
+          await createCategoryRecursive(childData, category.id, uniqueSlug);
+        }
+      }
+
+      return category;
     }
-    const mensCategory = createdCategories['fashion'].childCategories.find(
-      (c) => c.slug === 'mens-fashion',
-    );
-    const womensCategory = createdCategories['fashion'].childCategories.find(
-      (c) => c.slug === 'womens-fashion',
-    );
+
+    const createdCategories: Record<string, Category> = {};
+    for (const categoryData of categoriesData) {
+      const category = await createCategoryRecursive(categoryData);
+      createdCategories[category.slug] = category;
+    }
+
+    const mensCategory = await prisma.category.findUnique({
+      where: { slug: 'men' },
+    });
+    const womensCategory = await prisma.category.findUnique({
+      where: { slug: 'women' },
+    });
     if (!mensCategory || !womensCategory)
-      throw new Error('Could not find fashion child categories.');
+      throw new Error('Could not find Men or Women categories.');
 
     console.log('Creating store from store.json...');
     const levinShopLocation = await prisma.location.create({

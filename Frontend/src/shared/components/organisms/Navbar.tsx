@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from "react";
 import {
   Search,
   Heart,
@@ -12,14 +12,14 @@ import {
   LogOut,
   ScrollText,
   Bell,
-} from 'lucide-react';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { useAuthStore } from '@/features/auth/store/auth.store';
-import { useCartStore } from '@/features/cart/store/cart.store';
-import { useWishlistStore } from '@/features/wishlist/store/wishlist.store';
-import ThemeToggle from './ThemeToggle';
-import PromoMarquee from '@/shared/components/molecules/PromoMarquee';
+} from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useAuthStore } from "@/features/auth/store/auth.store";
+import { useCartStore } from "@/features/cart/store/cart.store";
+import { useWishlistStore } from "@/features/wishlist/store/wishlist.store";
+import ThemeToggle from "./ThemeToggle";
+import PromoMarquee from "@/shared/components/molecules/PromoMarquee";
 
 interface SubMenuSection {
   title: string;
@@ -56,214 +56,214 @@ const Navbar = () => {
     null
   );
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
-  const [searchValue, setSearchValue] = useState('');
+  const [searchValue, setSearchValue] = useState("");
   const [subMenuOpacity, setSubMenuOpacity] = useState(1);
-  const [activeCategoryMenu, setActiveCategoryMenu] = useState<string>('Women');
+  const [activeCategoryMenu, setActiveCategoryMenu] = useState<string>("Women");
   const [isSubMenuVisible, setIsSubMenuVisible] = useState(true);
   const lastScrollYRef = useRef(0);
-  const scrollDirectionRef = useRef<'up' | 'down'>('up');
+  const scrollDirectionRef = useRef<"up" | "down">("up");
 
   const dropdownData: { [key: string]: DropdownContent } = {
     Women: {
       categories: [
-        'Limited Offers',
-        'New Arrival',
-        'Bags',
-        'Shoes',
-        'Clothing',
-        'Accessories',
-        'Watches',
-        'Preloved',
+        "Limited Offers",
+        "New Arrival",
+        "Bags",
+        "Shoes",
+        "Clothing",
+        "Accessories",
+        "Watches",
+        "Preloved",
       ],
       subMenus: {
-        'Limited Offers': [
+        "Limited Offers": [
           {
-            title: 'Crafted for You',
-            items: ['Flash Sale Items', 'Weekend Specials', 'Member Exclusive'],
+            title: "Crafted for You",
+            items: ["Flash Sale Items", "Weekend Specials", "Member Exclusive"],
           },
           {
-            title: 'Shop by Category',
+            title: "Shop by Category",
             items: [
-              'Sale Bags',
-              'Sale Shoes',
-              'Sale Clothing',
-              'Sale Accessories',
-              'Sale Watches',
-              'Clearance Items',
+              "Sale Bags",
+              "Sale Shoes",
+              "Sale Clothing",
+              "Sale Accessories",
+              "Sale Watches",
+              "Clearance Items",
             ],
           },
           {
-            title: 'Perfect Picks for Beloved Ones',
+            title: "Perfect Picks for Beloved Ones",
             items: [
-              'Gift Card IDR 1.000.000',
-              'Gift Card IDR 500.000',
-              'Gift Card IDR 250.000',
+              "Gift Card IDR 1.000.000",
+              "Gift Card IDR 500.000",
+              "Gift Card IDR 250.000",
             ],
           },
         ],
-        'New Arrival': [
+        "New Arrival": [
           {
-            title: 'Crafted for You',
-            items: ['Timeless Pieces', 'Simply Unique', 'The Prestige Series'],
+            title: "Crafted for You",
+            items: ["Timeless Pieces", "Simply Unique", "The Prestige Series"],
           },
           {
-            title: 'Shop by Category',
+            title: "Shop by Category",
             items: [
-              'All New Arrivals',
-              'New in Bags',
-              'New in Shoes',
-              'New in Clothing',
-              'New in Accessories',
-              'New in Watches',
+              "All New Arrivals",
+              "New in Bags",
+              "New in Shoes",
+              "New in Clothing",
+              "New in Accessories",
+              "New in Watches",
             ],
           },
           {
-            title: 'Perfect Picks for Beloved Ones',
+            title: "Perfect Picks for Beloved Ones",
             items: [
-              'Gift Card IDR 1.000.000',
-              'Gift Card IDR 500.000',
-              'Gift Card IDR 250.000',
+              "Gift Card IDR 1.000.000",
+              "Gift Card IDR 500.000",
+              "Gift Card IDR 250.000",
             ],
           },
         ],
         Bags: [
           {
-            title: 'Crafted for You',
+            title: "Crafted for You",
             items: [
-              'Signature Collection',
-              'Limited Edition',
-              'Artisan Crafted',
+              "Signature Collection",
+              "Limited Edition",
+              "Artisan Crafted",
             ],
           },
           {
-            title: 'Shop by Category',
+            title: "Shop by Category",
             items: [
-              'Handbags',
-              'Shoulder Bags',
-              'Crossbody Bags',
-              'Clutches',
-              'Backpacks',
-              'Tote Bags',
+              "Handbags",
+              "Shoulder Bags",
+              "Crossbody Bags",
+              "Clutches",
+              "Backpacks",
+              "Tote Bags",
             ],
           },
           {
-            title: 'Perfect Picks for Beloved Ones',
+            title: "Perfect Picks for Beloved Ones",
             items: [
-              'Gift Card IDR 1.000.000',
-              'Gift Card IDR 500.000',
-              'Gift Card IDR 250.000',
+              "Gift Card IDR 1.000.000",
+              "Gift Card IDR 500.000",
+              "Gift Card IDR 250.000",
             ],
           },
         ],
         Shoes: [
           {
-            title: 'Crafted for You',
-            items: ['Comfort Series', 'Statement Pieces', 'Classic Collection'],
+            title: "Crafted for You",
+            items: ["Comfort Series", "Statement Pieces", "Classic Collection"],
           },
           {
-            title: 'Shop by Category',
+            title: "Shop by Category",
             items: [
-              'High Heels',
-              'Flats & Ballerinas',
-              'Sneakers',
-              'Boots & Ankle Boots',
-              'Sandals',
-              'Loafers',
+              "High Heels",
+              "Flats & Ballerinas",
+              "Sneakers",
+              "Boots & Ankle Boots",
+              "Sandals",
+              "Loafers",
             ],
           },
           {
-            title: 'Perfect Picks for Beloved Ones',
+            title: "Perfect Picks for Beloved Ones",
             items: [
-              'Gift Card IDR 1.000.000',
-              'Gift Card IDR 500.000',
-              'Gift Card IDR 250.000',
+              "Gift Card IDR 1.000.000",
+              "Gift Card IDR 500.000",
+              "Gift Card IDR 250.000",
             ],
           },
         ],
         Clothing: [
           {
-            title: 'Crafted for You',
+            title: "Crafted for You",
             items: [
-              'Wardrobe Essentials',
-              'Seasonal Must-Haves',
-              'Designer Picks',
+              "Wardrobe Essentials",
+              "Seasonal Must-Haves",
+              "Designer Picks",
             ],
           },
           {
-            title: 'Shop by Category',
+            title: "Shop by Category",
             items: [
-              'Dresses',
-              'Tops & Blouses',
-              'Skirts & Pants',
-              'Jackets & Blazers',
-              'Knitwear',
-              'Outerwear',
+              "Dresses",
+              "Tops & Blouses",
+              "Skirts & Pants",
+              "Jackets & Blazers",
+              "Knitwear",
+              "Outerwear",
             ],
           },
           {
-            title: 'Perfect Picks for Beloved Ones',
+            title: "Perfect Picks for Beloved Ones",
             items: [
-              'Gift Card IDR 1.000.000',
-              'Gift Card IDR 500.000',
-              'Gift Card IDR 250.000',
+              "Gift Card IDR 1.000.000",
+              "Gift Card IDR 500.000",
+              "Gift Card IDR 250.000",
             ],
           },
         ],
         Accessories: [
           {
-            title: 'Crafted for You',
+            title: "Crafted for You",
             items: [
-              'Statement Jewelry',
-              'Everyday Essentials',
-              'Special Occasions',
+              "Statement Jewelry",
+              "Everyday Essentials",
+              "Special Occasions",
             ],
           },
           {
-            title: 'Shop by Category',
+            title: "Shop by Category",
             items: [
-              'Fine Jewelry',
-              'Fashion Accessories',
-              'Scarves & Shawls',
-              'Belts',
-              'Sunglasses',
-              'Hair Accessories',
+              "Fine Jewelry",
+              "Fashion Accessories",
+              "Scarves & Shawls",
+              "Belts",
+              "Sunglasses",
+              "Hair Accessories",
             ],
           },
           {
-            title: 'Perfect Picks for Beloved Ones',
+            title: "Perfect Picks for Beloved Ones",
             items: [
-              'Gift Card IDR 1.000.000',
-              'Gift Card IDR 500.000',
-              'Gift Card IDR 250.000',
+              "Gift Card IDR 1.000.000",
+              "Gift Card IDR 500.000",
+              "Gift Card IDR 250.000",
             ],
           },
         ],
         Preloved: [
           {
-            title: 'Crafted for You',
+            title: "Crafted for You",
             items: [
-              'Authenticated Luxury',
-              'Vintage Treasures',
-              'Collector Pieces',
+              "Authenticated Luxury",
+              "Vintage Treasures",
+              "Collector Pieces",
             ],
           },
           {
-            title: 'Shop by Category',
+            title: "Shop by Category",
             items: [
-              'Pre-owned Bags',
-              'Vintage Shoes',
-              'Designer Clothing',
-              'Estate Jewelry',
-              'Classic Watches',
-              'Rare Finds',
+              "Pre-owned Bags",
+              "Vintage Shoes",
+              "Designer Clothing",
+              "Estate Jewelry",
+              "Classic Watches",
+              "Rare Finds",
             ],
           },
           {
-            title: 'Perfect Picks for Beloved Ones',
+            title: "Perfect Picks for Beloved Ones",
             items: [
-              'Gift Card IDR 1.000.000',
-              'Gift Card IDR 500.000',
-              'Gift Card IDR 250.000',
+              "Gift Card IDR 1.000.000",
+              "Gift Card IDR 500.000",
+              "Gift Card IDR 250.000",
             ],
           },
         ],
@@ -271,38 +271,38 @@ const Navbar = () => {
     },
     Men: {
       categories: [
-        'Limited Offers',
-        'New Arrival',
-        'Bags',
-        'Shoes',
-        'Clothing',
-        'Accessories',
-        'Watches',
-        'Preloved',
+        "Limited Offers",
+        "New Arrival",
+        "Bags",
+        "Shoes",
+        "Clothing",
+        "Accessories",
+        "Watches",
+        "Preloved",
       ],
       subMenus: {
-        'New Arrival': [
+        "New Arrival": [
           {
-            title: 'Crafted for You',
+            title: "Crafted for You",
             items: [
-              'Executive Collection',
-              'Casual Essentials',
-              'Premium Lifestyle',
+              "Executive Collection",
+              "Casual Essentials",
+              "Premium Lifestyle",
             ],
           },
         ],
       },
     },
     Kids: {
-      categories: ['New Arrival', 'Boys', 'Girls', 'Baby', 'Shoes'],
+      categories: ["New Arrival", "Boys", "Girls", "Baby", "Shoes"],
       subMenus: {
-        'New Arrival': [
+        "New Arrival": [
           {
-            title: 'Crafted for You',
+            title: "Crafted for You",
             items: [
-              'Age-Appropriate Designs',
-              'Comfort First',
-              'Playful & Fun',
+              "Age-Appropriate Designs",
+              "Comfort First",
+              "Playful & Fun",
             ],
           },
         ],
@@ -310,16 +310,16 @@ const Navbar = () => {
     },
     Brands: {
       categories: [
-        'Luxury Fashion',
-        'Designer Brands',
-        'Contemporary',
-        'Jewelry & Watches',
+        "Luxury Fashion",
+        "Designer Brands",
+        "Contemporary",
+        "Jewelry & Watches",
       ],
       subMenus: {
-        'Luxury Fashion': [
+        "Luxury Fashion": [
           {
-            title: 'Crafted for You',
-            items: ['Heritage Brands', 'Modern Luxury', 'Timeless Elegance'],
+            title: "Crafted for You",
+            items: ["Heritage Brands", "Modern Luxury", "Timeless Elegance"],
           },
         ],
       },
@@ -328,19 +328,19 @@ const Navbar = () => {
 
   const giftCardData = [
     {
-      label: 'Gift Card IDR 1.000.000',
-      amount: '1.000.000',
-      price: 'Rp1.000.000',
+      label: "Gift Card IDR 1.000.000",
+      amount: "1.000.000",
+      price: "Rp1.000.000",
     },
     {
-      label: 'Gift Card IDR 500.000',
-      amount: '500.000',
-      price: 'Rp500.000',
+      label: "Gift Card IDR 500.000",
+      amount: "500.000",
+      price: "Rp500.000",
     },
     {
-      label: 'Gift Card IDR 250.000',
-      amount: '250.000',
-      price: 'Rp250.000',
+      label: "Gift Card IDR 250.000",
+      amount: "250.000",
+      price: "Rp250.000",
     },
   ];
 
@@ -370,9 +370,9 @@ const Navbar = () => {
             Math.abs(currentScrollY - lastScrollYRef.current) > scrollThreshold
           ) {
             if (currentScrollY < lastScrollYRef.current) {
-              scrollDirectionRef.current = 'up';
+              scrollDirectionRef.current = "up";
             } else if (currentScrollY > lastScrollYRef.current) {
-              scrollDirectionRef.current = 'down';
+              scrollDirectionRef.current = "down";
             }
             lastScrollYRef.current = currentScrollY;
           }
@@ -381,9 +381,9 @@ const Navbar = () => {
             if (activeMainMenu) {
               setIsSubMenuVisible(true);
             } else {
-              if (scrollDirectionRef.current === 'up') {
+              if (scrollDirectionRef.current === "up") {
                 setIsSubMenuVisible(true);
-              } else if (scrollDirectionRef.current === 'down') {
+              } else if (scrollDirectionRef.current === "down") {
                 setIsSubMenuVisible(false);
               }
             }
@@ -405,29 +405,29 @@ const Navbar = () => {
       }
     };
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => {
-      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener("scroll", handleScroll);
     };
   }, [activeMainMenu]);
 
   const categoryToSlug = (category: string): string => {
-    return category.toLowerCase().replace(/\s+/g, '-');
+    return category.toLowerCase().replace(/\s+/g, "-");
   };
 
   const getMainMenuRoute = (menu: string): string => {
     const menuRoutes: { [key: string]: string } = {
-      Women: '/women',
-      Men: '/men',
-      Kids: '/kids',
-      Brands: '/brands',
+      Women: "/women",
+      Men: "/men",
+      Kids: "/kids",
+      Brands: "/brands",
     };
-    return menuRoutes[menu] || '/';
+    return menuRoutes[menu] || "/";
   };
 
   const handleMenuHover = (menu: string) => {
     const route = getMainMenuRoute(menu);
-    if (route !== '/') {
+    if (route !== "/") {
       router.prefetch(route);
     }
   };
@@ -454,9 +454,9 @@ const Navbar = () => {
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
     if (!isMobileMenuOpen) {
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = "hidden";
     } else {
-      document.body.style.overflow = 'auto';
+      document.body.style.overflow = "auto";
       setMobileActiveMainMenu(null);
       setMobileActiveSubMenu(null);
     }
@@ -464,7 +464,7 @@ const Navbar = () => {
 
   useEffect(() => {
     return () => {
-      document.body.style.overflow = 'auto';
+      document.body.style.overflow = "auto";
     };
   }, []);
 
@@ -490,11 +490,11 @@ const Navbar = () => {
   };
 
   const formatUserName = () => {
-    if (!user) return '';
-    const fullName = `${user.firstName || ''} ${user.lastName || ''}`.trim();
+    if (!user) return "";
+    const fullName = `${user.firstName || ""} ${user.lastName || ""}`.trim();
     if (fullName.length > 8) {
       return `${user.firstName} ${
-        user.lastName ? user.lastName.charAt(0) + '.' : ''
+        user.lastName ? user.lastName.charAt(0) + "." : ""
       }`;
     }
     return fullName;
@@ -533,8 +533,8 @@ const Navbar = () => {
                 }}
                 className={`py-2.5 font-semibold hover:text-sky-600 dark:hover:text-sky-400 transition-colors duration-200 ${
                   activeMainMenu === menu
-                    ? 'text-sky-600 dark:text-sky-400'
-                    : 'text-gray-800 dark:text-white'
+                    ? "text-sky-600 dark:text-sky-400"
+                    : "text-gray-800 dark:text-white"
                 }`}
               >
                 {menu}
@@ -556,8 +556,8 @@ const Navbar = () => {
                     <div
                       className="flex whitespace-nowrap text-gray-400 dark:text-gray-500 text-sm"
                       style={{
-                        animation: 'marquee 15s linear infinite',
-                        width: 'fit-content',
+                        animation: "marquee 15s linear infinite",
+                        width: "fit-content",
                       }}
                     >
                       {[1, 2].map((repeat) => (
@@ -622,7 +622,7 @@ const Navbar = () => {
                   <img
                     src={
                       user?.profile?.avatar ||
-                      'https://res.cloudinary.com/dqcyabvc2/image/upload/v1753019800/user_nxnpv1.webp'
+                      "https://res.cloudinary.com/dqcyabvc2/image/upload/v1753019800/user_nxnpv1.webp"
                     }
                     alt="User Avatar"
                     className="w-7 h-7 rounded-full object-cover transition-all duration-300 hover:ring-2 hover:ring-sky-500 dark:hover:ring-sky-400 cursor-pointer"
@@ -638,7 +638,7 @@ const Navbar = () => {
                         <div className="bg-sky-600 dark:bg-sky-700 px-6 py-5 relative">
                           <div className="text-white">
                             <h3 className="text-lg font-bold mb-1">
-                              {formatUserName() || 'User'}
+                              {formatUserName() || "User"}
                             </h3>
                             <p className="text-sm text-gray-200">0 VP</p>
                           </div>
@@ -746,13 +746,13 @@ const Navbar = () => {
       <div
         className="hidden lg:block w-full bg-gray-100/95 dark:bg-gray-800/95 border-b border-gray-200 dark:border-gray-700 overflow-hidden"
         style={{
-          maxHeight: isSubMenuVisible ? '60px' : '0',
+          maxHeight: isSubMenuVisible ? "60px" : "0",
           opacity: isSubMenuVisible ? Math.max(0, subMenuOpacity) : 0,
           transition:
-            'max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1), transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
-          transform: isSubMenuVisible ? 'translateY(0)' : 'translateY(-100%)',
+            "max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1), transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
+          transform: isSubMenuVisible ? "translateY(0)" : "translateY(-100%)",
           pointerEvents:
-            isSubMenuVisible && subMenuOpacity > 0 ? 'auto' : 'none',
+            isSubMenuVisible && subMenuOpacity > 0 ? "auto" : "none",
         }}
       >
         <div className="flex items-center justify-center space-x-6 xl:space-x-8 py-2 px-4 overflow-x-auto">
@@ -811,8 +811,8 @@ const Navbar = () => {
                     <div
                       className="flex whitespace-nowrap text-gray-400 dark:text-gray-500 text-sm"
                       style={{
-                        animation: 'marquee 15s linear infinite',
-                        width: 'fit-content',
+                        animation: "marquee 15s linear infinite",
+                        width: "fit-content",
                       }}
                     >
                       {[1, 2].map((repeat) => (
@@ -842,7 +842,7 @@ const Navbar = () => {
                   </span>
                   <ChevronDown
                     className={`w-5 h-5 transition-all duration-300 ease-in-out ${
-                      mobileActiveMainMenu === menu ? 'rotate-180' : ''
+                      mobileActiveMainMenu === menu ? "rotate-180" : ""
                     }`}
                   />
                 </div>
@@ -870,8 +870,8 @@ const Navbar = () => {
                             <ChevronDown
                               className={`w-5 h-5 transition-all duration-300 ease-in-out ${
                                 mobileActiveSubMenu === category
-                                  ? 'rotate-180'
-                                  : ''
+                                  ? "rotate-180"
+                                  : ""
                               }`}
                             />
                           </Link>
@@ -917,7 +917,7 @@ const Navbar = () => {
                   <img
                     src={
                       user?.profile?.avatar ||
-                      'https://res.cloudinary.com/dqcyabvc2/image/upload/v1753019800/user_nxnpv1.webp'
+                      "https://res.cloudinary.com/dqcyabvc2/image/upload/v1753019800/user_nxnpv1.webp"
                     }
                     alt="User Avatar"
                     className="w-6 h-6 rounded-full object-cover mr-3 transition-all duration-300 hover:ring-2 hover:ring-sky-500"
@@ -928,7 +928,7 @@ const Navbar = () => {
                   href="/profile/orders"
                   className="flex items-center py-3 text-sm text-gray-700 dark:text-gray-300 font-semibold hover:text-sky-600 dark:hover:text-sky-400 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md transition-all duration-300 hover:pl-2"
                 >
-                  <ScrollText className="w-5 h-5 mr-3 text-gray-500 dark:text-gray-400 transition-colors duration-300" />{' '}
+                  <ScrollText className="w-5 h-5 mr-3 text-gray-500 dark:text-gray-400 transition-colors duration-300" />{" "}
                   Order History
                 </Link>
                 <div className="">
@@ -936,7 +936,7 @@ const Navbar = () => {
                     onClick={handleLogout}
                     className="w-full text-left flex items-center py-3 text-sm text-red-600 dark:text-red-400 font-semibold hover:bg-red-50 dark:hover:bg-red-900/20 rounded-md transition-all duration-300 hover:pl-2"
                   >
-                    <LogOut className="w-5 h-5 mr-3 transition-colors duration-300" />{' '}
+                    <LogOut className="w-5 h-5 mr-3 transition-colors duration-300" />{" "}
                     Logout
                   </button>
                 </div>
@@ -974,7 +974,7 @@ const Navbar = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 xl:gap-12">
                   {dropdownData[activeMainMenu]?.subMenus[activeSubMenu]?.map(
                     (section) => {
-                      if (section.title === 'Perfect Picks for Beloved Ones') {
+                      if (section.title === "Perfect Picks for Beloved Ones") {
                         return (
                           <div key={section.title}>
                             <h3 className="font-bold text-lg mb-4 text-sky-700 dark:text-sky-400 border-b border-gray-200 dark:border-gray-700 pb-2">
@@ -1035,8 +1035,8 @@ const Navbar = () => {
                                     }
                                     className={`h-2 w-2 rounded-full transition-all duration-300 transform hover:scale-125 ${
                                       currentCardIndex === dotIndex
-                                        ? 'bg-sky-600 dark:bg-sky-400 scale-125'
-                                        : 'bg-gray-300 dark:bg-gray-600'
+                                        ? "bg-sky-600 dark:bg-sky-400 scale-125"
+                                        : "bg-gray-300 dark:bg-gray-600"
                                     }`}
                                     aria-label={`Go to slide ${dotIndex + 1}`}
                                   />

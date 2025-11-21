@@ -1,15 +1,366 @@
 [
   {
-    "name": "Fashion",
-    "slug": "fashion",
+    "name": "Women",
+    "slug": "women",
     "children": [
-      { "name": "Men's Fashion", "slug": "mens-fashion" },
-      { "name": "Women's Fashion", "slug": "womens-fashion" }
+      {
+        "name": "Limited Offers",
+        "slug": "limited-offers",
+        "children": []
+      },
+      {
+        "name": "New Arrival",
+        "slug": "new-arrival",
+        "children": [
+          {
+            "name": "Timeless Pieces",
+            "slug": "timeless-pieces",
+            "children": []
+          },
+          {
+            "name": "Simply Unique",
+            "slug": "simply-unique",
+            "children": []
+          },
+          {
+            "name": "The Prestige Series",
+            "slug": "the-prestige-series",
+            "children": []
+          },
+          {
+            "name": "All New Arrivals",
+            "slug": "all-new-arrivals",
+            "children": []
+          },
+          {
+            "name": "New in Bags",
+            "slug": "new-in-bags",
+            "children": []
+          },
+          {
+            "name": "New in Shoes",
+            "slug": "new-in-shoes",
+            "children": []
+          },
+          {
+            "name": "New in Clothing",
+            "slug": "new-in-clothing",
+            "children": []
+          },
+          {
+            "name": "New in Accessories",
+            "slug": "new-in-accessories",
+            "children": []
+          },
+          {
+            "name": "New in Watches",
+            "slug": "new-in-watches",
+            "children": []
+          }
+        ]
+      },
+      {
+        "name": "Bags",
+        "slug": "bags",
+        "children": [
+          {
+            "name": "Signature Collection",
+            "slug": "signature-collection",
+            "children": []
+          },
+          {
+            "name": "Limited Edition",
+            "slug": "limited-edition",
+            "children": []
+          },
+          {
+            "name": "Artisan Crafted",
+            "slug": "artisan-crafted",
+            "children": []
+          },
+          {
+            "name": "Handbags",
+            "slug": "handbags",
+            "children": []
+          },
+          {
+            "name": "Shoulder Bags",
+            "slug": "shoulder-bags",
+            "children": []
+          },
+          {
+            "name": "Crossbody Bags",
+            "slug": "crossbody-bags",
+            "children": []
+          },
+          {
+            "name": "Clutches",
+            "slug": "clutches",
+            "children": []
+          },
+          {
+            "name": "Backpacks",
+            "slug": "backpacks",
+            "children": []
+          },
+          {
+            "name": "Tote Bags",
+            "slug": "tote-bags",
+            "children": []
+          }
+        ]
+      },
+      {
+        "name": "Shoes",
+        "slug": "shoes",
+        "children": [
+          {
+            "name": "Comfort Series",
+            "slug": "comfort-series",
+            "children": []
+          },
+          {
+            "name": "Statement Pieces",
+            "slug": "statement-pieces",
+            "children": []
+          },
+          {
+            "name": "Classic Collection",
+            "slug": "classic-collection",
+            "children": []
+          },
+          {
+            "name": "High Heels",
+            "slug": "high-heels",
+            "children": []
+          },
+          {
+            "name": "Flats & Ballerinas",
+            "slug": "flats-ballerinas",
+            "children": []
+          },
+          {
+            "name": "Sneakers",
+            "slug": "sneakers",
+            "children": []
+          },
+          {
+            "name": "Boots & Ankle Boots",
+            "slug": "boots-ankle-boots",
+            "children": []
+          },
+          {
+            "name": "Sandals",
+            "slug": "sandals",
+            "children": []
+          },
+          {
+            "name": "Loafers",
+            "slug": "loafers",
+            "children": []
+          }
+        ]
+      },
+      {
+        "name": "Clothing",
+        "slug": "clothing",
+        "children": [
+          {
+            "name": "Wardrobe Essentials",
+            "slug": "wardrobe-essentials",
+            "children": []
+          },
+          {
+            "name": "Seasonal Must-Haves",
+            "slug": "seasonal-must-haves",
+            "children": []
+          },
+          {
+            "name": "Designer Picks",
+            "slug": "designer-picks",
+            "children": []
+          },
+          {
+            "name": "Dresses",
+            "slug": "dresses",
+            "children": []
+          },
+          {
+            "name": "Tops & Blouses",
+            "slug": "tops-blouses",
+            "children": []
+          },
+          {
+            "name": "Skirts & Pants",
+            "slug": "skirts-pants",
+            "children": []
+          },
+          {
+            "name": "Jackets & Blazers",
+            "slug": "jackets-blazers",
+            "children": []
+          },
+          {
+            "name": "Knitwear",
+            "slug": "knitwear",
+            "children": []
+          },
+          {
+            "name": "Outerwear",
+            "slug": "outerwear",
+            "children": []
+          }
+        ]
+      },
+      {
+        "name": "Accessories",
+        "slug": "accessories",
+        "children": [
+          {
+            "name": "Statement Jewelry",
+            "slug": "statement-jewelry",
+            "children": []
+          },
+          {
+            "name": "Everyday Essentials",
+            "slug": "everyday-essentials",
+            "children": []
+          },
+          {
+            "name": "Special Occasions",
+            "slug": "special-occasions",
+            "children": []
+          },
+          {
+            "name": "Fine Jewelry",
+            "slug": "fine-jewelry",
+            "children": []
+          },
+          {
+            "name": "Fashion Accessories",
+            "slug": "fashion-accessories",
+            "children": []
+          },
+          {
+            "name": "Scarves & Shawls",
+            "slug": "scarves-shawls",
+            "children": []
+          },
+          {
+            "name": "Belts",
+            "slug": "belts",
+            "children": []
+          },
+          {
+            "name": "Sunglasses",
+            "slug": "sunglasses",
+            "children": []
+          },
+          {
+            "name": "Hair Accessories",
+            "slug": "hair-accessories",
+            "children": []
+          }
+        ]
+      },
+      {
+        "name": "Watches",
+        "slug": "watches",
+        "children": []
+      },
+      {
+        "name": "Preloved",
+        "slug": "preloved",
+        "children": []
+      }
     ]
   },
   {
-    "name": "Electronics",
-    "slug": "electronics",
+    "name": "Men",
+    "slug": "men",
+    "children": [
+      {
+        "name": "Limited Offers",
+        "slug": "limited-offers",
+        "children": []
+      },
+      {
+        "name": "New Arrival",
+        "slug": "new-arrival",
+        "children": [
+          {
+            "name": "Executive Collection",
+            "slug": "executive-collection",
+            "children": []
+          },
+          {
+            "name": "Casual Essentials",
+            "slug": "casual-essentials",
+            "children": []
+          },
+          {
+            "name": "Premium Lifestyle",
+            "slug": "premium-lifestyle",
+            "children": []
+          }
+        ]
+      },
+      {
+        "name": "Bags",
+        "slug": "bags",
+        "children": []
+      },
+      {
+        "name": "Shoes",
+        "slug": "shoes",
+        "children": []
+      },
+      {
+        "name": "Clothing",
+        "slug": "clothing",
+        "children": []
+      },
+      {
+        "name": "Accessories",
+        "slug": "accessories",
+        "children": []
+      },
+      {
+        "name": "Watches",
+        "slug": "watches",
+        "children": []
+      },
+      {
+        "name": "Preloved",
+        "slug": "preloved",
+        "children": []
+      }
+    ]
+  },
+  {
+    "name": "Kids",
+    "slug": "kids",
+    "children": [
+      {
+        "name": "All Collection",
+        "slug": "all-collection",
+        "children": []
+      },
+      {
+        "name": "Clothing",
+        "slug": "clothing",
+        "children": []
+      },
+      {
+        "name": "Shoes",
+        "slug": "shoes",
+        "children": []
+      }
+    ]
+  },
+  {
+    "name": "Brands",
+    "slug": "brands",
     "children": []
   }
 ]
