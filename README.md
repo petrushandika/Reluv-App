@@ -1,890 +1,241 @@
-# Reluv-App Blueprint
+# Reluv App - E-Commerce Preloved Fashion Platform
 
-## 🧾 Project Overview
+## 📋 Overview
 
-**Reluv-App** adalah platform e-commerce marketplace yang berfokus pada penjualan produk preloved (bekas) dan baru. Platform ini memungkinkan pengguna untuk menjual dan membeli produk fashion dengan sistem toko online yang terintegrasi.
+Reluv adalah platform e-commerce untuk preloved fashion items yang memungkinkan pengguna untuk membeli dan menjual produk fashion bekas berkualitas. Platform ini dibangun dengan arsitektur modern menggunakan Next.js untuk frontend dan NestJS untuk backend.
 
-### Tujuan dan Use Case Utama
+## 🏗 Architecture
 
-- **Marketplace Preloved**: Platform jual-beli produk fashion bekas berkualitas
-- **Multi-vendor**: Sistem toko online untuk multiple seller
-- **E-commerce Complete**: Sistem lengkap dengan cart, checkout, payment, dan shipping
-- **Review System**: Sistem rating dan review produk
-- **Location-based**: Integrasi dengan sistem lokasi dan shipping
-
----
-
-## 🛠️ Tech Stack
-
-### 🖥️ Frontend
-
-- **Framework**: Next.js 16.0.3 (React 19.2.0)
-- **Styling**: TailwindCSS 4.1.17
-- **UI Components**: Radix UI, Lucide React
-- **State Management**: Zustand 5.0.8
-- **Form Handling**: React Hook Form 7.66.1
-- **Animation**: Framer Motion 12.23.24
-- **Maps**: Leaflet, React Leaflet
-- **Authentication**: NextAuth 5.0.0-beta.30
-- **HTTP Client**: Axios 1.13.2
-- **Validation**: Zod 3.25.76
-- **Carousel**: Embla Carousel 8.6.0
-- **Notifications**: Sonner 2.0.7
-- **TypeScript**: 5.9.3
-
-### ⚙️ Backend
-
-- **Framework**: NestJS 11.1.9
-- **Runtime**: Node.js 20+ dengan TypeScript 5.9.3
-- **Database ORM**: Prisma 6.19.0
-- **Authentication**: JWT, Passport (Local, Google, Facebook)
-- **File Upload**: Cloudinary 2.8.0
-- **Email**: Nodemailer 7.0.10, Resend 4.8.0
-- **Payment**: Midtrans Client 1.4.3
-- **Validation**: Class Validator, Zod 3.25.76
-- **Password Hashing**: bcrypt, bcryptjs 3.0.3
-- **HTTP Client**: Axios 1.13.2
-
-### 🗃️ Database
-
-- **Primary**: PostgreSQL
-- **ORM**: Prisma
-- **Migration**: Prisma Migrate
-- **Seeding**: TypeScript seed files
-
-### 🚀 Deployment
-
-- **Frontend**: Vercel (recommended)
-- **Backend**: Railway, Render, atau VPS
-- **Database**: PostgreSQL (Supabase, Railway, atau cloud provider)
-- **File Storage**: Cloudinary
-- **Email Service**: Resend atau SMTP
-
-### 🔧 Tools & Library Penting
-
-- **Development**: Prettier, TypeScript
-- **Testing**: Jest (Backend)
-- **API Documentation**: Swagger (dapat ditambahkan)
-- **Monitoring**: Dapat ditambahkan (Sentry, LogRocket)
-
----
-
-## 📁 Folder Structure
-
-### Frontend Structure
-
-```text
-Frontend/
-├── src/
-│   ├── app/                    # Next.js App Router
-│   │   ├── auth/              # Authentication pages
-│   │   │   ├── callback/      # OAuth callback handler
-│   │   │   ├── login/         # Login page
-│   │   │   ├── register/      # Registration page
-│   │   │   ├── forgot/        # Forgot password
-│   │   │   ├── reset/         # Reset password
-│   │   │   └── confirm/        # Email confirmation
-│   │   ├── dashboard/         # Admin dashboard
-│   │   ├── women/             # Women's category pages
-│   │   │   └── [category]/    # Dynamic category routes
-│   │   ├── men/               # Men's category pages
-│   │   │   └── [category]/    # Dynamic category routes
-│   │   ├── kids/              # Kids category pages
-│   │   │   └── [category]/    # Dynamic category routes
-│   │   ├── brands/            # Brands page
-│   │   ├── product/           # Product pages
-│   │   │   └── [id]/          # Product detail page
-│   │   ├── cart/              # Shopping cart
-│   │   ├── wishlist/          # User wishlist
-│   │   ├── checkout/          # Checkout process
-│   │   ├── sell/              # Sell product page
-│   │   ├── globals.css        # Global styles
-│   │   ├── layout.tsx         # Root layout
-│   │   └── page.tsx           # Home page
-│   ├── context/               # React contexts
-│   ├── features/              # Feature-based modules
-│   │   ├── auth/              # Authentication feature
-│   │   ├── cart/              # Shopping cart feature
-│   │   ├── products/          # Product management
-│   │   ├── reviews/           # Review system
-│   │   ├── sell/              # Selling feature
-│   │   ├── user/              # User management
-│   │   └── wishlist/          # Wishlist feature
-│   └── shared/                # Shared components & utilities
-│       ├── components/        # Reusable components
-│       ├── hooks/             # Custom hooks
-│       ├── lib/               # Utility libraries
-│       ├── store/             # Global state
-│       └── types/             # TypeScript types
-├── public/                    # Static assets
-├── components.json            # shadcn/ui config
-├── middleware.ts              # Next.js middleware
-├── next.config.ts             # Next.js configuration
-└── package.json
+```
+Reluv-App/
+├── Frontend/          # Next.js 16 + React 19 + TypeScript
+├── Backend/           # NestJS 11 + PostgreSQL + Prisma
+└── RELUV-API.postman_collection.json  # API Documentation
 ```
 
-### Backend Structure
-
-```text
-Backend/
-├── src/
-│   ├── auth/                  # Authentication module
-│   ├── cart/                  # Shopping cart module
-│   ├── categories/             # Product categories
-│   ├── cloudinary/             # File upload service
-│   ├── common/                 # Shared utilities
-│   ├── configs/               # Configuration files
-│   ├── email/                 # Email service
-│   ├── facebook/              # Facebook OAuth
-│   ├── geocode/               # Geocoding service
-│   ├── google/                # Google OAuth
-│   ├── locations/              # Location management
-│   ├── maps/                  # Maps integration
-│   ├── notifications/         # Notification system
-│   ├── orders/                # Order management
-│   ├── payments/              # Payment processing
-│   ├── prisma/                # Database service
-│   ├── products/              # Product management
-│   ├── reviews/               # Review system
-│   ├── shipments/             # Shipping management
-│   ├── shipping-rates/        # Shipping rates
-│   ├── store/                 # Store management
-│   ├── templates/             # Email templates
-│   ├── upload/                # File upload
-│   ├── users/                 # User management
-│   ├── utils/                 # Utility functions
-│   ├── vouchers/              # Voucher system
-│   ├── wishlist/              # Wishlist management
-│   ├── app.module.ts          # Main app module
-│   └── main.ts                # Application entry point
-├── prisma/
-│   ├── migrations/            # Database migrations
-│   ├── data/                 # Seed data
-│   ├── schema.prisma         # Database schema
-│   └── seed.ts               # Database seeding
-├── test/                     # E2E tests
-└── package.json
-```
-
----
-
-## 🔑 Environment Variables (.env)
-
-### Frontend (.env)
-
-```env
-# App Configuration
-NEXT_PUBLIC_APP_URL=http://localhost:3000
-NEXT_PUBLIC_API_URL=http://localhost:3001
-
-# NextAuth Configuration
-NEXTAUTH_URL=http://localhost:3000
-NEXTAUTH_SECRET=your-nextauth-secret-key
-
-# OAuth Providers
-NEXT_PUBLIC_GOOGLE_CLIENT_ID=your-google-client-id
-GOOGLE_CLIENT_SECRET=your-google-client-secret
-NEXT_PUBLIC_FACEBOOK_APP_ID=your-facebook-app-id
-FACEBOOK_APP_SECRET=your-facebook-app-secret
-
-# Maps & Location
-NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN=your-mapbox-token
-NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=your-google-maps-api-key
-
-# Payment
-NEXT_PUBLIC_MIDTRANS_CLIENT_KEY=your-midtrans-client-key
-
-# File Upload
-NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=your-cloudinary-cloud-name
-NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET=your-upload-preset
-```
-
-### Backend (.env)
-
-```env
-# Database
-DATABASE_URL="postgresql://username:password@localhost:5432/reluv_app?schema=public"
-
-# JWT Configuration
-JWT_SECRET=your-jwt-secret-key
-JWT_EXPIRATION_TIME=7d
-
-# OAuth Providers
-GOOGLE_CLIENT_ID=your-google-client-id
-GOOGLE_CLIENT_SECRET=your-google-client-secret
-GOOGLE_CALLBACK_URL=http://localhost:3001/api/v1/auth/google/callback
-FACEBOOK_APP_ID=your-facebook-app-id
-FACEBOOK_APP_SECRET=your-facebook-app-secret
-FACEBOOK_CALLBACK_URL=http://localhost:3001/api/v1/auth/facebook/callback
-
-# Email Configuration
-MAIL_HOST=smtp.gmail.com
-MAIL_PORT=587
-MAIL_SECURE=false
-MAIL_USER=your-email@gmail.com
-MAIL_PASSWORD=your-app-password
-MAIL_FROM=your-email@gmail.com
-RESEND_API_KEY=your-resend-api-key
-
-# Cloudinary Configuration
-CLOUDINARY_CLOUD_NAME=your-cloudinary-cloud-name
-CLOUDINARY_API_KEY=your-cloudinary-api-key
-CLOUDINARY_API_SECRET=your-cloudinary-api-secret
-
-# Payment Gateway
-MIDTRANS_SERVER_KEY=your-midtrans-server-key
-MIDTRANS_CLIENT_KEY=your-midtrans-client-key
-MIDTRANS_IS_PRODUCTION=false
-
-# Shipping Integration
-BITESHIP_API_KEY=your-biteship-api-key
-BITESHIP_BASE_URL=https://api.biteship.com/v1
-
-# Maps & Geocoding
-GOOGLE_MAPS_API_KEY=your-google-maps-api-key
-
-# App Configuration
-PORT=3001
-NODE_ENV=development
-FRONTEND_URL=http://localhost:3000
-```
-
----
-
-## 🌊 Business Flow / Alur Sistem
-
-### 🧑‍💻 Alur Pengguna (Customer)
-
-1.  **Registration/Login**
-
-- Register dengan email atau OAuth (Google/Facebook)
-  - Email verification
-  - Login dan mendapat JWT token
-
-2.  **Browse & Search Products**
-
-- Browse kategori produk
-  - Search dan filter produk
-  - View detail produk dan review
-
-3.  **Shopping Process**
-
-- Add to cart atau wishlist
-  - Manage cart items
-  - Checkout process
-  - Select shipping address
-  - Choose payment method
-  - Complete payment
-
-4.  **Order Management**
-    - Track order status
-    - View order history
-    - Receive notifications
-    - Write product reviews
-
-### 🏪 Alur Seller/Store Owner
-
-1.  **Store Setup**
-
-- Create store profile
-  - Setup store information
-  - Add store location
-
-2.  **Product Management**
-
-- Add new products
-  - Manage product variants
-  - Upload product images
-  - Set pricing and stock
-
-3.  **Order Fulfillment**
-
-- Receive order notifications
-  - Process orders
-  - Arrange shipping
-  - Update order status
-
-4.  **Store Analytics**
-    - View sales reports
-    - Manage reviews
-    - Track store performance
-
-### 👑 Alur Admin
-
-1.  **User Management**
-
-- Manage user accounts
-  - Handle user verification
-  - Moderate content
-
-2.  **Product Moderation**
-
-- Review new products
-  - Moderate product content
-  - Manage categories
-
-3.  **Order Oversight**
-
-- Monitor all orders
-  - Handle disputes
-  - Manage refunds
-
-4.  **System Management**
-    - Manage vouchers
-    - Configure shipping rates
-    - System analytics
-
-### Relasi Antar Entitas
-
-- **User** → **Store** (One-to-One)
-- **Store** → **Products** (One-to-Many)
-- **Product** → **Variants** (One-to-Many)
-- **User** → **Orders** (One-to-Many)
-- **Order** → **OrderItems** (One-to-Many)
-- **Order** → **Payment** (One-to-One)
-- **Order** → **Shipment** (One-to-One)
-- **User** → **Reviews** (One-to-Many)
-- **Product** → **Reviews** (One-to-Many)
-
----
-
-## 📊 Database Schema & Relasi
-
-### Tabel Utama
-
-#### Users
-
-- **Primary Key**: id (Int)
-- **Fields**: googleId, facebookId, firstName, lastName, email, password, phone, role, isActive, isVerified
-- **Relations**: locations, products, reviews, orders, cart, profile, wishlist, notifications, store
-
-#### Products
-
-- **Primary Key**: id (Int)
-- **Fields**: name, slug, description, images, isPublished, isPreloved, isActive, viewCount
-- **Relations**: seller (User), category, store, variants, reviews, wishlist
-
-#### Orders
-
-- **Primary Key**: id (Int)
-- **Fields**: orderNumber, totalAmount, itemsAmount, shippingCost, discountAmount, status
-- **Relations**: buyer (User), location, items, payment, shipment
-
-#### Payments
-
-- **Primary Key**: id (Int)
-- **Fields**: method, amount, status, midtrans integration fields
-- **Relations**: order (One-to-One)
-
-### Enum Types
-
-- **UserRole**: USER, ADMIN
-- **Condition**: NEW, LIKE_NEW, GOOD, FAIR, POOR
-- **OrderStatus**: PENDING, PAID, SHIPPED, DELIVERED, COMPLETED, CANCELLED, REFUNDED
-- **PaymentStatus**: PENDING, PAID, FAILED, REFUNDED, EXPIRED, CANCELLED
-- **ShipmentStatus**: AWAITING_PICKUP, PICKED_UP, IN_TRANSIT, DELIVERED, RETURNED, CANCELLED
-
----
-
-## 🔌 API Structure (Backend)
-
-### Authentication Endpoints
-
-```text
-POST /auth/register          # User registration
-POST /auth/login             # User login
-POST /auth/logout            # User logout
-POST /auth/refresh           # Refresh JWT token
-POST /auth/forgot-password   # Forgot password
-POST /auth/reset-password    # Reset password
-POST /auth/verify-email      # Email verification
-GET  /auth/profile           # Get user profile
-GET  /auth/google            # Google OAuth login
-GET  /auth/google/callback   # Google OAuth callback
-GET  /auth/facebook          # Facebook OAuth login
-GET  /auth/facebook/callback  # Facebook OAuth callback
-```
-
-### User Management
-
-```text
-GET    /users               # Get all users (Admin)
-GET    /users/:id           # Get user by ID
-PUT    /users/:id           # Update user
-DELETE /users/:id           # Delete user
-GET    /users/profile       # Get current user profile
-PUT    /users/profile       # Update current user profile
-```
-
-### Product Management
-
-```text
-GET    /products            # Get all products (with filters)
-GET    /products/:id       # Get product by ID
-POST   /products            # Create new product
-PUT    /products/:id       # Update product
-DELETE /products/:id        # Delete product
-GET    /products/search     # Search products
-GET    /products/category/:categoryId  # Get products by category
-```
-
-### Store Management
-
-```text
-GET    /store              # Get current user's store
-POST   /store              # Create new store
-PUT    /store              # Update store
-GET    /store/:slug        # Get store by slug
-GET    /store/:id/products # Get store products
-```
-
-### Cart Management
-
-```text
-GET    /cart               # Get user cart
-POST   /cart/items         # Add item to cart
-PUT    /cart/items/:id     # Update cart item
-DELETE /cart/items/:id     # Remove cart item
-DELETE /cart               # Clear cart
-```
-
-### Order Management
-
-```text
-GET    /orders             # Get user orders
-GET    /orders/:id         # Get order by ID
-POST   /orders             # Create new order
-PUT    /orders/:id/status  # Update order status
-GET    /orders/seller      # Get seller orders
-```
-
-### Payment Integration
-
-```text
-POST   /payments/create    # Create payment
-POST   /payments/callback  # Payment callback (Midtrans)
-GET    /payments/:id       # Get payment status
-```
-
-### Example Request & Response
-
-#### POST /auth/register
-
-**Request:**
-
-```json
-{
-  "firstName": "John",
-  "lastName": "Doe",
-  "email": "john@example.com",
-  "password": "password123",
-  "phone": "+6281234567890"
-}
-```
-
-**Response:**
-
-```json
-{
-  "success": true,
-  "message": "Registration successful. Please check your email for verification.",
-  "data": {
-    "user": {
-      "id": 1,
-      "firstName": "John",
-      "lastName": "Doe",
-      "email": "john@example.com",
-      "role": "USER",
-      "isVerified": false
-    }
-  }
-}
-```
-
-#### GET /products
-
-**Request:**
-
-```text
-GET /products?page=1&limit=10&category=fashion&condition=LIKE_NEW&minPrice=50000&maxPrice=500000
-```
-
-**Response:**
-
-```json
-{
-  "success": true,
-  "data": {
-    "products": [
-      {
-        "id": 1,
-        "name": "Vintage Denim Jacket",
-        "slug": "vintage-denim-jacket",
-        "description": "Classic vintage denim jacket in excellent condition",
-        "images": ["image1.jpg", "image2.jpg"],
-        "isPreloved": true,
-        "category": {
-          "id": 1,
-          "name": "Fashion",
-          "slug": "fashion"
-        },
-        "variants": [
-          {
-            "id": 1,
-            "size": "M",
-            "color": "Blue",
-            "price": 150000,
-            "condition": "LIKE_NEW",
-            "stock": 1
-          }
-        ],
-        "store": {
-          "id": 1,
-          "name": "Vintage Store",
-          "slug": "vintage-store"
-        }
-      }
-    ],
-    "pagination": {
-      "page": 1,
-      "limit": 10,
-      "total": 50,
-      "totalPages": 5
-    }
-  }
-}
-```
-
----
-
-## 🖼️ Frontend Flow
-
-### Routing Halaman
-
-```text
-/                         # Homepage
-
-# Authentication Routes
-/auth/login              # Login page
-/auth/register           # Registration page
-/auth/forgot             # Forgot password
-/auth/reset              # Reset password
-/auth/confirm            # Email confirmation
-/auth/callback           # OAuth callback handler
-
-# Category Routes
-/women                   # Women's category page
-/women/[category]        # Women's sub-category (e.g., /women/limited-offers)
-/men                     # Men's category page
-/men/[category]          # Men's sub-category
-/kids                    # Kids category page
-/kids/[category]         # Kids sub-category
-/brands                  # Brands page
-
-# Product Routes
-/product/[id]            # Product detail page
-
-# Shopping Routes
-/cart                    # Shopping cart
-/wishlist                # User wishlist
-/checkout                # Checkout process
-/sell                    # Sell product page
-
-# Dashboard Routes (Admin)
-/dashboard               # Admin dashboard
-/dashboard/users         # User management
-/dashboard/products      # Product management
-/dashboard/orders        # Order management
-/dashboard/reviews       # Review management
-/dashboard/settings      # Settings
-```
-
-### Komponen Penting
-
-#### Shared Components
-
-- **UI Components**: Button, Input, Modal, Card, etc.
-- **Layout Components**: Header, Footer, Sidebar
-- **Form Components**: LoginForm, RegisterForm, ProductForm
-- **Product Components**: ProductCard, ProductGrid, ProductDetail
-- **Cart Components**: CartItem, CartSummary
-- **Navigation**: Navbar, Breadcrumb, Pagination
-
-#### Feature Components
-
-- **AuthGuard**: Route protection
-- **ProductFilter**: Product filtering
-- **SearchBar**: Product search
-- **ImageUpload**: File upload component
-- **PaymentForm**: Payment processing
-- **OrderTracking**: Order status tracking
-
-### State Management
-
-#### Zustand Stores
-
-```typescript
-// Auth Store
-interface AuthState {
-  user: User | null;
-  token: string | null;
-  isAuthenticated: boolean;
-  login: (credentials: LoginCredentials) => Promise<void>;
-  logout: () => void;
-  register: (userData: RegisterData) => Promise<void>;
-  setToken: (token: string) => Promise<void>; // For OAuth callback
-}
-
-// Cart Store
-interface CartState {
-  items: CartItem[];
-  total: number;
-  addItem: (item: CartItem) => void;
-  removeItem: (itemId: number) => void;
-  updateQuantity: (itemId: number, quantity: number) => void;
-  clearCart: () => void;
-}
-
-// Product Store
-interface ProductState {
-  products: Product[];
-  filters: ProductFilters;
-  loading: boolean;
-  fetchProducts: (filters?: ProductFilters) => Promise<void>;
-  setFilters: (filters: ProductFilters) => void;
-}
-```
-
----
-
-## 🛡️ Rules & Roles
-
-### Role Permissions
-
-#### USER Role
-
-- Browse and search products
-- Manage personal profile
-- Create and manage store
-- Add products to store
-- Place orders
-- Write reviews
-- Manage cart and wishlist
-
-#### ADMIN Role
-
-- All USER permissions
-- Manage all users
-- Moderate products
-- Manage categories
-- View all orders
-- Manage vouchers
-- System configuration
-- Access analytics
-
-### Validasi Token dan Login
-
-#### JWT Token Structure
-
-```typescript
-interface JWTPayload {
-  sub: number; // User ID
-  email: string; // User email
-  role: UserRole; // User role
-  iat: number; // Issued at
-  exp: number; // Expires at
-}
-```
-
-#### Authentication Guards
-
-- **JwtAuthGuard**: Validates JWT token
-- **RolesGuard**: Checks user roles
-- **OwnershipGuard**: Validates resource ownership
-
-#### Frontend Route Protection
-
-```typescript
-// Protected route example
-const ProtectedRoute = ({ children, requiredRole }: ProtectedRouteProps) => {
-  const { user, isAuthenticated } = useAuth();
-
-  if (!isAuthenticated) {
-    return <Navigate to="/auth/login" />;
-  }
-
-  if (requiredRole && user?.role !== requiredRole) {
-    return <Navigate to="/unauthorized" />;
-  }
-
-  return children;
-};
-```
-
----
-
-## 🚢 Deployment & CI/CD
-
-### Environment Production
-
-#### Frontend (Vercel)
-
-```env
-NEXT_PUBLIC_APP_URL=https://reluv-app.vercel.app
-NEXT_PUBLIC_API_URL=https://api.reluv-app.com
-NEXTAUTH_URL=https://reluv-app.vercel.app
-NEXTAUTH_SECRET=production-secret-key
-# ... other production variables
-```
-
-#### Backend (Railway/Render)
-
-```env
-DATABASE_URL=postgresql://prod-db-url
-NODE_ENV=production
-PORT=3001
-FRONTEND_URL=https://reluv-app.vercel.app
-# ... other production variables
-```
-
-### Deployment Tools
-
-#### Frontend - Vercel
-
-1.  Connect GitHub repository
-2.  Configure environment variables
-3.  Set build command: `npm run build`
-4.  Set output directory: `.next`
-5.  Enable automatic deployments
-
-#### Backend - Railway
-
-1.  Connect GitHub repository
-2.  Configure environment variables
-3.  Set start command: `npm run start:prod`
-4.  Configure PostgreSQL database
-5.  Set up custom domain
-
-#### Alternative Backend - Render
-
-1.  Connect GitHub repository
-2.  Configure environment variables
-3.  Set build command: `npm run build`
-4.  Set start command: `npm run start:prod`
-5.  Configure PostgreSQL database
-
-### CI/CD Pipeline
-
-#### GitHub Actions Example
-
-```yaml
-name: Deploy to Production
-
-on:
-  push:
-    branches: [main]
-
-jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-      - run: npm ci
-      - run: npm run test
-      - run: npm run lint
-
-  deploy-frontend:
-    needs: test
-    runs-on: ubuntu-latest
-    steps:
-      - name: Deploy to Vercel
-        uses: amondnet/vercel-action@v20
-        with:
-          vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          vercel-org-id: ${{ secrets.ORG_ID }}
-          vercel-project-id: ${{ secrets.PROJECT_ID }}
-
-  deploy-backend:
-    needs: test
-    runs-on: ubuntu-latest
-    steps:
-      - name: Deploy to Railway
-        uses: railway-deploy@v1
-        with:
-          railway-token: ${{ secrets.RAILWAY_TOKEN }}
-```
-
-### Database Migration Strategy
-
-1.  **Development**: Run migrations locally
-2.  **Staging**: Auto-migrate on deployment
-3.  **Production**: Manual migration review and execution
-
-### Monitoring & Logging
-
-- **Error Tracking**: Sentry integration
-- **Performance**: Vercel Analytics, Railway metrics
-- **Logs**: Structured logging with Winston
-- **Uptime**: UptimeRobot or similar service
-
----
-
-## 🏁 Getting Started
+## 🚀 Quick Start
 
 ### Prerequisites
-
 - Node.js 18+
 - PostgreSQL 14+
 - npm atau yarn
 
-### Installation
-
-1.  **Clone Repository**
-
-<!-- end list -->
-
-```bash
-git clone https://github.com/petrushandika/Reluv-App
-cd Reluv-App
-```
-
-2.  **Backend Setup**
-
-<!-- end list -->
+### Backend Setup
 
 ```bash
 cd Backend
 npm install
 cp .env.example .env
-# Configure environment variables
-npx prisma generate
+# Configure .env file
 npx prisma migrate dev
 npx prisma db seed
 npm run start:dev
 ```
 
-3.  **Frontend Setup**
+Backend akan berjalan di `http://localhost:8000`
 
-<!-- end list -->
+### Frontend Setup
 
 ```bash
 cd Frontend
 npm install
-cp .env.example .env
-# Configure environment variables
+cp .env.example .env.local
+# Configure .env.local file
 npm run dev
 ```
 
-### Development Workflow
+Frontend akan berjalan di `http://localhost:3000`
 
-1. Create feature branch
-2. Develop and test locally
-3. Create pull request
-4. Code review
-5. Merge to main
-6. Automatic deployment
+## 📚 Documentation
 
----
+- [Backend Documentation](./Backend/README.md) - Complete backend API documentation
+- [Frontend Documentation](./Frontend/README.md) - Complete frontend documentation
+- [API Collection](./RELUV-API.postman_collection.json) - Postman collection untuk testing API
 
-_Dokumentasi ini akan terus diperbarui seiring dengan perkembangan project._
+## 🛠 Tech Stack
+
+### Frontend
+- Next.js 16 (App Router)
+- React 19
+- TypeScript
+- Tailwind CSS 4
+- Zustand (State Management)
+- Axios (HTTP Client)
+- React Hook Form + Zod (Form Validation)
+
+### Backend
+- NestJS 11
+- TypeScript
+- PostgreSQL
+- Prisma ORM
+- JWT Authentication
+- Cloudinary (Image Upload)
+- Midtrans (Payment)
+- Biteship (Shipping)
+
+## ✨ Features
+
+### Core Features
+- ✅ User Authentication (Email, Google, Facebook)
+- ✅ Product Management
+- ✅ Category Management (Nested Categories)
+- ✅ Shopping Cart
+- ✅ Wishlist
+- ✅ Order Management
+- ✅ Payment Integration (Midtrans)
+- ✅ Shipping Integration (Biteship)
+- ✅ Product Reviews & Ratings
+- ✅ Voucher System
+- ✅ Address Management
+- ✅ Store Management
+- ✅ Image Upload (Cloudinary)
+- ✅ Email Notifications
+- ✅ Real-time Notifications
+
+### User Features
+- Browse products by category
+- Search products
+- Add to cart
+- Add to wishlist
+- Create orders
+- Manage profile
+- Manage addresses
+- View order history
+- Write reviews
+
+### Seller Features
+- List products
+- Manage product variants
+- Upload product images
+- Manage store profile
+
+### Admin Features
+- Manage categories
+- Manage vouchers
+- View all orders
+- Manage users
+
+## 📁 Project Structure
+
+```
+Reluv-App/
+├── Backend/
+│   ├── src/
+│   │   ├── auth/              # Authentication
+│   │   ├── products/          # Product management
+│   │   ├── categories/        # Category management
+│   │   ├── cart/              # Shopping cart
+│   │   ├── orders/            # Order processing
+│   │   ├── payments/          # Payment integration
+│   │   ├── shipments/         # Shipping management
+│   │   ├── reviews/           # Reviews & ratings
+│   │   ├── vouchers/          # Voucher system
+│   │   ├── wishlist/          # Wishlist
+│   │   ├── users/             # User management
+│   │   ├── store/             # Store management
+│   │   ├── locations/         # Address management
+│   │   ├── notifications/     # Notifications
+│   │   ├── upload/            # File upload
+│   │   ├── maps/              # Maps integration
+│   │   ├── geocode/           # Geocoding
+│   │   ├── shipping-rates/   # Shipping rates
+│   │   └── common/            # Shared utilities
+│   └── prisma/                # Database schema & migrations
+│
+├── Frontend/
+│   └── src/
+│       ├── app/               # Next.js pages (App Router)
+│       ├── features/          # Feature modules
+│       │   ├── auth/
+│       │   ├── products/
+│       │   ├── cart/
+│       │   ├── wishlist/
+│       │   ├── reviews/
+│       │   ├── sell/
+│       │   └── ...
+│       └── shared/            # Shared components & utilities
+│
+└── RELUV-API.postman_collection.json
+```
+
+## 🔐 Authentication
+
+API menggunakan JWT untuk authentication. Setelah login, include token di header:
+
+```
+Authorization: Bearer <your-token>
+```
+
+## 📤 API Response Format
+
+Semua API responses menggunakan format konsisten:
+
+### Success Response
+```json
+{
+  "success": true,
+  "statusCode": 200,
+  "message": "Data retrieved successfully",
+  "data": { ... },
+  "timestamp": "2024-01-15T10:30:00.000Z",
+  "path": "/api/v1/products"
+}
+```
+
+### Error Response
+```json
+{
+  "success": false,
+  "statusCode": 404,
+  "message": "Resource not found",
+  "error": "Not Found",
+  "timestamp": "2024-01-15T10:30:00.000Z",
+  "path": "/api/v1/products/999"
+}
+```
+
+## 🧪 Testing API
+
+Import `RELUV-API.postman_collection.json` ke Postman untuk testing semua endpoints.
+
+## 📝 Environment Variables
+
+### Backend (.env)
+```env
+DATABASE_URL=postgresql://...
+JWT_SECRET=...
+CLOUDINARY_CLOUD_NAME=...
+MIDTRANS_SERVER_KEY=...
+BITESHIP_API_KEY=...
+# ... (lihat Backend/README.md untuk lengkapnya)
+```
+
+### Frontend (.env.local)
+```env
+NEXT_PUBLIC_API_URL=http://localhost:8000/api/v1
+```
+
+## 🚢 Deployment
+
+### Backend
+1. Build: `npm run build`
+2. Set environment variables
+3. Run migrations: `npx prisma migrate deploy`
+4. Start: `npm run start:prod`
+
+### Frontend
+1. Build: `npm run build`
+2. Set environment variables
+3. Deploy ke Vercel/Netlify atau self-hosted
+
+## 📄 License
+
+Private - All rights reserved
+
+## 👥 Contributing
+
+Untuk kontribusi, silakan buat issue atau pull request.
+
+## 📞 Support
+
+Untuk support atau pertanyaan, silakan buat issue di repository.
