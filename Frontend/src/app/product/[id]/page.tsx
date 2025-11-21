@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
+import Image from "next/image";
 import {
   ChevronLeft,
   ChevronRight,
@@ -52,6 +53,18 @@ const ProductDetail = () => {
   const isWishlisted = useWishlistStore((state) =>
     product ? state.items.some((item) => item.productId === product.id) : false
   );
+
+  useEffect(() => {
+    if (product && product.images && product.images.length > 1) {
+      product.images.slice(1, 4).forEach((url) => {
+        const link = document.createElement("link");
+        link.rel = "preload";
+        link.as = "image";
+        link.href = url;
+        document.head.appendChild(link);
+      });
+    }
+  }, [product]);
 
   if (isLoading) {
     return <ProductDetailSkeleton />;
@@ -163,7 +176,7 @@ const ProductDetail = () => {
         <div className="container mx-auto px-4 sm:px-6 md:px-10 xl:px-20 2xl:px-40 py-10 sm:py-12 md:py-14">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-16">
             <div className="space-y-4 lg:sticky top-8 self-start">
-              <div className="relative bg-gray-50/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-lg overflow-hidden border border-gray-200/30 dark:border-gray-700/30 shadow-sm">
+              <div className="relative bg-gray-50/90 dark:bg-gray-800/90 rounded-lg overflow-hidden">
                 <div
                   ref={imageRef}
                   className="aspect-square relative overflow-hidden cursor-zoom-in"
@@ -191,18 +204,35 @@ const ProductDetail = () => {
                           transition:
                             index === selectedImageIndex
                               ? isHovering
-                                ? "transform 0.3s ease-out, opacity 0.5s ease-in-out"
-                                : "opacity 0.5s ease-in-out, transform 0.3s ease-out"
-                              : "opacity 0.5s ease-in-out",
+                                ? "transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease-in-out"
+                                : "opacity 0.4s ease-in-out, transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)"
+                              : "opacity 0.4s ease-in-out",
                           pointerEvents:
                             index === selectedImageIndex ? "auto" : "none",
+                          willChange:
+                            index === selectedImageIndex
+                              ? "transform, opacity"
+                              : "opacity",
                         }}
                       >
-                        <img
+                        <Image
                           src={image}
-                          alt={product.name}
-                          className="w-full h-full object-cover"
+                          alt={`${product.name} - Image ${index + 1}`}
+                          fill
+                          sizes="(max-width: 768px) 100vw, 50vw"
+                          className="object-cover select-none"
                           draggable={false}
+                          priority={index === 0}
+                          quality={95}
+                          unoptimized={
+                            image.startsWith("http://localhost") ||
+                            image.includes("cloudinary")
+                          }
+                          onError={(e) => {
+                            const target = e.target as HTMLImageElement;
+                            target.src =
+                              "https://placehold.co/800x800/e2e8f0/e2e8f0?text=No+Image";
+                          }}
                         />
                       </div>
                     ))}
@@ -243,16 +273,29 @@ const ProductDetail = () => {
                   <button
                     key={index}
                     onClick={() => setSelectedImageIndex(index)}
-                    className={`aspect-square bg-gray-50/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-lg overflow-hidden border-2 transition-all duration-200 shadow-sm cursor-pointer ${
+                    className={`relative aspect-square bg-gray-50/90 dark:bg-gray-800/90 rounded-lg overflow-hidden transition-all duration-200 cursor-pointer ${
                       index === selectedImageIndex
-                        ? "border-sky-600 dark:border-sky-400"
-                        : "border-transparent hover:border-gray-300 dark:hover:border-gray-600"
+                        ? "ring-2 ring-sky-600 dark:ring-sky-400"
+                        : ""
                     }`}
                   >
-                    <img
+                    <Image
                       src={thumb}
-                      alt={`${product.name} ${index + 1}`}
-                      className="w-full h-full object-cover"
+                      alt={`${product.name} thumbnail ${index + 1}`}
+                      fill
+                      sizes="(max-width: 768px) 25vw, 12.5vw"
+                      className="object-cover select-none transition-opacity duration-200"
+                      quality={90}
+                      loading={index < 4 ? "eager" : "lazy"}
+                      unoptimized={
+                        thumb.startsWith("http://localhost") ||
+                        thumb.includes("cloudinary")
+                      }
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.src =
+                          "https://placehold.co/200x200/e2e8f0/e2e8f0?text=No+Image";
+                      }}
                     />
                   </button>
                 ))}
@@ -344,20 +387,31 @@ const ProductDetail = () => {
                       <button
                         key={variant.id}
                         onClick={() => setSelectedVariantIndex(index)}
-                        className={`relative w-12 h-12 sm:w-16 sm:h-16 rounded-lg border-2 overflow-hidden transition-all duration-200 cursor-pointer ${
+                        className={`relative w-12 h-12 sm:w-16 sm:h-16 rounded-lg overflow-hidden transition-all duration-200 cursor-pointer ${
                           index === selectedVariantIndex
-                            ? "border-sky-600 dark:border-sky-400"
-                            : "border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600"
+                            ? "ring-2 ring-sky-600 dark:ring-sky-400"
+                            : ""
                         }`}
                       >
-                        <img
-                          src={product.images[0]}
-                          alt={variant.size || ""}
-                          className="w-full h-full object-cover"
-                        />
-                        {index === selectedVariantIndex && (
-                          <div className="absolute inset-0 border-2 border-sky-600 dark:border-sky-400 rounded-lg"></div>
-                        )}
+                        <div className="relative w-full h-full">
+                          <Image
+                            src={
+                              product.images[0] ||
+                              "https://placehold.co/200x200/e2e8f0/e2e8f0?text=Image"
+                            }
+                            alt={variant.size || "Variant image"}
+                            fill
+                            sizes="(max-width: 640px) 48px, 64px"
+                            className="object-cover rounded-lg select-none"
+                            quality={85}
+                            loading="lazy"
+                            unoptimized={
+                              product.images[0]?.startsWith(
+                                "http://localhost"
+                              ) || product.images[0]?.includes("cloudinary")
+                            }
+                          />
+                        </div>
                       </button>
                     ))}
                   </div>
