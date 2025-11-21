@@ -47,8 +47,59 @@ const RegisterForm = ({
     }));
   };
 
+  const validateForm = (): { isValid: boolean; errors: string[] } => {
+    const errors: string[] = [];
+
+    if (!formData.firstName.trim()) {
+      errors.push("First name is required");
+    } else if (formData.firstName.trim().length > 100) {
+      errors.push("First name must be at most 100 characters");
+    }
+
+    if (formData.lastName && formData.lastName.length > 100) {
+      errors.push("Last name must be at most 100 characters");
+    }
+
+    if (!formData.email.trim()) {
+      errors.push("Email is required");
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      errors.push("Please provide a valid email address");
+    } else if (formData.email.length > 255) {
+      errors.push("Email must be at most 255 characters");
+    }
+
+    if (!formData.password) {
+      errors.push("Password is required");
+    } else if (formData.password.length < 6) {
+      errors.push("Password must be at least 6 characters long");
+    } else if (formData.password.length > 100) {
+      errors.push("Password must be at most 100 characters");
+    }
+
+    if (!formData.confirmPassword) {
+      errors.push("Confirm password is required");
+    } else if (formData.password !== formData.confirmPassword) {
+      errors.push("Passwords do not match");
+    }
+
+    if (!formData.agreeToTerms) {
+      errors.push("You must agree to the terms and conditions");
+    }
+
+    return {
+      isValid: errors.length === 0,
+      errors,
+    };
+  };
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const validation = validateForm();
+    if (!validation.isValid) {
+      // Show first error - you can enhance this to show all errors
+      alert(validation.errors[0]);
+      return;
+    }
     onSubmit(formData);
   };
 
@@ -80,6 +131,8 @@ const RegisterForm = ({
                 type="text"
                 value={formData.firstName}
                 onChange={handleInputChange}
+                maxLength={100}
+                required
                 className="block w-full pl-10 pr-3 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200 placeholder-gray-400 dark:placeholder-gray-500"
                 placeholder="First name"
               />
@@ -100,6 +153,7 @@ const RegisterForm = ({
                 type="text"
                 value={formData.lastName}
                 onChange={handleInputChange}
+                maxLength={100}
                 className="block w-full pl-10 pr-3 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200 placeholder-gray-400 dark:placeholder-gray-500"
                 placeholder="Last name"
               />
@@ -122,6 +176,8 @@ const RegisterForm = ({
               autoComplete="email"
               value={formData.email}
               onChange={handleInputChange}
+              maxLength={255}
+              required
               className="block w-full pl-10 pr-3 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 dark:focus:bg-gray-800 transition-colors duration-200 placeholder-gray-400 dark:placeholder-gray-500"
               placeholder="Enter your email"
             />
@@ -143,6 +199,9 @@ const RegisterForm = ({
               autoComplete="new-password"
               value={formData.password}
               onChange={handleInputChange}
+              minLength={6}
+              maxLength={100}
+              required
               className="block w-full pl-10 pr-12 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 dark:focus:bg-gray-800 transition-colors duration-200 placeholder-gray-400 dark:placeholder-gray-500"
               placeholder="Create a password"
             />
@@ -175,6 +234,9 @@ const RegisterForm = ({
               autoComplete="new-password"
               value={formData.confirmPassword}
               onChange={handleInputChange}
+              minLength={6}
+              maxLength={100}
+              required
               className="block w-full pl-10 pr-12 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 dark:focus:bg-gray-800 transition-colors duration-200 placeholder-gray-400 dark:placeholder-gray-500"
               placeholder="Confirm your password"
             />

@@ -191,10 +191,16 @@ const CustomSelect = ({
                           onChange={(e) => handleCustomInputChange(e.target.value)}
                           onBlur={handleCustomInputBlur}
                           onKeyDown={handleCustomInputKeyDown}
+                          maxLength={50}
                           className="w-full px-3 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-400"
                           autoFocus
                           onClick={(e) => e.stopPropagation()}
                         />
+                        {customValue && customValue.length > 40 && (
+                          <p className="text-xs text-amber-600 dark:text-amber-400 mt-1 px-3">
+                            {50 - customValue.length} characters remaining
+                          </p>
+                        )}
                       </div>
                     )}
                   </li>

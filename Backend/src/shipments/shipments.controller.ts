@@ -1,4 +1,4 @@
-import { Body, Controller, Post, HttpCode } from '@nestjs/common';
+import { Body, Controller, Post, HttpCode, ValidationPipe } from '@nestjs/common';
 import { ShipmentsService } from './shipments.service';
 import { BiteshipWebhookDto } from './dto/biteship-webhook.dto';
 
@@ -8,7 +8,16 @@ export class ShipmentsController {
 
   @Post('biteship-webhook')
   @HttpCode(200)
-  handleBiteshipWebhook(@Body() payload: BiteshipWebhookDto) {
+  handleBiteshipWebhook(
+    @Body(
+      new ValidationPipe({
+        transform: true,
+        whitelist: true,
+        forbidNonWhitelisted: false,
+      }),
+    )
+    payload: BiteshipWebhookDto,
+  ) {
     this.shipmentsService.handleWebhook(payload);
   }
 }

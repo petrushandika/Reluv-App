@@ -31,13 +31,114 @@ export const useSellProduct = () => {
       toast.error("Please upload at least one photo.");
       return;
     }
-    if (
-      !listingData.categoryId ||
-      !listingData.name ||
-      !listingData.price ||
-      !listingData.condition
-    ) {
-      toast.error("Please fill in all required fields.");
+
+    const numericPrice = listingData.price.replace(/\./g, "");
+    const priceValue = parseFloat(numericPrice) || 0;
+
+    if (!listingData.categoryId) {
+      toast.error("Please select a category.");
+      return;
+    }
+
+    if (!listingData.name || !listingData.name.trim()) {
+      toast.error("Please enter a listing title.");
+      return;
+    }
+
+    if (listingData.name.trim().length > 255) {
+      toast.error("Listing title must be at most 255 characters.");
+      return;
+    }
+
+    if (!listingData.condition) {
+      toast.error("Please select a condition.");
+      return;
+    }
+
+    if (!listingData.price || numericPrice === "" || priceValue <= 0) {
+      toast.error("Please enter a valid price (must be greater than 0).");
+      return;
+    }
+
+    if (priceValue > 999999999) {
+      toast.error("Price must be less than 1 billion.");
+      return;
+    }
+
+    if (listingData.description && listingData.description.length > 10000) {
+      toast.error("Description must be at most 10000 characters.");
+      return;
+    }
+
+    if (listingData.conditionNote && listingData.conditionNote.length > 500) {
+      toast.error("Condition note must be at most 500 characters.");
+      return;
+    }
+
+    if (listingData.size === "OTHER" && listingData.customSize) {
+      if (listingData.customSize.length > 50) {
+        toast.error("Custom size must be at most 50 characters.");
+        return;
+      }
+    }
+
+    if (listingData.color === "OTHER" && listingData.customColor) {
+      if (listingData.customColor.length > 50) {
+        toast.error("Custom color must be at most 50 characters.");
+        return;
+      }
+    }
+
+    const weight = parseInt(listingData.weight, 10);
+    if (listingData.weight && !isNaN(weight)) {
+      if (weight < 1) {
+        toast.error("Weight must be at least 1 gram.");
+        return;
+      } else if (weight > 999999) {
+        toast.error("Weight must be less than 1 million grams.");
+        return;
+      }
+    }
+
+    const length = parseInt(listingData.length, 10);
+    if (listingData.length && !isNaN(length)) {
+      if (length < 1) {
+        toast.error("Length must be at least 1 cm.");
+        return;
+      } else if (length > 9999) {
+        toast.error("Length must be less than 10000 cm.");
+        return;
+      }
+    }
+
+    const width = parseInt(listingData.width, 10);
+    if (listingData.width && !isNaN(width)) {
+      if (width < 1) {
+        toast.error("Width must be at least 1 cm.");
+        return;
+      } else if (width > 9999) {
+        toast.error("Width must be less than 10000 cm.");
+        return;
+      }
+    }
+
+    const height = parseInt(listingData.height, 10);
+    if (listingData.height && !isNaN(height)) {
+      if (height < 1) {
+        toast.error("Height must be at least 1 cm.");
+        return;
+      } else if (height > 9999) {
+        toast.error("Height must be less than 10000 cm.");
+        return;
+      }
+    }
+
+    const stock = Number(listingData.stock);
+    if (!isNaN(stock) && stock < 0) {
+      toast.error("Stock must be 0 or greater.");
+      return;
+    } else if (!isNaN(stock) && stock > 999999) {
+      toast.error("Stock must be less than 1 million.");
       return;
     }
 

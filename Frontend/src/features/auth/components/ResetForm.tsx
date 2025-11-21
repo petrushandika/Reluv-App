@@ -96,6 +96,8 @@ const ResetForm = ({
                   required
                   value={formData.password}
                   onChange={handleInputChange}
+                  minLength={6}
+                  maxLength={100}
                   className="block w-full pl-10 pr-12 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 dark:focus:bg-gray-800 transition-colors duration-200 placeholder-gray-400 dark:placeholder-gray-500"
                   placeholder="Enter new password"
                 />
@@ -118,7 +120,8 @@ const ResetForm = ({
                     <div className="flex-1 h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
                       <div
                         className={`h-full transition-all duration-300 ${
-                          strengthColors[passwordStrength - 1] || "bg-gray-200 dark:bg-gray-700"
+                          strengthColors[passwordStrength - 1] ||
+                          "bg-gray-200 dark:bg-gray-700"
                         }`}
                         style={{
                           width: `${(passwordStrength / 5) * 100}%`,
@@ -149,6 +152,8 @@ const ResetForm = ({
                   required
                   value={formData.confirmPassword}
                   onChange={handleInputChange}
+                  minLength={6}
+                  maxLength={100}
                   className="block w-full pl-10 pr-12 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 dark:focus:bg-gray-800 transition-colors duration-200 placeholder-gray-400 dark:placeholder-gray-500"
                   placeholder="Confirm new password"
                 />
@@ -195,7 +200,9 @@ const ResetForm = ({
               <ul className="space-y-1 text-sm text-gray-600 dark:text-gray-300">
                 <li
                   className={`flex items-center ${
-                    formData.password.length >= 6 ? "text-green-600 dark:text-green-400" : ""
+                    formData.password.length >= 6
+                      ? "text-green-600 dark:text-green-400"
+                      : ""
                   }`}
                 >
                   <div
@@ -209,7 +216,9 @@ const ResetForm = ({
                 </li>
                 <li
                   className={`flex items-center ${
-                    /[A-Z]/.test(formData.password) ? "text-green-600 dark:text-green-400" : ""
+                    /[A-Z]/.test(formData.password)
+                      ? "text-green-600 dark:text-green-400"
+                      : ""
                   }`}
                 >
                   <div
@@ -223,7 +232,9 @@ const ResetForm = ({
                 </li>
                 <li
                   className={`flex items-center ${
-                    /[a-z]/.test(formData.password) ? "text-green-600 dark:text-green-400" : ""
+                    /[a-z]/.test(formData.password)
+                      ? "text-green-600 dark:text-green-400"
+                      : ""
                   }`}
                 >
                   <div
@@ -237,7 +248,9 @@ const ResetForm = ({
                 </li>
                 <li
                   className={`flex items-center ${
-                    /[0-9]/.test(formData.password) ? "text-green-600 dark:text-green-400" : ""
+                    /[0-9]/.test(formData.password)
+                      ? "text-green-600 dark:text-green-400"
+                      : ""
                   }`}
                 >
                   <div

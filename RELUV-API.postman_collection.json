@@ -1040,6 +1040,7 @@
         {
           "name": "Create Product",
           "request": {
+            "description": "Create a new product. Required fields: name, slug, description, categoryId, images (at least 1), variants (at least 1). Optional: parentCategoryId, childCategoryId, isPublished, isPreloved. Each variant requires: price, stock, condition, weight, length, width, height. Optional variant fields: size, color, compareAtPrice, conditionNote.",
             "auth": {
               "type": "bearer",
               "bearer": [
@@ -1059,7 +1060,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"Vintage T-Shirt\",\n  \"description\": \"Beautiful vintage t-shirt in excellent condition\",\n  \"categoryId\": 1,\n  \"condition\": \"EXCELLENT\",\n  \"images\": [\"https://example.com/image1.jpg\", \"https://example.com/image2.jpg\"],\n  \"variants\": [\n    {\n      \"size\": \"M\",\n      \"color\": \"Blue\",\n      \"price\": 150000,\n      \"stock\": 1,\n      \"weight\": 200\n    }\n  ]\n}",
+              "raw": "{\n  \"name\": \"Vintage T-Shirt\",\n  \"slug\": \"vintage-t-shirt-12345\",\n  \"description\": \"Beautiful vintage t-shirt in excellent condition\",\n  \"categoryId\": 403,\n  \"parentCategoryId\": 401,\n  \"childCategoryId\": 404,\n  \"images\": [\"https://example.com/image1.jpg\", \"https://example.com/image2.jpg\"],\n  \"isPublished\": true,\n  \"isPreloved\": true,\n  \"variants\": [\n    {\n      \"size\": \"M\",\n      \"color\": \"Blue\",\n      \"price\": 150000,\n      \"compareAtPrice\": 200000,\n      \"stock\": 1,\n      \"condition\": \"NEW\",\n      \"conditionNote\": \"Brand new with tags\",\n      \"weight\": 200,\n      \"length\": 20,\n      \"width\": 15,\n      \"height\": 5\n    }\n  ]\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1163,7 +1164,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"Updated Vintage T-Shirt\",\n  \"description\": \"Updated description for vintage t-shirt\",\n  \"condition\": \"GOOD\",\n  \"images\": [\"https://example.com/updated-image1.jpg\"]\n}",
+              "raw": "{\n  \"name\": \"Updated Vintage T-Shirt\",\n  \"slug\": \"updated-vintage-t-shirt-12345\",\n  \"description\": \"Updated description for vintage t-shirt\",\n  \"images\": [\"https://example.com/updated-image1.jpg\"],\n  \"isPublished\": true,\n  \"isPreloved\": false,\n  \"categoryId\": 403,\n  \"parentCategoryId\": 401,\n  \"childCategoryId\": 404\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1221,7 +1222,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"size\": \"L\",\n  \"color\": \"Red\",\n  \"price\": 175000,\n  \"stock\": 1,\n  \"weight\": 220\n}",
+              "raw": "{\n  \"size\": \"L\",\n  \"color\": \"Red\",\n  \"price\": 175000,\n  \"compareAtPrice\": 220000,\n  \"stock\": 1,\n  \"condition\": \"LIKE_NEW\",\n  \"conditionNote\": \"Worn once, looks brand new\",\n  \"weight\": 220,\n  \"length\": 22,\n  \"width\": 16,\n  \"height\": 5\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1257,7 +1258,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"price\": 200000,\n  \"stock\": 2\n}",
+              "raw": "{\n  \"size\": \"XL\",\n  \"color\": \"Black\",\n  \"price\": 200000,\n  \"compareAtPrice\": 250000,\n  \"stock\": 2,\n  \"condition\": \"GOOD\",\n  \"conditionNote\": \"Good condition with minor wear\",\n  \"weight\": 230,\n  \"length\": 24,\n  \"width\": 18,\n  \"height\": 5\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1433,26 +1434,13 @@
               ]
             },
             "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"productId\": 1\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
+            "header": [],
             "url": {
-              "raw": "{{BACKEND}}/api/v1/wishlist",
+              "raw": "{{BACKEND}}/api/v1/wishlist/1",
               "host": ["{{BACKEND}}"],
-              "path": ["api", "v1", "wishlist"]
-            }
+              "path": ["api", "v1", "wishlist", "1"]
+            },
+            "description": "Add product to wishlist by productId (in URL path). No request body needed."
           }
         },
         {
@@ -1548,7 +1536,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"locationId\": 1,\n  \"items\": [\n    {\n      \"variantId\": 1,\n      \"quantity\": 1\n    }\n  ],\n  \"voucherCode\": \"DISCOUNT10\",\n  \"shippingMethod\": \"jne\",\n  \"shippingService\": \"reg\",\n  \"shippingCost\": 15000\n}",
+              "raw": "{\n  \"locationId\": 1,\n  \"shippingCost\": 15000,\n  \"notes\": \"Please handle with care\",\n  \"voucherCode\": \"DISCOUNT10\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1740,7 +1728,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"code\": \"NEWUSER20\",\n  \"type\": \"PERCENTAGE\",\n  \"value\": 20,\n  \"minPurchase\": 100000,\n  \"maxDiscount\": 50000,\n  \"maxUsage\": 100,\n  \"validFrom\": \"2024-01-01T00:00:00.000Z\",\n  \"validUntil\": \"2024-12-31T23:59:59.000Z\",\n  \"description\": \"20% discount for new users\"\n}",
+              "raw": "{\n  \"name\": \"New User Discount\",\n  \"code\": \"NEWUSER20\",\n  \"description\": \"20% discount for new users\",\n  \"type\": \"PERCENTAGE\",\n  \"value\": 20,\n  \"minPurchase\": 100000,\n  \"maxDiscount\": 50000,\n  \"usageLimit\": 100,\n  \"expiry\": \"2024-12-31T23:59:59.000Z\"\n}",
               "options": {
                 "raw": {
                   "language": "json"

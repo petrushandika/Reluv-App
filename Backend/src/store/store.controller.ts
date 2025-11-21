@@ -53,7 +53,16 @@ export class StoreController {
 
   @UseGuards(JwtAuthGuard, AdminGuard)
   @Post('/admin/create-for-user')
-  createStoreForUser(@Body() adminCreateStoreDto: AdminCreateStoreDto) {
+  createStoreForUser(
+    @Body(
+      new ValidationPipe({
+        transform: true,
+        whitelist: true,
+        forbidNonWhitelisted: false,
+      }),
+    )
+    adminCreateStoreDto: AdminCreateStoreDto,
+  ) {
     return this.storeService.createStoreForUser(adminCreateStoreDto);
   }
 
