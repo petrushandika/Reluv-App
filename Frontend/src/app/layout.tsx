@@ -74,7 +74,7 @@ export default function RootLayout({
         <AuthProvider>
           <AppInitializer>
             <Toaster
-              position="top-right"
+              position="bottom-right"
               richColors
               toastOptions={{
                 style: {
