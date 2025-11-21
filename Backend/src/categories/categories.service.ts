@@ -45,7 +45,38 @@ export class CategoriesService {
   }
 
   async findAll() {
-    return this.prisma.category.findMany({
+    const buildCategoryTree = async (categoryId: number): Promise<any> => {
+      const category = await this.prisma.category.findUnique({
+        where: { id: categoryId },
+        select: {
+          id: true,
+          name: true,
+          slug: true,
+        },
+      });
+
+      if (!category) return null;
+
+      const children = await this.prisma.category.findMany({
+        where: { parentId: categoryId },
+        select: {
+          id: true,
+          name: true,
+          slug: true,
+        },
+      });
+
+      const childCategories = await Promise.all(
+        children.map((child) => buildCategoryTree(child.id)),
+      );
+
+      return {
+        ...category,
+        childCategories: childCategories.filter((c) => c !== null),
+      };
+    };
+
+    const topLevelCategories = await this.prisma.category.findMany({
       where: {
         parentId: null,
       },
@@ -53,18 +84,46 @@ export class CategoriesService {
         id: true,
         name: true,
         slug: true,
-        childCategories: {
-          select: {
-            id: true,
-            name: true,
-            slug: true,
-          },
-        },
       },
     });
+
+    return Promise.all(
+      topLevelCategories.map((category) => buildCategoryTree(category.id)),
+    );
   }
 
   async findOne(id: number) {
+    const buildCategoryTree = async (categoryId: number): Promise<any> => {
+      const category = await this.prisma.category.findUnique({
+        where: { id: categoryId },
+        select: {
+          id: true,
+          name: true,
+          slug: true,
+        },
+      });
+
+      if (!category) return null;
+
+      const children = await this.prisma.category.findMany({
+        where: { parentId: categoryId },
+        select: {
+          id: true,
+          name: true,
+          slug: true,
+        },
+      });
+
+      const childCategories = await Promise.all(
+        children.map((child) => buildCategoryTree(child.id)),
+      );
+
+      return {
+        ...category,
+        childCategories: childCategories.filter((c) => c !== null),
+      };
+    };
+
     const category = await this.prisma.category.findUnique({
       where: { id },
       select: {
@@ -72,13 +131,6 @@ export class CategoriesService {
         name: true,
         slug: true,
         parentCategory: {
-          select: {
-            id: true,
-            name: true,
-            slug: true,
-          },
-        },
-        childCategories: {
           select: {
             id: true,
             name: true,
@@ -99,7 +151,24 @@ export class CategoriesService {
     if (!category) {
       throw new NotFoundException(`Category with ID ${id} not found`);
     }
-    return category;
+
+    const children = await this.prisma.category.findMany({
+      where: { parentId: id },
+      select: {
+        id: true,
+        name: true,
+        slug: true,
+      },
+    });
+
+    const childCategories = await Promise.all(
+      children.map((child) => buildCategoryTree(child.id)),
+    );
+
+    return {
+      ...category,
+      childCategories: childCategories.filter((c) => c !== null),
+    };
   }
 
   async update(id: number, updateCategoryDto: UpdateCategoryDto) {
