@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import axios from "axios";
 import { z } from "zod";
 import { toast } from "sonner";
@@ -196,7 +197,7 @@ const Register = () => {
             </div>
           ))}
         </div>
-        <div className="absolute inset-0 z-20">
+        <div className="absolute inset-0 z-[1]">
           {promoCards.map((card) => (
             <div
               key={card.id}
@@ -212,9 +213,11 @@ const Register = () => {
           ))}
         </div>
         <div className="relative z-10 flex flex-col justify-center items-center text-white px-12 text-center">
-          <h1 className="text-6xl font-bold text-white mb-4 tracking-wide [text-shadow:_2px_2px_8px_rgba(0,0,0,0.2)] animate-fade-in">
-            Reluv
-          </h1>
+          <Link href="/" className="cursor-pointer hover:opacity-80 transition-opacity">
+            <h1 className="text-6xl font-bold text-white mb-4 tracking-wide [text-shadow:_2px_2px_8px_rgba(0,0,0,0.2)] animate-fade-in">
+              Reluv
+            </h1>
+          </Link>
           <p className="text-2xl font-light mb-8 opacity-90 [text-shadow:_1px_1px_4px_rgba(0,0,0,0.2)] animate-fade-in-delayed">
             Where Style Finds a Second Life.
           </p>

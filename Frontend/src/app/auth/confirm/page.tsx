@@ -88,7 +88,7 @@ const Confirm = () => {
           ))}
         </div>
 
-        <div className="absolute inset-0 z-20">
+        <div className="absolute inset-0 z-[1]">
           {promoCards.map((card) => (
             <div key={card.id} className="promo-card-sky" style={card.style}>
               {card.icon}

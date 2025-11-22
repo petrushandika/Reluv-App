@@ -117,7 +117,7 @@ const ResetComponent = () => {
   return (
     <div className="min-h-screen flex bg-white dark:bg-gray-900">
       <div className="hidden lg:flex items-center justify-center lg:w-1/2 bg-gradient-to-br from-sky-500 to-sky-700 dark:from-sky-600 dark:to-sky-800 relative overflow-hidden">
-        <div className="absolute inset-0 z-20">
+        <div className="absolute inset-0 z-[1]">
           {promoCards.map((card) => (
             <div
               key={card.id}
