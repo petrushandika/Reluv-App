@@ -1,18 +1,12 @@
-import axios from "axios";
 import {
   AuthResponse,
   LoginPayload,
   RegisterPayload,
   ForgotPasswordPayload,
   ResetPasswordPayload,
+  User,
 } from "../types";
-
-export const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL,
-  headers: {
-    "Content-Type": "application/json",
-  },
-});
+import { api } from "@/shared/lib/axios";
 
 export const registerUser = async (data: RegisterPayload) => {
   const response = await api.post("/auth/register", data);
@@ -20,8 +14,28 @@ export const registerUser = async (data: RegisterPayload) => {
 };
 
 export const loginUser = async (data: LoginPayload): Promise<AuthResponse> => {
-  const response = await api.post<AuthResponse>("/auth/login", data);
-  return response.data;
+  const response = await api.post<{ token: string }>("/auth/login", data);
+  const token = response.data.token || response.data;
+  
+  if (!token || typeof token !== "string") {
+    throw new Error("Token not received from server");
+  }
+
+  const originalAuth = api.defaults.headers.common["Authorization"];
+  api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  
+  try {
+    const userResponse = await api.get<User>("/users/me");
+    const user = userResponse.data;
+    
+    return {
+      token,
+      user,
+    };
+  } catch (error) {
+    api.defaults.headers.common["Authorization"] = originalAuth;
+    throw error;
+  }
 };
 
 export const forgotPassword = async (data: ForgotPasswordPayload) => {

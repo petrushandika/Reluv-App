@@ -3,7 +3,7 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { loginUser } from '../api/authApi';
-import { api } from '../api/authApi';
+import { api } from '@/shared/lib/axios';
 import { User, LoginPayload, AuthResponse } from '../types';
 import { getMe } from '@/features/user/api/userApi';
 
@@ -128,6 +128,11 @@ export const useAuthStore = create<AuthState>()(
               api.defaults.headers.common[
                 'Authorization'
               ] = `Bearer ${state.token}`;
+              if (!state.user || !state.user.firstName) {
+                state.fetchAndSetUser().catch((error) => {
+                  console.error('Failed to fetch user after rehydrate:', error);
+                });
+              }
             }
           }
           state._setHydrated();

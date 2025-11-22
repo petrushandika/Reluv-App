@@ -37,6 +37,7 @@ const Navbar = () => {
   const user = useAuthStore((state) => state.user);
   const token = useAuthStore((state) => state.token);
   const logout = useAuthStore((state) => state.logout);
+  const fetchAndSetUser = useAuthStore((state) => state.fetchAndSetUser);
   const itemCount = useCartStore((state) => state.itemCount);
   const wishlistItems = useWishlistStore((state) => state.items);
   const clearCart = useCartStore((state) => state.clearCart);
@@ -468,6 +469,14 @@ const Navbar = () => {
     };
   }, []);
 
+  useEffect(() => {
+    if (token && (!user || !user.firstName)) {
+      fetchAndSetUser().catch((error) => {
+        console.error("Failed to fetch user in Navbar:", error);
+      });
+    }
+  }, [token, user, fetchAndSetUser]);
+
   const toggleMobileMainMenu = (menu: string) => {
     setMobileActiveMainMenu((prev) => (prev === menu ? null : menu));
     setMobileActiveSubMenu(null);
@@ -490,15 +499,36 @@ const Navbar = () => {
   };
 
   const formatUserName = () => {
-    if (!user) return "";
-    const fullName = `${user.firstName || ""} ${user.lastName || ""}`.trim();
-    if (fullName.length > 8) {
-      return `${user.firstName} ${
-        user.lastName ? user.lastName.charAt(0) + "." : ""
-      }`;
+    if (!user) {
+      return "";
     }
+    
+    const firstName = user.firstName?.trim() || "";
+    const lastName = user.lastName?.trim() || "";
+    
+    if (!firstName && !lastName) {
+      return "";
+    }
+    
+    if (!firstName) {
+      return lastName;
+    }
+    
+    if (!lastName) {
+      return firstName;
+    }
+    
+    const fullName = `${firstName} ${lastName}`;
+    const maxLength = 15;
+    
+    if (fullName.length > maxLength) {
+      return firstName;
+    }
+    
     return fullName;
   };
+
+  const displayName = formatUserName();
 
   return (
     <header
@@ -628,7 +658,7 @@ const Navbar = () => {
                     className="w-7 h-7 rounded-full object-cover transition-all duration-300 hover:ring-2 hover:ring-sky-500 dark:hover:ring-sky-400 cursor-pointer"
                   />
                   <span className="cursor-pointer">
-                    Hi, {formatUserName()}!
+                    Hi, {displayName || "User"}!
                   </span>
                 </button>
                 {isProfileDropdownOpen && (
@@ -638,7 +668,7 @@ const Navbar = () => {
                         <div className="bg-sky-600 dark:bg-sky-700 px-6 py-5 relative">
                           <div className="text-white">
                             <h3 className="text-lg font-bold mb-1">
-                              {formatUserName() || "User"}
+                              {displayName || "User"}
                             </h3>
                             <p className="text-sm text-gray-200">0 VP</p>
                           </div>

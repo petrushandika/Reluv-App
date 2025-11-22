@@ -68,7 +68,11 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${inter.variable} font-sans antialiased bg-white dark:bg-gray-900 text-gray-900 dark:text-white transition-colors`}
+        className={`${inter.variable} font-sans antialiased transition-colors`}
+        style={{
+          backgroundColor: 'var(--bg-primary)',
+          color: 'var(--text-primary)',
+        }}
         suppressHydrationWarning
       >
         <AuthProvider>

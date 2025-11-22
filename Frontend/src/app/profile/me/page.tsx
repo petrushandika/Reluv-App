@@ -613,7 +613,7 @@ const ProfilePage = () => {
               {isPhoneInputOpen && (
                 <form
                   onSubmit={handleSubmitPhoneNumber}
-                  className="px-4 pb-4 pt-2 space-y-4"
+                  className="py-2 space-y-4"
                 >
                   <div>
                     <label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block">

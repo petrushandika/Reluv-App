@@ -5,9 +5,14 @@ import {
   User,
   Category,
 } from '@prisma/client';
+import { Pool } from 'pg';
+import { PrismaPg } from '@prisma/adapter-pg';
 import * as bcrypt from 'bcrypt';
 import * as fs from 'fs';
 import * as path from 'path';
+import * as dotenv from 'dotenv';
+
+dotenv.config();
 
 function loadJsonData<T>(filename: string): T {
   const jsonPath = path.join(__dirname, 'data', filename);
@@ -98,7 +103,12 @@ const productSeedData = loadJsonData<ProductSeed[]>('products.json');
 const variantsData = loadJsonData<VariantsSeed[]>('variants.json');
 const locationsData = loadJsonData<LocationSeed[]>('locations.json');
 
-const prisma = new PrismaClient();
+const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+const adapter = new PrismaPg(pool);
+const prisma = new PrismaClient({
+  adapter,
+  log: ['query', 'info', 'warn', 'error'],
+});
 
 async function cleanup() {
   await prisma.orderItem.deleteMany();
