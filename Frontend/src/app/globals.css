@@ -644,6 +644,50 @@ body {
   accent-color: var(--accent-primary) !important;
 }
 
+.dark [class*="bg-gray-900/95"],
+.dark [class*="bg-gray-900/90"],
+.dark [class*="bg-gray-900/80"],
+.dark [class*="bg-gray-900/50"],
+.dark [class*="bg-gray-900/30"] {
+  background-color: var(--nav-bg) !important;
+}
+
+.dark [class*="bg-gray-800/95"],
+.dark [class*="bg-gray-800/90"],
+.dark [class*="bg-gray-800/80"],
+.dark [class*="bg-gray-800/50"],
+.dark [class*="bg-gray-800/30"] {
+  background-color: rgba(26, 35, 50, 0.95) !important;
+}
+
+.dark [class*="bg-gray-700/95"],
+.dark [class*="bg-gray-700/90"],
+.dark [class*="bg-gray-700/80"],
+.dark [class*="bg-gray-700/50"],
+.dark [class*="bg-gray-700/30"] {
+  background-color: var(--bg-secondary) !important;
+}
+
+.dark [class*="bg-white/95"],
+.dark [class*="bg-white/90"],
+.dark [class*="bg-white/80"],
+.dark [class*="bg-white/50"],
+.dark [class*="bg-white/30"] {
+  background-color: var(--nav-bg) !important;
+}
+
+.dark [class*="text-white"]:not([class*="dark:text-"]):not([class*="hover:text-"]):not([class*="focus:text-"]) {
+  color: var(--text-primary) !important;
+}
+
+.dark [class*="bg-black"]:not([class*="dark:bg-"]):not([class*="hover:bg-"]):not([class*="focus:bg-"]) {
+  background-color: var(--bg-primary) !important;
+}
+
+.dark [class*="text-black"]:not([class*="dark:text-"]):not([class*="hover:text-"]):not([class*="focus:text-"]) {
+  color: var(--text-primary) !important;
+}
+
 @keyframes buttonShine {
   0% {
     transform: translateX(-100%) translateY(-50%) rotate(25deg);

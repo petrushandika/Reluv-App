@@ -68,7 +68,7 @@ const ProductCard = ({ product, containerClassName }: ProductCardProps) => {
         </Link>
 
         {isNewProduct(product.createdAt) && (
-          <span className="absolute top-3 left-3 bg-black text-white text-[10px] px-2 py-1 rounded-sm z-10">
+          <span className="absolute top-3 left-3 bg-gray-900 dark:bg-gray-800 text-white dark:text-gray-100 text-[10px] px-2 py-1 rounded-sm z-10">
             New
           </span>
         )}

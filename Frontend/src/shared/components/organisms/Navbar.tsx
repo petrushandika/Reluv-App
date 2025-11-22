@@ -674,7 +674,7 @@ const Navbar = () => {
                           </div>
                         </div>
 
-                        <div className="bg-white dark:bg-gray-800 py-2">
+                        <div className="bg-white dark:bg-gray-700 py-2">
                           <Link
                             href="/profile/me"
                             onClick={() => setIsMobileMenuOpen(false)}
