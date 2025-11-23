@@ -434,7 +434,7 @@ const ProductDetail = () => {
                   </div>
                 </div>
               </div>
-              <div className="flex items-center space-x-3 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+              <div className="flex items-center space-x-3 p-4 bg-gray-100 dark:bg-gray-800 rounded-lg">
                 <Smartphone className="w-5 h-5 text-sky-600 dark:text-sky-400" />
                 <div className="flex-1">
                   <p className="text-sm text-gray-700 dark:text-gray-300">

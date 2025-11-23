@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { MapPin, ChevronLeft, X, Navigation, ChevronDown, Search } from 'lucide-react';
 import { useAuthStore } from '@/features/auth/store/auth.store';
 import { getMe } from '@/features/user/api/userApi';
@@ -14,7 +14,7 @@ import type { LatLngExpression } from 'leaflet';
 import type { SearchResult } from 'leaflet-geosearch/dist/providers/provider.js';
 import { toast } from 'sonner';
 import Spinner from '@/shared/components/atoms/Spinner';
-import { createAddress, getAddresses } from '@/features/address/api/addressApi';
+import { getAddress, updateAddress } from '@/features/address/api/addressApi';
 
 interface Province {
   id: string;
@@ -27,12 +27,13 @@ interface Regency {
   province_id: string;
 }
 
-const AddAddressPage = () => {
+const EditAddressPage = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const addressId = searchParams.get('id');
   const { isAuthenticated } = useAuthStore();
   const [user, setUser] = useState<UserType | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [hasExistingAddresses, setHasExistingAddresses] = useState(false);
   const [showPinpointModal, setShowPinpointModal] = useState(false);
   const [mapPosition, setMapPosition] = useState<LatLngExpression>([
     -6.2088, 106.8456,
@@ -93,22 +94,61 @@ const AddAddressPage = () => {
   }, [isAuthenticated, router]);
 
   useEffect(() => {
-    const checkExistingAddresses = async () => {
-      if (!isAuthenticated()) return;
+    const fetchAddress = async () => {
+      if (!addressId) {
+        router.push('/profile/address');
+        return;
+      }
 
       try {
-        const addresses = await getAddresses();
-        setHasExistingAddresses(addresses.length > 0);
+        const address = await getAddress(Number(addressId));
+        
+        const provinceMatch = provinces.find((p) => p.name === address.province);
+        
+        setFormData({
+          label: address.label,
+          recipientName: address.recipient,
+          phoneNumber: address.phone,
+          streetAddress: address.address,
+          country: 'ID',
+          province: provinceMatch?.id || '',
+          city: '',
+          district: address.district || '',
+          subDistrict: address.subDistrict || '',
+          postalCode: address.postalCode,
+          notes: '',
+          isDefault: address.isDefault,
+        });
+
+        if (address.latitude && address.longitude) {
+          setMapPosition([address.latitude, address.longitude]);
+        }
+
+        if (provinceMatch) {
+          const response = await fetch(
+            `https://www.emsifa.com/api-wilayah-indonesia/api/regencies/${provinceMatch.id}.json`
+          );
+          const data: Regency[] = await response.json();
+          setRegencies(data);
+          
+          const cityMatch = data.find((r) => r.name === address.city);
+          if (cityMatch) {
+            setFormData((prev) => ({ ...prev, city: cityMatch.id }));
+          }
+        }
       } catch (error) {
-        console.error('Failed to check existing addresses:', error);
-        setHasExistingAddresses(false);
+        console.error('Failed to fetch address:', error);
+        toast.error('Failed to Load Address', {
+          description: 'Could not load address data.',
+        });
+        router.push('/profile/address');
       }
     };
 
-    if (isAuthenticated()) {
-      checkExistingAddresses();
+    if (addressId && provinces.length > 0) {
+      fetchAddress();
     }
-  }, [isAuthenticated]);
+  }, [addressId, provinces, router]);
 
   useEffect(() => {
     const fetchProvinces = async () => {
@@ -153,13 +193,17 @@ const AddAddressPage = () => {
   }, [formData.province]);
 
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSelectChange = (
+    e: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleProvinceChange = (provinceId: string) => {
@@ -176,6 +220,8 @@ const AddAddressPage = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!addressId) return;
+
     try {
       const selectedProvince = provinces.find((p) => p.id === formData.province);
       const selectedCity = regencies.find((r) => r.id === formData.city);
@@ -197,21 +243,21 @@ const AddAddressPage = () => {
         subDistrict: formData.subDistrict.trim(),
         postalCode: formData.postalCode.trim(),
         address: formData.streetAddress.trim(),
-        isDefault: hasExistingAddresses ? formData.isDefault : true,
+        isDefault: formData.isDefault,
         latitude: Array.isArray(mapPosition) ? mapPosition[0] : undefined,
         longitude: Array.isArray(mapPosition) ? mapPosition[1] : undefined,
       };
 
-      await createAddress(addressData);
-      toast.success('Address Saved', {
-        description: 'Your address has been saved successfully.',
+      await updateAddress(Number(addressId), addressData);
+      toast.success('Address Updated', {
+        description: 'Your address has been updated successfully.',
       });
       router.push('/profile/address');
     } catch (error: unknown) {
-      console.error('Failed to save address:', error);
-      const errorMessage = (error as { response?: { data?: { message?: string | string[] } }; message?: string })?.response?.data?.message || (error as { message?: string })?.message || 'An error occurred while saving the address.';
+      console.error('Failed to update address:', error);
+      const errorMessage = (error as { response?: { data?: { message?: string | string[] } }; message?: string })?.response?.data?.message || (error as { message?: string })?.message || 'An error occurred while updating the address.';
       const errorDetails = Array.isArray(errorMessage) ? errorMessage.join(', ') : errorMessage;
-      toast.error('Failed to Save Address', {
+      toast.error('Failed to Update Address', {
         description: errorDetails,
       });
     }
@@ -246,6 +292,7 @@ const AddAddressPage = () => {
         type={type}
         id={id}
         name={id}
+        placeholder={placeholder}
         value={value}
         onChange={onChange}
         onMouseDown={(e) => {
@@ -279,7 +326,6 @@ const AddAddressPage = () => {
           e.stopPropagation();
         }}
         required={required}
-        placeholder={placeholder}
         className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-transparent transition-colors"
       />
     </div>
@@ -505,7 +551,7 @@ const AddAddressPage = () => {
               >
                 <ChevronLeft className="w-4 h-4" />
                 <h1 className="text-lg font-bold text-gray-900 dark:text-white">
-                  Add Address
+                  Edit Address
                 </h1>
               </button>
             </div>
@@ -517,7 +563,7 @@ const AddAddressPage = () => {
                 <div className="flex items-center gap-3 mb-2">
                   <MapPin className="w-6 h-6 text-sky-600 dark:text-sky-400" />
                   <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 dark:text-white">
-                    Add Address
+                    Edit Address
                   </h1>
                 </div>
               </div>
@@ -705,7 +751,7 @@ const AddAddressPage = () => {
                             label="Country"
                             options={[{ value: 'ID', label: 'Indonesia' }]}
                             value={formData.country}
-                            onChange={handleInputChange}
+                            onChange={handleSelectChange}
                             isOpen={isCountryOpen}
                             setIsOpen={setIsCountryOpen}
                             required
@@ -811,29 +857,27 @@ const AddAddressPage = () => {
                             className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-transparent transition-colors resize-y"
                           />
                         </div>
-                        {hasExistingAddresses && (
-                          <div className="flex items-center">
-                            <input
-                              type="checkbox"
-                              id="isDefault"
-                              name="isDefault"
-                              checked={formData.isDefault}
-                              onChange={(e) =>
-                                setFormData((prev) => ({
-                                  ...prev,
-                                  isDefault: e.target.checked,
-                                }))
-                              }
-                              className="w-4 h-4 text-sky-600 dark:text-sky-500 bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded focus:ring-sky-500 dark:focus:ring-sky-400 focus:ring-2 cursor-pointer"
-                            />
-                            <label
-                              htmlFor="isDefault"
-                              className="ml-2 text-sm font-medium text-gray-700 dark:text-gray-300 cursor-pointer"
-                            >
-                              Use as main Address
-                            </label>
-                          </div>
-                        )}
+                        <div className="flex items-center">
+                          <input
+                            type="checkbox"
+                            id="isDefault"
+                            name="isDefault"
+                            checked={formData.isDefault}
+                            onChange={(e) =>
+                              setFormData((prev) => ({
+                                ...prev,
+                                isDefault: e.target.checked,
+                              }))
+                            }
+                            className="w-4 h-4 text-sky-600 dark:text-sky-500 bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded focus:ring-sky-500 dark:focus:ring-sky-400 focus:ring-2 cursor-pointer"
+                          />
+                          <label
+                            htmlFor="isDefault"
+                            className="ml-2 text-sm font-medium text-gray-700 dark:text-gray-300 cursor-pointer"
+                          >
+                            Use as main Address
+                          </label>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -1008,4 +1052,5 @@ const AddAddressPage = () => {
   );
 };
 
-export default AddAddressPage;
+export default EditAddressPage;
+

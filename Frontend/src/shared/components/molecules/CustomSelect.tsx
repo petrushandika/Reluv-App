@@ -40,18 +40,25 @@ const CustomSelect = ({
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
       if (
         selectRef.current &&
-        !selectRef.current.contains(event.target as Node)
+        !selectRef.current.contains(target) &&
+        !target.closest('input') &&
+        !target.closest('textarea')
       ) {
         setIsOpen(false);
         setSearchTerm("");
         setIsCustomExpanded(false);
       }
     };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+    if (isOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isOpen]);
 
   useEffect(() => {
     if (value === "OTHER" && isOpen) {
@@ -141,6 +148,10 @@ const CustomSelect = ({
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   onClick={(e) => e.stopPropagation()}
+                  onMouseDown={(e) => e.stopPropagation()}
+                  onKeyDown={(e) => e.stopPropagation()}
+                  onKeyUp={(e) => e.stopPropagation()}
+                  onInput={(e) => e.stopPropagation()}
                 />
               </div>
             </div>
@@ -190,7 +201,13 @@ const CustomSelect = ({
                           value={customValue}
                           onChange={(e) => handleCustomInputChange(e.target.value)}
                           onBlur={handleCustomInputBlur}
-                          onKeyDown={handleCustomInputKeyDown}
+                          onKeyDown={(e) => {
+                            handleCustomInputKeyDown(e);
+                            e.stopPropagation();
+                          }}
+                          onKeyUp={(e) => e.stopPropagation()}
+                          onInput={(e) => e.stopPropagation()}
+                          onMouseDown={(e) => e.stopPropagation()}
                           maxLength={50}
                           className="w-full px-3 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-400"
                           autoFocus

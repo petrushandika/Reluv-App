@@ -173,7 +173,7 @@ const formatPrice = (price: number) =>
 const Checkout = () => {
   const router = useRouter();
   const { cart, isFetchingCart, subtotal } = useCart();
-  const { item: buyItem, clearBuyItem } = useBuyStore();
+  const { item: buyItem } = useBuyStore();
   const [hasCheckedCart, setHasCheckedCart] = useState(false);
 
   const [formData, setFormData] = useState({
@@ -185,6 +185,8 @@ const Checkout = () => {
     country: "ID",
     province: "",
     city: "",
+    district: "",
+    subDistrict: "",
     zip: "",
   });
 
@@ -277,14 +279,14 @@ const Checkout = () => {
     }
   }, [formData.province]);
 
-  const handleInputChange = (
+  const handleInputChange = React.useCallback((
     e: React.ChangeEvent<
       HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
     >
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-  };
+  }, []);
 
   const handleProvinceChange = (provinceId: string) => {
     setFormData((prev) => ({ ...prev, province: provinceId, city: "" }));
@@ -425,6 +427,36 @@ const Checkout = () => {
           name={id}
           value={value}
           onChange={onChange}
+          onMouseDown={(e) => {
+            e.stopPropagation();
+          }}
+          onKeyDown={(e) => {
+            e.stopPropagation();
+          }}
+          onKeyPress={(e) => {
+            e.stopPropagation();
+          }}
+          onKeyUp={(e) => {
+            e.stopPropagation();
+          }}
+          onInput={(e) => {
+            e.stopPropagation();
+          }}
+          onCompositionStart={(e) => {
+            e.stopPropagation();
+          }}
+          onCompositionUpdate={(e) => {
+            e.stopPropagation();
+          }}
+          onCompositionEnd={(e) => {
+            e.stopPropagation();
+          }}
+          onFocus={(e) => {
+            e.stopPropagation();
+          }}
+          onBlur={(e) => {
+            e.stopPropagation();
+          }}
           className={`block w-full ${
             Icon ? "pl-10" : "pl-4"
           } pr-3 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200 placeholder-gray-400 dark:placeholder-gray-500`}
@@ -465,17 +497,23 @@ const Checkout = () => {
 
     React.useEffect(() => {
       const handleClickOutside = (event: MouseEvent) => {
+        const target = event.target as HTMLElement;
         if (
           selectRef.current &&
-          !selectRef.current.contains(event.target as Node)
+          !selectRef.current.contains(target) &&
+          !target.closest('input') &&
+          !target.closest('textarea')
         ) {
           setIsOpen(false);
         }
       };
-      document.addEventListener("mousedown", handleClickOutside);
-      return () =>
+      if (isOpen) {
+        document.addEventListener("mousedown", handleClickOutside);
+      }
+      return () => {
         document.removeEventListener("mousedown", handleClickOutside);
-    }, [setIsOpen]);
+      };
+    }, [isOpen, setIsOpen]);
 
     const filteredOptions = options.filter((option) =>
       option.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -525,6 +563,14 @@ const Checkout = () => {
                   className="w-full pl-9 pr-3 py-2 border border-gray-200 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-400 focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 outline-none"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
+                  onClick={(e) => e.stopPropagation()}
+                  onMouseDown={(e) => e.stopPropagation()}
+                  onKeyDown={(e) => e.stopPropagation()}
+                  onKeyUp={(e) => e.stopPropagation()}
+                  onInput={(e) => e.stopPropagation()}
+                  onCompositionStart={(e) => e.stopPropagation()}
+                  onCompositionUpdate={(e) => e.stopPropagation()}
+                  onCompositionEnd={(e) => e.stopPropagation()}
                   autoFocus
                 />
               </div>
@@ -543,11 +589,13 @@ const Checkout = () => {
                   <li
                     key={option.id}
                     className="px-4 py-2 hover:bg-sky-100 dark:hover:bg-sky-900/30 cursor-pointer text-gray-900 dark:text-white transition-colors"
-                    onClick={() => {
+                    onClick={(e) => {
+                      e.stopPropagation();
                       onSelect(option.id);
                       setIsOpen(false);
                       setSearchTerm("");
                     }}
+                    onMouseDown={(e) => e.preventDefault()}
                   >
                     {option.name}
                   </li>
@@ -585,17 +633,23 @@ const Checkout = () => {
 
     React.useEffect(() => {
       const handleClickOutside = (event: MouseEvent) => {
+        const target = event.target as HTMLElement;
         if (
           selectRef.current &&
-          !selectRef.current.contains(event.target as Node)
+          !selectRef.current.contains(target) &&
+          !target.closest('input') &&
+          !target.closest('textarea')
         ) {
           setIsOpen(false);
         }
       };
-      document.addEventListener("mousedown", handleClickOutside);
-      return () =>
+      if (isOpen) {
+        document.addEventListener("mousedown", handleClickOutside);
+      }
+      return () => {
         document.removeEventListener("mousedown", handleClickOutside);
-    }, [setIsOpen]);
+      };
+    }, [isOpen, setIsOpen]);
 
     const selectedOption = options.find((opt) => opt.value === value);
 
@@ -826,6 +880,22 @@ const Checkout = () => {
                       placeholder="Select City"
                     />
                     <FormInput
+                      id="district"
+                      label="District"
+                      placeholder="Tebet"
+                      value={formData.district}
+                      onChange={handleInputChange}
+                    />
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <FormInput
+                      id="subDistrict"
+                      label="Sub District"
+                      placeholder="Tebet Timur"
+                      value={formData.subDistrict}
+                      onChange={handleInputChange}
+                    />
+                    <FormInput
                       id="zip"
                       label="Postal Code"
                       placeholder="12190"
@@ -998,6 +1068,36 @@ const Checkout = () => {
                       name="orderNotes"
                       value={orderNotes}
                       onChange={(e) => setOrderNotes(e.target.value)}
+                      onMouseDown={(e) => {
+                        e.stopPropagation();
+                      }}
+                      onKeyDown={(e) => {
+                        e.stopPropagation();
+                      }}
+                      onKeyPress={(e) => {
+                        e.stopPropagation();
+                      }}
+                      onKeyUp={(e) => {
+                        e.stopPropagation();
+                      }}
+                      onInput={(e) => {
+                        e.stopPropagation();
+                      }}
+                      onCompositionStart={(e) => {
+                        e.stopPropagation();
+                      }}
+                      onCompositionUpdate={(e) => {
+                        e.stopPropagation();
+                      }}
+                      onCompositionEnd={(e) => {
+                        e.stopPropagation();
+                      }}
+                      onFocus={(e) => {
+                        e.stopPropagation();
+                      }}
+                      onBlur={(e) => {
+                        e.stopPropagation();
+                      }}
                       rows={3}
                       placeholder="e.g., Please pack securely..."
                       className="block w-full text-sm p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200 placeholder-gray-400 dark:placeholder-gray-500"
