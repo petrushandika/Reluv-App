@@ -305,73 +305,6 @@ const AddAddressPage = () => {
     }
   };
 
-  const FormInput = ({
-    id,
-    label,
-    type = 'text',
-    placeholder,
-    value,
-    onChange,
-    required = false,
-  }: {
-    id: string;
-    label: string;
-    type?: string;
-    placeholder: string;
-    value: string;
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-    required?: boolean;
-  }) => (
-    <div>
-      <label
-        htmlFor={id}
-        className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
-      >
-        {label}
-        {required && <span className="text-red-500">*</span>}
-      </label>
-      <input
-        type={type}
-        id={id}
-        name={id}
-        value={value}
-        onChange={onChange}
-        onMouseDown={(e) => {
-          e.stopPropagation();
-        }}
-        onKeyDown={(e) => {
-          e.stopPropagation();
-        }}
-        onKeyPress={(e) => {
-          e.stopPropagation();
-        }}
-        onKeyUp={(e) => {
-          e.stopPropagation();
-        }}
-        onInput={(e) => {
-          e.stopPropagation();
-        }}
-        onCompositionStart={(e) => {
-          e.stopPropagation();
-        }}
-        onCompositionUpdate={(e) => {
-          e.stopPropagation();
-        }}
-        onCompositionEnd={(e) => {
-          e.stopPropagation();
-        }}
-        onFocus={(e) => {
-          e.stopPropagation();
-        }}
-        onBlur={(e) => {
-          e.stopPropagation();
-        }}
-        required={required}
-        placeholder={placeholder}
-        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder:text-base placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-transparent transition-colors"
-      />
-    </div>
-  );
 
   const FormSelect = ({
     id,
@@ -622,36 +555,6 @@ const AddAddressPage = () => {
                         name="label"
                         value={formData.label}
                         onChange={handleInputChange}
-                        onMouseDown={(e) => {
-                          e.stopPropagation();
-                        }}
-                        onKeyDown={(e) => {
-                          e.stopPropagation();
-                        }}
-                        onKeyPress={(e) => {
-                          e.stopPropagation();
-                        }}
-                        onKeyUp={(e) => {
-                          e.stopPropagation();
-                        }}
-                        onInput={(e) => {
-                          e.stopPropagation();
-                        }}
-                        onCompositionStart={(e) => {
-                          e.stopPropagation();
-                        }}
-                        onCompositionUpdate={(e) => {
-                          e.stopPropagation();
-                        }}
-                        onCompositionEnd={(e) => {
-                          e.stopPropagation();
-                        }}
-                        onFocus={(e) => {
-                          e.stopPropagation();
-                        }}
-                        onBlur={(e) => {
-                          e.stopPropagation();
-                        }}
                         required
                         placeholder="Example: Home, Office, etc."
                         className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder:text-base placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-transparent transition-colors"
@@ -779,14 +682,24 @@ const AddAddressPage = () => {
                         Address Detail
                       </h2>
                       <div className="space-y-4">
-                        <FormInput
-                          id="streetAddress"
-                          label="Street Address"
-                          placeholder="Sudirman St. No. 52-53"
-                          value={formData.streetAddress}
-                          onChange={handleInputChange}
-                          required
-                        />
+                        <div>
+                          <label
+                            htmlFor="streetAddress"
+                            className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                          >
+                            Street Address<span className="text-red-500">*</span>
+                          </label>
+                          <input
+                            type="text"
+                            id="streetAddress"
+                            name="streetAddress"
+                            value={formData.streetAddress}
+                            onChange={handleInputChange}
+                            required
+                            placeholder="Sudirman St. No. 52-53"
+                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder:text-base placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-transparent transition-colors"
+                          />
+                        </div>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                           <FormSelect
                             id="country"
@@ -861,14 +774,24 @@ const AddAddressPage = () => {
                             placeholder="Select Sub District"
                             required
                           />
-                          <FormInput
-                            id="postalCode"
-                            label="Postal Code"
-                            placeholder="12190"
-                            value={formData.postalCode}
-                            onChange={handleInputChange}
-                            required
-                          />
+                          <div>
+                            <label
+                              htmlFor="postalCode"
+                              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                            >
+                              Postal Code<span className="text-red-500">*</span>
+                            </label>
+                            <input
+                              type="text"
+                              id="postalCode"
+                              name="postalCode"
+                              value={formData.postalCode}
+                              onChange={handleInputChange}
+                              required
+                              placeholder="12190"
+                              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder:text-base placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-transparent transition-colors"
+                            />
+                          </div>
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">

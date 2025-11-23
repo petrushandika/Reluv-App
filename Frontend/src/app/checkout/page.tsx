@@ -381,14 +381,14 @@ const Checkout = () => {
     }
   }, [formData.district]);
 
-  const handleInputChange = React.useCallback((
+  const handleInputChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
     >
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-  }, []);
+  };
 
   const handleProvinceChange = (provinceId: string) => {
     setFormData((prev) => ({ ...prev, province: provinceId, city: "" }));
@@ -658,103 +658,6 @@ const Checkout = () => {
     checkoutSubtotal + shippingCost + tax - voucherDiscount
   );
 
-  const FormInput = ({
-    id,
-    label,
-    type = "text",
-    placeholder,
-    icon: Icon,
-    value,
-    onChange,
-    disabled = false,
-    onDisabledClick,
-  }: {
-    id: string;
-    label: string;
-    type?: string;
-    placeholder: string;
-    icon?: React.ElementType;
-    value: string;
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-    disabled?: boolean;
-    onDisabledClick?: () => void;
-  }) => (
-    <div>
-      <label
-        htmlFor={id}
-        className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5"
-      >
-        {label}
-      </label>
-      <div className="relative">
-        {Icon && (
-          <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5">
-            <Icon
-              className="h-5 w-5 text-gray-400 dark:text-gray-500"
-              aria-hidden="true"
-            />
-          </div>
-        )}
-        <input
-          type={type}
-          id={id}
-          name={id}
-          value={value}
-          onChange={onChange}
-          disabled={disabled}
-          onClick={(e) => {
-            if (disabled && onDisabledClick) {
-              e.preventDefault();
-              e.stopPropagation();
-              onDisabledClick();
-            }
-          }}
-          onMouseDown={(e) => {
-            e.stopPropagation();
-            if (disabled && onDisabledClick) {
-              e.preventDefault();
-              onDisabledClick();
-            }
-          }}
-          onKeyDown={(e) => {
-            e.stopPropagation();
-          }}
-          onKeyPress={(e) => {
-            e.stopPropagation();
-          }}
-          onKeyUp={(e) => {
-            e.stopPropagation();
-          }}
-          onInput={(e) => {
-            e.stopPropagation();
-          }}
-          onCompositionStart={(e) => {
-            e.stopPropagation();
-          }}
-          onCompositionUpdate={(e) => {
-            e.stopPropagation();
-          }}
-          onCompositionEnd={(e) => {
-            e.stopPropagation();
-          }}
-          onFocus={(e) => {
-            e.stopPropagation();
-            if (disabled && onDisabledClick) {
-              e.preventDefault();
-              onDisabledClick();
-            }
-          }}
-          onBlur={(e) => {
-            e.stopPropagation();
-          }}
-          className={`block w-full ${
-            Icon ? "pl-10" : "pl-4"
-          } pr-3 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder:text-base placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200 disabled:bg-gray-50 dark:disabled:bg-gray-700 disabled:cursor-not-allowed disabled:opacity-60`}
-          placeholder={placeholder}
-        />
-      </div>
-    </div>
-  );
 
   const SearchableSelect = ({
     id,
@@ -786,22 +689,28 @@ const Checkout = () => {
     const selectRef = React.useRef<HTMLDivElement>(null);
 
     React.useEffect(() => {
+      if (!isOpen) return;
+      
       const handleClickOutside = (event: MouseEvent) => {
         const target = event.target as HTMLElement;
-        if (
-          selectRef.current &&
-          !selectRef.current.contains(target) &&
-          !target.closest('input') &&
-          !target.closest('textarea')
-        ) {
-          setIsOpen(false);
+        if (!selectRef.current) return;
+        
+        if (selectRef.current.contains(target)) {
+          return;
         }
+        
+        const isInput = target.tagName === 'INPUT' || target.tagName === 'TEXTAREA';
+        if (isInput) {
+          return;
+        }
+        
+        setIsOpen(false);
       };
-      if (isOpen) {
-        document.addEventListener("mousedown", handleClickOutside);
-      }
+      
+      document.addEventListener("click", handleClickOutside);
+      
       return () => {
-        document.removeEventListener("mousedown", handleClickOutside);
+        document.removeEventListener("click", handleClickOutside);
       };
     }, [isOpen, setIsOpen]);
 
@@ -854,13 +763,6 @@ const Checkout = () => {
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   onClick={(e) => e.stopPropagation()}
-                  onMouseDown={(e) => e.stopPropagation()}
-                  onKeyDown={(e) => e.stopPropagation()}
-                  onKeyUp={(e) => e.stopPropagation()}
-                  onInput={(e) => e.stopPropagation()}
-                  onCompositionStart={(e) => e.stopPropagation()}
-                  onCompositionUpdate={(e) => e.stopPropagation()}
-                  onCompositionEnd={(e) => e.stopPropagation()}
                   autoFocus
                 />
               </div>
@@ -922,22 +824,28 @@ const Checkout = () => {
     const selectRef = React.useRef<HTMLDivElement>(null);
 
     React.useEffect(() => {
+      if (!isOpen) return;
+      
       const handleClickOutside = (event: MouseEvent) => {
         const target = event.target as HTMLElement;
-        if (
-          selectRef.current &&
-          !selectRef.current.contains(target) &&
-          !target.closest('input') &&
-          !target.closest('textarea')
-        ) {
-          setIsOpen(false);
+        if (!selectRef.current) return;
+        
+        if (selectRef.current.contains(target)) {
+          return;
         }
+        
+        const isInput = target.tagName === 'INPUT' || target.tagName === 'TEXTAREA';
+        if (isInput) {
+          return;
+        }
+        
+        setIsOpen(false);
       };
-      if (isOpen) {
-        document.addEventListener("mousedown", handleClickOutside);
-      }
+      
+      document.addEventListener("click", handleClickOutside);
+      
       return () => {
-        document.removeEventListener("mousedown", handleClickOutside);
+        document.removeEventListener("click", handleClickOutside);
       };
     }, [isOpen, setIsOpen]);
 
@@ -1098,60 +1006,163 @@ const Checkout = () => {
                   )}
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                    <FormInput
-                      id="firstName"
-                      label="First Name"
-                      placeholder="John"
-                      value={formData.firstName}
-                      onChange={handleInputChange}
-                      disabled={addressMode === "select"}
-                      onDisabledClick={() => {
-                        toast.info("Cannot Edit", {
-                          description: "This field cannot be edited because you're using a saved address. Please use the Edit button on the address card to modify your saved address, or switch to Add New Address mode.",
-                          duration: 5000,
-                        });
-                      }}
-                    />
-                    <FormInput
-                      id="lastName"
-                      label="Last Name"
-                      placeholder="Doe"
-                      value={formData.lastName}
-                      onChange={handleInputChange}
-                      disabled={addressMode === "select"}
-                      onDisabledClick={() => {
-                        toast.info("Cannot Edit", {
-                          description: "This field cannot be edited because you're using a saved address. Please use the Edit button on the address card to modify your saved address, or switch to Add New Address mode.",
-                          duration: 5000,
-                        });
-                      }}
-                    />
+                    <div>
+                      <label
+                        htmlFor="firstName"
+                        className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5"
+                      >
+                        First Name
+                      </label>
+                      <input
+                        type="text"
+                        id="firstName"
+                        name="firstName"
+                        value={formData.firstName}
+                        onChange={handleInputChange}
+                        disabled={addressMode === "select"}
+                        onClick={
+                          addressMode === "select"
+                            ? (e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                toast.info("Cannot Edit", {
+                                  description: "This field cannot be edited because you're using a saved address. Please use the Edit button on the address card to modify your saved address, or switch to Add New Address mode.",
+                                  duration: 5000,
+                                });
+                              }
+                            : undefined
+                        }
+                        onFocus={
+                          addressMode === "select"
+                            ? (e) => {
+                                e.preventDefault();
+                                toast.info("Cannot Edit", {
+                                  description: "This field cannot be edited because you're using a saved address. Please use the Edit button on the address card to modify your saved address, or switch to Add New Address mode.",
+                                  duration: 5000,
+                                });
+                              }
+                            : undefined
+                        }
+                        placeholder="John"
+                        className="block w-full pl-4 pr-3 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder:text-base placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200 disabled:bg-gray-50 dark:disabled:bg-gray-700 disabled:cursor-not-allowed disabled:opacity-60"
+                      />
+                    </div>
+                    <div>
+                      <label
+                        htmlFor="lastName"
+                        className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5"
+                      >
+                        Last Name
+                      </label>
+                      <input
+                        type="text"
+                        id="lastName"
+                        name="lastName"
+                        value={formData.lastName}
+                        onChange={handleInputChange}
+                        disabled={addressMode === "select"}
+                        onClick={
+                          addressMode === "select"
+                            ? (e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                toast.info("Cannot Edit", {
+                                  description: "This field cannot be edited because you're using a saved address. Please use the Edit button on the address card to modify your saved address, or switch to Add New Address mode.",
+                                  duration: 5000,
+                                });
+                              }
+                            : undefined
+                        }
+                        onFocus={
+                          addressMode === "select"
+                            ? (e) => {
+                                e.preventDefault();
+                                toast.info("Cannot Edit", {
+                                  description: "This field cannot be edited because you're using a saved address. Please use the Edit button on the address card to modify your saved address, or switch to Add New Address mode.",
+                                  duration: 5000,
+                                });
+                              }
+                            : undefined
+                        }
+                        placeholder="Doe"
+                        className="block w-full pl-4 pr-3 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder:text-base placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200 disabled:bg-gray-50 dark:disabled:bg-gray-700 disabled:cursor-not-allowed disabled:opacity-60"
+                      />
+                    </div>
                   </div>
-                  <FormInput
-                    id="email"
-                    label="Email Address"
-                    type="email"
-                    placeholder="you@example.com"
-                    icon={Mail}
-                    value={formData.email}
-                    onChange={handleInputChange}
-                  />
-                  <FormInput
-                    id="phone"
-                    label="Phone Number"
-                    type="tel"
-                    placeholder="+62 812-3456-7890"
-                    icon={Phone}
-                    value={formData.phone}
-                    onChange={handleInputChange}
-                    disabled={addressMode === "select"}
-                    onDisabledClick={() => {
-                      toast.info("Cannot Edit", {
-                        description: "This field cannot be edited because you're using a saved address. Please use the 'Edit' button on the address card to modify your saved address, or switch to 'Add New Address' mode.",
-                        duration: 5000,
-                      });
-                    }}
-                  />
+                  <div>
+                    <label
+                      htmlFor="email"
+                      className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5"
+                    >
+                      Email Address
+                    </label>
+                    <div className="relative">
+                      <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5">
+                        <Mail
+                          className="h-5 w-5 text-gray-400 dark:text-gray-500"
+                          aria-hidden="true"
+                        />
+                      </div>
+                      <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleInputChange}
+                        placeholder="you@example.com"
+                        className="block w-full pl-10 pr-3 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder:text-base placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label
+                      htmlFor="phone"
+                      className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5"
+                    >
+                      Phone Number
+                    </label>
+                    <div className="relative">
+                      <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5">
+                        <Phone
+                          className="h-5 w-5 text-gray-400 dark:text-gray-500"
+                          aria-hidden="true"
+                        />
+                      </div>
+                      <input
+                        type="tel"
+                        id="phone"
+                        name="phone"
+                        value={formData.phone}
+                        onChange={handleInputChange}
+                        disabled={addressMode === "select"}
+                        onClick={
+                          addressMode === "select"
+                            ? (e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                toast.info("Cannot Edit", {
+                                  description: "This field cannot be edited because you're using a saved address. Please use the 'Edit' button on the address card to modify your saved address, or switch to 'Add New Address' mode.",
+                                  duration: 5000,
+                                });
+                              }
+                            : undefined
+                        }
+                        onFocus={
+                          addressMode === "select"
+                            ? (e) => {
+                                e.preventDefault();
+                                toast.info("Cannot Edit", {
+                                  description: "This field cannot be edited because you're using a saved address. Please use the 'Edit' button on the address card to modify your saved address, or switch to 'Add New Address' mode.",
+                                  duration: 5000,
+                                });
+                              }
+                            : undefined
+                        }
+                        placeholder="+62 812-3456-7890"
+                        className="block w-full pl-10 pr-3 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder:text-base placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200 disabled:bg-gray-50 dark:disabled:bg-gray-700 disabled:cursor-not-allowed disabled:opacity-60"
+                      />
+                    </div>
+                  </div>
                 </div>
 
                 <div className="space-y-4 sm:space-y-6">
@@ -1264,13 +1275,23 @@ const Checkout = () => {
 
                   {addressMode === "new" && (
                     <>
-                      <FormInput
-                    id="address"
-                    label="Street Address"
-                    placeholder="Sudirman St. No. 52-53"
-                    value={formData.address}
-                    onChange={handleInputChange}
-                  />
+                      <div>
+                        <label
+                          htmlFor="address"
+                          className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5"
+                        >
+                          Street Address
+                        </label>
+                        <input
+                          type="text"
+                          id="address"
+                          name="address"
+                          value={formData.address}
+                          onChange={handleInputChange}
+                          placeholder="Sudirman St. No. 52-53"
+                          className="block w-full pl-4 pr-3 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder:text-base placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200"
+                        />
+                      </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     <FormSelect
                       id="country"
@@ -1340,13 +1361,23 @@ const Checkout = () => {
                       disabled={!formData.district}
                       placeholder="Select Sub District"
                     />
-                    <FormInput
-                      id="zip"
-                      label="Postal Code"
-                      placeholder="12190"
-                      value={formData.zip}
-                      onChange={handleInputChange}
-                    />
+                    <div>
+                      <label
+                        htmlFor="zip"
+                        className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5"
+                      >
+                        Postal Code
+                      </label>
+                      <input
+                        type="text"
+                        id="zip"
+                        name="zip"
+                        value={formData.zip}
+                        onChange={handleInputChange}
+                        placeholder="12190"
+                        className="block w-full pl-4 pr-3 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder:text-base placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200"
+                      />
+                    </div>
                   </div>
 
                   <div>
@@ -1358,36 +1389,6 @@ const Checkout = () => {
                       name="detailAddress"
                       value={formData.detailAddress}
                       onChange={handleInputChange}
-                      onMouseDown={(e) => {
-                        e.stopPropagation();
-                      }}
-                      onKeyDown={(e) => {
-                        e.stopPropagation();
-                      }}
-                      onKeyPress={(e) => {
-                        e.stopPropagation();
-                      }}
-                      onKeyUp={(e) => {
-                        e.stopPropagation();
-                      }}
-                      onInput={(e) => {
-                        e.stopPropagation();
-                      }}
-                      onCompositionStart={(e) => {
-                        e.stopPropagation();
-                      }}
-                      onCompositionUpdate={(e) => {
-                        e.stopPropagation();
-                      }}
-                      onCompositionEnd={(e) => {
-                        e.stopPropagation();
-                      }}
-                      onFocus={(e) => {
-                        e.stopPropagation();
-                      }}
-                      onBlur={(e) => {
-                        e.stopPropagation();
-                      }}
                       rows={3}
                       placeholder="Additional address details (e.g., building name, floor, unit number)"
                       className="block w-full text-sm p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder:text-base placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200 resize-y"
@@ -1560,36 +1561,6 @@ const Checkout = () => {
                       name="orderNotes"
                       value={orderNotes}
                       onChange={(e) => setOrderNotes(e.target.value)}
-                      onMouseDown={(e) => {
-                        e.stopPropagation();
-                      }}
-                      onKeyDown={(e) => {
-                        e.stopPropagation();
-                      }}
-                      onKeyPress={(e) => {
-                        e.stopPropagation();
-                      }}
-                      onKeyUp={(e) => {
-                        e.stopPropagation();
-                      }}
-                      onInput={(e) => {
-                        e.stopPropagation();
-                      }}
-                      onCompositionStart={(e) => {
-                        e.stopPropagation();
-                      }}
-                      onCompositionUpdate={(e) => {
-                        e.stopPropagation();
-                      }}
-                      onCompositionEnd={(e) => {
-                        e.stopPropagation();
-                      }}
-                      onFocus={(e) => {
-                        e.stopPropagation();
-                      }}
-                      onBlur={(e) => {
-                        e.stopPropagation();
-                      }}
                       rows={3}
                       placeholder="e.g., Please pack securely..."
                       className="block w-full text-sm p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder:text-base placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200"
