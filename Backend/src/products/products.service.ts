@@ -41,12 +41,15 @@ export class ProductsService {
       ...productData
     } = createProductDto;
 
+    const storeId = (productData as any).storeId;
+
     const [
       categoryExists,
       parentCategoryExists,
       childCategoryExists,
       store,
       existingProduct,
+      storeToUse,
     ] = await Promise.all([
       this.prisma.category.findUnique({
         where: { id: categoryId },
@@ -72,6 +75,12 @@ export class ProductsService {
         where: { slug: productData.slug },
         select: { id: true },
       }),
+      storeId
+        ? this.prisma.store.findUnique({
+            where: { id: storeId },
+            select: { id: true, userId: true },
+          })
+        : Promise.resolve(null),
     ]);
 
     if (!categoryExists) {
@@ -94,6 +103,17 @@ export class ProductsService {
       throw new ConflictException(
         `Product with slug '${productData.slug}' already exists`,
       );
+    }
+
+    if (storeId) {
+      if (!storeToUse) {
+        throw new NotFoundException(`Store with ID ${storeId} not found.`);
+      }
+      if (storeToUse.userId !== user.id) {
+        throw new ForbiddenException(
+          'You are not the owner of this store. Only the store owner can create products for this store.',
+        );
+      }
     }
 
     return this.prisma.product.create({
@@ -298,20 +318,29 @@ export class ProductsService {
     const { categoryId, parentCategoryId, childCategoryId, ...otherData } =
       updateProductDto;
 
-    const [parentCategoryExists, childCategoryExists] = await Promise.all([
-      parentCategoryId
-        ? this.prisma.category.findUnique({
-            where: { id: parentCategoryId },
-            select: { id: true },
-          })
-        : Promise.resolve(null),
-      childCategoryId
-        ? this.prisma.category.findUnique({
-            where: { id: childCategoryId },
-            select: { id: true },
-          })
-        : Promise.resolve(null),
-    ]);
+    const storeId = (otherData as any).storeId;
+
+    const [parentCategoryExists, childCategoryExists, storeToUse] =
+      await Promise.all([
+        parentCategoryId
+          ? this.prisma.category.findUnique({
+              where: { id: parentCategoryId },
+              select: { id: true },
+            })
+          : Promise.resolve(null),
+        childCategoryId
+          ? this.prisma.category.findUnique({
+              where: { id: childCategoryId },
+              select: { id: true },
+            })
+          : Promise.resolve(null),
+        storeId
+          ? this.prisma.store.findUnique({
+              where: { id: storeId },
+              select: { id: true, userId: true },
+            })
+          : Promise.resolve(null),
+      ]);
 
     if (parentCategoryId && !parentCategoryExists) {
       throw new NotFoundException(
@@ -323,6 +352,19 @@ export class ProductsService {
       throw new NotFoundException(
         `Child category with ID ${childCategoryId} not found.`,
       );
+    }
+
+    if (storeId !== undefined) {
+      if (storeId !== null) {
+        if (!storeToUse) {
+          throw new NotFoundException(`Store with ID ${storeId} not found.`);
+        }
+        if (storeToUse.userId !== user.id) {
+          throw new ForbiddenException(
+            'You are not the owner of this store. Only the store owner can assign products to this store.',
+          );
+        }
+      }
     }
 
     const updateData: any = {
@@ -337,6 +379,9 @@ export class ProductsService {
         childCategory: childCategoryId
           ? { connect: { id: childCategoryId } }
           : { disconnect: true },
+      }),
+      ...(storeId !== undefined && {
+        store: storeId ? { connect: { id: storeId } } : { disconnect: true },
       }),
     };
 

@@ -58,6 +58,7 @@ export class OrdersService {
     let discountAmount = 0;
     let finalVoucherCode: string | null = null;
     let voucherId: number | null = null;
+    let voucherUsageId: number | null = null;
 
     if (voucherCode) {
       const user = { id: userId } as User;
@@ -87,6 +88,7 @@ export class OrdersService {
           shippingCost,
           discountAmount,
           voucherCode: finalVoucherCode,
+          voucherId: voucherId || undefined,
           totalAmount,
           notes,
         },
@@ -109,14 +111,30 @@ export class OrdersService {
       }
 
       if (voucherId) {
-        await tx.voucherUsage.create({
-          data: { userId: userId, voucherId: voucherId },
+        const voucherUsage = await tx.voucherUsage.create({
+          data: {
+            userId: userId,
+            voucherId: voucherId,
+            orderId: order.id,
+          },
+        });
+        voucherUsageId = voucherUsage.id;
+
+        await tx.order.update({
+          where: { id: order.id },
+          data: { voucherUsageId: voucherUsageId },
         });
       }
 
       await tx.cartItem.deleteMany({ where: { cartId: cart.id } });
 
-      return order;
+      return tx.order.findUnique({
+        where: { id: order.id },
+        include: {
+          voucher: true,
+          voucherUsage: true,
+        },
+      });
     });
 
     const paymentTransaction =

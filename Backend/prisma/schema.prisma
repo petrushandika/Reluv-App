@@ -53,6 +53,26 @@ enum VoucherType {
   FREE_SHIPPING
 }
 
+enum NotificationType {
+  ORDER_CREATED
+  ORDER_PAID
+  ORDER_SHIPPED
+  ORDER_DELIVERED
+  ORDER_CANCELLED
+  REVIEW_RECEIVED
+  PRODUCT_LOW_STOCK
+  VOUCHER_APPLIED
+  PAYMENT_FAILED
+  SHIPMENT_UPDATED
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+  PREFER_NOT_TO_SAY
+}
+
 model User {
   id         Int       @id @default(autoincrement())
   googleId   String?   @unique
@@ -94,10 +114,13 @@ model UserProfile {
   avatar String?
   banner String?
   bio    String?
-  gender String?
+  gender Gender?
 
   user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId Int  @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@map("user_profiles")
 }
@@ -118,7 +141,7 @@ model Store {
   userId   Int           @unique
   products Product[]
 
-  location   Location? @relation(fields: [locationId], references: [id])
+  location   Location? @relation("StoreLocation")
   locationId Int?      @unique
 
   createdAt DateTime @default(now())
@@ -139,6 +162,9 @@ model StoreProfile {
 
   store   Store @relation(fields: [storeId], references: [id], onDelete: Cascade)
   storeId Int   @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@map("store_profiles")
 }
@@ -163,10 +189,13 @@ model Location {
   user   User? @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId Int?
 
-  store Store?
+  store   Store? @relation("StoreLocation", fields: [storeId], references: [id], onDelete: SetNull)
+  storeId Int?   @unique
 
   orders Order[]
 
+  @@index([userId])
+  @@index([storeId])
   @@map("locations")
 }
 
@@ -182,6 +211,9 @@ model Category {
   parentId        Int?
   parentCategory  Category?  @relation("SubCategories", fields: [parentId], references: [id], onDelete: Restrict)
   childCategories Category[] @relation("SubCategories")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@map("categories")
 }
@@ -200,19 +232,19 @@ model Product {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  seller   User @relation(fields: [sellerId], references: [id])
+  seller   User @relation(fields: [sellerId], references: [id], onDelete: Restrict)
   sellerId Int
 
-  category   Category @relation("ProductCategory", fields: [categoryId], references: [id])
+  category   Category @relation("ProductCategory", fields: [categoryId], references: [id], onDelete: Restrict)
   categoryId Int
 
-  parentCategory   Category? @relation("ProductParentCategory", fields: [parentCategoryId], references: [id])
+  parentCategory   Category? @relation("ProductParentCategory", fields: [parentCategoryId], references: [id], onDelete: Restrict)
   parentCategoryId Int?
 
-  childCategory   Category? @relation("ProductChildCategory", fields: [childCategoryId], references: [id])
+  childCategory   Category? @relation("ProductChildCategory", fields: [childCategoryId], references: [id], onDelete: Restrict)
   childCategoryId Int?
 
-  store   Store? @relation(fields: [storeId], references: [id])
+  store   Store? @relation(fields: [storeId], references: [id], onDelete: SetNull)
   storeId Int?
 
   variants Variant[]
@@ -223,6 +255,7 @@ model Product {
   @@index([categoryId])
   @@index([parentCategoryId])
   @@index([childCategoryId])
+  @@index([storeId])
   @@index([slug])
   @@index([isPublished, isActive, createdAt])
   @@map("products")
@@ -264,7 +297,7 @@ model Variant {
 
 model Wishlist {
   id        Int      @id @default(autoincrement())
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    Int
   product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
   productId Int
@@ -306,7 +339,7 @@ model Voucher {
   name        String
   description String?
   type        VoucherType
-  value       Float
+  value       Int
   maxDiscount Int?
   minPurchase Int?
   usageLimit  Int?
@@ -314,19 +347,30 @@ model Voucher {
   isActive    Boolean     @default(true)
 
   usages VoucherUsage[]
+  orders Order[] @relation("OrderVoucher")
 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([code, isActive, expiry])
   @@map("vouchers")
 }
 
 model VoucherUsage {
   id        Int      @id @default(autoincrement())
   userId    Int
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   voucherId Int
-  voucher   Voucher  @relation(fields: [voucherId], references: [id])
+  voucher   Voucher  @relation(fields: [voucherId], references: [id], onDelete: Cascade)
   usedAt    DateTime @default(now())
 
+  order   Order? @relation("OrderVoucherUsage")
+  orderId Int?   @unique
+
   @@unique([userId, voucherId])
+  @@index([userId])
+  @@index([voucherId])
+  @@index([orderId])
   @@map("voucher_usages")
 }
 
@@ -338,13 +382,18 @@ model Review {
 
   product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
   productId Int
-  author    User    @relation(fields: [authorId], references: [id])
+  author    User    @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId  Int
 
+  isVerified  Boolean @default(false)
+  helpfulCount Int     @default(0)
+
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@unique([productId, authorId])
   @@index([productId, rating])
+  @@index([authorId])
   @@map("reviews")
 }
 
@@ -361,18 +410,27 @@ model Order {
   createdAt      DateTime    @default(now())
   updatedAt      DateTime    @updatedAt
 
-  buyer      User     @relation(fields: [buyerId], references: [id])
+  buyer      User     @relation(fields: [buyerId], references: [id], onDelete: Restrict)
   buyerId    Int
-  location   Location @relation(fields: [locationId], references: [id])
+  location   Location @relation(fields: [locationId], references: [id], onDelete: Restrict)
   locationId Int
+
+  voucherId Int?
+  voucher   Voucher? @relation("OrderVoucher", fields: [voucherId], references: [id], onDelete: SetNull)
+
+  voucherUsageId Int?   @unique
+  voucherUsage   VoucherUsage? @relation("OrderVoucherUsage", fields: [voucherUsageId], references: [id], onDelete: SetNull)
 
   items    OrderItem[]
   payment  Payment?
   shipment Shipment?
 
   @@index([buyerId, status])
+  @@index([status])
   @@index([createdAt])
   @@index([orderNumber])
+  @@index([voucherId])
+  @@index([voucherUsageId])
   @@map("orders")
 }
 
@@ -415,7 +473,7 @@ model Payment {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
 
-  order   Order @relation(fields: [orderId], references: [id])
+  order   Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
   orderId Int   @unique
 
   @@index([status])
@@ -425,18 +483,20 @@ model Payment {
 }
 
 model Notification {
-  id        Int      @id @default(autoincrement())
-  user      User     @relation(fields: [userId], references: [id])
+  id        Int             @id @default(autoincrement())
+  user      User            @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    Int
   title     String
-  body      String   @db.Text
-  type      String?
+  body      String          @db.Text
+  type      NotificationType?
+  actionUrl String?
   data      Json?
-  isRead    Boolean  @default(false)
-  createdAt DateTime @default(now())
+  isRead    Boolean         @default(false)
+  createdAt DateTime        @default(now())
 
   @@index([userId, isRead])
   @@index([userId, createdAt])
+  @@index([type])
   @@map("notifications")
 }
 
@@ -463,7 +523,7 @@ model Shipment {
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 
-  order   Order @relation(fields: [orderId], references: [id])
+  order   Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
   orderId Int   @unique
 
   @@index([trackingNumber])

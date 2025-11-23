@@ -33,7 +33,7 @@ export class CreateVoucherDto {
   @IsNotEmpty()
   type: VoucherType;
 
-  @IsNumber()
+  @IsInt()
   @IsNotEmpty()
   @Min(0, { message: 'Value must be 0 or greater' })
   @Max(100, { message: 'Value must be at most 100 for percentage type' })

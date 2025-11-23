@@ -51,7 +51,7 @@ export class VouchersService {
 
     let discountAmount = 0;
     if (voucher.type === 'PERCENTAGE') {
-      discountAmount = subtotal * voucher.value;
+      discountAmount = Math.floor((subtotal * voucher.value) / 100);
       if (voucher.maxDiscount && discountAmount > voucher.maxDiscount) {
         discountAmount = voucher.maxDiscount;
       }
@@ -63,7 +63,7 @@ export class VouchersService {
       message: 'Voucher applied successfully.',
       code: voucher.code,
       type: voucher.type,
-      discountAmount: Math.floor(discountAmount),
+      discountAmount: discountAmount,
     };
   }
 
@@ -99,7 +99,7 @@ export class VouchersService {
 
     let discountAmount = 0;
     if (voucher.type === 'PERCENTAGE') {
-      discountAmount = subtotal * voucher.value;
+      discountAmount = Math.floor((subtotal * voucher.value) / 100);
       if (voucher.maxDiscount && discountAmount > voucher.maxDiscount) {
         discountAmount = voucher.maxDiscount;
       }
@@ -108,7 +108,7 @@ export class VouchersService {
     }
 
     return {
-      discountAmount: Math.floor(discountAmount),
+      discountAmount: discountAmount,
       voucherId: voucher.id,
     };
   }
