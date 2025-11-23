@@ -1,0 +1,42 @@
+[
+  {
+    "name": "Midnight Flash Sale",
+    "type": "FLASH_SALE",
+    "description": "Limited time flash sale! Get up to 20% off on selected items. Don't miss out!",
+    "discount": 20,
+    "durationMonths": 1,
+    "storeIndex": 0
+  },
+  {
+    "name": "Buy One Get One 50% Off",
+    "type": "BOGO",
+    "description": "Buy one item and get the second one at 50% off. Mix and match any items!",
+    "discount": 30,
+    "durationMonths": 1,
+    "storeIndex": 1
+  },
+  {
+    "name": "Bundle & Save",
+    "type": "BUNDLE",
+    "description": "Purchase 3 or more items and save 20% on your entire bundle. Perfect for wardrobe updates!",
+    "discount": 20,
+    "durationMonths": 1,
+    "storeIndex": 2
+  },
+  {
+    "name": "Summer Collection Sale",
+    "type": "SEASONAL",
+    "description": "Welcome summer with our seasonal collection! Enjoy 30% off on all summer essentials.",
+    "discount": 30,
+    "durationMonths": 1,
+    "storeIndex": 3
+  },
+  {
+    "name": "Grand Opening Special",
+    "type": "CUSTOM",
+    "description": "Celebrate our grand opening with exclusive deals! 20% off on all items, plus free shipping.",
+    "discount": 20,
+    "durationMonths": 1,
+    "storeIndex": 4
+  }
+]

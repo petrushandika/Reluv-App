@@ -1,0 +1,37 @@
+[
+  {
+    "type": "VERIFIED",
+    "name": "Verified Store",
+    "description": "Urban Threads Co. is a verified and trusted seller on our platform.",
+    "color": "#10b981",
+    "storeIndex": 0
+  },
+  {
+    "type": "PREMIUM",
+    "name": "Premium Seller",
+    "description": "Elegance Boutique offers premium quality fashion collections.",
+    "color": "#3b82f6",
+    "storeIndex": 1
+  },
+  {
+    "type": "FEATURED",
+    "name": "Featured Shop",
+    "description": "Trendsetter Fashion is featured for outstanding customer service.",
+    "color": "#8b5cf6",
+    "storeIndex": 2
+  },
+  {
+    "type": "TRENDING",
+    "name": "Trending Now",
+    "description": "Luxury Wardrobe is currently trending with high customer engagement.",
+    "color": "#f59e0b",
+    "storeIndex": 3
+  },
+  {
+    "type": "BEST_SELLER",
+    "name": "Best Seller",
+    "description": "Style Vault has achieved best seller status with exceptional sales performance.",
+    "color": "#ef4444",
+    "storeIndex": 4
+  }
+]

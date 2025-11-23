@@ -1,0 +1,97 @@
+[
+  {
+    "name": "Urban Threads Welcome Discount",
+    "description": "New customer special! Get 10% off on your first purchase from Urban Threads Co. Minimum purchase Rp 200,000.",
+    "type": "PERCENTAGE",
+    "value": 10,
+    "maxDiscount": 500000,
+    "minPurchase": 200000,
+    "scope": "STORE",
+    "usageLimit": 1000,
+    "durationMonths": 2,
+    "storeIndex": 0
+  },
+  {
+    "name": "Elegance Boutique Premium Discount",
+    "description": "Exclusive 15% discount for all Elegance Boutique products. Perfect for upgrading your wardrobe. Min. purchase Rp 200,000.",
+    "type": "PERCENTAGE",
+    "value": 15,
+    "maxDiscount": 500000,
+    "minPurchase": 200000,
+    "scope": "STORE",
+    "usageLimit": 1000,
+    "durationMonths": 2,
+    "storeIndex": 1
+  },
+  {
+    "name": "Trendsetter Fashion Mega Sale",
+    "description": "Mega sale alert! Enjoy 20% off on all Trendsetter Fashion items. Limited time only. Min. purchase Rp 200,000.",
+    "type": "PERCENTAGE",
+    "value": 20,
+    "maxDiscount": 500000,
+    "minPurchase": 200000,
+    "scope": "STORE",
+    "usageLimit": 1000,
+    "durationMonths": 2,
+    "storeIndex": 2
+  },
+  {
+    "name": "Luxury Wardrobe VIP Discount",
+    "description": "VIP treatment for our customers! Get 25% off on premium collections. Minimum purchase Rp 200,000 required.",
+    "type": "PERCENTAGE",
+    "value": 25,
+    "maxDiscount": 500000,
+    "minPurchase": 200000,
+    "scope": "STORE",
+    "usageLimit": 1000,
+    "durationMonths": 2,
+    "storeIndex": 3
+  },
+  {
+    "name": "Style Vault Super Savings",
+    "description": "Super savings event! Get 30% off on all Style Vault products. Best deals in town. Min. purchase Rp 200,000.",
+    "type": "PERCENTAGE",
+    "value": 30,
+    "maxDiscount": 500000,
+    "minPurchase": 200000,
+    "scope": "STORE",
+    "usageLimit": 1000,
+    "durationMonths": 2,
+    "storeIndex": 4
+  },
+  {
+    "name": "Men's Collection Special",
+    "description": "Exclusive discount for men's fashion! Get 15% off on all men's category products. Minimum purchase Rp 150,000.",
+    "type": "PERCENTAGE",
+    "value": 15,
+    "maxDiscount": 300000,
+    "minPurchase": 150000,
+    "scope": "CATEGORY",
+    "usageLimit": 500,
+    "durationDays": 60,
+    "categorySlug": "men"
+  },
+  {
+    "name": "Women's Collection Special",
+    "description": "Ladies, treat yourself! Enjoy 15% off on all women's category products. Minimum purchase Rp 150,000.",
+    "type": "PERCENTAGE",
+    "value": 15,
+    "maxDiscount": 300000,
+    "minPurchase": 150000,
+    "scope": "CATEGORY",
+    "usageLimit": 500,
+    "durationDays": 60,
+    "categorySlug": "women"
+  },
+  {
+    "name": "Sitewide Welcome Bonus",
+    "description": "Welcome to our platform! Get 5% off on all purchases sitewide. Perfect for new customers. Minimum purchase Rp 500,000.",
+    "type": "PERCENTAGE",
+    "value": 5,
+    "maxDiscount": 100000,
+    "minPurchase": 500000,
+    "scope": "GLOBAL",
+    "usageLimit": 10000,
+    "durationDays": 90
+  }
+]

@@ -1,0 +1,167 @@
+[
+  {
+    "code": "URBAN15",
+    "name": "Urban Threads 15% Off",
+    "description": "Get 15% off on your purchase from Urban Threads Co. Valid for all products. Min. purchase Rp 200,000.",
+    "type": "PERCENTAGE",
+    "value": 15,
+    "maxDiscount": 200000,
+    "minPurchase": 200000,
+    "usageLimit": 100,
+    "expiryMonths": 3
+  },
+  {
+    "code": "URBAN50K",
+    "name": "Urban Threads Rp 50K Off",
+    "description": "Save Rp 50,000 on your purchase from Urban Threads Co. Minimum purchase Rp 300,000 required.",
+    "type": "FIXED_AMOUNT",
+    "value": 50000,
+    "maxDiscount": null,
+    "minPurchase": 300000,
+    "usageLimit": 100,
+    "expiryMonths": 3
+  },
+  {
+    "code": "URBAN100K",
+    "name": "Urban Threads Rp 100K Off",
+    "description": "Big savings! Get Rp 100,000 off on purchases over Rp 500,000 from Urban Threads Co.",
+    "type": "FIXED_AMOUNT",
+    "value": 100000,
+    "maxDiscount": null,
+    "minPurchase": 500000,
+    "usageLimit": 100,
+    "expiryMonths": 3
+  },
+  {
+    "code": "ELEGANCE15",
+    "name": "Elegance Boutique 15% Off",
+    "description": "Enjoy 15% discount on elegant fashion pieces from Elegance Boutique. Min. purchase Rp 200,000.",
+    "type": "PERCENTAGE",
+    "value": 15,
+    "maxDiscount": 200000,
+    "minPurchase": 200000,
+    "usageLimit": 100,
+    "expiryMonths": 3
+  },
+  {
+    "code": "ELEGANCE50K",
+    "name": "Elegance Boutique Rp 50K Off",
+    "description": "Save Rp 50,000 on your elegant wardrobe upgrade. Minimum purchase Rp 300,000 from Elegance Boutique.",
+    "type": "FIXED_AMOUNT",
+    "value": 50000,
+    "maxDiscount": null,
+    "minPurchase": 300000,
+    "usageLimit": 100,
+    "expiryMonths": 3
+  },
+  {
+    "code": "ELEGANCE100K",
+    "name": "Elegance Boutique Rp 100K Off",
+    "description": "Premium savings! Get Rp 100,000 off on purchases over Rp 500,000 from Elegance Boutique.",
+    "type": "FIXED_AMOUNT",
+    "value": 100000,
+    "maxDiscount": null,
+    "minPurchase": 500000,
+    "usageLimit": 100,
+    "expiryMonths": 3
+  },
+  {
+    "code": "TREND15",
+    "name": "Trendsetter 15% Off",
+    "description": "Stay trendy with 15% off from Trendsetter Fashion. Min. purchase Rp 200,000.",
+    "type": "PERCENTAGE",
+    "value": 15,
+    "maxDiscount": 200000,
+    "minPurchase": 200000,
+    "usageLimit": 100,
+    "expiryMonths": 3
+  },
+  {
+    "code": "TREND50K",
+    "name": "Trendsetter Rp 50K Off",
+    "description": "Get Rp 50,000 off on the latest trends from Trendsetter Fashion. Min. purchase Rp 300,000.",
+    "type": "FIXED_AMOUNT",
+    "value": 50000,
+    "maxDiscount": null,
+    "minPurchase": 300000,
+    "usageLimit": 100,
+    "expiryMonths": 3
+  },
+  {
+    "code": "TREND100K",
+    "name": "Trendsetter Rp 100K Off",
+    "description": "Big trend savings! Save Rp 100,000 on purchases over Rp 500,000 from Trendsetter Fashion.",
+    "type": "FIXED_AMOUNT",
+    "value": 100000,
+    "maxDiscount": null,
+    "minPurchase": 500000,
+    "usageLimit": 100,
+    "expiryMonths": 3
+  },
+  {
+    "code": "LUXURY15",
+    "name": "Luxury Wardrobe 15% Off",
+    "description": "Indulge in luxury with 15% off from Luxury Wardrobe. Min. purchase Rp 200,000.",
+    "type": "PERCENTAGE",
+    "value": 15,
+    "maxDiscount": 200000,
+    "minPurchase": 200000,
+    "usageLimit": 100,
+    "expiryMonths": 3
+  },
+  {
+    "code": "LUXURY50K",
+    "name": "Luxury Wardrobe Rp 50K Off",
+    "description": "Premium discount! Save Rp 50,000 on luxury items. Min. purchase Rp 300,000 from Luxury Wardrobe.",
+    "type": "FIXED_AMOUNT",
+    "value": 50000,
+    "maxDiscount": null,
+    "minPurchase": 300000,
+    "usageLimit": 100,
+    "expiryMonths": 3
+  },
+  {
+    "code": "LUXURY100K",
+    "name": "Luxury Wardrobe Rp 100K Off",
+    "description": "Exclusive luxury savings! Get Rp 100,000 off on purchases over Rp 500,000 from Luxury Wardrobe.",
+    "type": "FIXED_AMOUNT",
+    "value": 100000,
+    "maxDiscount": null,
+    "minPurchase": 500000,
+    "usageLimit": 100,
+    "expiryMonths": 3
+  },
+  {
+    "code": "STYLE15",
+    "name": "Style Vault 15% Off",
+    "description": "Unlock style with 15% off from Style Vault. Min. purchase Rp 200,000.",
+    "type": "PERCENTAGE",
+    "value": 15,
+    "maxDiscount": 200000,
+    "minPurchase": 200000,
+    "usageLimit": 100,
+    "expiryMonths": 3
+  },
+  {
+    "code": "STYLE50K",
+    "name": "Style Vault Rp 50K Off",
+    "description": "Style savings! Get Rp 50,000 off on your purchase. Min. purchase Rp 300,000 from Style Vault.",
+    "type": "FIXED_AMOUNT",
+    "value": 50000,
+    "maxDiscount": null,
+    "minPurchase": 300000,
+    "usageLimit": 100,
+    "expiryMonths": 3
+  },
+  {
+    "code": "STYLE100K",
+    "name": "Style Vault Rp 100K Off",
+    "description": "Maximum style savings! Save Rp 100,000 on purchases over Rp 500,000 from Style Vault.",
+    "type": "FIXED_AMOUNT",
+    "value": 100000,
+    "maxDiscount": null,
+    "minPurchase": 500000,
+    "usageLimit": 100,
+    "expiryMonths": 3
+  }
+]

@@ -1,8 +1,8 @@
 [
   {
-    "name": "Levin's Men Collection #1",
-    "slug": "levin-collection-1",
-    "description": "A stylish item from the new Men's Collection. Made with premium materials.",
+    "name": "Classic Denim Jacket",
+    "slug": "classic-denim-jacket",
+    "description": "Premium quality denim jacket with classic design. Perfect for casual wear and street style. Made from high-quality cotton denim with reinforced stitching.",
     "isForMen": true,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post1_img1.webp",
@@ -12,24 +12,24 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post1_img6.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post1_img7.webp"
     ],
-    "variantsKey": "collection_1_men"
+    "variantsKey": "clothing-sizes-l-xl-xxl"
   },
   {
-    "name": "Levin's Women Collection #2",
-    "slug": "levin-collection-2",
-    "description": "A stylish item from the new Women's Collection. Made with premium materials.",
+    "name": "Elegant Evening Dress",
+    "slug": "elegant-evening-dress",
+    "description": "Elegant evening dress with sophisticated design. Made from premium fabric with delicate details. Perfect for special occasions and formal events.",
     "isForMen": false,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post2_img1.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post2_img2.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post2_img4.webp"
     ],
-    "variantsKey": "collection_2_men"
+    "variantsKey": "clothing-sizes-sml-xl"
   },
   {
-    "name": "Levin's Men Collection #3",
-    "slug": "levin-collection-3",
-    "description": "A stylish item from the new Men's Collection. Made with premium materials.",
+    "name": "Premium Leather Boots",
+    "slug": "premium-leather-boots",
+    "description": "Handcrafted leather boots with durable sole. Comfortable and stylish for everyday wear. Features genuine leather upper and cushioned insole.",
     "isForMen": true,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post3_img1.webp",
@@ -39,12 +39,12 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post3_img6.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post3_img7.webp"
     ],
-    "variantsKey": "collection_3_men"
+    "variantsKey": "shoes-sizes-40-43"
   },
   {
-    "name": "Levin's Women Collection #4",
-    "slug": "levin-collection-4",
-    "description": "A stylish item from the new Women's Collection. Made with premium materials.",
+    "name": "Designer Leather Handbag",
+    "slug": "designer-leather-handbag",
+    "description": "Designer leather handbag with spacious interior. Made from genuine leather with quality hardware. Perfect for everyday use and special occasions.",
     "isForMen": false,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post4_img1.webp",
@@ -52,12 +52,12 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post4_img4.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post4_img5.webp"
     ],
-    "variantsKey": "collection_4_men"
+    "variantsKey": "bags-one-size"
   },
   {
-    "name": "Levin's Men Collection #5",
-    "slug": "levin-collection-5",
-    "description": "A stylish item from the new Men's Collection. Made with premium materials.",
+    "name": "Casual Summer Shirt",
+    "slug": "casual-summer-shirt",
+    "description": "Lightweight summer shirt made from breathable cotton fabric. Perfect for warm weather. Available in multiple colors and sizes.",
     "isForMen": true,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post5_img1.webp",
@@ -67,12 +67,12 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post5_img6.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post5_img7.webp"
     ],
-    "variantsKey": "collection_5_men"
+    "variantsKey": "clothing-sizes-sml-xl"
   },
   {
-    "name": "Levin's Women Collection #6",
-    "slug": "levin-collection-6",
-    "description": "A stylish item from the new Women's Collection. Made with premium materials.",
+    "name": "Floral Summer Dress",
+    "slug": "floral-summer-dress",
+    "description": "Beautiful floral summer dress with feminine design. Made from lightweight fabric. Perfect for warm weather and casual occasions.",
     "isForMen": false,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post6_img1.webp",
@@ -85,12 +85,12 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post6_img9.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post6_img10.webp"
     ],
-    "variantsKey": "collection_1_men"
+    "variantsKey": "clothing-sizes-sml-xl"
   },
   {
-    "name": "Levin's Men Collection #7",
-    "slug": "levin-collection-7",
-    "description": "A stylish item from the new Men's Collection. Made with premium materials.",
+    "name": "Sporty Running Sneakers",
+    "slug": "sporty-running-sneakers",
+    "description": "High-performance running sneakers with advanced cushioning technology. Ideal for athletes and active lifestyle. Features breathable mesh upper.",
     "isForMen": true,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post7_img1.webp",
@@ -100,12 +100,12 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post7_img6.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post7_img7.webp"
     ],
-    "variantsKey": "collection_2_men"
+    "variantsKey": "shoes-sizes-40-43"
   },
   {
-    "name": "Levin's Women Collection #8",
-    "slug": "levin-collection-8",
-    "description": "A stylish item from the new Women's Collection. Made with premium materials.",
+    "name": "High Heel Sandals",
+    "slug": "high-heel-sandals",
+    "description": "Stylish high heel sandals with comfortable design. Made from premium materials. Perfect for formal and semi-formal occasions.",
     "isForMen": false,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post8_img1.webp",
@@ -115,12 +115,12 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post8_img6.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post8_img7.webp"
     ],
-    "variantsKey": "collection_3_men"
+    "variantsKey": "shoes-sizes-40-43"
   },
   {
-    "name": "Levin's Men Collection #9",
-    "slug": "levin-collection-9",
-    "description": "A stylish item from the new Men's Collection. Made with premium materials.",
+    "name": "Vintage Graphic Tee",
+    "slug": "vintage-graphic-tee",
+    "description": "Vintage-inspired graphic t-shirt with unique designs. Made from soft cotton blend. Perfect for casual streetwear style.",
     "isForMen": true,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post9_img1.webp",
@@ -132,12 +132,12 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post9_img8.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post9_img9.webp"
     ],
-    "variantsKey": "collection_4_men"
+    "variantsKey": "clothing-sizes-sml-xl"
   },
   {
-    "name": "Levin's Women Collection #10",
-    "slug": "levin-collection-10",
-    "description": "A stylish item from the new Women's Collection. Made with premium materials.",
+    "name": "Silk Scarf",
+    "slug": "silk-scarf",
+    "description": "Luxurious silk scarf with elegant patterns. Made from high-quality silk. Perfect accessory for any outfit.",
     "isForMen": false,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post10_img1.webp",
@@ -146,12 +146,12 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post10_img5.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post10_img6.webp"
     ],
-    "variantsKey": "collection_5_men"
+    "variantsKey": "one-size-accessories"
   },
   {
-    "name": "Levin's Men Collection #11",
-    "slug": "levin-collection-11",
-    "description": "A stylish item from the new Men's Collection. Made with premium materials.",
+    "name": "Designer Leather Watch",
+    "slug": "designer-leather-watch",
+    "description": "Elegant leather watch with classic design. Features genuine leather strap and precision movement. Perfect for formal and casual occasions.",
     "isForMen": true,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post11_img1.webp",
@@ -159,12 +159,12 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post11_img4.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post11_img5.webp"
     ],
-    "variantsKey": "collection_1_men"
+    "variantsKey": "one-size-accessories"
   },
   {
-    "name": "Levin's Women Collection #12",
-    "slug": "levin-collection-12",
-    "description": "A stylish item from the new Women's Collection. Made with premium materials.",
+    "name": "Pearl Necklace",
+    "slug": "pearl-necklace",
+    "description": "Classic pearl necklace with timeless design. Made from high-quality cultured pearls. Perfect for formal and elegant occasions.",
     "isForMen": false,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post12_img1.webp",
@@ -174,12 +174,12 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post12_img6.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post12_img7.webp"
     ],
-    "variantsKey": "collection_2_men"
+    "variantsKey": "one-size-accessories"
   },
   {
-    "name": "Levin's Men Collection #13",
-    "slug": "levin-collection-13",
-    "description": "A stylish item from the new Men's Collection. Made with premium materials.",
+    "name": "Slim Fit Chinos",
+    "slug": "slim-fit-chinos",
+    "description": "Slim-fit chinos in modern cut. Made from premium cotton twill. Versatile pants suitable for office and casual wear.",
     "isForMen": true,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post13_img1.webp",
@@ -189,12 +189,12 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post13_img7.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post13_img8.webp"
     ],
-    "variantsKey": "collection_3_men"
+    "variantsKey": "clothing-sizes-sml-xl"
   },
   {
-    "name": "Levin's Women Collection #14",
-    "slug": "levin-collection-14",
-    "description": "A stylish item from the new Women's Collection. Made with premium materials.",
+    "name": "Leather Ankle Boots",
+    "slug": "leather-ankle-boots",
+    "description": "Fashionable leather ankle boots with modern design. Made from genuine leather. Perfect for casual and semi-formal wear.",
     "isForMen": false,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post14_img1.webp",
@@ -203,12 +203,12 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post14_img5.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post14_img6.webp"
     ],
-    "variantsKey": "collection_4_men"
+    "variantsKey": "shoes-sizes-40-43"
   },
   {
-    "name": "Levin's Men Collection #15",
-    "slug": "levin-collection-15",
-    "description": "A stylish item from the new Men's Collection. Made with premium materials.",
+    "name": "Cotton Polo Shirt",
+    "slug": "cotton-polo-shirt",
+    "description": "Classic polo shirt in premium cotton pique. Comfortable fit with collar design. Perfect for smart casual occasions.",
     "isForMen": true,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post15_img1.webp",
@@ -218,12 +218,12 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post15_img6.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post15_img7.webp"
     ],
-    "variantsKey": "collection_5_men"
+    "variantsKey": "clothing-sizes-sml-xl"
   },
   {
-    "name": "Levin's Women Collection #16",
-    "slug": "levin-collection-16",
-    "description": "A stylish item from the new Women's Collection. Made with premium materials.",
+    "name": "Knit Cardigan",
+    "slug": "knit-cardigan",
+    "description": "Cozy knit cardigan with soft fabric. Perfect for layering and casual wear. Features button closure and comfortable fit.",
     "isForMen": false,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post16_img1.webp",
@@ -233,12 +233,12 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post16_img6.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post16_img7.webp"
     ],
-    "variantsKey": "collection_1_men"
+    "variantsKey": "clothing-sizes-sml-xl"
   },
   {
-    "name": "Levin's Men Collection #17",
-    "slug": "levin-collection-17",
-    "description": "A stylish item from the new Men's Collection. Made with premium materials.",
+    "name": "Canvas Backpack",
+    "slug": "canvas-backpack",
+    "description": "Durable canvas backpack with multiple compartments. Water-resistant material and padded straps. Ideal for daily commute and travel.",
     "isForMen": true,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post17_img1.webp",
@@ -248,12 +248,12 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post17_img6.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post17_img7.webp"
     ],
-    "variantsKey": "collection_2_men"
+    "variantsKey": "bags-one-size"
   },
   {
-    "name": "Levin's Women Collection #18",
-    "slug": "levin-collection-18",
-    "description": "A stylish item from the new Women's Collection. Made with premium materials.",
+    "name": "Maxi Skirt",
+    "slug": "maxi-skirt",
+    "description": "Elegant maxi skirt with flowing design. Made from lightweight fabric. Perfect for casual and semi-formal occasions.",
     "isForMen": false,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post18_img1.webp",
@@ -261,12 +261,12 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post18_img4.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post18_img5.webp"
     ],
-    "variantsKey": "collection_3_men"
+    "variantsKey": "clothing-sizes-sml-xl"
   },
   {
-    "name": "Levin's Men Collection #19",
-    "slug": "levin-collection-19",
-    "description": "A stylish item from the new Men's Collection. Made with premium materials.",
+    "name": "Wool Winter Coat",
+    "slug": "wool-winter-coat",
+    "description": "Warm wool winter coat with modern design. Features high-quality wool blend and inner lining. Perfect for cold weather protection.",
     "isForMen": true,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post19_img1.webp",
@@ -275,12 +275,12 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post19_img5.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post19_img6.webp"
     ],
-    "variantsKey": "collection_4_men"
+    "variantsKey": "clothing-sizes-l-xl-xxl"
   },
   {
-    "name": "Levin's Women Collection #20",
-    "slug": "levin-collection-20",
-    "description": "A stylish item from the new Women's Collection. Made with premium materials.",
+    "name": "Blouse Top",
+    "slug": "blouse-top",
+    "description": "Stylish blouse top with feminine details. Made from premium fabric. Perfect for office and casual wear.",
     "isForMen": false,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post20_img1.webp",
@@ -288,12 +288,12 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post20_img4.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post20_img5.webp"
     ],
-    "variantsKey": "collection_5_men"
+    "variantsKey": "clothing-sizes-sml-xl"
   },
   {
-    "name": "Levin's Men Collection #21",
-    "slug": "levin-collection-21",
-    "description": "A stylish item from the new Men's Collection. Made with premium materials.",
+    "name": "Leather Dress Shoes",
+    "slug": "leather-dress-shoes",
+    "description": "Sophisticated leather dress shoes with polished finish. Handcrafted with attention to detail. Suitable for formal events and business attire.",
     "isForMen": true,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post21_img1.webp",
@@ -301,12 +301,12 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post21_img4.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post21_img5.webp"
     ],
-    "variantsKey": "collection_1_men"
+    "variantsKey": "shoes-sizes-40-43"
   },
   {
-    "name": "Levin's Women Collection #22",
-    "slug": "levin-collection-22",
-    "description": "A stylish item from the new Women's Collection. Made with premium materials.",
+    "name": "Denim Jacket",
+    "slug": "denim-jacket",
+    "description": "Classic denim jacket with modern fit. Made from high-quality denim. Versatile piece for casual styling.",
     "isForMen": false,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post22_img1.webp",
@@ -318,12 +318,12 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post22_img8.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post22_img9.webp"
     ],
-    "variantsKey": "collection_2_men"
+    "variantsKey": "clothing-sizes-l-xl-xxl"
   },
   {
-    "name": "Levin's Men Collection #23",
-    "slug": "levin-collection-23",
-    "description": "A stylish item from the new Men's Collection. Made with premium materials.",
+    "name": "Athletic Shorts",
+    "slug": "athletic-shorts",
+    "description": "Comfortable athletic shorts with moisture-wicking fabric. Perfect for sports and workouts. Features elastic waistband and side pockets.",
     "isForMen": true,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post23_img1.webp",
@@ -337,12 +337,12 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post23_img10.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post23_img11.webp"
     ],
-    "variantsKey": "collection_3_men"
+    "variantsKey": "clothing-sizes-sml-xl"
   },
   {
-    "name": "Levin's Women Collection #24",
-    "slug": "levin-collection-24",
-    "description": "A stylish item from the new Women's Collection. Made with premium materials.",
+    "name": "Fashion Sneakers",
+    "slug": "fashion-sneakers",
+    "description": "Comfortable fashion sneakers with modern design. Perfect for casual wear and active lifestyle. Features cushioned sole.",
     "isForMen": false,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post24_img1.webp",
@@ -350,12 +350,12 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post24_img4.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post24_img5.webp"
     ],
-    "variantsKey": "collection_4_men"
+    "variantsKey": "shoes-sizes-40-43"
   },
   {
-    "name": "Levin's Men Collection #25",
-    "slug": "levin-collection-25",
-    "description": "A stylish item from the new Men's Collection. Made with premium materials.",
+    "name": "Denim Jeans",
+    "slug": "denim-jeans",
+    "description": "Classic denim jeans with modern fit. Made from premium denim fabric. Versatile pants for everyday wear.",
     "isForMen": true,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post25_img1.webp",
@@ -363,12 +363,12 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post25_img4.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post25_img5.webp"
     ],
-    "variantsKey": "collection_5_men"
+    "variantsKey": "clothing-sizes-sml-xl"
   },
   {
-    "name": "Levin's Women Collection #26",
-    "slug": "levin-collection-26",
-    "description": "A stylish item from the new Women's Collection. Made with premium materials.",
+    "name": "Crossbody Bag",
+    "slug": "crossbody-bag",
+    "description": "Practical crossbody bag with adjustable strap. Made from durable material. Perfect for everyday use and travel.",
     "isForMen": false,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post26_img1.webp",
@@ -376,12 +376,12 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post26_img4.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post26_img5.webp"
     ],
-    "variantsKey": "collection_1_men"
+    "variantsKey": "bags-one-size"
   },
   {
-    "name": "Levin's Men Collection #27",
-    "slug": "levin-collection-27",
-    "description": "A stylish item from the new Men's Collection. Made with premium materials.",
+    "name": "Hooded Sweatshirt",
+    "slug": "hooded-sweatshirt",
+    "description": "Cozy hooded sweatshirt with soft fleece lining. Perfect for casual wear and lounging. Features adjustable drawstring hood.",
     "isForMen": true,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post27_img1.webp",
@@ -391,12 +391,12 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post27_img6.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post27_img7.webp"
     ],
-    "variantsKey": "collection_2_men"
+    "variantsKey": "clothing-sizes-sml-xl"
   },
   {
-    "name": "Levin's Women Collection #28",
-    "slug": "levin-collection-28",
-    "description": "A stylish item from the new Women's Collection. Made with premium materials.",
+    "name": "Statement Earrings",
+    "slug": "statement-earrings",
+    "description": "Bold statement earrings with unique design. Made from premium materials. Perfect for special occasions and evening wear.",
     "isForMen": false,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post28_img1.webp",
@@ -404,12 +404,12 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post28_img4.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post28_img5.webp"
     ],
-    "variantsKey": "collection_3_men"
+    "variantsKey": "one-size-accessories"
   },
   {
-    "name": "Levin's Men Collection #29",
-    "slug": "levin-collection-29",
-    "description": "A stylish item from the new Men's Collection. Made with premium materials.",
+    "name": "Baseball Cap",
+    "slug": "baseball-cap",
+    "description": "Stylish baseball cap with adjustable strap. Made from breathable cotton twill. Perfect for sun protection and casual style.",
     "isForMen": true,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post29_img1.webp",
@@ -421,12 +421,12 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post29_img8.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post29_img9.webp"
     ],
-    "variantsKey": "collection_4_men"
+    "variantsKey": "clothing-sizes-sml-xl"
   },
   {
-    "name": "Levin's Women Collection #30",
-    "slug": "levin-collection-30",
-    "description": "A stylish item from the new Women's Collection. Made with premium materials.",
+    "name": "Wide Leg Pants",
+    "slug": "wide-leg-pants",
+    "description": "Flattering wide leg pants with comfortable fit. Made from premium fabric. Perfect for office and casual wear.",
     "isForMen": false,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post30_img1.webp",
@@ -434,12 +434,12 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post30_img4.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post30_img5.webp"
     ],
-    "variantsKey": "collection_5_men"
+    "variantsKey": "clothing-sizes-sml-xl"
   },
   {
-    "name": "Levin's Men Collection #31",
-    "slug": "levin-collection-31",
-    "description": "A stylish item from the new Men's Collection. Made with premium materials.",
+    "name": "Leather Belt",
+    "slug": "leather-belt",
+    "description": "Genuine leather belt with classic buckle design. Durable and stylish accessory. Available in multiple sizes and colors.",
     "isForMen": true,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post31_img1.webp",
@@ -447,12 +447,12 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post31_img4.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post31_img5.webp"
     ],
-    "variantsKey": "collection_1_men"
+    "variantsKey": "one-size-accessories"
   },
   {
-    "name": "Levin's Women Collection #32",
-    "slug": "levin-collection-32",
-    "description": "A stylish item from the new Women's Collection. Made with premium materials.",
+    "name": "Midi Dress",
+    "slug": "midi-dress",
+    "description": "Elegant midi dress with versatile design. Made from quality fabric. Suitable for various occasions.",
     "isForMen": false,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post32_img1.webp",
@@ -463,12 +463,12 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post32_img7.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post32_img8.webp"
     ],
-    "variantsKey": "collection_2_men"
+    "variantsKey": "clothing-sizes-sml-xl"
   },
   {
-    "name": "Levin's Men Collection #33",
-    "slug": "levin-collection-33",
-    "description": "A stylish item from the new Men's Collection. Made with premium materials.",
+    "name": "Cotton Socks Pack",
+    "slug": "cotton-socks-pack",
+    "description": "Pack of comfortable cotton socks. Soft and breathable material. Perfect for daily wear.",
     "isForMen": true,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post33_img1.webp",
@@ -478,12 +478,12 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post33_img6.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post33_img7.webp"
     ],
-    "variantsKey": "collection_3_men"
+    "variantsKey": "clothing-sizes-sml-xl"
   },
   {
-    "name": "Levin's Women Collection #34",
-    "slug": "levin-collection-34",
-    "description": "A stylish item from the new Women's Collection. Made with premium materials.",
+    "name": "Platform Heels",
+    "slug": "platform-heels",
+    "description": "Stylish platform heels with comfortable height. Made from premium materials. Perfect for adding height and style.",
     "isForMen": false,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post34_img1.webp",
@@ -493,12 +493,12 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post34_img6.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post34_img7.webp"
     ],
-    "variantsKey": "collection_4_men"
+    "variantsKey": "shoes-sizes-40-43"
   },
   {
-    "name": "Levin's Men Collection #35",
-    "slug": "levin-collection-35",
-    "description": "A stylish item from the new Men's Collection. Made with premium materials.",
+    "name": "Swim Trunks",
+    "slug": "swim-trunks",
+    "description": "Quick-dry swim trunks with modern design. Perfect for beach and pool activities. Features secure drawstring closure.",
     "isForMen": true,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post35_img1.webp",
@@ -508,24 +508,24 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post35_img6.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post35_img7.webp"
     ],
-    "variantsKey": "collection_5_men"
+    "variantsKey": "clothing-sizes-sml-xl"
   },
   {
-    "name": "Levin's Women Collection #36",
-    "slug": "levin-collection-36",
-    "description": "A stylish item from the new Women's Collection. Made with premium materials.",
+    "name": "Tote Bag",
+    "slug": "tote-bag",
+    "description": "Spacious tote bag with multiple compartments. Made from durable material. Perfect for daily use and shopping.",
     "isForMen": false,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post36_img1.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post36_img2.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post36_img4.webp"
     ],
-    "variantsKey": "collection_1_men"
+    "variantsKey": "bags-one-size"
   },
   {
-    "name": "Levin's Men Collection #37",
-    "slug": "levin-collection-37",
-    "description": "A stylish item from the new Men's Collection. Made with premium materials.",
+    "name": "Formal Dress Shirt",
+    "slug": "formal-dress-shirt",
+    "description": "Formal dress shirt with crisp cotton fabric. Classic collar and button design. Perfect for business and formal occasions.",
     "isForMen": true,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post37_img1.webp",
@@ -535,12 +535,12 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post37_img6.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post37_img7.webp"
     ],
-    "variantsKey": "collection_2_men"
+    "variantsKey": "clothing-sizes-sml-xl"
   },
   {
-    "name": "Levin's Women Collection #38",
-    "slug": "levin-collection-38",
-    "description": "A stylish item from the new Women's Collection. Made with premium materials.",
+    "name": "Trench Coat",
+    "slug": "trench-coat",
+    "description": "Classic trench coat with timeless design. Made from water-resistant fabric. Perfect for rainy weather and formal occasions.",
     "isForMen": false,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post38_img1.webp",
@@ -551,12 +551,12 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post38_img7.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post38_img8.webp"
     ],
-    "variantsKey": "collection_3_men"
+    "variantsKey": "clothing-sizes-l-xl-xxl"
   },
   {
-    "name": "Levin's Men Collection #39",
-    "slug": "levin-collection-39",
-    "description": "A stylish item from the new Men's Collection. Made with premium materials.",
+    "name": "Cargo Pants",
+    "slug": "cargo-pants",
+    "description": "Functional cargo pants with multiple pockets. Made from durable cotton canvas. Ideal for outdoor activities and casual wear.",
     "isForMen": true,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post39_img1.webp",
@@ -565,12 +565,12 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post39_img5.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post39_img6.webp"
     ],
-    "variantsKey": "collection_4_men"
+    "variantsKey": "clothing-sizes-sml-xl"
   },
   {
-    "name": "Levin's Women Collection #40",
-    "slug": "levin-collection-40",
-    "description": "A stylish item from the new Women's Collection. Made with premium materials.",
+    "name": "Blazer",
+    "slug": "blazer",
+    "description": "Professional blazer with tailored fit. Made from premium fabric. Perfect for office and business occasions.",
     "isForMen": false,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post40_img1.webp",
@@ -584,12 +584,12 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post40_img10.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post40_img11.webp"
     ],
-    "variantsKey": "collection_5_men"
+    "variantsKey": "clothing-sizes-l-xl-xxl"
   },
   {
-    "name": "Levin's Men Collection #41",
-    "slug": "levin-collection-41",
-    "description": "A stylish item from the new Men's Collection. Made with premium materials.",
+    "name": "Windbreaker Jacket",
+    "slug": "windbreaker-jacket",
+    "description": "Lightweight windbreaker jacket with water-resistant coating. Perfect for outdoor activities. Features adjustable cuffs and hood.",
     "isForMen": true,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post41_img1.webp",
@@ -597,24 +597,24 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post41_img4.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post41_img5.webp"
     ],
-    "variantsKey": "collection_5_men"
+    "variantsKey": "clothing-sizes-l-xl-xxl"
   },
   {
-    "name": "Levin's Women Collection #42",
-    "slug": "levin-collection-42",
-    "description": "A stylish item from the new Women's Collection. Made with premium materials.",
+    "name": "Skinny Jeans",
+    "slug": "skinny-jeans",
+    "description": "Comfortable skinny jeans with stretch fabric. Modern fit with flattering design. Perfect for casual everyday wear.",
     "isForMen": false,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post42_img1.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post42_img2.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post42_img4.webp"
     ],
-    "variantsKey": "collection_5_men"
+    "variantsKey": "clothing-sizes-sml-xl"
   },
   {
-    "name": "Levin's Men Collection #43",
-    "slug": "levin-collection-43",
-    "description": "A stylish item from the new Men's Collection. Made with premium materials.",
+    "name": "Running Shorts",
+    "slug": "running-shorts",
+    "description": "Performance running shorts with built-in compression. Moisture-wicking fabric and reflective details. Ideal for athletes.",
     "isForMen": true,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post43_img1.webp",
@@ -622,12 +622,12 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post43_img4.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post43_img5.webp"
     ],
-    "variantsKey": "collection_5_men"
+    "variantsKey": "clothing-sizes-sml-xl"
   },
   {
-    "name": "Levin's Women Collection #44",
-    "slug": "levin-collection-44",
-    "description": "A stylish item from the new Women's Collection. Made with premium materials.",
+    "name": "V-Neck T-Shirt",
+    "slug": "v-neck-t-shirt",
+    "description": "Soft v-neck t-shirt with comfortable fit. Made from premium cotton. Versatile piece for layering and casual wear.",
     "isForMen": false,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post44_img1.webp",
@@ -637,12 +637,12 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post44_img6.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post44_img7.webp"
     ],
-    "variantsKey": "collection_5_men"
+    "variantsKey": "clothing-sizes-sml-xl"
   },
   {
-    "name": "Levin's Men Collection #45",
-    "slug": "levin-collection-45",
-    "description": "A stylish item from the new Men's Collection. Made with premium materials.",
+    "name": "Leather Wallet",
+    "slug": "leather-wallet",
+    "description": "Genuine leather wallet with multiple card slots. Compact design with RFID blocking. Perfect for everyday use.",
     "isForMen": true,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post45_img1.webp",
@@ -652,12 +652,12 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post45_img6.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post45_img7.webp"
     ],
-    "variantsKey": "collection_5_men"
+    "variantsKey": "clothing-sizes-sml-xl"
   },
   {
-    "name": "Levin's Women Collection #46",
-    "slug": "levin-collection-46",
-    "description": "A stylish item from the new Women's Collection. Made with premium materials.",
+    "name": "Cable Knit Sweater",
+    "slug": "cable-knit-sweater",
+    "description": "Warm cable knit sweater with cozy design. Made from soft wool blend. Perfect for cold weather and casual occasions.",
     "isForMen": false,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post46_img1.webp",
@@ -666,12 +666,12 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post46_img5.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post46_img6.webp"
     ],
-    "variantsKey": "collection_5_men"
+    "variantsKey": "clothing-sizes-sml-xl"
   },
   {
-    "name": "Levin's Men Collection #47",
-    "slug": "levin-collection-47",
-    "description": "A stylish item from the new Men's Collection. Made with premium materials.",
+    "name": "Sunglasses",
+    "slug": "sunglasses",
+    "description": "Stylish sunglasses with UV protection. Modern frame design with polarized lenses. Perfect for outdoor activities.",
     "isForMen": true,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post47_img1.webp",
@@ -679,12 +679,12 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post47_img4.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post47_img5.webp"
     ],
-    "variantsKey": "collection_5_men"
+    "variantsKey": "one-size-accessories"
   },
   {
-    "name": "Levin's Women Collection #48",
-    "slug": "levin-collection-48",
-    "description": "A stylish item from the new Women's Collection. Made with premium materials.",
+    "name": "Yoga Leggings",
+    "slug": "yoga-leggings",
+    "description": "Comfortable yoga leggings with stretch fabric. Perfect for workouts and casual wear. Features high-waist design.",
     "isForMen": false,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post48_img1.webp",
@@ -694,24 +694,24 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post48_img6.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post48_img7.webp"
     ],
-    "variantsKey": "collection_5_men"
+    "variantsKey": "clothing-sizes-sml-xl"
   },
   {
-    "name": "Levin's Men Collection #49",
-    "slug": "levin-collection-49",
-    "description": "A stylish item from the new Men's Collection. Made with premium materials.",
+    "name": "Winter Beanie",
+    "slug": "winter-beanie",
+    "description": "Warm winter beanie made from soft acrylic blend. Stretchy fit with comfortable design. Perfect for cold weather.",
     "isForMen": true,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post49_img1.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post49_img2.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post49_img4.webp"
     ],
-    "variantsKey": "collection_5_men"
+    "variantsKey": "one-size-accessories"
   },
   {
-    "name": "Levin's Women Collection #50",
-    "slug": "levin-collection-50",
-    "description": "A stylish item from the new Women's Collection. Made with premium materials.",
+    "name": "Jumpsuit",
+    "slug": "jumpsuit",
+    "description": "Stylish jumpsuit with modern design. Made from quality fabric. Perfect for casual and semi-formal occasions.",
     "isForMen": false,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post50_img1.webp",
@@ -721,12 +721,12 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post50_img6.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post50_img7.webp"
     ],
-    "variantsKey": "collection_5_men"
+    "variantsKey": "clothing-sizes-sml-xl"
   },
   {
-    "name": "Levin's Men Collection #51",
-    "slug": "levin-collection-51",
-    "description": "A stylish item from the new Men's Collection. Made with premium materials.",
+    "name": "Gym Bag",
+    "slug": "gym-bag",
+    "description": "Spacious gym bag with multiple compartments. Durable material with padded straps. Ideal for sports and fitness activities.",
     "isForMen": true,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post51_img1.webp",
@@ -734,12 +734,12 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post51_img4.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post51_img5.webp"
     ],
-    "variantsKey": "collection_5_men"
+    "variantsKey": "bags-one-size"
   },
   {
-    "name": "Levin's Women Collection #52",
-    "slug": "levin-collection-52",
-    "description": "A stylish item from the new Women's Collection. Made with premium materials.",
+    "name": "Romper",
+    "slug": "romper",
+    "description": "Cute romper with feminine design. Made from lightweight fabric. Perfect for summer and casual occasions.",
     "isForMen": false,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post52_img1.webp",
@@ -748,12 +748,12 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post52_img5.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post52_img6.webp"
     ],
-    "variantsKey": "collection_5_men"
+    "variantsKey": "clothing-sizes-sml-xl"
   },
   {
-    "name": "Levin's Men Collection #53",
-    "slug": "levin-collection-53",
-    "description": "A stylish item from the new Men's Collection. Made with premium materials.",
+    "name": "Flip Flops",
+    "slug": "flip-flops",
+    "description": "Comfortable flip flops with cushioned sole. Lightweight and flexible design. Perfect for beach and casual wear.",
     "isForMen": true,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post53_img1.webp",
@@ -765,12 +765,12 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post53_img8.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post53_img9.webp"
     ],
-    "variantsKey": "collection_5_men"
+    "variantsKey": "clothing-sizes-sml-xl"
   },
   {
-    "name": "Levin's Women Collection #54",
-    "slug": "levin-collection-54",
-    "description": "A stylish item from the new Women's Collection. Made with premium materials.",
+    "name": "High Waist Shorts",
+    "slug": "high-waist-shorts",
+    "description": "Flattering high waist shorts with comfortable fit. Made from quality fabric. Perfect for warm weather.",
     "isForMen": false,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post54_img1.webp",
@@ -783,12 +783,12 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post54_img9.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post54_img10.webp"
     ],
-    "variantsKey": "collection_5_men"
+    "variantsKey": "clothing-sizes-sml-xl"
   },
   {
-    "name": "Levin's Men Collection #55",
-    "slug": "levin-collection-55",
-    "description": "A stylish item from the new Men's Collection. Made with premium materials.",
+    "name": "Tank Top",
+    "slug": "tank-top",
+    "description": "Breathable tank top for active lifestyle. Moisture-wicking fabric with comfortable fit. Ideal for workouts and sports.",
     "isForMen": true,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post55_img1.webp",
@@ -797,12 +797,12 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post55_img5.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post55_img6.webp"
     ],
-    "variantsKey": "collection_5_men"
+    "variantsKey": "clothing-sizes-sml-xl"
   },
   {
-    "name": "Levin's Women Collection #56",
-    "slug": "levin-collection-56",
-    "description": "A stylish item from the new Women's Collection. Made with premium materials.",
+    "name": "Pleated Skirt",
+    "slug": "pleated-skirt",
+    "description": "Elegant pleated skirt with flowing design. Made from lightweight fabric. Perfect for office and casual wear.",
     "isForMen": false,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post56_img1.webp",
@@ -813,12 +813,12 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post56_img7.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post56_img8.webp"
     ],
-    "variantsKey": "collection_5_men"
+    "variantsKey": "clothing-sizes-sml-xl"
   },
   {
-    "name": "Levin's Men Collection #57",
-    "slug": "levin-collection-57",
-    "description": "A stylish item from the new Men's Collection. Made with premium materials.",
+    "name": "Long Sleeve Tee",
+    "slug": "long-sleeve-tee",
+    "description": "Long sleeve t-shirt with comfortable cotton fabric. Versatile design for layering. Perfect for casual everyday wear.",
     "isForMen": true,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post57_img1.webp",
@@ -828,12 +828,12 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post57_img6.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post57_img7.webp"
     ],
-    "variantsKey": "collection_5_men"
+    "variantsKey": "clothing-sizes-sml-xl"
   },
   {
-    "name": "Levin's Women Collection #58",
-    "slug": "levin-collection-58",
-    "description": "A stylish item from the new Women's Collection. Made with premium materials.",
+    "name": "Crop Top",
+    "slug": "crop-top",
+    "description": "Trendy crop top with modern design. Made from comfortable fabric. Perfect for casual and party occasions.",
     "isForMen": false,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post58_img1.webp",
@@ -843,12 +843,12 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post58_img6.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post58_img7.webp"
     ],
-    "variantsKey": "collection_5_men"
+    "variantsKey": "clothing-sizes-sml-xl"
   },
   {
-    "name": "Levin's Men Collection #59",
-    "slug": "levin-collection-59",
-    "description": "A stylish item from the new Men's Collection. Made with premium materials.",
+    "name": "Cargo Shorts",
+    "slug": "cargo-shorts",
+    "description": "Functional cargo shorts with multiple pockets. Made from durable cotton fabric. Ideal for outdoor activities.",
     "isForMen": true,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post59_img1.webp",
@@ -857,12 +857,12 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post59_img5.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post59_img6.webp"
     ],
-    "variantsKey": "collection_5_men"
+    "variantsKey": "clothing-sizes-sml-xl"
   },
   {
-    "name": "Levin's Women Collection #60",
-    "slug": "levin-collection-60",
-    "description": "A stylish item from the new Women's Collection. Made with premium materials.",
+    "name": "Ruffle Blouse",
+    "slug": "ruffle-blouse",
+    "description": "Feminine ruffle blouse with delicate details. Made from premium fabric. Perfect for office and special occasions.",
     "isForMen": false,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post60_img1.webp",
@@ -871,12 +871,12 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post60_img5.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post60_img6.webp"
     ],
-    "variantsKey": "collection_5_men"
+    "variantsKey": "clothing-sizes-sml-xl"
   },
   {
-    "name": "Levin's Men Collection #61",
-    "slug": "levin-collection-61",
-    "description": "A stylish item from the new Men's Collection. Made with premium materials.",
+    "name": "Hiking Boots",
+    "slug": "hiking-boots",
+    "description": "Durable hiking boots with rugged sole. Waterproof design with ankle support. Perfect for outdoor adventures.",
     "isForMen": true,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post61_img1.webp",
@@ -887,12 +887,12 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post61_img7.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post61_img8.webp"
     ],
-    "variantsKey": "collection_5_men"
+    "variantsKey": "shoes-sizes-40-43"
   },
   {
-    "name": "Levin's Women Collection #62",
-    "slug": "levin-collection-62",
-    "description": "A stylish item from the new Women's Collection. Made with premium materials.",
+    "name": "Bomber Jacket",
+    "slug": "bomber-jacket",
+    "description": "Stylish bomber jacket with modern design. Made from quality material. Perfect for casual wear and layering.",
     "isForMen": false,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post62_img1.webp",
@@ -902,12 +902,12 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post62_img6.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post62_img7.webp"
     ],
-    "variantsKey": "collection_5_men"
+    "variantsKey": "clothing-sizes-l-xl-xxl"
   },
   {
-    "name": "Levin's Men Collection #63",
-    "slug": "levin-collection-63",
-    "description": "A stylish item from the new Men's Collection. Made with premium materials.",
+    "name": "Trench Coat",
+    "slug": "trench-coat",
+    "description": "Classic trench coat with timeless design. Made from water-resistant fabric. Perfect for rainy weather and formal occasions.",
     "isForMen": true,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post63_img1.webp",
@@ -916,12 +916,12 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post63_img5.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post63_img6.webp"
     ],
-    "variantsKey": "collection_5_men"
+    "variantsKey": "clothing-sizes-l-xl-xxl"
   },
   {
-    "name": "Levin's Women Collection #64",
-    "slug": "levin-collection-64",
-    "description": "A stylish item from the new Women's Collection. Made with premium materials.",
+    "name": "Wool Coat",
+    "slug": "wool-coat",
+    "description": "Warm wool coat with elegant design. Made from premium wool blend. Perfect for cold weather and formal occasions.",
     "isForMen": false,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post64_img1.webp",
@@ -929,22 +929,22 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post64_img4.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post64_img5.webp"
     ],
-    "variantsKey": "collection_5_men"
+    "variantsKey": "clothing-sizes-l-xl-xxl"
   },
   {
-    "name": "Levin's Men Collection #65",
-    "slug": "levin-collection-65",
-    "description": "A stylish item from the new Men's Collection. Made with premium materials.",
+    "name": "Blazer Jacket",
+    "slug": "blazer-jacket",
+    "description": "Elegant blazer jacket with tailored fit. Made from premium wool blend. Suitable for business and formal events.",
     "isForMen": true,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post65_img1.webp"
     ],
-    "variantsKey": "collection_5_men"
+    "variantsKey": "clothing-sizes-l-xl-xxl"
   },
   {
-    "name": "Levin's Women Collection #66",
-    "slug": "levin-collection-66",
-    "description": "A stylish item from the new Women's Collection. Made with premium materials.",
+    "name": "Ankle Boots",
+    "slug": "ankle-boots",
+    "description": "Fashionable ankle boots with versatile design. Made from quality materials. Perfect for casual and semi-formal wear.",
     "isForMen": false,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post66_img1.webp",
@@ -953,12 +953,12 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post66_img5.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post66_img6.webp"
     ],
-    "variantsKey": "collection_5_men"
+    "variantsKey": "shoes-sizes-40-43"
   },
   {
-    "name": "Levin's Men Collection #67",
-    "slug": "levin-collection-67",
-    "description": "A stylish item from the new Men's Collection. Made with premium materials.",
+    "name": "Track Pants",
+    "slug": "track-pants",
+    "description": "Comfortable track pants with elastic waistband. Made from soft cotton blend. Perfect for casual wear and workouts.",
     "isForMen": true,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post67_img1.webp",
@@ -968,12 +968,12 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post67_img6.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post67_img7.webp"
     ],
-    "variantsKey": "collection_5_men"
+    "variantsKey": "clothing-sizes-sml-xl"
   },
   {
-    "name": "Levin's Women Collection #68",
-    "slug": "levin-collection-68",
-    "description": "A stylish item from the new Women's Collection. Made with premium materials.",
+    "name": "Ballet Flats",
+    "slug": "ballet-flats",
+    "description": "Comfortable ballet flats with classic design. Made from soft leather. Perfect for everyday wear and office.",
     "isForMen": false,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post68_img1.webp",
@@ -984,12 +984,12 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post68_img7.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post68_img8.webp"
     ],
-    "variantsKey": "collection_5_men"
+    "variantsKey": "shoes-sizes-40-43"
   },
   {
-    "name": "Levin's Men Collection #69",
-    "slug": "levin-collection-69",
-    "description": "A stylish item from the new Men's Collection. Made with premium materials.",
+    "name": "Sandals",
+    "slug": "sandals",
+    "description": "Stylish sandals with comfortable sole. Modern design with adjustable straps. Perfect for summer and casual wear.",
     "isForMen": true,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post69_img1.webp",
@@ -998,12 +998,12 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post69_img5.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post69_img6.webp"
     ],
-    "variantsKey": "collection_5_men"
+    "variantsKey": "shoes-sizes-40-43"
   },
   {
-    "name": "Levin's Women Collection #70",
-    "slug": "levin-collection-70",
-    "description": "A stylish item from the new Women's Collection. Made with premium materials.",
+    "name": "Stiletto Heels",
+    "slug": "stiletto-heels",
+    "description": "Elegant stiletto heels with sophisticated design. Made from premium materials. Perfect for formal and evening occasions.",
     "isForMen": false,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post70_img1.webp",
@@ -1013,12 +1013,12 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post70_img6.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post70_img7.webp"
     ],
-    "variantsKey": "collection_5_men"
+    "variantsKey": "shoes-sizes-40-43"
   },
   {
-    "name": "Levin's Men Collection #71",
-    "slug": "levin-collection-71",
-    "description": "A stylish item from the new Men's Collection. Made with premium materials.",
+    "name": "Briefcase",
+    "slug": "briefcase",
+    "description": "Professional briefcase with multiple compartments. Made from durable leather. Perfect for business professionals.",
     "isForMen": true,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post71_img1.webp",
@@ -1028,12 +1028,12 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post71_img6.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post71_img7.webp"
     ],
-    "variantsKey": "collection_5_men"
+    "variantsKey": "bags-one-size"
   },
   {
-    "name": "Levin's Women Collection #72",
-    "slug": "levin-collection-72",
-    "description": "A stylish item from the new Women's Collection. Made with premium materials.",
+    "name": "Wedge Sandals",
+    "slug": "wedge-sandals",
+    "description": "Stylish wedge sandals with comfortable height. Made from quality materials. Perfect for casual and semi-formal wear.",
     "isForMen": false,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post72_img1.webp",
@@ -1043,12 +1043,12 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post72_img6.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post72_img7.webp"
     ],
-    "variantsKey": "collection_5_men"
+    "variantsKey": "shoes-sizes-40-43"
   },
   {
-    "name": "Levin's Men Collection #73",
-    "slug": "levin-collection-73",
-    "description": "A stylish item from the new Men's Collection. Made with premium materials.",
+    "name": "Tie Set",
+    "slug": "tie-set",
+    "description": "Set of elegant ties in various colors. Made from premium silk blend. Perfect for formal occasions.",
     "isForMen": true,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post73_img1.webp",
@@ -1058,12 +1058,12 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post73_img6.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post73_img7.webp"
     ],
-    "variantsKey": "collection_5_men"
+    "variantsKey": "one-size-accessories"
   },
   {
-    "name": "Levin's Women Collection #74",
-    "slug": "levin-collection-74",
-    "description": "A stylish item from the new Women's Collection. Made with premium materials.",
+    "name": "Peep Toe Pumps",
+    "slug": "peep-toe-pumps",
+    "description": "Fashionable peep toe pumps with modern design. Made from premium materials. Perfect for office and formal occasions.",
     "isForMen": false,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post74_img1.webp",
@@ -1073,12 +1073,12 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post74_img6.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post74_img7.webp"
     ],
-    "variantsKey": "collection_5_men"
+    "variantsKey": "shoes-sizes-40-43"
   },
   {
-    "name": "Levin's Men Collection #75",
-    "slug": "levin-collection-75",
-    "description": "A stylish item from the new Men's Collection. Made with premium materials.",
+    "name": "Suspenders",
+    "slug": "suspenders",
+    "description": "Classic suspenders with adjustable length. Made from durable elastic material. Perfect for formal and vintage style.",
     "isForMen": true,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post75_img1.webp",
@@ -1087,12 +1087,12 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post75_img5.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post75_img6.webp"
     ],
-    "variantsKey": "collection_5_men"
+    "variantsKey": "one-size-accessories"
   },
   {
-    "name": "Levin's Women Collection #76",
-    "slug": "levin-collection-76",
-    "description": "A stylish item from the new Women's Collection. Made with premium materials.",
+    "name": "Evening Clutch",
+    "slug": "evening-clutch",
+    "description": "Elegant evening clutch with sophisticated design. Made from premium materials. Perfect for special occasions and events.",
     "isForMen": false,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post76_img1.webp",
@@ -1100,12 +1100,12 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post76_img4.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post76_img5.webp"
     ],
-    "variantsKey": "collection_5_men"
+    "variantsKey": "bags-one-size"
   },
   {
-    "name": "Levin's Men Collection #77",
-    "slug": "levin-collection-77",
-    "description": "A stylish item from the new Men's Collection. Made with premium materials.",
+    "name": "Bow Tie",
+    "slug": "bow-tie",
+    "description": "Elegant bow tie with adjustable size. Made from premium fabric. Perfect for formal events and special occasions.",
     "isForMen": true,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post77_img1.webp",
@@ -1115,12 +1115,12 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post77_img6.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post77_img7.webp"
     ],
-    "variantsKey": "collection_5_men"
+    "variantsKey": "one-size-accessories"
   },
   {
-    "name": "Levin's Women Collection #78",
-    "slug": "levin-collection-78",
-    "description": "A stylish item from the new Women's Collection. Made with premium materials.",
+    "name": "Backpack Purse",
+    "slug": "backpack-purse",
+    "description": "Practical backpack purse with multiple compartments. Made from durable material. Perfect for daily use and travel.",
     "isForMen": false,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post78_img1.webp",
@@ -1131,12 +1131,12 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post78_img7.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post78_img8.webp"
     ],
-    "variantsKey": "collection_5_men"
+    "variantsKey": "bags-one-size"
   },
   {
-    "name": "Levin's Men Collection #79",
-    "slug": "levin-collection-79",
-    "description": "A stylish item from the new Men's Collection. Made with premium materials.",
+    "name": "Cufflinks Set",
+    "slug": "cufflinks-set",
+    "description": "Set of sophisticated cufflinks with classic design. Made from premium metal. Perfect for formal attire.",
     "isForMen": true,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post79_img1.webp",
@@ -1144,23 +1144,23 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post79_img4.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post79_img5.webp"
     ],
-    "variantsKey": "collection_5_men"
+    "variantsKey": "one-size-accessories"
   },
   {
-    "name": "Levin's Women Collection #80",
-    "slug": "levin-collection-80",
-    "description": "A stylish item from the new Women's Collection. Made with premium materials.",
+    "name": "Shoulder Bag",
+    "slug": "shoulder-bag",
+    "description": "Stylish shoulder bag with adjustable strap. Made from quality materials. Perfect for everyday use and casual occasions.",
     "isForMen": false,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post80_img1.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post80_img2.webp"
     ],
-    "variantsKey": "collection_5_men"
+    "variantsKey": "bags-one-size"
   },
   {
-    "name": "Levin's Men Collection #81",
-    "slug": "levin-collection-81",
-    "description": "A stylish item from the new Men's Collection. Made with premium materials.",
+    "name": "Pocket Square",
+    "slug": "pocket-square",
+    "description": "Elegant pocket square in premium silk. Perfect accessory for formal occasions. Available in various colors and patterns.",
     "isForMen": true,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post81_img1.webp",
@@ -1170,12 +1170,12 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post81_img6.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post81_img7.webp"
     ],
-    "variantsKey": "collection_5_men"
+    "variantsKey": "one-size-accessories"
   },
   {
-    "name": "Levin's Women Collection #82",
-    "slug": "levin-collection-82",
-    "description": "A stylish item from the new Women's Collection. Made with premium materials.",
+    "name": "Chain Belt",
+    "slug": "chain-belt",
+    "description": "Decorative chain belt with modern design. Made from premium metal. Perfect for accessorizing and defining waist.",
     "isForMen": false,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post82_img1.webp",
@@ -1188,12 +1188,12 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post82_img9.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post82_img10.webp"
     ],
-    "variantsKey": "collection_5_men"
+    "variantsKey": "one-size-accessories"
   },
   {
-    "name": "Levin's Men Collection #83",
-    "slug": "levin-collection-83",
-    "description": "A stylish item from the new Men's Collection. Made with premium materials.",
+    "name": "Belt Buckle",
+    "slug": "belt-buckle",
+    "description": "Decorative belt buckle with unique design. Made from premium metal. Perfect for customizing your belt style.",
     "isForMen": true,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post83_img1.webp",
@@ -1203,24 +1203,24 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post83_img6.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post83_img7.webp"
     ],
-    "variantsKey": "collection_5_men"
+    "variantsKey": "one-size-accessories"
   },
   {
-    "name": "Levin's Women Collection #84",
-    "slug": "levin-collection-84",
-    "description": "A stylish item from the new Women's Collection. Made with premium materials.",
+    "name": "Fedora Hat",
+    "slug": "fedora-hat",
+    "description": "Fashionable fedora hat with classic design. Made from quality materials. Perfect for sun protection and style.",
     "isForMen": false,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post84_img1.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post84_img2.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post84_img4.webp"
     ],
-    "variantsKey": "collection_5_men"
+    "variantsKey": "one-size-accessories"
   },
   {
-    "name": "Levin's Men Collection #85",
-    "slug": "levin-collection-85",
-    "description": "A stylish item from the new Men's Collection. Made with premium materials.",
+    "name": "Wallet Chain",
+    "slug": "wallet-chain",
+    "description": "Stylish wallet chain with secure attachment. Made from durable metal. Perfect for keeping wallet secure.",
     "isForMen": true,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post85_img1.webp",
@@ -1230,12 +1230,12 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post85_img6.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post85_img7.webp"
     ],
-    "variantsKey": "collection_5_men"
+    "variantsKey": "one-size-accessories"
   },
   {
-    "name": "Levin's Women Collection #86",
-    "slug": "levin-collection-86",
-    "description": "A stylish item from the new Women's Collection. Made with premium materials.",
+    "name": "Infinity Scarf",
+    "slug": "infinity-scarf",
+    "description": "Versatile infinity scarf with soft fabric. Made from premium materials. Perfect for layering and cold weather.",
     "isForMen": false,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post86_img1.webp",
@@ -1244,12 +1244,12 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post86_img5.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post86_img6.webp"
     ],
-    "variantsKey": "collection_5_men"
+    "variantsKey": "one-size-accessories"
   },
   {
-    "name": "Levin's Men Collection #87",
-    "slug": "levin-collection-87",
-    "description": "A stylish item from the new Men's Collection. Made with premium materials.",
+    "name": "Keychain",
+    "slug": "keychain",
+    "description": "Functional keychain with durable design. Made from premium metal. Perfect for organizing keys.",
     "isForMen": true,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post87_img1.webp",
@@ -1259,12 +1259,12 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post87_img6.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post87_img7.webp"
     ],
-    "variantsKey": "collection_5_men"
+    "variantsKey": "one-size-accessories"
   },
   {
-    "name": "Levin's Women Collection #88",
-    "slug": "levin-collection-88",
-    "description": "A stylish item from the new Women's Collection. Made with premium materials.",
+    "name": "Leather Gloves",
+    "slug": "leather-gloves",
+    "description": "Elegant leather gloves with warm lining. Made from genuine leather. Perfect for cold weather and formal occasions.",
     "isForMen": false,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post88_img1.webp",
@@ -1274,12 +1274,12 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post88_img6.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post88_img7.webp"
     ],
-    "variantsKey": "collection_5_men"
+    "variantsKey": "one-size-accessories"
   },
   {
-    "name": "Levin's Men Collection #89",
-    "slug": "levin-collection-89",
-    "description": "A stylish item from the new Men's Collection. Made with premium materials.",
+    "name": "Phone Case",
+    "slug": "phone-case",
+    "description": "Protective phone case with shock-absorbing design. Available for various phone models. Features raised edges for screen protection.",
     "isForMen": true,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post89_img1.webp",
@@ -1289,12 +1289,12 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post89_img6.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post89_img7.webp"
     ],
-    "variantsKey": "collection_5_men"
+    "variantsKey": "one-size-accessories"
   },
   {
-    "name": "Levin's Women Collection #90",
-    "slug": "levin-collection-90",
-    "description": "A stylish item from the new Women's Collection. Made with premium materials.",
+    "name": "Cat Eye Sunglasses",
+    "slug": "cat-eye-sunglasses",
+    "description": "Stylish cat eye sunglasses with UV protection. Modern frame design with polarized lenses. Perfect for outdoor activities.",
     "isForMen": false,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post90_img1.webp",
@@ -1303,12 +1303,12 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post90_img5.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post90_img6.webp"
     ],
-    "variantsKey": "collection_5_men"
+    "variantsKey": "one-size-accessories"
   },
   {
-    "name": "Levin's Men Collection #91",
-    "slug": "levin-collection-91",
-    "description": "A stylish item from the new Men's Collection. Made with premium materials.",
+    "name": "Laptop Bag",
+    "slug": "laptop-bag",
+    "description": "Professional laptop bag with padded compartment. Made from durable material. Perfect for business and travel.",
     "isForMen": true,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post91_img1.webp",
@@ -1318,12 +1318,12 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post91_img6.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post91_img7.webp"
     ],
-    "variantsKey": "collection_5_men"
+    "variantsKey": "bags-one-size"
   },
   {
-    "name": "Levin's Women Collection #92",
-    "slug": "levin-collection-92",
-    "description": "A stylish item from the new Women's Collection. Made with premium materials.",
+    "name": "Rose Gold Watch",
+    "slug": "rose-gold-watch",
+    "description": "Elegant rose gold watch with feminine design. Features genuine leather strap. Perfect for everyday wear and special occasions.",
     "isForMen": false,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post92_img1.webp",
@@ -1333,12 +1333,12 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post92_img6.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post92_img7.webp"
     ],
-    "variantsKey": "collection_5_men"
+    "variantsKey": "one-size-accessories"
   },
   {
-    "name": "Levin's Men Collection #93",
-    "slug": "levin-collection-93",
-    "description": "A stylish item from the new Men's Collection. Made with premium materials.",
+    "name": "Travel Bag",
+    "slug": "travel-bag",
+    "description": "Spacious travel bag with wheels. Made from durable material with multiple compartments. Ideal for long trips.",
     "isForMen": true,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post93_img1.webp",
@@ -1346,12 +1346,12 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post93_img4.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post93_img5.webp"
     ],
-    "variantsKey": "collection_5_men"
+    "variantsKey": "bags-one-size"
   },
   {
-    "name": "Levin's Women Collection #94",
-    "slug": "levin-collection-94",
-    "description": "A stylish item from the new Women's Collection. Made with premium materials.",
+    "name": "Bangle Bracelet",
+    "slug": "bangle-bracelet",
+    "description": "Decorative bangle bracelet with unique design. Made from premium materials. Perfect for accessorizing and layering.",
     "isForMen": false,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post94_img1.webp",
@@ -1360,12 +1360,12 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post94_img5.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post94_img6.webp"
     ],
-    "variantsKey": "collection_5_men"
+    "variantsKey": "one-size-accessories"
   },
   {
-    "name": "Levin's Men Collection #95",
-    "slug": "levin-collection-95",
-    "description": "A stylish item from the new Men's Collection. Made with premium materials.",
+    "name": "Duffel Bag",
+    "slug": "duffel-bag",
+    "description": "Large duffel bag with comfortable straps. Made from durable canvas. Perfect for gym and travel.",
     "isForMen": true,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post95_img4.webp",
@@ -1373,12 +1373,12 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post95_img6.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post95_img7.webp"
     ],
-    "variantsKey": "collection_5_men"
+    "variantsKey": "bags-one-size"
   },
   {
-    "name": "Levin's Women Collection #96",
-    "slug": "levin-collection-96",
-    "description": "A stylish item from the new Women's Collection. Made with premium materials.",
+    "name": "Diamond Ring",
+    "slug": "diamond-ring",
+    "description": "Sophisticated diamond ring with elegant design. Made from premium materials. Perfect for special occasions and gifts.",
     "isForMen": false,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post96_img1.webp",
@@ -1391,12 +1391,12 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post96_img9.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post96_img10.webp"
     ],
-    "variantsKey": "collection_5_men"
+    "variantsKey": "one-size-accessories"
   },
   {
-    "name": "Levin's Women Collection #98",
-    "slug": "levin-collection-98",
-    "description": "A stylish item from the new Women's Collection. Made with premium materials.",
+    "name": "Anklet",
+    "slug": "anklet",
+    "description": "Delicate anklet with feminine design. Made from quality materials. Perfect for beach and casual occasions.",
     "isForMen": false,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post98_img1.webp",
@@ -1406,12 +1406,12 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post98_img6.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post98_img7.webp"
     ],
-    "variantsKey": "collection_5_men"
+    "variantsKey": "one-size-accessories"
   },
   {
-    "name": "Levin's Men Collection #103",
-    "slug": "levin-collection-103",
-    "description": "A stylish item from the new Men's Collection. Made with premium materials.",
+    "name": "Messenger Bag",
+    "slug": "messenger-bag",
+    "description": "Stylish messenger bag with adjustable strap. Made from durable material. Perfect for daily commute and casual use.",
     "isForMen": true,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post103_img1.webp",
@@ -1419,12 +1419,12 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post103_img4.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post103_img5.webp"
     ],
-    "variantsKey": "collection_5_men"
+    "variantsKey": "bags-one-size"
   },
   {
-    "name": "Levin's Men Collection #105",
-    "slug": "levin-collection-105",
-    "description": "A stylish item from the new Men's Collection. Made with premium materials.",
+    "name": "Workout Gloves",
+    "slug": "workout-gloves",
+    "description": "Protective workout gloves with padding. Perfect for weightlifting and gym activities. Features breathable material.",
     "isForMen": true,
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post105_img1.webp",
@@ -1434,6 +1434,6 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post105_img6.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post105_img7.webp"
     ],
-    "variantsKey": "collection_5_men"
+    "variantsKey": "one-size-accessories"
   }
 ]

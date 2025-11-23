@@ -1,22 +1,72 @@
 [
   {
-    "email": "user@gmail.com",
-    "firstName": "Levin",
-    "lastName": "Official",
+    "email": "john.doe@gmail.com",
+    "firstName": "John",
+    "lastName": "Doe",
     "password": "password123",
-    "phone": "085555555555",
+    "phone": "081234567890",
     "role": "USER",
     "isVerified": true,
-    "profileBio": "Official account for LevinShop."
+    "profileBio": "Fashion enthusiast and style lover. Always looking for the latest trends!"
   },
   {
-    "email": "admin@gmail.com",
-    "firstName": "Super",
-    "lastName": "Admin",
+    "email": "jane.smith@gmail.com",
+    "firstName": "Jane",
+    "lastName": "Smith",
+    "password": "password123",
+    "phone": "081234567891",
+    "role": "USER",
+    "isVerified": true,
+    "profileBio": "Love shopping for quality fashion pieces. Quality over quantity!"
+  },
+  {
+    "email": "michael.chen@gmail.com",
+    "firstName": "Michael",
+    "lastName": "Chen",
+    "password": "password123",
+    "phone": "081234567892",
+    "role": "USER",
+    "isVerified": true,
+    "profileBio": "Urban fashion collector. Streetwear is my passion."
+  },
+  {
+    "email": "sarah.williams@gmail.com",
+    "firstName": "Sarah",
+    "lastName": "Williams",
+    "password": "password123",
+    "phone": "081234567893",
+    "role": "USER",
+    "isVerified": true,
+    "profileBio": "Fashion blogger and style consultant. Sharing my fashion journey!"
+  },
+  {
+    "email": "david.brown@gmail.com",
+    "firstName": "David",
+    "lastName": "Brown",
+    "password": "password123",
+    "phone": "081234567894",
+    "role": "USER",
+    "isVerified": true,
+    "profileBio": "Minimalist fashion lover. Less is more!"
+  },
+  {
+    "email": "emily.jones@gmail.com",
+    "firstName": "Emily",
+    "lastName": "Jones",
+    "password": "password123",
+    "phone": "081234567895",
+    "role": "USER",
+    "isVerified": true,
+    "profileBio": "Vintage fashion collector. Bringing back classic styles!"
+  },
+  {
+    "email": "admin@reluv.com",
+    "firstName": "Admin",
+    "lastName": "Reluv",
     "password": "adminpassword",
     "phone": "089999999999",
     "role": "ADMIN",
     "isVerified": true,
-    "profileBio": "System Administrator."
+    "profileBio": "System Administrator for Reluv Platform."
   }
 ]

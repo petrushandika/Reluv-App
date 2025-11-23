@@ -1,0 +1,107 @@
+[
+  {
+    "name": "Urban Threads Co.",
+    "slug": "urban-threads-co",
+    "isVerified": true,
+    "profile": {
+      "bio": "Contemporary streetwear and urban fashion for the modern lifestyle. Quality meets style.",
+      "banner": "https://res.cloudinary.com/dqcyabvc2/image/upload/stores/banner1.webp"
+    },
+    "location": {
+      "label": "Urban Threads Co. Warehouse",
+      "recipient": "Urban Threads Co. Team",
+      "phone": "081234567890",
+      "province": "DKI Jakarta",
+      "city": "Jakarta Selatan",
+      "district": "Kebayoran Baru",
+      "subDistrict": "Senayan",
+      "postalCode": "12190",
+      "address": "Jl. Senayan No. 123",
+      "biteship_area_id": "IDNP31"
+    }
+  },
+  {
+    "name": "Elegance Boutique",
+    "slug": "elegance-boutique",
+    "isVerified": true,
+    "profile": {
+      "bio": "Sophisticated fashion pieces curated for the elegant and refined. Timeless style, modern elegance.",
+      "banner": "https://res.cloudinary.com/dqcyabvc2/image/upload/stores/banner2.webp"
+    },
+    "location": {
+      "label": "Elegance Boutique Store",
+      "recipient": "Elegance Boutique Manager",
+      "phone": "081234567891",
+      "province": "DKI Jakarta",
+      "city": "Jakarta Pusat",
+      "district": "Menteng",
+      "subDistrict": "Gondangdia",
+      "postalCode": "10350",
+      "address": "Jl. Menteng Raya No. 45",
+      "biteship_area_id": "IDNP31"
+    }
+  },
+  {
+    "name": "Trendsetter Fashion",
+    "slug": "trendsetter-fashion",
+    "isVerified": true,
+    "profile": {
+      "bio": "Stay ahead of the curve with our latest fashion trends. Bold, fresh, and always in style.",
+      "banner": "https://res.cloudinary.com/dqcyabvc2/image/upload/stores/banner3.webp"
+    },
+    "location": {
+      "label": "Trendsetter Fashion Hub",
+      "recipient": "Trendsetter Fashion Team",
+      "phone": "081234567892",
+      "province": "DKI Jakarta",
+      "city": "Jakarta Barat",
+      "district": "Kebon Jeruk",
+      "subDistrict": "Kebon Jeruk",
+      "postalCode": "11530",
+      "address": "Jl. Kebon Jeruk No. 78",
+      "biteship_area_id": "IDNP31"
+    }
+  },
+  {
+    "name": "Luxury Wardrobe",
+    "slug": "luxury-wardrobe",
+    "isVerified": false,
+    "profile": {
+      "bio": "Premium fashion collections for the discerning customer. Where luxury meets everyday style.",
+      "banner": "https://res.cloudinary.com/dqcyabvc2/image/upload/stores/banner4.webp"
+    },
+    "location": {
+      "label": "Luxury Wardrobe Showroom",
+      "recipient": "Luxury Wardrobe Owner",
+      "phone": "081234567893",
+      "province": "DKI Jakarta",
+      "city": "Jakarta Utara",
+      "district": "Kelapa Gading",
+      "subDistrict": "Kelapa Gading Barat",
+      "postalCode": "14240",
+      "address": "Jl. Kelapa Gading Boulevard No. 12",
+      "biteship_area_id": "IDNP31"
+    }
+  },
+  {
+    "name": "Style Vault",
+    "slug": "style-vault",
+    "isVerified": false,
+    "profile": {
+      "bio": "Your trusted source for quality fashion at unbeatable prices. Style that doesn't break the bank.",
+      "banner": "https://res.cloudinary.com/dqcyabvc2/image/upload/stores/banner5.webp"
+    },
+    "location": {
+      "label": "Style Vault Distribution Center",
+      "recipient": "Style Vault Operations",
+      "phone": "081234567894",
+      "province": "DKI Jakarta",
+      "city": "Jakarta Timur",
+      "district": "Cakung",
+      "subDistrict": "Cakung Timur",
+      "postalCode": "13910",
+      "address": "Jl. Raya Bekasi Km. 20 No. 56",
+      "biteship_area_id": "IDNP31"
+    }
+  }
+]
