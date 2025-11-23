@@ -15,11 +15,15 @@ import {
   Clock,
   ChevronDown,
   Search,
+  Edit,
+  Info,
 } from "lucide-react";
 import type { LatLngExpression } from "leaflet";
 import { useCart } from "@/features/cart/hooks/useCart";
 import { useBuyStore } from "@/features/checkout/store/buy.store";
 import Spinner from "@/shared/components/atoms/Spinner";
+import { getAddresses, createAddress, type Address } from "@/features/address/api/addressApi";
+import { toast } from "sonner";
 
 const MapPicker = dynamic(
   () => import("@/shared/components/organisms/MapPicker"),
@@ -240,6 +244,11 @@ const Checkout = () => {
   const [districtSearchTerm, setDistrictSearchTerm] = useState("");
   const [subDistrictSearchTerm, setSubDistrictSearchTerm] = useState("");
 
+  const [addresses, setAddresses] = useState<Address[]>([]);
+  const [isLoadingAddresses, setIsLoadingAddresses] = useState(false);
+  const [addressMode, setAddressMode] = useState<"select" | "new">("select");
+  const [selectedAddressId, setSelectedAddressId] = useState<number | null>(null);
+
   useEffect(() => {
     if (!isFetchingCart) {
       setHasCheckedCart(true);
@@ -257,6 +266,30 @@ const Checkout = () => {
       }
     }
   }, [cart, isFetchingCart, hasCheckedCart, router, buyItem]);
+
+  useEffect(() => {
+    const fetchAddresses = async () => {
+      setIsLoadingAddresses(true);
+      try {
+        const data = await getAddresses();
+        setAddresses(data);
+        if (data.length > 0) {
+          const defaultAddress = data.find((addr) => addr.isDefault) || data[0];
+          setSelectedAddressId(defaultAddress.id);
+          setAddressMode("select");
+          handleSelectAddress(defaultAddress);
+        } else {
+          setAddressMode("new");
+        }
+      } catch (error) {
+        console.error("Failed to fetch addresses:", error);
+        setAddressMode("new");
+      } finally {
+        setIsLoadingAddresses(false);
+      }
+    };
+    fetchAddresses();
+  }, []);
 
   useEffect(() => {
     const fetchProvinces = async () => {
@@ -397,6 +430,162 @@ const Checkout = () => {
     setIsVoucherModalOpen(false);
   };
 
+  const handleSelectAddress = async (address: Address) => {
+    setSelectedAddressId(address.id);
+    setAddressMode("select");
+
+    const addressLines = address.address.split("\n");
+    const streetAddress = addressLines[0] || "";
+    const detailAddress = addressLines.slice(1).join("\n") || "";
+
+    const provinceMatch = provinces.find((p) => p.name === address.province);
+    let cityId = "";
+    let districtId = "";
+    let subDistrictId = "";
+
+    if (provinceMatch) {
+      try {
+        const regenciesResponse = await fetch(
+          `https://www.emsifa.com/api-wilayah-indonesia/api/regencies/${provinceMatch.id}.json`
+        );
+        const regenciesData: Regency[] = await regenciesResponse.json();
+        setRegencies(regenciesData);
+
+        const cityMatch = regenciesData.find((r) => r.name === address.city);
+        if (cityMatch) {
+          cityId = cityMatch.id;
+
+          const districtsResponse = await fetch(
+            `https://www.emsifa.com/api-wilayah-indonesia/api/districts/${cityMatch.id}.json`
+          );
+          const districtsData: District[] = await districtsResponse.json();
+          setDistricts(districtsData);
+
+          const districtMatch = districtsData.find((d) => d.name === address.district);
+          if (districtMatch) {
+            districtId = districtMatch.id;
+
+            const subDistrictsResponse = await fetch(
+              `https://www.emsifa.com/api-wilayah-indonesia/api/villages/${districtMatch.id}.json`
+            );
+            const subDistrictsData: SubDistrict[] = await subDistrictsResponse.json();
+            setSubDistricts(subDistrictsData);
+
+            const subDistrictMatch = subDistrictsData.find((s) => s.name === address.subDistrict);
+            if (subDistrictMatch) {
+              subDistrictId = subDistrictMatch.id;
+            }
+          }
+        }
+      } catch (error) {
+        console.error("Failed to fetch location data:", error);
+      }
+    }
+
+    setFormData({
+      firstName: address.recipient.split(" ")[0] || "",
+      lastName: address.recipient.split(" ").slice(1).join(" ") || "",
+      email: formData.email,
+      phone: address.phone,
+      address: streetAddress,
+      country: "ID",
+      province: provinceMatch?.id || "",
+      city: cityId,
+      district: districtId,
+      subDistrict: subDistrictId,
+      zip: address.postalCode,
+      detailAddress: detailAddress,
+    });
+
+    if (address.latitude && address.longitude) {
+      setMapPosition([address.latitude, address.longitude]);
+    }
+  };
+
+  const handleAddressModeChange = (mode: "select" | "new") => {
+    setAddressMode(mode);
+    if (mode === "new") {
+      setSelectedAddressId(null);
+      setFormData({
+        firstName: "",
+        lastName: "",
+        email: formData.email,
+        phone: "",
+        address: "",
+        country: "ID",
+        province: "",
+        city: "",
+        district: "",
+        subDistrict: "",
+        zip: "",
+        detailAddress: "",
+      });
+    } else if (addresses.length > 0) {
+      const defaultAddress = addresses.find((addr) => addr.isDefault) || addresses[0];
+      handleSelectAddress(defaultAddress);
+    }
+  };
+
+  const handleFormSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (addressMode === "new") {
+      try {
+        const selectedProvince = provinces.find((p) => p.id === formData.province);
+        const selectedCity = regencies.find((r) => r.id === formData.city);
+        const selectedDistrict = districts.find((d) => d.id === formData.district);
+        const selectedSubDistrict = subDistricts.find((s) => s.id === formData.subDistrict);
+
+        if (!selectedProvince || !selectedCity) {
+          toast.error("Invalid Selection", {
+            description: "Please select both province and city.",
+          });
+          return;
+        }
+
+        let fullAddress = formData.address.trim();
+        if (formData.detailAddress.trim()) {
+          fullAddress += `\n${formData.detailAddress.trim()}`;
+        }
+
+        const addressData = {
+          label: "Home",
+          recipient: `${formData.firstName} ${formData.lastName}`.trim(),
+          phone: formData.phone.trim(),
+          province: selectedProvince.name,
+          city: selectedCity.name,
+          district: selectedDistrict?.name || formData.district.trim(),
+          subDistrict: selectedSubDistrict?.name || formData.subDistrict.trim(),
+          postalCode: formData.zip.trim(),
+          address: fullAddress,
+          isDefault: addresses.length === 0,
+          latitude: Array.isArray(mapPosition) ? mapPosition[0] : undefined,
+          longitude: Array.isArray(mapPosition) ? mapPosition[1] : undefined,
+        };
+
+        await createAddress(addressData);
+        toast.success("Address Saved", {
+          description: "Your address has been saved successfully.",
+        });
+
+        const updatedAddresses = await getAddresses();
+        setAddresses(updatedAddresses);
+      } catch (error: unknown) {
+        console.error("Failed to save address:", error);
+        const errorMessage =
+          error instanceof Error ? error.message : "Failed to save address";
+        toast.error("Failed to Save Address", {
+          description: errorMessage,
+        });
+        return;
+      }
+    }
+
+    // Continue with order submission logic here
+    // For now, just show a success message
+    toast.success("Order submitted successfully!");
+  };
+
   // If buy item exists, use it; otherwise use cart
   const checkoutItems = buyItem
     ? [
@@ -477,6 +666,8 @@ const Checkout = () => {
     icon: Icon,
     value,
     onChange,
+    disabled = false,
+    onDisabledClick,
   }: {
     id: string;
     label: string;
@@ -485,6 +676,8 @@ const Checkout = () => {
     icon?: React.ElementType;
     value: string;
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    disabled?: boolean;
+    onDisabledClick?: () => void;
   }) => (
     <div>
       <label
@@ -508,8 +701,20 @@ const Checkout = () => {
           name={id}
           value={value}
           onChange={onChange}
+          disabled={disabled}
+          onClick={(e) => {
+            if (disabled && onDisabledClick) {
+              e.preventDefault();
+              e.stopPropagation();
+              onDisabledClick();
+            }
+          }}
           onMouseDown={(e) => {
             e.stopPropagation();
+            if (disabled && onDisabledClick) {
+              e.preventDefault();
+              onDisabledClick();
+            }
           }}
           onKeyDown={(e) => {
             e.stopPropagation();
@@ -534,13 +739,17 @@ const Checkout = () => {
           }}
           onFocus={(e) => {
             e.stopPropagation();
+            if (disabled && onDisabledClick) {
+              e.preventDefault();
+              onDisabledClick();
+            }
           }}
           onBlur={(e) => {
             e.stopPropagation();
           }}
           className={`block w-full ${
             Icon ? "pl-10" : "pl-4"
-          } pr-3 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder:text-base placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200`}
+          } pr-3 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder:text-base placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200 disabled:bg-gray-50 dark:disabled:bg-gray-700 disabled:cursor-not-allowed disabled:opacity-60`}
           placeholder={placeholder}
         />
       </div>
@@ -867,12 +1076,27 @@ const Checkout = () => {
           </h1>
           <div className="flex flex-col lg:grid lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
             <div className="lg:col-span-2 border border-gray-200 dark:border-gray-700 rounded-lg p-4 sm:p-6 md:p-8 bg-white dark:bg-gray-800 shadow-sm">
-              <form className="space-y-6 sm:space-y-8">
+              <form className="space-y-6 sm:space-y-8" onSubmit={handleFormSubmit}>
                 <div className="space-y-4 sm:space-y-6">
                   <h2 className="text-base sm:text-lg md:text-xl font-semibold text-sky-600 dark:text-sky-400 flex items-center gap-2 sm:gap-3">
                     <User className="w-5 h-5 sm:w-6 sm:h-6" /> Contact
                     Information
                   </h2>
+                  
+                  {addressMode === "select" && (
+                    <div className="flex items-start gap-3 p-3 sm:p-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg">
+                      <Info className="w-5 h-5 text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5" />
+                      <div className="flex-1">
+                        <p className="text-sm font-medium text-amber-800 dark:text-amber-300 mb-1">
+                          Using Saved Address
+                        </p>
+                        <p className="text-xs sm:text-sm text-amber-700 dark:text-amber-400">
+                          Contact information is locked because you&apos;re using a saved address. To edit these details, please use the &quot;Edit&quot; button on the address card or switch to &quot;Add New Address&quot; mode.
+                        </p>
+                      </div>
+                    </div>
+                  )}
+
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     <FormInput
                       id="firstName"
@@ -880,6 +1104,13 @@ const Checkout = () => {
                       placeholder="John"
                       value={formData.firstName}
                       onChange={handleInputChange}
+                      disabled={addressMode === "select"}
+                      onDisabledClick={() => {
+                        toast.info("Cannot Edit", {
+                          description: "This field cannot be edited because you're using a saved address. Please use the Edit button on the address card to modify your saved address, or switch to Add New Address mode.",
+                          duration: 5000,
+                        });
+                      }}
                     />
                     <FormInput
                       id="lastName"
@@ -887,6 +1118,13 @@ const Checkout = () => {
                       placeholder="Doe"
                       value={formData.lastName}
                       onChange={handleInputChange}
+                      disabled={addressMode === "select"}
+                      onDisabledClick={() => {
+                        toast.info("Cannot Edit", {
+                          description: "This field cannot be edited because you're using a saved address. Please use the Edit button on the address card to modify your saved address, or switch to Add New Address mode.",
+                          duration: 5000,
+                        });
+                      }}
                     />
                   </div>
                   <FormInput
@@ -906,6 +1144,13 @@ const Checkout = () => {
                     icon={Phone}
                     value={formData.phone}
                     onChange={handleInputChange}
+                    disabled={addressMode === "select"}
+                    onDisabledClick={() => {
+                      toast.info("Cannot Edit", {
+                        description: "This field cannot be edited because you're using a saved address. Please use the 'Edit' button on the address card to modify your saved address, or switch to 'Add New Address' mode.",
+                        duration: 5000,
+                      });
+                    }}
                   />
                 </div>
 
@@ -914,7 +1159,112 @@ const Checkout = () => {
                     <MapPin className="w-5 h-5 sm:w-6 sm:h-6" /> Shipping
                     Address
                   </h2>
-                  <FormInput
+
+                  {addresses.length > 0 && (
+                    <div className="space-y-3">
+                      <div className="flex flex-wrap items-center gap-3 sm:gap-4">
+                        <label className="flex items-center gap-2 cursor-pointer">
+                          <input
+                            type="radio"
+                            name="addressMode"
+                            checked={addressMode === "select"}
+                            onChange={() => handleAddressModeChange("select")}
+                            className="h-4 w-4 accent-sky-600 dark:accent-sky-400 text-sky-600 dark:text-sky-400 focus:ring-sky-500 dark:focus:ring-sky-400 border-gray-300 dark:border-gray-600 cursor-pointer"
+                          />
+                          <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                            Use Saved Address
+                          </span>
+                        </label>
+                        <label className="flex items-center gap-2 cursor-pointer">
+                          <input
+                            type="radio"
+                            name="addressMode"
+                            checked={addressMode === "new"}
+                            onChange={() => handleAddressModeChange("new")}
+                            className="h-4 w-4 accent-sky-600 dark:accent-sky-400 text-sky-600 dark:text-sky-400 focus:ring-sky-500 dark:focus:ring-sky-400 border-gray-300 dark:border-gray-600 cursor-pointer"
+                          />
+                          <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                            Add New Address
+                          </span>
+                        </label>
+                      </div>
+
+                      {addressMode === "select" && (
+                        <div className="space-y-2 max-h-60 overflow-y-auto">
+                          {isLoadingAddresses ? (
+                            <div className="flex items-center justify-center py-4">
+                              <Spinner />
+                            </div>
+                          ) : (
+                            addresses.map((address) => (
+                              <div
+                                key={address.id}
+                                className={`flex items-start p-3 sm:p-4 border rounded-lg cursor-pointer transition-all bg-white dark:bg-gray-800 ${
+                                  selectedAddressId === address.id
+                                    ? "border-sky-500 dark:border-sky-400"
+                                    : "border-gray-300 dark:border-gray-600 hover:border-sky-300 dark:hover:border-sky-500"
+                                }`}
+                              >
+                                <label className="flex items-start flex-grow cursor-pointer">
+                                  <input
+                                    type="radio"
+                                    name="selectedAddress"
+                                    checked={selectedAddressId === address.id}
+                                    onChange={() => handleSelectAddress(address)}
+                                    className="mt-1 h-4 w-4 accent-sky-600 dark:accent-sky-400 text-sky-600 dark:text-sky-400 focus:ring-sky-500 dark:focus:ring-sky-400 border-gray-300 dark:border-gray-600 cursor-pointer"
+                                  />
+                                  <div className="ml-3 flex-grow">
+                                    <div className="flex flex-wrap items-center gap-2 mb-1">
+                                      <span className="font-semibold text-sm text-gray-900 dark:text-white">
+                                        {address.label}
+                                      </span>
+                                      {address.isDefault && (
+                                        <span className="px-2 py-0.5 bg-sky-600 dark:bg-sky-500 text-white text-xs font-semibold rounded">
+                                          Main
+                                        </span>
+                                      )}
+                                    </div>
+                                    <p className="text-sm text-gray-700 dark:text-gray-300">
+                                      {address.recipient}
+                                    </p>
+                                    <p className="text-sm text-gray-700 dark:text-gray-300">
+                                      {address.phone}
+                                    </p>
+                                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                                      {address.address}
+                                      {address.address && (address.city || address.province) && ", "}
+                                      {address.city && address.province
+                                        ? `${address.city}, ${address.province}`
+                                        : address.city || address.province}
+                                      {address.postalCode && `, ${address.postalCode}`}
+                                    </p>
+                                  </div>
+                                </label>
+                                <button
+                                  type="button"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    router.push(`/profile/address/edit?id=${address.id}`);
+                                  }}
+                                  className="ml-2 sm:ml-3 flex items-center gap-1 sm:gap-2 text-sky-600 dark:text-sky-400 hover:bg-sky-50 dark:hover:bg-sky-900/20 px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg transition-colors cursor-pointer flex-shrink-0"
+                                  title="Edit Address"
+                                >
+                                  <Edit className="w-3 h-3 sm:w-4 sm:h-4" />
+                                  <span className="text-xs sm:text-sm font-medium hidden sm:inline">
+                                    Edit
+                                  </span>
+                                </button>
+                              </div>
+                            ))
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {addressMode === "new" && (
+                    <>
+                      <FormInput
                     id="address"
                     label="Street Address"
                     placeholder="Sudirman St. No. 52-53"
@@ -1053,6 +1403,8 @@ const Checkout = () => {
                       setPosition={setMapPosition}
                     />
                   </div>
+                    </>
+                  )}
                 </div>
 
                 <div className="space-y-4 sm:space-y-6">
@@ -1097,7 +1449,7 @@ const Checkout = () => {
                               id={service.id}
                               checked={selectedService?.id === service.id}
                               onChange={() => handleServiceChange(service)}
-                              className="h-4 w-4 text-sky-600 dark:text-sky-400 focus:ring-sky-500 dark:focus:ring-sky-400 border-gray-300 dark:border-gray-600"
+                              className="h-4 w-4 accent-sky-600 dark:accent-sky-400 text-sky-600 dark:text-sky-400 focus:ring-sky-500 dark:focus:ring-sky-400 border-gray-300 dark:border-gray-600 cursor-pointer"
                             />
                             <div className="ml-4 flex-grow grid grid-cols-2 sm:grid-cols-3 items-center">
                               <div className="col-span-2 sm:col-span-1">
