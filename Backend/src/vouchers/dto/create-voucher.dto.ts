@@ -61,4 +61,9 @@ export class CreateVoucherDto {
   @IsDate()
   @IsNotEmpty()
   expiry: Date;
+
+  @IsInt()
+  @IsNotEmpty()
+  @Min(1)
+  storeId: number;
 }

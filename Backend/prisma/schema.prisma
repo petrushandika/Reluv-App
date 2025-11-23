@@ -73,6 +73,37 @@ enum Gender {
   PREFER_NOT_TO_SAY
 }
 
+enum DiscountType {
+  PERCENTAGE
+  FIXED_AMOUNT
+  FREE_SHIPPING
+}
+
+enum DiscountScope {
+  GLOBAL
+  CATEGORY
+  PRODUCT
+  STORE
+}
+
+enum PromotionType {
+  FLASH_SALE
+  BOGO
+  BUNDLE
+  SEASONAL
+  CUSTOM
+}
+
+enum BadgeType {
+  VERIFIED
+  PREMIUM
+  FEATURED
+  TRENDING
+  BEST_SELLER
+  NEW_STORE
+  CUSTOM
+}
+
 model User {
   id         Int       @id @default(autoincrement())
   googleId   String?   @unique
@@ -144,6 +175,11 @@ model Store {
   location   Location? @relation("StoreLocation")
   locationId Int?      @unique
 
+  discounts    Discount[]
+  promotions   Promotion[]
+  badges       Badge[]
+  vouchers     Voucher[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -212,6 +248,8 @@ model Category {
   parentCategory  Category?  @relation("SubCategories", fields: [parentId], references: [id], onDelete: Restrict)
   childCategories Category[] @relation("SubCategories")
 
+  discounts Discount[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -246,6 +284,9 @@ model Product {
 
   store   Store? @relation(fields: [storeId], references: [id], onDelete: SetNull)
   storeId Int?
+
+  discounts   Discount[]
+  promotions  Promotion[]
 
   variants Variant[]
   reviews  Review[]
@@ -346,6 +387,9 @@ model Voucher {
   expiry      DateTime
   isActive    Boolean     @default(true)
 
+  store   Store? @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  storeId Int?
+
   usages VoucherUsage[]
   orders Order[] @relation("OrderVoucher")
 
@@ -353,6 +397,7 @@ model Voucher {
   updatedAt DateTime @updatedAt
 
   @@index([code, isActive, expiry])
+  @@index([storeId])
   @@map("vouchers")
 }
 
@@ -548,4 +593,85 @@ model ShippingRate {
 
   @@unique([originAreaId, destinationAreaId, courierCode, serviceCode])
   @@map("shipping_rates")
+}
+
+model Discount {
+  id          Int           @id @default(autoincrement())
+  name        String
+  description String?        @db.Text
+  type        DiscountType
+  value       Int
+  maxDiscount Int?
+  minPurchase Int?
+  scope       DiscountScope
+  isActive    Boolean        @default(true)
+
+  startDate DateTime
+  endDate   DateTime
+
+  categoryId Int?
+  category   Category? @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  productId Int?
+  product   Product? @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  storeId Int?
+  store    Store? @relation(fields: [storeId], references: [id], onDelete: Cascade)
+
+  usageLimit Int?
+  usedCount  Int      @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([scope])
+  @@index([isActive, startDate, endDate])
+  @@index([categoryId])
+  @@index([productId])
+  @@index([storeId])
+  @@map("discounts")
+}
+
+model Promotion {
+  id          Int            @id @default(autoincrement())
+  name        String
+  type        PromotionType
+  description String?        @db.Text
+  discount    Float?
+  startDate   DateTime
+  endDate     DateTime
+  isActive    Boolean        @default(true)
+
+  store   Store @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  storeId Int
+
+  products Product[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([storeId])
+  @@index([startDate, endDate])
+  @@index([isActive])
+  @@map("promotions")
+}
+
+model Badge {
+  id          Int       @id @default(autoincrement())
+  type        BadgeType
+  name        String
+  description String?    @db.Text
+  icon        String?
+  color       String?
+  isActive    Boolean   @default(true)
+
+  store   Store @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  storeId Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([storeId])
+  @@index([type, isActive])
+  @@map("badges")
 }

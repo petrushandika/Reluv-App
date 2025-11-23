@@ -30,6 +30,9 @@ import { EmailModule } from './email/email.module';
 import { ConfigModule } from '@nestjs/config';
 import { VouchersModule } from './vouchers/vouchers.module';
 import { GeocodeModule } from './geocode/geocode.module';
+import { DiscountsModule } from './discounts/discounts.module';
+import { PromotionsModule } from './promotions/promotions.module';
+import { BadgesModule } from './badges/badges.module';
 
 @Module({
   imports: [
@@ -57,6 +60,9 @@ import { GeocodeModule } from './geocode/geocode.module';
     EmailModule,
     VouchersModule,
     GeocodeModule,
+    DiscountsModule,
+    PromotionsModule,
+    BadgesModule,
   ],
   controllers: [AppController],
 })
@@ -89,6 +95,13 @@ export class AppModule implements NestModule {
 
         { path: 'payments/midtrans-notification', method: RequestMethod.POST },
         { path: 'shipments/biteship-webhook', method: RequestMethod.POST },
+        { path: 'discounts', method: RequestMethod.GET },
+        { path: 'discounts/:id', method: RequestMethod.GET },
+        { path: 'promotions', method: RequestMethod.GET },
+        { path: 'promotions/:id', method: RequestMethod.GET },
+        { path: 'badges', method: RequestMethod.GET },
+        { path: 'badges/:id', method: RequestMethod.GET },
+        { path: 'vouchers', method: RequestMethod.GET },
       )
       .forRoutes({ path: '*', method: RequestMethod.ALL });
   }

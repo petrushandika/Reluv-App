@@ -41,26 +41,30 @@ export class VouchersController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Post('admin')
+  @Post()
   @HttpCode(HttpStatus.CREATED)
-  create(@Body(new ValidationPipe()) createVoucherDto: CreateVoucherDto) {
-    return this.vouchersService.create(createVoucherDto);
+  create(
+    @GetUser() user: User,
+    @Body(new ValidationPipe()) createVoucherDto: CreateVoucherDto,
+  ) {
+    return this.vouchersService.create(user, createVoucherDto);
   }
 
   @UseGuards(JwtAuthGuard)
-  @Patch('admin/:id')
+  @Patch(':id')
   @HttpCode(HttpStatus.OK)
   update(
+    @GetUser() user: User,
     @Param('id', ParseIntPipe) id: number,
     @Body(new ValidationPipe()) updateVoucherDto: UpdateVoucherDto,
   ) {
-    return this.vouchersService.update(id, updateVoucherDto);
+    return this.vouchersService.update(user, id, updateVoucherDto);
   }
 
   @UseGuards(JwtAuthGuard)
-  @Delete('admin/:id')
+  @Delete(':id')
   @HttpCode(HttpStatus.OK)
-  remove(@Param('id', ParseIntPipe) id: number) {
-    return this.vouchersService.remove(id);
+  remove(@GetUser() user: User, @Param('id', ParseIntPipe) id: number) {
+    return this.vouchersService.remove(user, id);
   }
 }
