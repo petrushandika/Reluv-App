@@ -222,7 +222,6 @@ export class DiscountsService {
           { scope: DiscountScope.GLOBAL },
         ],
       },
-      orderBy: { value: 'desc' },
     });
 
     if (allDiscounts.length === 0) {
