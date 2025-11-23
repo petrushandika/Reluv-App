@@ -47,6 +47,12 @@ Content-Type: application/json
 }
 ```
 
+#### Confirm Email
+
+```http
+GET /auth/confirm?token=<verification-token>
+```
+
 #### Forgot Password
 
 ```http
@@ -71,12 +77,51 @@ Content-Type: application/json
 }
 ```
 
+### Users
+
+#### Get My Profile
+
+```http
+GET /users/me
+Authorization: Bearer <token>
+```
+
+#### Update My Profile
+
+```http
+PATCH /users/me
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{
+  "firstName": "John Updated",
+  "lastName": "Doe Updated",
+  "phone": "+6281234567890"
+}
+```
+
+#### Update My Profile (with avatar/banner)
+
+```http
+PATCH /users/me/profile
+Authorization: Bearer <token>
+Content-Type: multipart/form-data
+
+{
+  "bio": "My bio",
+  "gender": "MALE",
+  "birthDate": "1990-01-01",
+  "avatar": <file>,
+  "banner": <file>
+}
+```
+
 ### Products
 
 #### Get All Products
 
 ```http
-GET /products?page=1&limit=10&search=shirt&categoryId=1
+GET /products?page=1&limit=10&search=shirt&categoryId=1&minPrice=100000&maxPrice=500000&sortBy=createdAt&sortOrder=desc
 ```
 
 **Query Parameters:**
@@ -87,7 +132,7 @@ GET /products?page=1&limit=10&search=shirt&categoryId=1
 - `categoryId` (number): Filter by category
 - `minPrice` (number): Minimum price
 - `maxPrice` (number): Maximum price
-- `sortBy` (string): Sort field
+- `sortBy` (string): Sort field (createdAt, price, name)
 - `sortOrder` (string): 'asc' or 'desc'
 
 #### Get Product by ID
@@ -110,18 +155,16 @@ Content-Type: application/json
   "categoryId": 403,
   "parentCategoryId": 401,
   "childCategoryId": 404,
+  "storeId": 1,
   "images": ["https://example.com/image1.jpg"],
   "isPublished": true,
   "isPreloved": true,
   "variants": [
     {
       "size": "M",
-      "color": "Blue",
       "price": 150000,
-      "compareAtPrice": 200000,
       "stock": 1,
       "condition": "NEW",
-      "conditionNote": "Brand new with tags",
       "weight": 200,
       "length": 20,
       "width": 15,
@@ -148,6 +191,45 @@ Content-Type: application/json
 
 ```http
 DELETE /products/:id
+Authorization: Bearer <token>
+```
+
+#### Add Variant to Product
+
+```http
+POST /products/:productId/variants
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{
+  "size": "L",
+  "price": 200000,
+  "stock": 5,
+  "condition": "NEW",
+  "weight": 200,
+  "length": 20,
+  "width": 15,
+  "height": 5
+}
+```
+
+#### Update Variant
+
+```http
+PATCH /products/:productId/variants/:variantId
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{
+  "price": 180000,
+  "stock": 3
+}
+```
+
+#### Delete Variant
+
+```http
+DELETE /products/:productId/variants/:variantId
 Authorization: Bearer <token>
 ```
 
@@ -181,6 +263,25 @@ Content-Type: application/json
 }
 ```
 
+#### Update Category (Admin)
+
+```http
+PATCH /categories/:id
+Authorization: Bearer <admin-token>
+Content-Type: application/json
+
+{
+  "name": "Updated Category Name"
+}
+```
+
+#### Delete Category (Admin)
+
+```http
+DELETE /categories/:id
+Authorization: Bearer <admin-token>
+```
+
 ### Cart
 
 #### Get My Cart
@@ -198,7 +299,7 @@ Authorization: Bearer <token>
 Content-Type: application/json
 
 {
-  "productId": 1,
+  "variantId": 1,
   "quantity": 1
 }
 ```
@@ -238,6 +339,12 @@ Content-Type: application/json
   "voucherCode": "DISCOUNT10"
 }
 ```
+
+**Response includes:**
+- `order`: Order object with `discountId`, `discountAmount`, `voucherId`, `voucherCode`
+- `payment`: Payment transaction object
+
+**Note:** Discounts are automatically applied based on product, category, store, and global scope. Voucher discount is applied after item discounts.
 
 #### Get My Orders
 
@@ -284,6 +391,13 @@ GET /wishlist
 Authorization: Bearer <token>
 ```
 
+#### Check Wishlist Status
+
+```http
+GET /wishlist/status/:productId
+Authorization: Bearer <token>
+```
+
 #### Add to Wishlist
 
 ```http
@@ -298,28 +412,6 @@ DELETE /wishlist/:productId
 Authorization: Bearer <token>
 ```
 
-### Users
-
-#### Get My Profile
-
-```http
-GET /users/me
-Authorization: Bearer <token>
-```
-
-#### Update My Profile
-
-```http
-PATCH /users/me
-Authorization: Bearer <token>
-Content-Type: application/json
-
-{
-  "firstName": "John Updated",
-  "lastName": "Doe Updated"
-}
-```
-
 ### Store
 
 #### Get All Stores
@@ -327,6 +419,12 @@ Content-Type: application/json
 ```http
 GET /store?page=1&limit=10&search=store
 ```
+
+**Query Parameters:**
+
+- `page` (number): Page number (default: 1)
+- `limit` (number): Items per page (default: 10)
+- `search` (string): Search term
 
 #### Get Store by Slug
 
@@ -344,6 +442,54 @@ Content-Type: application/json
 {
   "name": "My Awesome Store",
   "slug": "my-awesome-store",
+  "locationId": 1
+}
+```
+
+#### Get My Store
+
+```http
+GET /store/me/my-store
+Authorization: Bearer <token>
+```
+
+#### Update My Store
+
+```http
+PATCH /store/me/my-store
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{
+  "name": "Updated Store Name",
+  "slug": "updated-store-slug"
+}
+```
+
+#### Update My Store Profile
+
+```http
+PATCH /store/me/my-store/profile
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{
+  "bio": "Store description",
+  "banner": "https://example.com/banner.jpg"
+}
+```
+
+#### Create Store for User (Admin)
+
+```http
+POST /store/admin/create-for-user
+Authorization: Bearer <admin-token>
+Content-Type: application/json
+
+{
+  "userId": 1,
+  "name": "Store Name",
+  "slug": "store-slug",
   "locationId": 1
 }
 ```
@@ -367,14 +513,60 @@ Content-Type: application/json
   "subDistrict": "Tebet Timur",
   "postalCode": "12820",
   "address": "Jl. Example Street No. 123",
-  "isDefault": true
+  "isDefault": true,
+  "biteship_area_id": "IDNP31IDNC151IDND1234IDZ12820",
+  "latitude": -6.2088,
+  "longitude": 106.8456
 }
 ```
+
+**Required Fields:**
+- `label`, `recipient`, `phone`, `province`, `city`, `district`, `subDistrict`, `postalCode`, `address`
+
+**Optional Fields:**
+- `isDefault` (default: false)
+- `biteship_area_id`
+- `latitude`, `longitude`
 
 #### Get My Locations
 
 ```http
 GET /locations?page=1&limit=10
+Authorization: Bearer <token>
+```
+
+#### Get Location by ID
+
+```http
+GET /locations/:id
+Authorization: Bearer <token>
+```
+
+#### Update Location
+
+```http
+PATCH /locations/:id
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{
+  "label": "Office",
+  "recipient": "John Doe",
+  "phone": "+6281234567890",
+  "province": "DKI Jakarta",
+  "city": "Jakarta Pusat",
+  "district": "Menteng",
+  "subDistrict": "Gondangdia",
+  "postalCode": "10350",
+  "address": "Jl. Office Street No. 456",
+  "isDefault": false
+}
+```
+
+#### Delete Location
+
+```http
+DELETE /locations/:id
 Authorization: Bearer <token>
 ```
 
@@ -396,6 +588,239 @@ Content-Type: application/json
 {
   "code": "DISCOUNT10"
 }
+```
+
+#### Create Voucher (Store Owner)
+
+```http
+POST /vouchers
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{
+  "code": "DISCOUNT10",
+  "name": "10% Discount",
+  "description": "Get 10% off on your purchase",
+  "type": "PERCENTAGE",
+  "value": 10,
+  "maxDiscount": 50000,
+  "minPurchase": 200000,
+  "usageLimit": 100,
+  "expiry": "2024-12-31T23:59:59.000Z",
+  "storeId": 1
+}
+```
+
+**Note:** `value` is an integer. For PERCENTAGE type, value should be 0-100. For FIXED_AMOUNT type, value is the discount amount in Rupiah. For FREE_SHIPPING type, value should be 0. `storeId` is required and the user must own the store.
+
+#### Update Voucher (Store Owner)
+
+```http
+PATCH /vouchers/:id
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{
+  "isActive": false
+}
+```
+
+#### Delete Voucher (Store Owner)
+
+```http
+DELETE /vouchers/:id
+Authorization: Bearer <token>
+```
+
+### Discounts
+
+#### Get All Discounts
+
+```http
+GET /discounts?page=1&limit=10&scope=STORE&isActive=true
+```
+
+**Query Parameters:**
+
+- `page` (number): Page number (default: 1)
+- `limit` (number): Items per page (default: 10)
+- `scope` (string): Filter by scope (GLOBAL, CATEGORY, PRODUCT, STORE)
+- `isActive` (boolean): Filter by active status
+- `storeId` (number): Filter by store ID
+- `categoryId` (number): Filter by category ID
+- `productId` (number): Filter by product ID
+
+#### Get Discount by ID
+
+```http
+GET /discounts/:id
+```
+
+#### Create Discount (Store Owner)
+
+```http
+POST /discounts
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{
+  "name": "Store Discount 20%",
+  "description": "Get 20% off on all store products",
+  "type": "PERCENTAGE",
+  "value": 20,
+  "maxDiscount": 100000,
+  "minPurchase": 200000,
+  "scope": "STORE",
+  "startDate": "2024-01-01T00:00:00.000Z",
+  "endDate": "2024-12-31T23:59:59.000Z",
+  "usageLimit": 1000,
+  "isActive": true,
+  "storeId": 1
+}
+```
+
+**Note:** 
+- `value` is an integer. For PERCENTAGE type, value should be 0-100. For FIXED_AMOUNT type, value is the discount amount in Rupiah. For FREE_SHIPPING type, value should be 0.
+- For `scope: "CATEGORY"`, include `categoryId` (required). For `scope: "PRODUCT"`, include `productId` (required). For `scope: "STORE"`, include `storeId` (required). For `scope: "GLOBAL"`, omit all IDs.
+- User must own the store if scope is STORE, or have permission for CATEGORY/PRODUCT discounts.
+
+#### Update Discount (Store Owner)
+
+```http
+PATCH /discounts/:id
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{
+  "isActive": false
+}
+```
+
+#### Delete Discount (Store Owner)
+
+```http
+DELETE /discounts/:id
+Authorization: Bearer <token>
+```
+
+### Promotions
+
+#### Get All Promotions
+
+```http
+GET /promotions?page=1&limit=10&storeId=1&isActive=true
+```
+
+**Query Parameters:**
+
+- `page` (number): Page number (default: 1)
+- `limit` (number): Items per page (default: 10)
+- `storeId` (number): Filter by store ID
+- `isActive` (boolean): Filter by active status
+- `type` (string): Filter by type (FLASH_SALE, BOGO, BUNDLE, SEASONAL, CUSTOM)
+
+#### Get Promotion by ID
+
+```http
+GET /promotions/:id
+```
+
+#### Create Promotion (Store Owner)
+
+```http
+POST /promotions
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{
+  "name": "Flash Sale",
+  "type": "FLASH_SALE",
+  "description": "Limited time flash sale",
+  "discount": 20,
+  "startDate": "2024-01-01T00:00:00.000Z",
+  "endDate": "2024-01-31T23:59:59.000Z",
+  "isActive": true,
+  "storeId": 1,
+  "productIds": [1, 2, 3]
+}
+```
+
+#### Update Promotion (Store Owner)
+
+```http
+PATCH /promotions/:id
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{
+  "isActive": false
+}
+```
+
+#### Delete Promotion (Store Owner)
+
+```http
+DELETE /promotions/:id
+Authorization: Bearer <token>
+```
+
+### Badges
+
+#### Get All Badges
+
+```http
+GET /badges?page=1&limit=10&storeId=1&isActive=true&type=VERIFIED
+```
+
+**Query Parameters:**
+
+- `page` (number): Page number (default: 1)
+- `limit` (number): Items per page (default: 10)
+- `storeId` (number): Filter by store ID
+- `isActive` (boolean): Filter by active status
+- `type` (string): Filter by type (VERIFIED, PREMIUM, FEATURED, TRENDING, BEST_SELLER, NEW_STORE, CUSTOM)
+
+#### Get Badge by ID
+
+```http
+GET /badges/:id
+```
+
+#### Create Badge (Store Owner)
+
+```http
+POST /badges
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{
+  "type": "VERIFIED",
+  "name": "Verified Store",
+  "description": "This store is verified",
+  "icon": "https://example.com/icon.svg",
+  "color": "#10b981",
+  "isActive": true,
+  "storeId": 1
+}
+```
+
+#### Update Badge (Store Owner)
+
+```http
+PATCH /badges/:id
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{
+  "isActive": false
+}
+```
+
+#### Delete Badge (Store Owner)
+
+```http
+DELETE /badges/:id
+Authorization: Bearer <token>
 ```
 
 ### Upload
@@ -450,8 +875,19 @@ Semua responses menggunakan format konsisten. Lihat [Response Format Documentati
 - `GET /store`
 - `GET /store/:slug`
 - `GET /vouchers`
+- `GET /discounts`
+- `GET /discounts/:id`
+- `GET /promotions`
+- `GET /promotions/:id`
+- `GET /badges`
+- `GET /badges/:id`
+- `GET /products/:productId/reviews`
 - `POST /auth/register`
 - `POST /auth/login`
+- `GET /auth/confirm`
+- `POST /auth/forgot`
+- `POST /auth/reset`
+- `POST /shipping-rates/check-by-area`
 
 ### Authenticated Endpoints
 
@@ -462,13 +898,48 @@ Semua endpoints selain public endpoints memerlukan JWT token.
 - `POST /categories`
 - `PATCH /categories/:id`
 - `DELETE /categories/:id`
-- `POST /vouchers/admin`
-- `PATCH /vouchers/admin/:id`
-- `DELETE /vouchers/admin/:id`
+- `POST /store/admin/create-for-user`
+
+### Store Owner Only Endpoints
+
+- `POST /vouchers` (must own the store specified in `storeId`)
+- `PATCH /vouchers/:id` (must own the store)
+- `DELETE /vouchers/:id` (must own the store)
+- `POST /discounts` (must own the store if scope is STORE, or have permission for CATEGORY/PRODUCT/GLOBAL)
+- `PATCH /discounts/:id` (must own the store if discount is store-specific)
+- `DELETE /discounts/:id` (must own the store if discount is store-specific)
+- `POST /promotions` (must own the store specified in `storeId`)
+- `PATCH /promotions/:id` (must own the store)
+- `DELETE /promotions/:id` (must own the store)
+- `POST /badges` (must own the store specified in `storeId`)
+- `PATCH /badges/:id` (must own the store)
+- `DELETE /badges/:id` (must own the store)
 
 ## 📝 Postman Collection
 
 Untuk testing yang lebih mudah, import `RELUV-API.postman_collection.json` ke Postman.
+
+**Setup:**
+1. Import file `RELUV-API.postman_collection.json` ke Postman
+2. Set environment variables:
+   - `base_url`: `http://localhost:8000/api/v1`
+   - `token`: JWT token dari login (akan di-set otomatis jika menggunakan Postman scripts)
+   - `admin_token`: JWT token untuk admin user
+
+**Collection includes:**
+- Authentication endpoints (register, login, confirm, forgot, reset)
+- User management
+- Products CRUD
+- Categories
+- Cart operations
+- Orders
+- Locations
+- Vouchers (with storeId requirement)
+- Discounts (all scopes: GLOBAL, CATEGORY, PRODUCT, STORE)
+- Promotions
+- Badges
+- Store management
+- Wishlist
 
 ## 🔗 Related Documentation
 

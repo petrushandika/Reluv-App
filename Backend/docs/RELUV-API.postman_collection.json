@@ -494,7 +494,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"label\": \"Office\",\n  \"recipient\": \"John Doe\",\n  \"phone\": \"+6281234567890\",\n  \"address\": \"Jl. Updated Address No. 456\",\n  \"isDefault\": false\n}",
+              "raw": "{\n  \"label\": \"Office\",\n  \"recipient\": \"John Doe\",\n  \"phone\": \"+6281234567890\",\n  \"province\": \"DKI Jakarta\",\n  \"city\": \"Jakarta Pusat\",\n  \"district\": \"Menteng\",\n  \"subDistrict\": \"Gondangdia\",\n  \"postalCode\": \"10350\",\n  \"address\": \"Jl. Office Street No. 456\",\n  \"isDefault\": false\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1040,7 +1040,7 @@
         {
           "name": "Create Product",
           "request": {
-            "description": "Create a new product. Required fields: name, slug, description, categoryId, images (at least 1), variants (at least 1). Optional: parentCategoryId, childCategoryId, isPublished, isPreloved. Each variant requires: price, stock, condition, weight, length, width, height. Optional variant fields: size, color, compareAtPrice, conditionNote.",
+            "description": "Create a new product. Required fields: name, slug, description, categoryId, images (at least 1), variants (at least 1). Optional: parentCategoryId, childCategoryId, storeId, isPublished, isPreloved. If storeId is provided, user must own the store. Each variant requires: price, stock, condition, weight, length, width, height. Optional variant fields: size, color, compareAtPrice, conditionNote.",
             "auth": {
               "type": "bearer",
               "bearer": [
@@ -1060,7 +1060,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"Vintage T-Shirt\",\n  \"slug\": \"vintage-t-shirt-12345\",\n  \"description\": \"Beautiful vintage t-shirt in excellent condition\",\n  \"categoryId\": 403,\n  \"parentCategoryId\": 401,\n  \"childCategoryId\": 404,\n  \"images\": [\"https://example.com/image1.jpg\", \"https://example.com/image2.jpg\"],\n  \"isPublished\": true,\n  \"isPreloved\": true,\n  \"variants\": [\n    {\n      \"size\": \"M\",\n      \"color\": \"Blue\",\n      \"price\": 150000,\n      \"compareAtPrice\": 200000,\n      \"stock\": 1,\n      \"condition\": \"NEW\",\n      \"conditionNote\": \"Brand new with tags\",\n      \"weight\": 200,\n      \"length\": 20,\n      \"width\": 15,\n      \"height\": 5\n    }\n  ]\n}",
+              "raw": "{\n  \"name\": \"Vintage T-Shirt\",\n  \"slug\": \"vintage-t-shirt-12345\",\n  \"description\": \"Beautiful vintage t-shirt in excellent condition\",\n  \"categoryId\": 403,\n  \"parentCategoryId\": 401,\n  \"childCategoryId\": 404,\n  \"storeId\": 1,\n  \"images\": [\"https://example.com/image1.jpg\", \"https://example.com/image2.jpg\"],\n  \"isPublished\": true,\n  \"isPreloved\": true,\n  \"variants\": [\n    {\n      \"size\": \"M\",\n      \"color\": \"Blue\",\n      \"price\": 150000,\n      \"compareAtPrice\": 200000,\n      \"stock\": 1,\n      \"condition\": \"NEW\",\n      \"conditionNote\": \"Brand new with tags\",\n      \"weight\": 200,\n      \"length\": 20,\n      \"width\": 15,\n      \"height\": 5\n    }\n  ]\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1707,7 +1707,7 @@
           }
         },
         {
-          "name": "Create Voucher (Admin)",
+          "name": "Create Voucher (Store Owner)",
           "request": {
             "auth": {
               "type": "bearer",
@@ -1728,7 +1728,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"New User Discount\",\n  \"code\": \"NEWUSER20\",\n  \"description\": \"20% discount for new users\",\n  \"type\": \"PERCENTAGE\",\n  \"value\": 20,\n  \"minPurchase\": 100000,\n  \"maxDiscount\": 50000,\n  \"usageLimit\": 100,\n  \"expiry\": \"2024-12-31T23:59:59.000Z\"\n}",
+              "raw": "{\n  \"code\": \"DISCOUNT10\",\n  \"name\": \"10% Discount\",\n  \"description\": \"Get 10% off on your purchase\",\n  \"type\": \"PERCENTAGE\",\n  \"value\": 10,\n  \"maxDiscount\": 50000,\n  \"minPurchase\": 200000,\n  \"usageLimit\": 100,\n  \"expiry\": \"2024-12-31T23:59:59.000Z\",\n  \"storeId\": 1\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1736,14 +1736,15 @@
               }
             },
             "url": {
-              "raw": "{{BACKEND}}/api/v1/vouchers/admin",
+              "raw": "{{BACKEND}}/api/v1/vouchers",
               "host": ["{{BACKEND}}"],
-              "path": ["api", "v1", "vouchers", "admin"]
-            }
+              "path": ["api", "v1", "vouchers"]
+            },
+            "description": "Create a voucher for a store. storeId is required and user must own the store. value is an integer (0-100 for PERCENTAGE, amount in Rupiah for FIXED_AMOUNT, 0 for FREE_SHIPPING)."
           }
         },
         {
-          "name": "Update Voucher (Admin)",
+          "name": "Update Voucher (Store Owner)",
           "request": {
             "auth": {
               "type": "bearer",
@@ -1764,7 +1765,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"value\": 25,\n  \"maxDiscount\": 75000,\n  \"description\": \"Updated 25% discount for new users\"\n}",
+              "raw": "{\n  \"isActive\": false\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1772,14 +1773,15 @@
               }
             },
             "url": {
-              "raw": "{{BACKEND}}/api/v1/vouchers/admin/1",
+              "raw": "{{BACKEND}}/api/v1/vouchers/1",
               "host": ["{{BACKEND}}"],
-              "path": ["api", "v1", "vouchers", "admin", "1"]
-            }
+              "path": ["api", "v1", "vouchers", "1"]
+            },
+            "description": "Update a voucher. User must own the store that owns the voucher."
           }
         },
         {
-          "name": "Delete Voucher (Admin)",
+          "name": "Delete Voucher (Store Owner)",
           "request": {
             "auth": {
               "type": "bearer",
@@ -1794,10 +1796,590 @@
             "method": "DELETE",
             "header": [],
             "url": {
-              "raw": "{{BACKEND}}/api/v1/vouchers/admin/1",
+              "raw": "{{BACKEND}}/api/v1/vouchers/1",
               "host": ["{{BACKEND}}"],
-              "path": ["api", "v1", "vouchers", "admin", "1"]
+              "path": ["api", "v1", "vouchers", "1"]
+            },
+            "description": "Delete a voucher. User must own the store that owns the voucher."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Discounts",
+      "item": [
+        {
+          "name": "Get All Discounts",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BACKEND}}/api/v1/discounts?page=1&limit=10&scope=STORE&isActive=true&storeId=1",
+              "host": ["{{BACKEND}}"],
+              "path": ["api", "v1", "discounts"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "scope",
+                  "value": "STORE",
+                  "description": "GLOBAL, CATEGORY, PRODUCT, STORE"
+                },
+                {
+                  "key": "isActive",
+                  "value": "true"
+                },
+                {
+                  "key": "storeId",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Get all discounts with optional filters. Scope can be GLOBAL, CATEGORY, PRODUCT, or STORE."
+          }
+        },
+        {
+          "name": "Get Discount by ID",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BACKEND}}/api/v1/discounts/1",
+              "host": ["{{BACKEND}}"],
+              "path": ["api", "v1", "discounts", "1"]
             }
+          }
+        },
+        {
+          "name": "Create Discount - Store Scope",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Store Discount 20%\",\n  \"description\": \"Get 20% off on all store products\",\n  \"type\": \"PERCENTAGE\",\n  \"value\": 20,\n  \"maxDiscount\": 100000,\n  \"minPurchase\": 200000,\n  \"scope\": \"STORE\",\n  \"startDate\": \"2024-01-01T00:00:00.000Z\",\n  \"endDate\": \"2024-12-31T23:59:59.000Z\",\n  \"usageLimit\": 1000,\n  \"isActive\": true,\n  \"storeId\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BACKEND}}/api/v1/discounts",
+              "host": ["{{BACKEND}}"],
+              "path": ["api", "v1", "discounts"]
+            },
+            "description": "Create a store-specific discount. storeId is required. User must own the store. value is an integer (0-100 for PERCENTAGE, amount in Rupiah for FIXED_AMOUNT, 0 for FREE_SHIPPING)."
+          }
+        },
+        {
+          "name": "Create Discount - Category Scope",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Category Discount 15%\",\n  \"description\": \"Get 15% off on category products\",\n  \"type\": \"PERCENTAGE\",\n  \"value\": 15,\n  \"maxDiscount\": 50000,\n  \"minPurchase\": 150000,\n  \"scope\": \"CATEGORY\",\n  \"startDate\": \"2024-01-01T00:00:00.000Z\",\n  \"endDate\": \"2024-12-31T23:59:59.000Z\",\n  \"usageLimit\": 500,\n  \"isActive\": true,\n  \"categoryId\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BACKEND}}/api/v1/discounts",
+              "host": ["{{BACKEND}}"],
+              "path": ["api", "v1", "discounts"]
+            },
+            "description": "Create a category-specific discount. categoryId is required when scope is CATEGORY."
+          }
+        },
+        {
+          "name": "Create Discount - Product Scope",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Product Discount 25%\",\n  \"description\": \"Get 25% off on this product\",\n  \"type\": \"PERCENTAGE\",\n  \"value\": 25,\n  \"maxDiscount\": 75000,\n  \"minPurchase\": 100000,\n  \"scope\": \"PRODUCT\",\n  \"startDate\": \"2024-01-01T00:00:00.000Z\",\n  \"endDate\": \"2024-12-31T23:59:59.000Z\",\n  \"usageLimit\": 200,\n  \"isActive\": true,\n  \"productId\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BACKEND}}/api/v1/discounts",
+              "host": ["{{BACKEND}}"],
+              "path": ["api", "v1", "discounts"]
+            },
+            "description": "Create a product-specific discount. productId is required when scope is PRODUCT."
+          }
+        },
+        {
+          "name": "Create Discount - Global Scope",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Global Sitewide Discount 5%\",\n  \"description\": \"Get 5% off on all products\",\n  \"type\": \"PERCENTAGE\",\n  \"value\": 5,\n  \"maxDiscount\": 100000,\n  \"minPurchase\": 500000,\n  \"scope\": \"GLOBAL\",\n  \"startDate\": \"2024-01-01T00:00:00.000Z\",\n  \"endDate\": \"2024-12-31T23:59:59.000Z\",\n  \"usageLimit\": 10000,\n  \"isActive\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BACKEND}}/api/v1/discounts",
+              "host": ["{{BACKEND}}"],
+              "path": ["api", "v1", "discounts"]
+            },
+            "description": "Create a global sitewide discount. No storeId, categoryId, or productId needed for GLOBAL scope."
+          }
+        },
+        {
+          "name": "Update Discount",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"isActive\": false\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BACKEND}}/api/v1/discounts/1",
+              "host": ["{{BACKEND}}"],
+              "path": ["api", "v1", "discounts", "1"]
+            },
+            "description": "Update a discount. User must own the store if discount is store-specific."
+          }
+        },
+        {
+          "name": "Delete Discount",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{BACKEND}}/api/v1/discounts/1",
+              "host": ["{{BACKEND}}"],
+              "path": ["api", "v1", "discounts", "1"]
+            },
+            "description": "Delete a discount. User must own the store if discount is store-specific."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Promotions",
+      "item": [
+        {
+          "name": "Get All Promotions",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BACKEND}}/api/v1/promotions?page=1&limit=10&storeId=1&isActive=true&type=FLASH_SALE",
+              "host": ["{{BACKEND}}"],
+              "path": ["api", "v1", "promotions"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "storeId",
+                  "value": "1"
+                },
+                {
+                  "key": "isActive",
+                  "value": "true"
+                },
+                {
+                  "key": "type",
+                  "value": "FLASH_SALE",
+                  "description": "FLASH_SALE, BOGO, BUNDLE, SEASONAL, CUSTOM"
+                }
+              ]
+            },
+            "description": "Get all promotions with optional filters. Type can be FLASH_SALE, BOGO, BUNDLE, SEASONAL, or CUSTOM."
+          }
+        },
+        {
+          "name": "Get Promotion by ID",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BACKEND}}/api/v1/promotions/1",
+              "host": ["{{BACKEND}}"],
+              "path": ["api", "v1", "promotions", "1"]
+            }
+          }
+        },
+        {
+          "name": "Create Promotion (Store Owner)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Flash Sale\",\n  \"type\": \"FLASH_SALE\",\n  \"description\": \"Limited time flash sale\",\n  \"discount\": 20,\n  \"startDate\": \"2024-01-01T00:00:00.000Z\",\n  \"endDate\": \"2024-01-31T23:59:59.000Z\",\n  \"isActive\": true,\n  \"storeId\": 1,\n  \"productIds\": [1, 2, 3]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BACKEND}}/api/v1/promotions",
+              "host": ["{{BACKEND}}"],
+              "path": ["api", "v1", "promotions"]
+            },
+            "description": "Create a promotion for a store. storeId is required and user must own the store. productIds is optional array of product IDs to link to the promotion."
+          }
+        },
+        {
+          "name": "Update Promotion",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"isActive\": false\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BACKEND}}/api/v1/promotions/1",
+              "host": ["{{BACKEND}}"],
+              "path": ["api", "v1", "promotions", "1"]
+            },
+            "description": "Update a promotion. User must own the store."
+          }
+        },
+        {
+          "name": "Delete Promotion",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{BACKEND}}/api/v1/promotions/1",
+              "host": ["{{BACKEND}}"],
+              "path": ["api", "v1", "promotions", "1"]
+            },
+            "description": "Delete a promotion. User must own the store."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Badges",
+      "item": [
+        {
+          "name": "Get All Badges",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BACKEND}}/api/v1/badges?page=1&limit=10&storeId=1&isActive=true&type=VERIFIED",
+              "host": ["{{BACKEND}}"],
+              "path": ["api", "v1", "badges"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "storeId",
+                  "value": "1"
+                },
+                {
+                  "key": "isActive",
+                  "value": "true"
+                },
+                {
+                  "key": "type",
+                  "value": "VERIFIED",
+                  "description": "VERIFIED, PREMIUM, FEATURED, TRENDING, BEST_SELLER, NEW_STORE, CUSTOM"
+                }
+              ]
+            },
+            "description": "Get all badges with optional filters. Type can be VERIFIED, PREMIUM, FEATURED, TRENDING, BEST_SELLER, NEW_STORE, or CUSTOM."
+          }
+        },
+        {
+          "name": "Get Badge by ID",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BACKEND}}/api/v1/badges/1",
+              "host": ["{{BACKEND}}"],
+              "path": ["api", "v1", "badges", "1"]
+            }
+          }
+        },
+        {
+          "name": "Create Badge (Store Owner)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"VERIFIED\",\n  \"name\": \"Verified Store\",\n  \"description\": \"This store is verified\",\n  \"icon\": \"https://example.com/icon.svg\",\n  \"color\": \"#10b981\",\n  \"isActive\": true,\n  \"storeId\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BACKEND}}/api/v1/badges",
+              "host": ["{{BACKEND}}"],
+              "path": ["api", "v1", "badges"]
+            },
+            "description": "Create a badge for a store. storeId is required and user must own the store."
+          }
+        },
+        {
+          "name": "Update Badge",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"isActive\": false\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BACKEND}}/api/v1/badges/1",
+              "host": ["{{BACKEND}}"],
+              "path": ["api", "v1", "badges", "1"]
+            },
+            "description": "Update a badge. User must own the store."
+          }
+        },
+        {
+          "name": "Delete Badge",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{BACKEND}}/api/v1/badges/1",
+              "host": ["{{BACKEND}}"],
+              "path": ["api", "v1", "badges", "1"]
+            },
+            "description": "Delete a badge. User must own the store."
           }
         }
       ]
