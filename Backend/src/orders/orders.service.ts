@@ -8,6 +8,7 @@ import { CreateOrderDto } from './dto/create-order.dto';
 import { User } from '@prisma/client';
 import { PaymentsService } from '../payments/payments.service';
 import { VouchersService } from '../vouchers/vouchers.service';
+import { DiscountsService } from '../discounts/discounts.service';
 
 @Injectable()
 export class OrdersService {
@@ -15,6 +16,7 @@ export class OrdersService {
     private prisma: PrismaService,
     private paymentsService: PaymentsService,
     private vouchersService: VouchersService,
+    private discountsService: DiscountsService,
   ) {}
 
   async createOrder(userId: number, createOrderDto: CreateOrderDto) {
@@ -34,6 +36,13 @@ export class OrdersService {
                 id: true,
                 price: true,
                 stock: true,
+                product: {
+                  select: {
+                    id: true,
+                    categoryId: true,
+                    storeId: true,
+                  },
+                },
               },
             },
           },
@@ -46,16 +55,42 @@ export class OrdersService {
     }
 
     let itemsAmount = 0;
+    const itemDiscounts: Array<{
+      variantId: number;
+      discountAmount: number;
+      discountId: number | null;
+    }> = [];
+
     for (const item of cart.items) {
       if (item.variant.stock < item.quantity) {
         throw new BadRequestException(
           `Not enough stock for variant ID ${item.variant.id}.`,
         );
       }
-      itemsAmount += item.variant.price * item.quantity;
+      const itemSubtotal = item.variant.price * item.quantity;
+      itemsAmount += itemSubtotal;
+
+      const discountResult = await this.discountsService.applyDiscount(
+        item.variant.product.id,
+        item.variant.product.categoryId,
+        item.variant.product.storeId,
+        itemSubtotal,
+      );
+
+      itemDiscounts.push({
+        variantId: item.variantId,
+        discountAmount: discountResult.discountAmount,
+        discountId: discountResult.discountId,
+      });
     }
 
-    let discountAmount = 0;
+    const totalItemDiscounts = itemDiscounts.reduce(
+      (sum, item) => sum + item.discountAmount,
+      0,
+    );
+
+    let discountAmount = totalItemDiscounts;
+    let discountId: number | null = null;
     let finalVoucherCode: string | null = null;
     let voucherId: number | null = null;
     let voucherUsageId: number | null = null;
@@ -65,11 +100,21 @@ export class OrdersService {
       const result = await this.vouchersService.validateAndCalculateDiscount(
         user,
         voucherCode,
-        itemsAmount,
+        itemsAmount - totalItemDiscounts,
       );
-      discountAmount = result.discountAmount;
-      voucherId = result.voucherId;
-      finalVoucherCode = voucherCode;
+      const voucherDiscount = result.discountAmount;
+      if (voucherDiscount > 0) {
+        discountAmount += voucherDiscount;
+        voucherId = result.voucherId;
+        finalVoucherCode = voucherCode;
+      }
+    }
+
+    if (totalItemDiscounts > 0) {
+      const highestDiscount = itemDiscounts.reduce((max, item) =>
+        item.discountAmount > max.discountAmount ? item : max,
+      );
+      discountId = highestDiscount.discountId;
     }
 
     const totalAmount = itemsAmount + shippingCost - discountAmount;
@@ -89,18 +134,26 @@ export class OrdersService {
           discountAmount,
           voucherCode: finalVoucherCode,
           voucherId: voucherId || undefined,
+          discountId: discountId || undefined,
           totalAmount,
           notes,
         },
       });
 
-      const orderItemsData = cart.items.map((item) => ({
-        orderId: order.id,
-        variantId: item.variantId,
-        quantity: item.quantity,
-        price: item.variant.price,
-        total: item.variant.price * item.quantity,
-      }));
+      const orderItemsData = cart.items.map((item) => {
+        const itemDiscount = itemDiscounts.find(
+          (d) => d.variantId === item.variantId,
+        );
+        const itemTotal = item.variant.price * item.quantity;
+        return {
+          orderId: order.id,
+          variantId: item.variantId,
+          quantity: item.quantity,
+          price: item.variant.price,
+          total: itemTotal,
+          discountAmount: itemDiscount?.discountAmount || 0,
+        };
+      });
       await tx.orderItem.createMany({ data: orderItemsData });
 
       for (const item of cart.items) {
@@ -133,6 +186,7 @@ export class OrdersService {
         include: {
           voucher: true,
           voucherUsage: true,
+          discount: true,
         },
       });
     });
@@ -206,6 +260,7 @@ export class OrdersService {
             quantity: true,
             price: true,
             total: true,
+            discountAmount: true,
             variant: {
               select: {
                 id: true,

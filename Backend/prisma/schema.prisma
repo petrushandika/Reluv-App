@@ -466,6 +466,9 @@ model Order {
   voucherUsageId Int?   @unique
   voucherUsage   VoucherUsage? @relation("OrderVoucherUsage", fields: [voucherUsageId], references: [id], onDelete: SetNull)
 
+  discountId Int?
+  discount   Discount? @relation(fields: [discountId], references: [id], onDelete: SetNull)
+
   items    OrderItem[]
   payment  Payment?
   shipment Shipment?
@@ -476,14 +479,16 @@ model Order {
   @@index([orderNumber])
   @@index([voucherId])
   @@index([voucherUsageId])
+  @@index([discountId])
   @@map("orders")
 }
 
 model OrderItem {
-  id       Int @id @default(autoincrement())
-  quantity Int
-  price    Int
-  total    Int
+  id            Int @id @default(autoincrement())
+  quantity      Int
+  price         Int
+  total         Int
+  discountAmount Int @default(0)
 
   order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
   orderId   Int
@@ -621,6 +626,8 @@ model Discount {
   usageLimit Int?
   usedCount  Int      @default(0)
 
+  orders Order[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -629,6 +636,7 @@ model Discount {
   @@index([categoryId])
   @@index([productId])
   @@index([storeId])
+  @@index([usedCount])
   @@map("discounts")
 }
 

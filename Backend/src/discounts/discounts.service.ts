@@ -210,29 +210,51 @@ export class DiscountsService {
   ): Promise<{ discountAmount: number; discountId: number | null }> {
     const now = new Date();
 
-    const discounts = await this.prisma.discount.findMany({
+    const allDiscounts = await this.prisma.discount.findMany({
       where: {
         isActive: true,
         startDate: { lte: now },
         endDate: { gte: now },
         OR: [
-          { scope: DiscountScope.GLOBAL },
-          { scope: DiscountScope.CATEGORY, categoryId },
           { scope: DiscountScope.PRODUCT, productId },
+          { scope: DiscountScope.CATEGORY, categoryId },
           ...(storeId ? [{ scope: DiscountScope.STORE, storeId }] : []),
+          { scope: DiscountScope.GLOBAL },
         ],
       },
       orderBy: { value: 'desc' },
-      take: 1,
     });
 
-    if (discounts.length === 0) {
+    if (allDiscounts.length === 0) {
       return { discountAmount: 0, discountId: null };
     }
 
-    const discount = discounts[0];
+    const priorityOrder = [
+      DiscountScope.PRODUCT,
+      DiscountScope.CATEGORY,
+      DiscountScope.STORE,
+      DiscountScope.GLOBAL,
+    ];
+
+    const sortedDiscounts = allDiscounts.sort((a, b) => {
+      const aPriority = priorityOrder.indexOf(a.scope);
+      const bPriority = priorityOrder.indexOf(b.scope);
+      if (aPriority !== bPriority) {
+        return aPriority - bPriority;
+      }
+      return b.value - a.value;
+    });
+
+    const discount = sortedDiscounts[0];
 
     if (discount.minPurchase && subtotal < discount.minPurchase) {
+      return { discountAmount: 0, discountId: null };
+    }
+
+    if (
+      discount.usageLimit &&
+      discount.usedCount >= discount.usageLimit
+    ) {
       return { discountAmount: 0, discountId: null };
     }
 
@@ -244,12 +266,16 @@ export class DiscountsService {
       }
     } else if (discount.type === 'FIXED_AMOUNT') {
       discountAmount = discount.value;
+    } else if (discount.type === 'FREE_SHIPPING') {
+      discountAmount = 0;
     }
 
-    await this.prisma.discount.update({
-      where: { id: discount.id },
-      data: { usedCount: { increment: 1 } },
-    });
+    if (discountAmount > 0) {
+      await this.prisma.discount.update({
+        where: { id: discount.id },
+        data: { usedCount: { increment: 1 } },
+      });
+    }
 
     return { discountAmount, discountId: discount.id };
   }
