@@ -191,8 +191,31 @@ export class OrdersService {
       });
     });
 
+    if (!createdOrder) {
+      throw new BadRequestException('Failed to create order.');
+    }
+
+    const orderForPayment = {
+      id: createdOrder.id,
+      orderNumber: createdOrder.orderNumber,
+      buyerId: createdOrder.buyerId,
+      locationId: createdOrder.locationId,
+      totalAmount: createdOrder.totalAmount,
+      itemsAmount: createdOrder.itemsAmount,
+      shippingCost: createdOrder.shippingCost,
+      discountAmount: createdOrder.discountAmount,
+      voucherCode: createdOrder.voucherCode,
+      status: createdOrder.status,
+      notes: createdOrder.notes,
+      createdAt: createdOrder.createdAt,
+      updatedAt: createdOrder.updatedAt,
+      voucherId: createdOrder.voucherId,
+      voucherUsageId: createdOrder.voucherUsageId,
+      discountId: createdOrder.discountId,
+    };
+
     const paymentTransaction =
-      await this.paymentsService.createPayment(createdOrder);
+      await this.paymentsService.createPayment(orderForPayment);
 
     return { order: createdOrder, payment: paymentTransaction };
   }

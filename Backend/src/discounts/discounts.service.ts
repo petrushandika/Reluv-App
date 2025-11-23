@@ -8,14 +8,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { CreateDiscountDto } from './dto/create-discount.dto';
 import { UpdateDiscountDto } from './dto/update-discount.dto';
 import { QueryDiscountDto } from './dto/query-discount.dto';
-import { User } from '@prisma/client';
-
-enum DiscountScope {
-  GLOBAL = 'GLOBAL',
-  CATEGORY = 'CATEGORY',
-  PRODUCT = 'PRODUCT',
-  STORE = 'STORE',
-}
+import { User, DiscountScope } from '@prisma/client';
 
 @Injectable()
 export class DiscountsService {
@@ -228,7 +221,7 @@ export class DiscountsService {
       return { discountAmount: 0, discountId: null };
     }
 
-    const priorityOrder = [
+    const priorityOrder: DiscountScope[] = [
       DiscountScope.PRODUCT,
       DiscountScope.CATEGORY,
       DiscountScope.STORE,
@@ -236,8 +229,10 @@ export class DiscountsService {
     ];
 
     const sortedDiscounts = allDiscounts.sort((a, b) => {
-      const aPriority = priorityOrder.indexOf(a.scope);
-      const bPriority = priorityOrder.indexOf(b.scope);
+      const aScope = a.scope as DiscountScope;
+      const bScope = b.scope as DiscountScope;
+      const aPriority = priorityOrder.indexOf(aScope);
+      const bPriority = priorityOrder.indexOf(bScope);
       if (aPriority !== bPriority) {
         return aPriority - bPriority;
       }
