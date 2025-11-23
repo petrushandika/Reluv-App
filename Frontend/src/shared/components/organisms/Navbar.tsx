@@ -729,15 +729,19 @@ const Navbar = () => {
               href="/notifications"
               aria-label="Notifications"
               className="relative"
+              onClick={() => setIsMobileMenuOpen(false)}
             >
               <Bell className="w-6 h-6 text-sky-600 hover:text-sky-700 dark:text-sky-400 dark:hover:text-sky-300 cursor-pointer transition-all duration-300 transform hover:scale-110" />
             </Link>
-            <ThemeToggle />
+            <div onClick={() => setIsMobileMenuOpen(false)}>
+              <ThemeToggle />
+            </div>
             <Link
               href="/wishlist"
               prefetch={true}
               aria-label="Wishlist"
               className="relative"
+              onClick={() => setIsMobileMenuOpen(false)}
             >
               <Heart className="w-6 h-6 text-sky-600 hover:text-sky-700 dark:text-sky-400 dark:hover:text-sky-300 cursor-pointer transition-all duration-300 transform hover:scale-110" />
               {wishlistItemCount > 0 && (
@@ -751,6 +755,7 @@ const Navbar = () => {
               prefetch={true}
               aria-label="Cart"
               className="relative"
+              onClick={() => setIsMobileMenuOpen(false)}
             >
               <ShoppingBag className="w-6 h-6 text-sky-600 hover:text-sky-700 dark:text-sky-400 dark:hover:text-sky-300 cursor-pointer transition-all duration-300 transform hover:scale-110" />
               {itemCount > 0 && (
@@ -812,20 +817,25 @@ const Navbar = () => {
         </div>
       </div>
 
-      {isMobileMenuOpen && (
-        <div className="absolute top-full left-0 w-full z-10 lg:hidden bg-white/95 dark:bg-gray-900/95 backdrop-blur-md text-gray-800 dark:text-white border-t border-gray-200/50 dark:border-gray-700/50 max-h-[calc(100vh-4.5rem)] overflow-y-auto animate-[slideDown_0.4s_cubic-bezier(0.4,0,0.2,1)] shadow-lg">
-          <style jsx>{`
-            @keyframes slideDown {
-              from {
-                opacity: 0;
-                transform: translateY(-15px);
-              }
-              to {
-                opacity: 1;
-                transform: translateY(0);
-              }
+      <div
+        className={`absolute top-full left-0 w-full z-10 lg:hidden bg-white/95 dark:bg-gray-900/95 backdrop-blur-md text-gray-800 dark:text-white border-t border-gray-200/50 dark:border-gray-700/50 max-h-[calc(100vh-4.5rem)] overflow-y-auto shadow-lg transition-all duration-300 ease-in-out ${
+          isMobileMenuOpen
+            ? "opacity-100 translate-y-0"
+            : "opacity-0 -translate-y-4 pointer-events-none"
+        }`}
+      >
+        <style jsx>{`
+          @keyframes slideDown {
+            from {
+              opacity: 0;
+              transform: translateY(-15px);
             }
-          `}</style>
+            to {
+              opacity: 1;
+              transform: translateY(0);
+            }
+          }
+        `}</style>
           <div className="py-4 px-6 space-y-1 border-b border-gray-200 dark:border-gray-700">
             <div className="relative">
               <div className="relative w-full overflow-hidden rounded-md bg-gray-100/80 dark:bg-gray-800/80 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 focus-within:ring-2 focus-within:ring-sky-500 dark:focus-within:ring-sky-400 shadow-sm">
@@ -892,7 +902,10 @@ const Navbar = () => {
                             href={categoryRoute}
                             prefetch={true}
                             className="w-full flex justify-between items-center py-3 text-left text-sm text-gray-700 dark:text-gray-300 cursor-pointer hover:text-sky-600 dark:hover:text-sky-400 transition-all duration-300"
-                            onClick={() => toggleMobileSubMenu(category)}
+                            onClick={() => {
+                              toggleMobileSubMenu(category);
+                              setIsMobileMenuOpen(false);
+                            }}
                           >
                             <span className="transition-colors duration-300">
                               {category}
@@ -957,13 +970,17 @@ const Navbar = () => {
                 <Link
                   href="/profile/orders"
                   className="flex items-center py-3 text-sm text-gray-700 dark:text-gray-300 font-semibold hover:text-sky-600 dark:hover:text-sky-400 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md transition-all duration-300 hover:pl-2"
+                  onClick={() => setIsMobileMenuOpen(false)}
                 >
                   <ScrollText className="w-5 h-5 mr-3 text-gray-500 dark:text-gray-400 transition-colors duration-300" />{" "}
                   Order History
                 </Link>
                 <div className="">
                   <button
-                    onClick={handleLogout}
+                    onClick={() => {
+                      handleLogout();
+                      setIsMobileMenuOpen(false);
+                    }}
                     className="w-full text-left flex items-center py-3 text-sm text-red-600 dark:text-red-400 font-semibold hover:bg-red-50 dark:hover:bg-red-900/20 rounded-md transition-all duration-300 hover:pl-2"
                   >
                     <LogOut className="w-5 h-5 mr-3 transition-colors duration-300" />{" "}
@@ -977,6 +994,7 @@ const Navbar = () => {
                 <Link
                   href="/auth/login"
                   className="hover:text-sky-600 dark:hover:text-sky-400 text-gray-800 dark:text-white"
+                  onClick={() => setIsMobileMenuOpen(false)}
                 >
                   Sign In
                 </Link>
@@ -984,6 +1002,7 @@ const Navbar = () => {
                 <Link
                   href="/auth/register"
                   className="hover:text-sky-600 dark:hover:text-sky-400 text-gray-800 dark:text-white"
+                  onClick={() => setIsMobileMenuOpen(false)}
                 >
                   Register
                 </Link>
@@ -991,7 +1010,6 @@ const Navbar = () => {
             )}
           </div>
         </div>
-      )}
 
       {activeMainMenu && (
         <div

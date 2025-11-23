@@ -159,12 +159,12 @@ const Cart = () => {
                             "https://placehold.co/100x100/e2e8f0/e2e8f0?text=Image"
                           }
                           alt={item.variant.product.name}
-                          className="w-full sm:w-20 md:w-24 h-40 sm:h-20 md:h-24 object-cover rounded-lg bg-gray-100 dark:bg-gray-700"
+                          className="w-full aspect-square sm:w-20 md:w-24 sm:h-20 md:h-24 object-cover rounded-lg bg-gray-100 dark:bg-gray-700"
                         />
                       </div>
 
-                      <div className="flex-grow w-full">
-                        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start space-y-2 sm:space-y-0">
+                      <div className="flex-grow w-full min-w-0">
+                        <div className="flex items-start space-x-3">
                           <div className="flex-grow min-w-0">
                             <p className="text-xs sm:text-sm font-medium text-sky-600 dark:text-sky-400 glossy-text-strong">
                               {item.variant.product.store?.name || "Reluv"}
@@ -184,7 +184,7 @@ const Cart = () => {
 
                           <button
                             onClick={() => requestRemoveItem(item)}
-                            className="text-gray-400 dark:text-gray-500 hover:text-red-500 dark:hover:text-red-400 transition-colors self-start sm:self-auto cursor-pointer"
+                            className="text-gray-400 dark:text-gray-500 hover:text-red-500 dark:hover:text-red-400 transition-colors flex-shrink-0 self-center cursor-pointer mt-6 sm:mt-0"
                             aria-label="Remove item"
                           >
                             <Trash2 className="w-4 h-4 md:w-5 md:h-5" />
