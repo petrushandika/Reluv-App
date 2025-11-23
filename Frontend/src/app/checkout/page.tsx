@@ -44,6 +44,18 @@ interface Regency {
   province_id: string;
 }
 
+interface District {
+  id: string;
+  name: string;
+  regency_id: string;
+}
+
+interface SubDistrict {
+  id: string;
+  name: string;
+  district_id: string;
+}
+
 const shippingData = {
   sicepat: {
     name: "SiCepat",
@@ -188,6 +200,7 @@ const Checkout = () => {
     district: "",
     subDistrict: "",
     zip: "",
+    detailAddress: "",
   });
 
   const [mapPosition, setMapPosition] = useState<LatLngExpression>([
@@ -210,14 +223,22 @@ const Checkout = () => {
   const [isCountryOpen, setIsCountryOpen] = useState(false);
   const [isProvinceOpen, setIsProvinceOpen] = useState(false);
   const [isCityOpen, setIsCityOpen] = useState(false);
+  const [isDistrictOpen, setIsDistrictOpen] = useState(false);
+  const [isSubDistrictOpen, setIsSubDistrictOpen] = useState(false);
   const [isCourierOpen, setIsCourierOpen] = useState(false);
 
   const [provinces, setProvinces] = useState<Province[]>([]);
   const [regencies, setRegencies] = useState<Regency[]>([]);
+  const [districts, setDistricts] = useState<District[]>([]);
+  const [subDistricts, setSubDistricts] = useState<SubDistrict[]>([]);
   const [isLoadingProvinces, setIsLoadingProvinces] = useState(false);
   const [isLoadingRegencies, setIsLoadingRegencies] = useState(false);
+  const [isLoadingDistricts, setIsLoadingDistricts] = useState(false);
+  const [isLoadingSubDistricts, setIsLoadingSubDistricts] = useState(false);
   const [provinceSearchTerm, setProvinceSearchTerm] = useState("");
   const [citySearchTerm, setCitySearchTerm] = useState("");
+  const [districtSearchTerm, setDistrictSearchTerm] = useState("");
+  const [subDistrictSearchTerm, setSubDistrictSearchTerm] = useState("");
 
   useEffect(() => {
     if (!isFetchingCart) {
@@ -275,9 +296,57 @@ const Checkout = () => {
       fetchRegencies();
     } else {
       setRegencies([]);
-      setFormData((prev) => ({ ...prev, city: "" }));
+      setFormData((prev) => ({ ...prev, city: "", district: "", subDistrict: "" }));
     }
   }, [formData.province]);
+
+  useEffect(() => {
+    if (formData.city) {
+      const fetchDistricts = async () => {
+        setIsLoadingDistricts(true);
+        try {
+          const response = await fetch(
+            `https://www.emsifa.com/api-wilayah-indonesia/api/districts/${formData.city}.json`
+          );
+          const data: District[] = await response.json();
+          setDistricts(data);
+        } catch (error) {
+          console.error("Failed to fetch districts:", error);
+          setDistricts([]);
+        } finally {
+          setIsLoadingDistricts(false);
+        }
+      };
+      fetchDistricts();
+    } else {
+      setDistricts([]);
+      setFormData((prev) => ({ ...prev, district: "", subDistrict: "" }));
+    }
+  }, [formData.city]);
+
+  useEffect(() => {
+    if (formData.district) {
+      const fetchSubDistricts = async () => {
+        setIsLoadingSubDistricts(true);
+        try {
+          const response = await fetch(
+            `https://www.emsifa.com/api-wilayah-indonesia/api/villages/${formData.district}.json`
+          );
+          const data: SubDistrict[] = await response.json();
+          setSubDistricts(data);
+        } catch (error) {
+          console.error("Failed to fetch sub-districts:", error);
+          setSubDistricts([]);
+        } finally {
+          setIsLoadingSubDistricts(false);
+        }
+      };
+      fetchSubDistricts();
+    } else {
+      setSubDistricts([]);
+      setFormData((prev) => ({ ...prev, subDistrict: "" }));
+    }
+  }, [formData.district]);
 
   const handleInputChange = React.useCallback((
     e: React.ChangeEvent<
@@ -295,9 +364,21 @@ const Checkout = () => {
   };
 
   const handleCityChange = (regencyId: string) => {
-    setFormData((prev) => ({ ...prev, city: regencyId }));
+    setFormData((prev) => ({ ...prev, city: regencyId, district: "", subDistrict: "" }));
     setIsCityOpen(false);
     setCitySearchTerm("");
+  };
+
+  const handleDistrictChange = (districtId: string) => {
+    setFormData((prev) => ({ ...prev, district: districtId, subDistrict: "" }));
+    setIsDistrictOpen(false);
+    setDistrictSearchTerm("");
+  };
+
+  const handleSubDistrictChange = (subDistrictId: string) => {
+    setFormData((prev) => ({ ...prev, subDistrict: subDistrictId }));
+    setIsSubDistrictOpen(false);
+    setSubDistrictSearchTerm("");
   };
 
   const handleCourierChange = (courierValue: string) => {
@@ -459,7 +540,7 @@ const Checkout = () => {
           }}
           className={`block w-full ${
             Icon ? "pl-10" : "pl-4"
-          } pr-3 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200 placeholder-gray-400 dark:placeholder-gray-500`}
+          } pr-3 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder:text-base placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200`}
           placeholder={placeholder}
         />
       </div>
@@ -560,7 +641,7 @@ const Checkout = () => {
                 <input
                   type="text"
                   placeholder={`Search ${label.toLowerCase()}...`}
-                  className="w-full pl-9 pr-3 py-2 border border-gray-200 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-400 focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 outline-none"
+                  className="w-full pl-9 pr-3 py-2 border border-gray-200 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder:text-base placeholder-gray-400 dark:placeholder-gray-400 focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 outline-none"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   onClick={(e) => e.stopPropagation()}
@@ -750,7 +831,7 @@ const Checkout = () => {
           onFocus={() => setIsOpen(true)}
           onBlur={() => setIsOpen(false)}
           onMouseDown={() => setIsOpen(!isOpen)}
-          className="block w-full pl-4 pr-12 py-3 border border-gray-300/50 dark:border-gray-600/50 rounded-lg bg-white/80 dark:bg-gray-800/80 text-gray-900 dark:text-white focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200 placeholder-gray-400 dark:placeholder-gray-500 disabled:bg-gray-50/80 dark:disabled:bg-gray-700/80 disabled:cursor-not-allowed appearance-none cursor-pointer glossy-text"
+          className="block w-full pl-4 pr-12 py-3 border border-gray-300/50 dark:border-gray-600/50 rounded-lg bg-white/80 dark:bg-gray-800/80 text-gray-900 dark:text-white placeholder:text-base placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200 disabled:bg-gray-50/80 dark:disabled:bg-gray-700/80 disabled:cursor-not-allowed appearance-none cursor-pointer glossy-text"
         >
           <option value="" disabled>
             {placeholder || `Select ${label}`}
@@ -879,21 +960,35 @@ const Checkout = () => {
                       disabled={!formData.province}
                       placeholder="Select City"
                     />
-                    <FormInput
+                    <SearchableSelect
                       id="district"
                       label="District"
-                      placeholder="Tebet"
                       value={formData.district}
-                      onChange={handleInputChange}
+                      options={districts}
+                      isLoading={isLoadingDistricts}
+                      searchTerm={districtSearchTerm}
+                      setSearchTerm={setDistrictSearchTerm}
+                      isOpen={isDistrictOpen}
+                      setIsOpen={setIsDistrictOpen}
+                      onSelect={handleDistrictChange}
+                      disabled={!formData.city}
+                      placeholder="Select District"
                     />
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                    <FormInput
+                    <SearchableSelect
                       id="subDistrict"
                       label="Sub District"
-                      placeholder="Tebet Timur"
                       value={formData.subDistrict}
-                      onChange={handleInputChange}
+                      options={subDistricts}
+                      isLoading={isLoadingSubDistricts}
+                      searchTerm={subDistrictSearchTerm}
+                      setSearchTerm={setSubDistrictSearchTerm}
+                      isOpen={isSubDistrictOpen}
+                      setIsOpen={setIsSubDistrictOpen}
+                      onSelect={handleSubDistrictChange}
+                      disabled={!formData.district}
+                      placeholder="Select Sub District"
                     />
                     <FormInput
                       id="zip"
@@ -901,6 +996,51 @@ const Checkout = () => {
                       placeholder="12190"
                       value={formData.zip}
                       onChange={handleInputChange}
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
+                      Detail Address
+                    </label>
+                    <textarea
+                      id="detailAddress"
+                      name="detailAddress"
+                      value={formData.detailAddress}
+                      onChange={handleInputChange}
+                      onMouseDown={(e) => {
+                        e.stopPropagation();
+                      }}
+                      onKeyDown={(e) => {
+                        e.stopPropagation();
+                      }}
+                      onKeyPress={(e) => {
+                        e.stopPropagation();
+                      }}
+                      onKeyUp={(e) => {
+                        e.stopPropagation();
+                      }}
+                      onInput={(e) => {
+                        e.stopPropagation();
+                      }}
+                      onCompositionStart={(e) => {
+                        e.stopPropagation();
+                      }}
+                      onCompositionUpdate={(e) => {
+                        e.stopPropagation();
+                      }}
+                      onCompositionEnd={(e) => {
+                        e.stopPropagation();
+                      }}
+                      onFocus={(e) => {
+                        e.stopPropagation();
+                      }}
+                      onBlur={(e) => {
+                        e.stopPropagation();
+                      }}
+                      rows={3}
+                      placeholder="Additional address details (e.g., building name, floor, unit number)"
+                      className="block w-full text-sm p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder:text-base placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200 resize-y"
                     />
                   </div>
 
@@ -1100,7 +1240,7 @@ const Checkout = () => {
                       }}
                       rows={3}
                       placeholder="e.g., Please pack securely..."
-                      className="block w-full text-sm p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200 placeholder-gray-400 dark:placeholder-gray-500"
+                      className="block w-full text-sm p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder:text-base placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200"
                     ></textarea>
                   </div>
                 </div>
