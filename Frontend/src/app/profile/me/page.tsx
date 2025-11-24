@@ -1,24 +1,23 @@
-'use client';
+"use client";
 
-import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   User,
   Edit,
   ChevronLeft,
   ChevronRight,
   X,
-  Calendar,
   Plus,
   Mail,
-} from 'lucide-react';
-import { useAuthStore } from '@/features/auth/store/auth.store';
-import { getMe, updateMe } from '@/features/user/api/userApi';
-import { User as UserType } from '@/features/auth/types';
-import { PrivateRoute } from '@/shared/components/guards/RouteGuards';
-import { toast } from 'sonner';
-import ProfileSidebar from '@/shared/components/organisms/ProfileSidebar';
-import Spinner from '@/shared/components/atoms/Spinner';
+} from "lucide-react";
+import { useAuthStore } from "@/features/auth/store/auth.store";
+import { getMe, updateMe } from "@/features/user/api/userApi";
+import { User as UserType } from "@/features/auth/types";
+import { PrivateRoute } from "@/shared/components/guards/RouteGuards";
+import { toast } from "sonner";
+import ProfileSidebar from "@/shared/components/organisms/ProfileSidebar";
+import Spinner from "@/shared/components/atoms/Spinner";
 
 const ProfilePage = () => {
   const router = useRouter();
@@ -27,21 +26,21 @@ const ProfilePage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isEditPersonalInfoOpen, setIsEditPersonalInfoOpen] = useState(false);
   const [formData, setFormData] = useState({
-    title: '',
-    firstName: '',
-    lastName: '',
-    dateOfBirth: '',
+    title: "",
+    firstName: "",
+    lastName: "",
+    dateOfBirth: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isEditAccountInfoOpen, setIsEditAccountInfoOpen] = useState(false);
   const [isPhoneInputOpen, setIsPhoneInputOpen] = useState(false);
-  const [phoneNumber, setPhoneNumber] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState("");
   const [isSubmittingPhone, setIsSubmittingPhone] = useState(false);
 
   useEffect(() => {
     const fetchUser = async () => {
       if (!isAuthenticated()) {
-        router.push('/auth/login');
+        router.push("/auth/login");
         return;
       }
 
@@ -49,7 +48,7 @@ const ProfilePage = () => {
         const userData = await getMe();
         setUser(userData);
       } catch (error) {
-        console.error('Failed to fetch user data:', error);
+        console.error("Failed to fetch user data:", error);
         setUser(null);
       } finally {
         setIsLoading(false);
@@ -65,15 +64,15 @@ const ProfilePage = () => {
 
   const handleOpenEditPersonalInfo = () => {
     setFormData({
-      title: '',
-      firstName: user?.firstName || authUser?.firstName || '',
-      lastName: user?.lastName || authUser?.lastName || '',
+      title: "",
+      firstName: user?.firstName || authUser?.firstName || "",
+      lastName: user?.lastName || authUser?.lastName || "",
       dateOfBirth:
         user?.birth || authUser?.birth
-          ? new Date(user?.birth || authUser?.birth || '')
+          ? new Date(user?.birth || authUser?.birth || "")
               .toISOString()
-              .split('T')[0]
-          : '',
+              .split("T")[0]
+          : "",
     });
     setIsEditPersonalInfoOpen(true);
   };
@@ -106,13 +105,13 @@ const ProfilePage = () => {
       const userData = await getMe();
       setUser(userData);
       setIsEditPersonalInfoOpen(false);
-      toast.success('Profile Updated', {
-        description: 'Your personal information has been updated successfully.',
+      toast.success("Profile Updated", {
+        description: "Your personal information has been updated successfully.",
       });
     } catch (error) {
-      console.error('Failed to update personal info:', error);
-      toast.error('Update Failed', {
-        description: 'Unable to update personal information. Please try again.',
+      console.error("Failed to update personal info:", error);
+      toast.error("Update Failed", {
+        description: "Unable to update personal information. Please try again.",
       });
     } finally {
       setIsSubmitting(false);
@@ -120,7 +119,7 @@ const ProfilePage = () => {
   };
 
   const handleOpenEditAccountInfo = () => {
-    setPhoneNumber(user?.phone || '');
+    setPhoneNumber(user?.phone || "");
     setIsPhoneInputOpen(false);
     setIsEditAccountInfoOpen(true);
   };
@@ -128,13 +127,13 @@ const ProfilePage = () => {
   const handleCloseEditAccountInfo = () => {
     setIsEditAccountInfoOpen(false);
     setIsPhoneInputOpen(false);
-    setPhoneNumber(user?.phone || '');
+    setPhoneNumber(user?.phone || "");
   };
 
   const handleTogglePhoneInput = () => {
     setIsPhoneInputOpen(!isPhoneInputOpen);
     if (!isPhoneInputOpen) {
-      setPhoneNumber(user?.phone || '');
+      setPhoneNumber(user?.phone || "");
     }
   };
 
@@ -148,13 +147,13 @@ const ProfilePage = () => {
       const userData = await getMe();
       setUser(userData);
       setIsPhoneInputOpen(false);
-      toast.success('Phone Updated', {
-        description: 'Your phone number has been updated successfully.',
+      toast.success("Phone Updated", {
+        description: "Your phone number has been updated successfully.",
       });
     } catch (error) {
-      console.error('Failed to update phone number:', error);
-      toast.error('Update Failed', {
-        description: 'Unable to update phone number. Please try again.',
+      console.error("Failed to update phone number:", error);
+      toast.error("Update Failed", {
+        description: "Unable to update phone number. Please try again.",
       });
     } finally {
       setIsSubmittingPhone(false);
@@ -162,16 +161,16 @@ const ProfilePage = () => {
   };
 
   const formatDate = (date: Date | string | null) => {
-    if (!date) return '-';
+    if (!date) return "-";
     const d = new Date(date);
-    return d.toLocaleDateString('id-ID', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
+    return d.toLocaleDateString("id-ID", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
     });
   };
 
-  const displayEmail = user?.email || authUser?.email || '';
+  const displayEmail = user?.email || authUser?.email || "";
 
   if (isLoading) {
     return <Spinner />;
@@ -207,7 +206,7 @@ const ProfilePage = () => {
                           type="radio"
                           name="title"
                           value="Mr."
-                          checked={formData.title === 'Mr.'}
+                          checked={formData.title === "Mr."}
                           onChange={(e) =>
                             setFormData({ ...formData, title: e.target.value })
                           }
@@ -222,7 +221,7 @@ const ProfilePage = () => {
                           type="radio"
                           name="title"
                           value="Mrs./Ms."
-                          checked={formData.title === 'Mrs./Ms.'}
+                          checked={formData.title === "Mrs./Ms."}
                           onChange={(e) =>
                             setFormData({ ...formData, title: e.target.value })
                           }
@@ -281,10 +280,9 @@ const ProfilePage = () => {
                             dateOfBirth: e.target.value,
                           })
                         }
-                        className="w-full px-3 py-2 pr-10 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-transparent transition-colors"
+                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-transparent transition-colors"
                         placeholder="Date of Birth"
                       />
-                      <Calendar className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 dark:text-gray-500 pointer-events-none" />
                     </div>
                     <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                       Fill your date of birth to get birthday reward once a
@@ -299,11 +297,11 @@ const ProfilePage = () => {
                     }
                     className={`w-full py-3 rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer ${
                       formData.firstName && formData.lastName && !isSubmitting
-                        ? 'bg-sky-600 dark:bg-sky-500 text-white hover:bg-sky-700 dark:hover:bg-sky-600'
-                        : 'bg-sky-600 dark:bg-sky-500 text-white hover:bg-sky-700 dark:hover:bg-sky-600'
+                        ? "bg-sky-600 dark:bg-sky-500 text-white hover:bg-sky-700 dark:hover:bg-sky-600"
+                        : "bg-sky-600 dark:bg-sky-500 text-white hover:bg-sky-700 dark:hover:bg-sky-600"
                     }`}
                   >
-                    {isSubmitting ? 'Saving...' : 'Save'}
+                    {isSubmitting ? "Saving..." : "Save"}
                   </button>
                 </form>
               </div>
@@ -312,7 +310,7 @@ const ProfilePage = () => {
         ) : null}
         <div
           className={`container mx-auto px-4 sm:px-6 md:px-10 xl:px-20 2xl:px-40 py-10 sm:py-12 md:py-14 ${
-            isEditPersonalInfoOpen ? 'hidden lg:block' : ''
+            isEditPersonalInfoOpen ? "hidden lg:block" : ""
           }`}
         >
           <div className="flex flex-col lg:flex-row lg:gap-8">
@@ -367,7 +365,7 @@ const ProfilePage = () => {
                       First Name
                     </label>
                     <p className="text-gray-900 dark:text-white font-semibold">
-                      {user?.firstName || authUser?.firstName || '-'}
+                      {user?.firstName || authUser?.firstName || "-"}
                     </p>
                   </div>
                   <div className="border-b border-gray-200 dark:border-gray-700 pb-4">
@@ -375,7 +373,7 @@ const ProfilePage = () => {
                       Last Name
                     </label>
                     <p className="text-gray-900 dark:text-white font-semibold">
-                      {user?.lastName || authUser?.lastName || '-'}
+                      {user?.lastName || authUser?.lastName || "-"}
                     </p>
                   </div>
                   <div>
@@ -408,7 +406,7 @@ const ProfilePage = () => {
                       Phone Number
                     </label>
                     <p className="text-gray-900 dark:text-white font-semibold">
-                      {user?.phone || '-'}
+                      {user?.phone || "-"}
                     </p>
                   </div>
                   <div>
@@ -416,7 +414,7 @@ const ProfilePage = () => {
                       Email
                     </label>
                     <p className="text-gray-900 dark:text-white font-semibold break-words">
-                      {displayEmail || '-'}
+                      {displayEmail || "-"}
                     </p>
                   </div>
                 </div>
@@ -463,7 +461,7 @@ const ProfilePage = () => {
                       type="radio"
                       name="title"
                       value="Mr."
-                      checked={formData.title === 'Mr.'}
+                      checked={formData.title === "Mr."}
                       onChange={(e) =>
                         setFormData({ ...formData, title: e.target.value })
                       }
@@ -478,7 +476,7 @@ const ProfilePage = () => {
                       type="radio"
                       name="title"
                       value="Mrs./Ms."
-                      checked={formData.title === 'Mrs./Ms.'}
+                      checked={formData.title === "Mrs./Ms."}
                       onChange={(e) =>
                         setFormData({ ...formData, title: e.target.value })
                       }
@@ -537,10 +535,9 @@ const ProfilePage = () => {
                         dateOfBirth: e.target.value,
                       })
                     }
-                    className="w-full px-3 py-2 pr-10 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-transparent transition-colors"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-transparent transition-colors"
                     placeholder="Date of Birth"
                   />
-                  <Calendar className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 dark:text-gray-500 pointer-events-none" />
                 </div>
                 <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                   Fill your date of birth to get birthday reward once a year.
@@ -554,7 +551,7 @@ const ProfilePage = () => {
                 }
                 className="w-full py-3 bg-sky-600 dark:bg-sky-500 text-white rounded-lg font-medium hover:bg-sky-700 dark:hover:bg-sky-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
               >
-                {isSubmitting ? 'Saving...' : 'Save'}
+                {isSubmitting ? "Saving..." : "Save"}
               </button>
             </form>
           </div>
@@ -640,7 +637,7 @@ const ProfilePage = () => {
                       disabled={isSubmittingPhone}
                       className="flex-1 py-2 px-4 bg-sky-600 dark:bg-sky-500 text-white rounded-lg hover:bg-sky-700 dark:hover:bg-sky-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      {isSubmittingPhone ? 'Saving...' : 'Save'}
+                      {isSubmittingPhone ? "Saving..." : "Save"}
                     </button>
                   </div>
                 </form>
@@ -658,7 +655,7 @@ const ProfilePage = () => {
                       Change Email
                     </span>
                     <span className="text-sm text-gray-500 dark:text-gray-400 mt-1 break-words">
-                      {displayEmail || '-'}
+                      {displayEmail || "-"}
                     </span>
                   </div>
                 </div>

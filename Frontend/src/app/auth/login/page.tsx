@@ -24,9 +24,7 @@ import {
   redirectToGoogleAuth,
   redirectToFacebookAuth,
 } from "@/features/auth/api/authApi";
-import { LoginPayload } from "@/features/auth/types";
-
-type SocialProvider = "Google" | "Facebook";
+import { LoginPayload, SocialProvider } from "@/features/auth/types";
 
 const Login = () => {
   const router = useRouter();

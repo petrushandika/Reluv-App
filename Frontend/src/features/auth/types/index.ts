@@ -42,3 +42,5 @@ export interface ResetPasswordPayload {
   newPassword: string;
   confirmNewPassword: string;
 }
+
+export type SocialProvider = "Google" | "Facebook";

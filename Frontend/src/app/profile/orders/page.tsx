@@ -14,88 +14,11 @@ import { getMe } from '@/features/user/api/userApi';
 import { User as UserType } from '@/features/auth/types';
 import { PrivateRoute } from '@/shared/components/guards/RouteGuards';
 import ProfileSidebar from '@/shared/components/organisms/ProfileSidebar';
-import { api } from '@/shared/lib/axios';
 import Image from 'next/image';
 import Spinner from '@/shared/components/atoms/Spinner';
-
-type OrderStatus =
-  | 'PENDING'
-  | 'PAID'
-  | 'SHIPPED'
-  | 'DELIVERED'
-  | 'COMPLETED'
-  | 'CANCELLED'
-  | 'REFUNDED';
-
-interface OrderItem {
-  id: number;
-  quantity: number;
-  price: number;
-  total: number;
-  variant: {
-    id: number;
-    size: string;
-    color: string;
-    image: string;
-    product: {
-      id: number;
-      name: string;
-      slug: string;
-      images: string[];
-    };
-  };
-}
-
-interface Order {
-  id: number;
-  orderNumber: string;
-  totalAmount: number;
-  itemsAmount: number;
-  shippingCost: number;
-  discountAmount: number;
-  status: OrderStatus;
-  createdAt: string;
-  updatedAt: string;
-  items: OrderItem[];
-}
-
-const getStatusColor = (status: OrderStatus) => {
-  switch (status) {
-    case 'PENDING':
-      return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400';
-    case 'PAID':
-      return 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400';
-    case 'SHIPPED':
-      return 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400';
-    case 'DELIVERED':
-      return 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400';
-    case 'COMPLETED':
-      return 'bg-sky-100 text-sky-800 dark:bg-sky-900/30 dark:text-sky-400';
-    case 'CANCELLED':
-      return 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400';
-    case 'REFUNDED':
-      return 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300';
-    default:
-      return 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300';
-  }
-};
-
-const formatCurrency = (amount: number) => {
-  return new Intl.NumberFormat('id-ID', {
-    style: 'currency',
-    currency: 'IDR',
-    minimumFractionDigits: 0,
-  }).format(amount);
-};
-
-const formatDate = (dateString: string) => {
-  const date = new Date(dateString);
-  return new Intl.DateTimeFormat('id-ID', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  }).format(date);
-};
+import { getOrders } from '@/features/orders/api/ordersApi';
+import { Order } from '@/features/orders/types';
+import { getStatusColor, formatCurrency, formatDate } from '@/features/orders/utils';
 
 const OrdersPage = () => {
   const router = useRouter();
@@ -114,10 +37,10 @@ const OrdersPage = () => {
       try {
         const [userData, ordersData] = await Promise.all([
           getMe(),
-          api.get<Order[]>('/orders'),
+          getOrders(),
         ]);
         setUser(userData);
-        setOrders(ordersData.data);
+        setOrders(ordersData);
       } catch (error) {
         console.error('Failed to fetch data:', error);
         setUser(null);

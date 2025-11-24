@@ -15,29 +15,7 @@ import type { SearchResult } from 'leaflet-geosearch/dist/providers/provider.js'
 import { toast } from 'sonner';
 import Spinner from '@/shared/components/atoms/Spinner';
 import { createAddress, getAddresses } from '@/features/address/api/addressApi';
-
-interface Province {
-  id: string;
-  name: string;
-}
-
-interface Regency {
-  id: string;
-  name: string;
-  province_id: string;
-}
-
-interface District {
-  id: string;
-  name: string;
-  regency_id: string;
-}
-
-interface SubDistrict {
-  id: string;
-  name: string;
-  district_id: string;
-}
+import { Province, Regency, District, SubDistrict } from '@/features/checkout/types';
 
 const AddAddressPage = () => {
   const router = useRouter();

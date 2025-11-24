@@ -1,55 +1,11 @@
 "use client";
 
 import { api } from "@/shared/lib/axios";
-
-export interface Address {
-  id: number;
-  label: string;
-  recipient: string;
-  phone: string;
-  province: string;
-  city: string;
-  district: string;
-  subDistrict: string;
-  postalCode: string;
-  address: string;
-  isDefault: boolean;
-  latitude?: number;
-  longitude?: number;
-  biteship_area_id?: string;
-}
-
-export interface CreateAddressPayload {
-  label: string;
-  recipient: string;
-  phone: string;
-  province: string;
-  city: string;
-  district: string;
-  subDistrict: string;
-  postalCode: string;
-  address: string;
-  isDefault?: boolean;
-  latitude?: number;
-  longitude?: number;
-  biteship_area_id?: string;
-}
-
-export interface UpdateAddressPayload {
-  label?: string;
-  recipient?: string;
-  phone?: string;
-  province?: string;
-  city?: string;
-  district?: string;
-  subDistrict?: string;
-  postalCode?: string;
-  address?: string;
-  isDefault?: boolean;
-  latitude?: number;
-  longitude?: number;
-  biteship_area_id?: string;
-}
+import {
+  Address,
+  CreateAddressPayload,
+  UpdateAddressPayload,
+} from "../types";
 
 export const getAddresses = async (): Promise<Address[]> => {
   try {

@@ -9,7 +9,8 @@ import { User as UserType } from '@/features/auth/types';
 import { PrivateRoute } from '@/shared/components/guards/RouteGuards';
 import ProfileSidebar from '@/shared/components/organisms/ProfileSidebar';
 import Spinner from '@/shared/components/atoms/Spinner';
-import { getAddresses, deleteAddress, Address } from '@/features/address/api/addressApi';
+import { getAddresses, deleteAddress } from '@/features/address/api/addressApi';
+import { Address } from '@/features/address/types';
 import { toast } from 'sonner';
 
 const AddressPage = () => {

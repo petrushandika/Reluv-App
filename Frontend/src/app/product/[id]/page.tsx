@@ -23,10 +23,7 @@ import { useWishlistStore } from "@/features/wishlist/store/wishlist.store";
 import { useBuyStore } from "@/features/checkout/store/buy.store";
 import ShareModal from "@/shared/components/molecules/ShareModal";
 import ProductDetailSkeleton from "@/shared/components/molecules/ProductDetailSkeleton";
-
-const formatPrice = (price: number) => {
-  return `Rp${new Intl.NumberFormat("id-ID").format(price)}`;
-};
+import { formatPrice } from "@/shared/utils/format";
 
 const ProductDetail = () => {
   const params = useParams();

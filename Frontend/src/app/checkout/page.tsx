@@ -22,7 +22,15 @@ import type { LatLngExpression } from "leaflet";
 import { useCart } from "@/features/cart/hooks/useCart";
 import { useBuyStore } from "@/features/checkout/store/buy.store";
 import Spinner from "@/shared/components/atoms/Spinner";
-import { getAddresses, createAddress, type Address } from "@/features/address/api/addressApi";
+import { getAddresses, createAddress } from "@/features/address/api/addressApi";
+import { Address } from "@/features/address/types";
+import {
+  Province,
+  Regency,
+  District,
+  SubDistrict,
+  ShippingData,
+} from "@/features/checkout/types";
 import { toast } from "sonner";
 
 const MapPicker = dynamic(
@@ -37,30 +45,7 @@ const MapPicker = dynamic(
   }
 );
 
-interface Province {
-  id: string;
-  name: string;
-}
-
-interface Regency {
-  id: string;
-  name: string;
-  province_id: string;
-}
-
-interface District {
-  id: string;
-  name: string;
-  regency_id: string;
-}
-
-interface SubDistrict {
-  id: string;
-  name: string;
-  district_id: string;
-}
-
-const shippingData = {
+const shippingData: ShippingData = {
   sicepat: {
     name: "SiCepat",
     services: [

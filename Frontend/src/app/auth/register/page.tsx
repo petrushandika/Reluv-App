@@ -23,7 +23,7 @@ import {
   redirectToGoogleAuth,
   redirectToFacebookAuth,
 } from "@/features/auth/api/authApi";
-import { RegisterPayload } from "@/features/auth/types";
+import { RegisterPayload, SocialProvider } from "@/features/auth/types";
 
 const registerSchema = z
   .object({
@@ -53,8 +53,6 @@ interface RegisterFormData {
   confirmPassword: string;
   agreeToTerms: boolean;
 }
-
-type SocialProvider = "Google" | "Facebook";
 
 const Register = () => {
   const router = useRouter();
