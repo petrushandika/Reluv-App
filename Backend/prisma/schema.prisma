@@ -6,6 +6,518 @@ datasource db {
   provider = "postgresql"
 }
 
+model User {
+  id                      Int            @id @default(autoincrement())
+  email                   String         @unique
+  password                String?
+  phone                   String?
+  role                    UserRole       @default(USER)
+  isActive                Boolean        @default(true)
+  googleId                String?        @unique
+  facebookId              String?        @unique
+  isVerified              Boolean        @default(false)
+  verificationToken       String?
+  verificationTokenExpiry DateTime?
+  createdAt               DateTime       @default(now())
+  updatedAt               DateTime       @updatedAt
+  firstName               String?
+  lastName                String?
+  birth                   DateTime?
+  cart                    Cart?
+  locations               Location[]
+  notifications           Notification[]
+  orders                  Order[]
+  products                Product[]
+  reviews                 Review[]
+  store                   Store?
+  profile                 UserProfile?
+  voucherUsages           VoucherUsage[]
+  wishlist                Wishlist[]
+
+  @@index([email])
+  @@index([isActive, isVerified])
+  @@map("users")
+}
+
+model UserProfile {
+  id        Int      @id @default(autoincrement())
+  avatar    String?
+  bio       String?
+  userId    Int      @unique
+  banner    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  gender    Gender?
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_profiles")
+}
+
+model Store {
+  id            Int           @id @default(autoincrement())
+  name          String
+  slug          String        @unique
+  isActive      Boolean       @default(true)
+  isVerified    Boolean       @default(false)
+  totalProducts Int           @default(0)
+  totalSales    Int           @default(0)
+  rating        Float?        @db.Real
+  userId        Int           @unique
+  locationId    Int?          @unique
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  badges        Badge[]
+  discounts     Discount[]
+  location      Location?     @relation("StoreLocation")
+  products      Product[]
+  promotions    Promotion[]
+  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  profile       StoreProfile?
+  vouchers      Voucher[]
+
+  @@index([userId])
+  @@index([slug])
+  @@index([isActive, isVerified])
+  @@map("store")
+}
+
+model StoreProfile {
+  id          Int      @id @default(autoincrement())
+  banner      String?
+  bio         String?
+  operational String?
+  storeId     Int      @unique
+  avatar      String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  store       Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
+
+  @@map("store_profiles")
+}
+
+model Location {
+  id               Int     @id @default(autoincrement())
+  label            String
+  recipient        String
+  phone            String
+  province         String
+  city             String
+  district         String
+  subDistrict      String
+  postalCode       String
+  address          String
+  isDefault        Boolean @default(false)
+  latitude         Float?
+  longitude        Float?
+  biteship_area_id String?
+  userId           Int?
+  storeId          Int?    @unique
+  store            Store?  @relation("StoreLocation", fields: [storeId], references: [id])
+  user             User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  orders           Order[]
+
+  @@index([userId])
+  @@index([storeId])
+  @@map("locations")
+}
+
+model Category {
+  id              Int        @id @default(autoincrement())
+  name            String
+  slug            String     @unique
+  parentId        Int?
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+  parentCategory  Category?  @relation("SubCategories", fields: [parentId], references: [id], onDelete: Restrict)
+  childCategories Category[] @relation("SubCategories")
+  discounts       Discount[]
+  products        Product[]  @relation("ProductCategory")
+  childProducts   Product[]  @relation("ProductChildCategory")
+  parentProducts  Product[]  @relation("ProductParentCategory")
+
+  @@map("categories")
+}
+
+model Product {
+  id               Int         @id @default(autoincrement())
+  name             String
+  slug             String      @unique
+  description      String
+  images           String[]
+  isPublished      Boolean     @default(true)
+  isPreloved       Boolean     @default(true)
+  isActive         Boolean     @default(true)
+  viewCount        Int         @default(0)
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+  sellerId         Int
+  categoryId       Int
+  storeId          Int?
+  childCategoryId  Int?
+  parentCategoryId Int?
+  discounts        Discount[]
+  category         Category    @relation("ProductCategory", fields: [categoryId], references: [id])
+  childCategory    Category?   @relation("ProductChildCategory", fields: [childCategoryId], references: [id], onDelete: Restrict)
+  parentCategory   Category?   @relation("ProductParentCategory", fields: [parentCategoryId], references: [id], onDelete: Restrict)
+  seller           User        @relation(fields: [sellerId], references: [id])
+  store            Store?      @relation(fields: [storeId], references: [id])
+  reviews          Review[]
+  variants         Variant[]
+  wishlist         Wishlist[]
+  promotions       Promotion[] @relation("ProductToPromotion")
+
+  @@index([sellerId, isPublished, isActive])
+  @@index([categoryId])
+  @@index([parentCategoryId])
+  @@index([childCategoryId])
+  @@index([storeId])
+  @@index([slug])
+  @@index([isPublished, isActive, createdAt])
+  @@map("products")
+}
+
+model Variant {
+  id             Int         @id @default(autoincrement())
+  productId      Int
+  sku            String?     @unique
+  price          Int
+  compareAtPrice Int?
+  stock          Int         @default(1)
+  condition      Condition
+  conditionNote  String?
+  isActive       Boolean     @default(true)
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+  height         Int
+  length         Int
+  weight         Int
+  width          Int
+  color          String?
+  size           String?
+  image          String?
+  cartItems      CartItem[]
+  orderItems     OrderItem[]
+  product        Product     @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId, isActive])
+  @@index([sku])
+  @@map("variants")
+}
+
+model Wishlist {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  productId Int
+  createdAt DateTime @default(now())
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, productId])
+  @@index([userId])
+  @@index([productId])
+  @@map("wishlists")
+}
+
+model Cart {
+  id     Int        @id @default(autoincrement())
+  userId Int        @unique
+  items  CartItem[]
+  user   User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("carts")
+}
+
+model CartItem {
+  id        Int      @id @default(autoincrement())
+  cartId    Int
+  variantId Int
+  quantity  Int
+  createdAt DateTime @default(now())
+  cart      Cart     @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  variant   Variant  @relation(fields: [variantId], references: [id], onDelete: Cascade)
+
+  @@unique([cartId, variantId])
+  @@index([cartId])
+  @@index([variantId])
+  @@map("cart_items")
+}
+
+model Voucher {
+  id          Int            @id @default(autoincrement())
+  code        String         @unique
+  description String?
+  type        VoucherType
+  value       Int
+  maxDiscount Int?
+  minPurchase Int?
+  usageLimit  Int?
+  expiry      DateTime
+  isActive    Boolean        @default(true)
+  name        String
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  storeId     Int?
+  orders      Order[]        @relation("OrderVoucher")
+  usages      VoucherUsage[]
+  store       Store?         @relation(fields: [storeId], references: [id], onDelete: Cascade)
+
+  @@index([code, isActive, expiry])
+  @@index([storeId])
+  @@map("vouchers")
+}
+
+model VoucherUsage {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  voucherId Int
+  usedAt    DateTime @default(now())
+  orderId   Int?     @unique
+  order     Order?   @relation("OrderVoucherUsage")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  voucher   Voucher  @relation(fields: [voucherId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, voucherId])
+  @@index([userId])
+  @@index([voucherId])
+  @@index([orderId])
+  @@map("voucher_usages")
+}
+
+model Review {
+  id           Int      @id @default(autoincrement())
+  rating       Int      @db.SmallInt
+  comment      String?
+  images       String[]
+  productId    Int
+  authorId     Int
+  createdAt    DateTime @default(now())
+  helpfulCount Int      @default(0)
+  isVerified   Boolean  @default(false)
+  updatedAt    DateTime @updatedAt
+  author       User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  product      Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([productId, authorId])
+  @@index([productId, rating])
+  @@index([authorId])
+  @@map("reviews")
+}
+
+model Order {
+  id             Int           @id @default(autoincrement())
+  orderNumber    String        @unique
+  totalAmount    Int
+  itemsAmount    Int
+  shippingCost   Int           @default(0)
+  status         OrderStatus   @default(PENDING)
+  notes          String?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  buyerId        Int
+  locationId     Int
+  discountAmount Int           @default(0)
+  voucherCode    String?
+  voucherId      Int?
+  voucherUsageId Int?          @unique
+  discountId     Int?
+  items          OrderItem[]
+  buyer          User          @relation(fields: [buyerId], references: [id])
+  discount       Discount?     @relation(fields: [discountId], references: [id])
+  location       Location      @relation(fields: [locationId], references: [id])
+  voucher        Voucher?      @relation("OrderVoucher", fields: [voucherId], references: [id])
+  voucherUsage   VoucherUsage? @relation("OrderVoucherUsage", fields: [voucherUsageId], references: [id])
+  payment        Payment?
+  shipment       Shipment?
+
+  @@index([buyerId, status])
+  @@index([status])
+  @@index([createdAt])
+  @@index([orderNumber])
+  @@index([voucherId])
+  @@index([voucherUsageId])
+  @@index([discountId])
+  @@map("orders")
+}
+
+model OrderItem {
+  id             Int     @id @default(autoincrement())
+  quantity       Int
+  price          Int
+  total          Int
+  orderId        Int
+  variantId      Int
+  discountAmount Int     @default(0)
+  order          Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  variant        Variant @relation(fields: [variantId], references: [id])
+
+  @@index([orderId])
+  @@index([variantId])
+  @@map("order_items")
+}
+
+model Payment {
+  id                    Int           @id @default(autoincrement())
+  method                String?
+  amount                Int
+  status                PaymentStatus @default(PENDING)
+  snap_token            String?       @unique
+  snap_redirect_url     String?
+  midtrans_order_id     String        @unique
+  midtrans_tx_id        String?       @unique @map("midtrans_transaction_id")
+  midtrans_payment_type String?
+  midtrans_va_number    String?
+  midtrans_bank         String?
+  midtrans_tx_status    String?       @map("midtrans_transaction_status")
+  midtrans_fraud_status String?
+  gatewayResponse       Json?
+  paidAt                DateTime?
+  expiresAt             DateTime?
+  createdAt             DateTime      @default(now())
+  updatedAt             DateTime      @updatedAt
+  orderId               Int           @unique
+  order                 Order         @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@index([status])
+  @@index([midtrans_order_id])
+  @@index([orderId])
+  @@map("payments")
+}
+
+model Notification {
+  id        Int               @id @default(autoincrement())
+  userId    Int
+  title     String
+  body      String
+  data      Json?
+  isRead    Boolean           @default(false)
+  createdAt DateTime          @default(now())
+  actionUrl String?
+  type      NotificationType?
+  user      User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, isRead])
+  @@index([userId, createdAt])
+  @@index([type])
+  @@map("notifications")
+}
+
+model Shipment {
+  id                    Int            @id @default(autoincrement())
+  courier               String
+  service               String
+  trackingNumber        String?        @unique
+  status                ShipmentStatus @default(AWAITING_PICKUP)
+  biteship_order_id     String?        @unique
+  biteship_courier_code String?
+  biteship_service_code String?
+  estimatedDays         String?
+  shippingCost          Int?           @map("shipping_cost")
+  insuranceCost         Int?           @default(0) @map("insurance_cost")
+  biteshipResponse      Json?
+  trackingHistory       Json[]
+  shippedAt             DateTime?
+  deliveredAt           DateTime?
+  createdAt             DateTime       @default(now())
+  updatedAt             DateTime       @updatedAt
+  orderId               Int            @unique
+  order                 Order          @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@index([trackingNumber])
+  @@index([status])
+  @@index([orderId])
+  @@map("shipments")
+}
+
+model ShippingRate {
+  id                Int      @id @default(autoincrement())
+  originAreaId      String
+  destinationAreaId String
+  courierCode       String
+  serviceCode       String
+  serviceName       String
+  price             Int
+  minWeight         Int
+  maxWeight         Int
+  estimatedDays     String
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@unique([originAreaId, destinationAreaId, courierCode, serviceCode])
+  @@map("shipping_rates")
+}
+
+model Discount {
+  id          Int           @id @default(autoincrement())
+  name        String
+  description String?
+  type        DiscountType
+  value       Int
+  maxDiscount Int?
+  minPurchase Int?
+  scope       DiscountScope
+  isActive    Boolean       @default(true)
+  startDate   DateTime
+  endDate     DateTime
+  categoryId  Int?
+  productId   Int?
+  storeId     Int?
+  usageLimit  Int?
+  usedCount   Int           @default(0)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  category    Category?     @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  product     Product?      @relation(fields: [productId], references: [id], onDelete: Cascade)
+  store       Store?        @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  orders      Order[]
+
+  @@index([scope])
+  @@index([isActive, startDate, endDate])
+  @@index([categoryId])
+  @@index([productId])
+  @@index([storeId])
+  @@index([usedCount])
+  @@map("discounts")
+}
+
+model Promotion {
+  id          Int           @id @default(autoincrement())
+  name        String
+  type        PromotionType
+  description String?
+  discount    Float?
+  startDate   DateTime
+  endDate     DateTime
+  isActive    Boolean       @default(true)
+  storeId     Int
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  store       Store         @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  products    Product[]     @relation("ProductToPromotion")
+
+  @@index([storeId])
+  @@index([startDate, endDate])
+  @@index([isActive])
+  @@map("promotions")
+}
+
+model Badge {
+  id          Int       @id @default(autoincrement())
+  type        BadgeType
+  name        String
+  description String?
+  icon        String?
+  color       String?
+  isActive    Boolean   @default(true)
+  storeId     Int
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  store       Store     @relation(fields: [storeId], references: [id], onDelete: Cascade)
+
+  @@index([storeId])
+  @@index([type, isActive])
+  @@map("badges")
+}
+
 enum UserRole {
   USER
   ADMIN
@@ -102,584 +614,4 @@ enum BadgeType {
   BEST_SELLER
   NEW_STORE
   CUSTOM
-}
-
-model User {
-  id         Int       @id @default(autoincrement())
-  googleId   String?   @unique
-  facebookId String?   @unique
-  firstName  String?
-  lastName   String?
-  email      String    @unique
-  password   String?
-  phone      String?
-  birth      DateTime?
-  role       UserRole  @default(USER)
-  isActive   Boolean   @default(true)
-  isVerified Boolean   @default(false)
-
-  verificationToken       String?
-  verificationTokenExpiry DateTime?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  locations     Location[]
-  products      Product[]
-  reviews       Review[]
-  orders        Order[]
-  cart          Cart?
-  profile       UserProfile?
-  wishlist      Wishlist[]
-  notifications Notification[]
-  store         Store?
-  voucherUsages VoucherUsage[]
-
-  @@index([email])
-  @@index([isActive, isVerified])
-  @@map("users")
-}
-
-model UserProfile {
-  id     Int     @id @default(autoincrement())
-  avatar String?
-  banner String?
-  bio    String?
-  gender Gender?
-
-  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId Int  @unique
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@map("user_profiles")
-}
-
-model Store {
-  id         Int     @id @default(autoincrement())
-  name       String
-  slug       String  @unique
-  isActive   Boolean @default(true)
-  isVerified Boolean @default(false)
-
-  totalProducts Int    @default(0)
-  totalSales    Int    @default(0)
-  rating        Float? @db.Real
-
-  profile  StoreProfile?
-  user     User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId   Int           @unique
-  products Product[]
-
-  location   Location? @relation("StoreLocation")
-  locationId Int?      @unique
-
-  discounts    Discount[]
-  promotions   Promotion[]
-  badges       Badge[]
-  vouchers     Voucher[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([userId])
-  @@index([slug])
-  @@index([isActive, isVerified])
-  @@map("store")
-}
-
-model StoreProfile {
-  id          Int     @id @default(autoincrement())
-  avatar      String?
-  banner      String?
-  bio         String?
-  operational String?
-
-  store   Store @relation(fields: [storeId], references: [id], onDelete: Cascade)
-  storeId Int   @unique
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@map("store_profiles")
-}
-
-model Location {
-  id          Int     @id @default(autoincrement())
-  label       String
-  recipient   String
-  phone       String
-  province    String
-  city        String
-  district    String
-  subDistrict String
-  postalCode  String
-  address     String  @db.Text
-  isDefault   Boolean @default(false)
-
-  latitude         Float?
-  longitude        Float?
-  biteship_area_id String?
-
-  user   User? @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId Int?
-
-  store   Store? @relation("StoreLocation", fields: [storeId], references: [id], onDelete: SetNull)
-  storeId Int?   @unique
-
-  orders Order[]
-
-  @@index([userId])
-  @@index([storeId])
-  @@map("locations")
-}
-
-model Category {
-  id   Int    @id @default(autoincrement())
-  name String
-  slug String @unique
-
-  products       Product[] @relation("ProductCategory")
-  parentProducts Product[] @relation("ProductParentCategory")
-  childProducts  Product[] @relation("ProductChildCategory")
-
-  parentId        Int?
-  parentCategory  Category?  @relation("SubCategories", fields: [parentId], references: [id], onDelete: Restrict)
-  childCategories Category[] @relation("SubCategories")
-
-  discounts Discount[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@map("categories")
-}
-
-model Product {
-  id          Int      @id @default(autoincrement())
-  name        String
-  slug        String   @unique
-  description String   @db.Text
-  images      String[]
-  isPublished Boolean  @default(true)
-  isPreloved  Boolean  @default(true)
-  isActive    Boolean  @default(true)
-  viewCount   Int      @default(0)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  seller   User @relation(fields: [sellerId], references: [id], onDelete: Restrict)
-  sellerId Int
-
-  category   Category @relation("ProductCategory", fields: [categoryId], references: [id], onDelete: Restrict)
-  categoryId Int
-
-  parentCategory   Category? @relation("ProductParentCategory", fields: [parentCategoryId], references: [id], onDelete: Restrict)
-  parentCategoryId Int?
-
-  childCategory   Category? @relation("ProductChildCategory", fields: [childCategoryId], references: [id], onDelete: Restrict)
-  childCategoryId Int?
-
-  store   Store? @relation(fields: [storeId], references: [id], onDelete: SetNull)
-  storeId Int?
-
-  discounts   Discount[]
-  promotions  Promotion[]
-
-  variants Variant[]
-  reviews  Review[]
-  wishlist Wishlist[]
-
-  @@index([sellerId, isPublished, isActive])
-  @@index([categoryId])
-  @@index([parentCategoryId])
-  @@index([childCategoryId])
-  @@index([storeId])
-  @@index([slug])
-  @@index([isPublished, isActive, createdAt])
-  @@map("products")
-}
-
-model Variant {
-  id        Int     @id @default(autoincrement())
-  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
-  productId Int
-
-  size  String?
-  color String?
-  sku   String? @unique
-  image String?
-
-  price          Int
-  compareAtPrice Int?
-
-  stock         Int       @default(1)
-  condition     Condition
-  conditionNote String?
-
-  weight Int
-  length Int
-  width  Int
-  height Int
-
-  isActive  Boolean  @default(true)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  orderItems OrderItem[]
-  cartItems  CartItem[]
-
-  @@index([productId, isActive])
-  @@index([sku])
-  @@map("variants")
-}
-
-model Wishlist {
-  id        Int      @id @default(autoincrement())
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    Int
-  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
-  productId Int
-  createdAt DateTime @default(now())
-
-  @@unique([userId, productId])
-  @@index([userId])
-  @@index([productId])
-  @@map("wishlists")
-}
-
-model Cart {
-  id     Int        @id @default(autoincrement())
-  user   User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId Int        @unique
-  items  CartItem[]
-
-  @@map("carts")
-}
-
-model CartItem {
-  id        Int      @id @default(autoincrement())
-  cart      Cart     @relation(fields: [cartId], references: [id], onDelete: Cascade)
-  cartId    Int
-  variant   Variant  @relation(fields: [variantId], references: [id], onDelete: Cascade)
-  variantId Int
-  quantity  Int
-  createdAt DateTime @default(now())
-
-  @@unique([cartId, variantId])
-  @@index([cartId])
-  @@index([variantId])
-  @@map("cart_items")
-}
-
-model Voucher {
-  id          Int         @id @default(autoincrement())
-  code        String      @unique
-  name        String
-  description String?
-  type        VoucherType
-  value       Int
-  maxDiscount Int?
-  minPurchase Int?
-  usageLimit  Int?
-  expiry      DateTime
-  isActive    Boolean     @default(true)
-
-  store   Store? @relation(fields: [storeId], references: [id], onDelete: Cascade)
-  storeId Int?
-
-  usages VoucherUsage[]
-  orders Order[] @relation("OrderVoucher")
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([code, isActive, expiry])
-  @@index([storeId])
-  @@map("vouchers")
-}
-
-model VoucherUsage {
-  id        Int      @id @default(autoincrement())
-  userId    Int
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  voucherId Int
-  voucher   Voucher  @relation(fields: [voucherId], references: [id], onDelete: Cascade)
-  usedAt    DateTime @default(now())
-
-  order   Order? @relation("OrderVoucherUsage")
-  orderId Int?   @unique
-
-  @@unique([userId, voucherId])
-  @@index([userId])
-  @@index([voucherId])
-  @@index([orderId])
-  @@map("voucher_usages")
-}
-
-model Review {
-  id      Int      @id @default(autoincrement())
-  rating  Int      @db.SmallInt
-  comment String?  @db.Text
-  images  String[]
-
-  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
-  productId Int
-  author    User    @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  authorId  Int
-
-  isVerified  Boolean @default(false)
-  helpfulCount Int     @default(0)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@unique([productId, authorId])
-  @@index([productId, rating])
-  @@index([authorId])
-  @@map("reviews")
-}
-
-model Order {
-  id             Int         @id @default(autoincrement())
-  orderNumber    String      @unique
-  totalAmount    Int
-  itemsAmount    Int
-  shippingCost   Int         @default(0)
-  discountAmount Int         @default(0)
-  voucherCode    String?
-  status         OrderStatus @default(PENDING)
-  notes          String?     @db.Text
-  createdAt      DateTime    @default(now())
-  updatedAt      DateTime    @updatedAt
-
-  buyer      User     @relation(fields: [buyerId], references: [id], onDelete: Restrict)
-  buyerId    Int
-  location   Location @relation(fields: [locationId], references: [id], onDelete: Restrict)
-  locationId Int
-
-  voucherId Int?
-  voucher   Voucher? @relation("OrderVoucher", fields: [voucherId], references: [id], onDelete: SetNull)
-
-  voucherUsageId Int?   @unique
-  voucherUsage   VoucherUsage? @relation("OrderVoucherUsage", fields: [voucherUsageId], references: [id], onDelete: SetNull)
-
-  discountId Int?
-  discount   Discount? @relation(fields: [discountId], references: [id], onDelete: SetNull)
-
-  items    OrderItem[]
-  payment  Payment?
-  shipment Shipment?
-
-  @@index([buyerId, status])
-  @@index([status])
-  @@index([createdAt])
-  @@index([orderNumber])
-  @@index([voucherId])
-  @@index([voucherUsageId])
-  @@index([discountId])
-  @@map("orders")
-}
-
-model OrderItem {
-  id            Int @id @default(autoincrement())
-  quantity      Int
-  price         Int
-  total         Int
-  discountAmount Int @default(0)
-
-  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  orderId   Int
-  variant   Variant @relation(fields: [variantId], references: [id], onDelete: Restrict)
-  variantId Int
-
-  @@index([orderId])
-  @@index([variantId])
-  @@map("order_items")
-}
-
-model Payment {
-  id     Int           @id @default(autoincrement())
-  method String?
-  amount Int
-  status PaymentStatus @default(PENDING)
-
-  snap_token            String? @unique
-  snap_redirect_url     String?
-  midtrans_order_id     String  @unique
-  midtrans_tx_id        String? @unique @map("midtrans_transaction_id")
-  midtrans_payment_type String?
-  midtrans_va_number    String?
-  midtrans_bank         String?
-  midtrans_tx_status    String? @map("midtrans_transaction_status")
-  midtrans_fraud_status String?
-
-  gatewayResponse Json?
-
-  paidAt    DateTime?
-  expiresAt DateTime?
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-
-  order   Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  orderId Int   @unique
-
-  @@index([status])
-  @@index([midtrans_order_id])
-  @@index([orderId])
-  @@map("payments")
-}
-
-model Notification {
-  id        Int             @id @default(autoincrement())
-  user      User            @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    Int
-  title     String
-  body      String          @db.Text
-  type      NotificationType?
-  actionUrl String?
-  data      Json?
-  isRead    Boolean         @default(false)
-  createdAt DateTime        @default(now())
-
-  @@index([userId, isRead])
-  @@index([userId, createdAt])
-  @@index([type])
-  @@map("notifications")
-}
-
-model Shipment {
-  id             Int            @id @default(autoincrement())
-  courier        String
-  service        String
-  trackingNumber String?        @unique
-  status         ShipmentStatus @default(AWAITING_PICKUP)
-
-  biteship_order_id     String? @unique
-  biteship_courier_code String?
-  biteship_service_code String?
-
-  estimatedDays String?
-  shippingCost  Int?    @map("shipping_cost")
-  insuranceCost Int?    @default(0) @map("insurance_cost")
-
-  biteshipResponse Json?
-  trackingHistory  Json[]
-
-  shippedAt   DateTime?
-  deliveredAt DateTime?
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-
-  order   Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  orderId Int   @unique
-
-  @@index([trackingNumber])
-  @@index([status])
-  @@index([orderId])
-  @@map("shipments")
-}
-
-model ShippingRate {
-  id                Int      @id @default(autoincrement())
-  originAreaId      String
-  destinationAreaId String
-  courierCode       String
-  serviceCode       String
-  serviceName       String
-  price             Int
-  minWeight         Int
-  maxWeight         Int
-  estimatedDays     String
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
-
-  @@unique([originAreaId, destinationAreaId, courierCode, serviceCode])
-  @@map("shipping_rates")
-}
-
-model Discount {
-  id          Int           @id @default(autoincrement())
-  name        String
-  description String?        @db.Text
-  type        DiscountType
-  value       Int
-  maxDiscount Int?
-  minPurchase Int?
-  scope       DiscountScope
-  isActive    Boolean        @default(true)
-
-  startDate DateTime
-  endDate   DateTime
-
-  categoryId Int?
-  category   Category? @relation(fields: [categoryId], references: [id], onDelete: Cascade)
-
-  productId Int?
-  product   Product? @relation(fields: [productId], references: [id], onDelete: Cascade)
-
-  storeId Int?
-  store    Store? @relation(fields: [storeId], references: [id], onDelete: Cascade)
-
-  usageLimit Int?
-  usedCount  Int      @default(0)
-
-  orders Order[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([scope])
-  @@index([isActive, startDate, endDate])
-  @@index([categoryId])
-  @@index([productId])
-  @@index([storeId])
-  @@index([usedCount])
-  @@map("discounts")
-}
-
-model Promotion {
-  id          Int            @id @default(autoincrement())
-  name        String
-  type        PromotionType
-  description String?        @db.Text
-  discount    Float?
-  startDate   DateTime
-  endDate     DateTime
-  isActive    Boolean        @default(true)
-
-  store   Store @relation(fields: [storeId], references: [id], onDelete: Cascade)
-  storeId Int
-
-  products Product[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([storeId])
-  @@index([startDate, endDate])
-  @@index([isActive])
-  @@map("promotions")
-}
-
-model Badge {
-  id          Int       @id @default(autoincrement())
-  type        BadgeType
-  name        String
-  description String?    @db.Text
-  icon        String?
-  color       String?
-  isActive    Boolean   @default(true)
-
-  store   Store @relation(fields: [storeId], references: [id], onDelete: Cascade)
-  storeId Int
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([storeId])
-  @@index([type, isActive])
-  @@map("badges")
 }
