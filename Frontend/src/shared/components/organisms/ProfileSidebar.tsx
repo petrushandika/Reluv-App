@@ -17,7 +17,7 @@ import {
 } from "lucide-react";
 import { useAuthStore } from "@/features/auth/store/auth.store";
 import { User as UserType } from "@/features/auth/types";
-import { updateMyProfileAvatar } from "@/features/user/api/userApi";
+import { updateMyProfileAvatar, getMe } from "@/features/user/api/userApi";
 import { toast } from "sonner";
 
 interface ProfileMenuItem {
@@ -88,10 +88,30 @@ const LogoutConfirmationModal = ({
 
 const ProfileSidebar: React.FC<ProfileSidebarProps> = ({ user }) => {
   const pathname = usePathname();
-  const { user: authUser, logout, fetchAndSetUser } = useAuthStore();
+  const { user: authUser, logout, fetchAndSetUser, token } = useAuthStore();
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
+  const [localUser, setLocalUser] = useState<UserType | null>(user || null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      if (token) {
+        try {
+          const userData = await getMe();
+          setLocalUser(userData);
+        } catch (error) {
+          console.error("Failed to fetch user data in ProfileSidebar:", error);
+        }
+      }
+    };
+
+    if (!user && token) {
+      fetchUserData();
+    } else if (user) {
+      setLocalUser(user);
+    }
+  }, [user, token]);
 
   const menuItems: ProfileMenuItem[] = [
     {
@@ -124,15 +144,14 @@ const ProfileSidebar: React.FC<ProfileSidebarProps> = ({ user }) => {
     window.location.href = "/";
   };
 
-  const displayName = user
-    ? `${user.firstName || ""} ${user.lastName || ""}`.trim() || "User"
-    : authUser
-    ? `${authUser.firstName || ""} ${authUser.lastName || ""}`.trim() || "User"
+  const currentUser = localUser || user || authUser;
+  
+  const displayName = currentUser
+    ? `${currentUser.firstName || ""} ${currentUser.lastName || ""}`.trim() || "User"
     : "User";
 
-  const displayEmail = user?.email || authUser?.email || "";
+  const displayEmail = currentUser?.email || "";
 
-  const currentUser = user || authUser;
   const avatarUrl = currentUser?.profile?.avatar;
 
   const handleAvatarClick = () => {
@@ -161,16 +180,17 @@ const ProfileSidebar: React.FC<ProfileSidebarProps> = ({ user }) => {
 
     setIsUploadingAvatar(true);
     try {
-      await updateMyProfileAvatar(file);
+      const updatedUser = await updateMyProfileAvatar(file);
       await fetchAndSetUser();
+      setLocalUser(updatedUser);
       toast.success("Avatar Updated", {
         description: "Your profile avatar has been updated successfully",
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Failed to update avatar:", error);
+      const errorMessage = error instanceof Error ? error.message : "Failed to update avatar. Please try again.";
       toast.error("Upload Failed", {
-        description:
-          error?.message || "Failed to update avatar. Please try again.",
+        description: errorMessage,
       });
     } finally {
       setIsUploadingAvatar(false);
