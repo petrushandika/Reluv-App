@@ -245,7 +245,7 @@ async function main() {
       createdUsers.push(user);
     }
     let sellerUsers = createdUsers.filter((u) => u.role === UserRole.USER);
-    
+
     while (sellerUsers.length < 5) {
       const newUser = await prisma.user.create({
         data: {
@@ -322,11 +322,11 @@ async function main() {
       rating: number | null;
       locationId: number | null;
     }> = [];
-    
+
     for (let i = 0; i < storesData.length; i++) {
       const storeSeed = storesData[i];
       const seller = sellerUsers[i];
-      
+
       const storeLocation = await prisma.location.create({
         data: {
           ...storeSeed.location,
@@ -334,7 +334,7 @@ async function main() {
           phone: seller.phone || storeSeed.location.phone,
         },
       });
-      
+
       const store = await prisma.store.create({
         data: {
           name: storeSeed.name,
@@ -354,8 +354,8 @@ async function main() {
       console.log(`🏪 Created store: ${store.name} (${store.slug})`);
     }
 
-
     console.log('Creating products and variants from JSON files...');
+    const usedSlugs = new Set<string>();
     for (let i = 0; i < productSeedData.length; i++) {
       const product = productSeedData[i];
       const categoryId = product.isForMen ? mensCategory.id : womensCategory.id;
@@ -363,7 +363,13 @@ async function main() {
       const store = createdStores[storeIndex];
       const seller = sellerUsers[storeIndex];
       const productName = product.name.trim();
-      const newSlug = `${store.slug}-${product.slug}-${i + 1}`;
+      let newSlug = product.slug;
+
+      if (usedSlugs.has(newSlug)) {
+        const randomStr = Math.random().toString(36).substring(2, 8);
+        newSlug = `${newSlug}-${randomStr}`;
+      }
+      usedSlugs.add(newSlug);
 
       const variantsToCreate = variantsData.find(
         (v) => v.key === product.variantsKey,
@@ -375,26 +381,56 @@ async function main() {
         continue;
       }
 
-      await prisma.product.create({
-        data: {
-          name: productName,
-          slug: newSlug,
-          description: product.description,
-          images: product.images,
-          seller: { connect: { id: seller.id } },
-          category: { connect: { id: categoryId } },
-          store: { connect: { id: store.id } },
-          variants: {
-            create: variantsToCreate.map((v) => ({
-              ...v,
-              condition: v.condition as Condition,
-            })),
+      try {
+        await prisma.product.create({
+          data: {
+            name: productName,
+            slug: newSlug,
+            description: product.description,
+            images: product.images,
+            seller: { connect: { id: seller.id } },
+            category: { connect: { id: categoryId } },
+            store: { connect: { id: store.id } },
+            variants: {
+              create: variantsToCreate.map((v) => ({
+                ...v,
+                condition: v.condition as Condition,
+              })),
+            },
           },
-        },
-      });
-      console.log(
-        `📦 Created product: "${productName}" in ${store.name} with ${variantsToCreate.length} variants.`,
-      );
+        });
+        console.log(
+          `📦 Created product: "${productName}" in ${store.name} with ${variantsToCreate.length} variants.`,
+        );
+      } catch (error: any) {
+        if (error.code === 'P2002' && error.meta?.target?.includes('slug')) {
+          const randomStr = Math.random().toString(36).substring(2, 8);
+          newSlug = `${product.slug}-${randomStr}`;
+          usedSlugs.add(newSlug);
+          await prisma.product.create({
+            data: {
+              name: productName,
+              slug: newSlug,
+              description: product.description,
+              images: product.images,
+              seller: { connect: { id: seller.id } },
+              category: { connect: { id: categoryId } },
+              store: { connect: { id: store.id } },
+              variants: {
+                create: variantsToCreate.map((v) => ({
+                  ...v,
+                  condition: v.condition as Condition,
+                })),
+              },
+            },
+          });
+          console.log(
+            `📦 Created product: "${productName}" in ${store.name} with ${variantsToCreate.length} variants (slug: ${newSlug}).`,
+          );
+        } else {
+          throw error;
+        }
+      }
     }
 
     console.log('Creating vouchers from vouchers.json...');
@@ -402,12 +438,15 @@ async function main() {
     for (let i = 0; i < createdStores.length; i++) {
       const store = createdStores[i];
       const startIndex = i * vouchersPerStore;
-      const storeVouchers = vouchersData.slice(startIndex, startIndex + vouchersPerStore);
-      
+      const storeVouchers = vouchersData.slice(
+        startIndex,
+        startIndex + vouchersPerStore,
+      );
+
       for (const voucherData of storeVouchers) {
         const expiryDate = new Date();
         expiryDate.setMonth(expiryDate.getMonth() + voucherData.expiryMonths);
-        
+
         await prisma.voucher.create({
           data: {
             code: voucherData.code,
@@ -424,14 +463,16 @@ async function main() {
           },
         });
       }
-      console.log(`🎫 Created ${storeVouchers.length} vouchers for ${store.name}`);
+      console.log(
+        `🎫 Created ${storeVouchers.length} vouchers for ${store.name}`,
+      );
     }
 
     console.log('Creating badges from badges.json...');
     for (const badgeData of badgesData) {
       const store = createdStores[badgeData.storeIndex];
       if (!store) continue;
-      
+
       await prisma.badge.create({
         data: {
           type: badgeData.type as BadgeType,
@@ -449,16 +490,16 @@ async function main() {
     for (const promotionData of promotionsData) {
       const store = createdStores[promotionData.storeIndex];
       if (!store) continue;
-      
+
       const startDate = new Date();
       const endDate = new Date();
       endDate.setMonth(endDate.getMonth() + promotionData.durationMonths);
-      
+
       const products = await prisma.product.findMany({
         where: { storeId: store.id },
         take: 5,
       });
-      
+
       await prisma.promotion.create({
         data: {
           name: promotionData.name,
@@ -479,17 +520,19 @@ async function main() {
 
     console.log('Creating discounts from discounts.json...');
     const allProducts = await prisma.product.findMany({ take: 10 });
-    
+
     for (const discountData of discountsData) {
       const startDate = new Date();
       let endDate = new Date();
-      
+
       if (discountData.durationMonths) {
         endDate.setMonth(endDate.getMonth() + discountData.durationMonths);
       } else if (discountData.durationDays) {
-        endDate = new Date(Date.now() + discountData.durationDays * 24 * 60 * 60 * 1000);
+        endDate = new Date(
+          Date.now() + discountData.durationDays * 24 * 60 * 60 * 1000,
+        );
       }
-      
+
       const discountCreateData: any = {
         name: discountData.name,
         description: discountData.description,
@@ -503,13 +546,19 @@ async function main() {
         endDate,
         usageLimit: discountData.usageLimit,
       };
-      
-      if (discountData.scope === 'STORE' && discountData.storeIndex !== undefined) {
+
+      if (
+        discountData.scope === 'STORE' &&
+        discountData.storeIndex !== undefined
+      ) {
         const store = createdStores[discountData.storeIndex];
         if (store) {
           discountCreateData.store = { connect: { id: store.id } };
         }
-      } else if (discountData.scope === 'CATEGORY' && discountData.categorySlug) {
+      } else if (
+        discountData.scope === 'CATEGORY' &&
+        discountData.categorySlug
+      ) {
         const category = await prisma.category.findUnique({
           where: { slug: discountData.categorySlug },
         });
@@ -517,10 +566,13 @@ async function main() {
           discountCreateData.category = { connect: { id: category.id } };
         }
       } else if (discountData.scope === 'PRODUCT' && allProducts.length > 0) {
-        const productIndex = discountsData.indexOf(discountData) % allProducts.length;
-        discountCreateData.product = { connect: { id: allProducts[productIndex].id } };
+        const productIndex =
+          discountsData.indexOf(discountData) % allProducts.length;
+        discountCreateData.product = {
+          connect: { id: allProducts[productIndex].id },
+        };
       }
-      
+
       await prisma.discount.create({ data: discountCreateData });
       console.log(`💰 Created discount: ${discountData.name}`);
     }
