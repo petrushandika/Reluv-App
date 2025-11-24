@@ -210,6 +210,108 @@ export class ProductsService {
     };
   }
 
+  async findOneBySlug(slug: string) {
+    const product = await this.prisma.product.findUnique({
+      where: { slug },
+      select: {
+        id: true,
+        name: true,
+        slug: true,
+        description: true,
+        images: true,
+        isPreloved: true,
+        isPublished: true,
+        viewCount: true,
+        createdAt: true,
+        updatedAt: true,
+        seller: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+          },
+        },
+        category: {
+          select: {
+            id: true,
+            name: true,
+            slug: true,
+          },
+        },
+        parentCategory: {
+          select: {
+            id: true,
+            name: true,
+            slug: true,
+          },
+        },
+        childCategory: {
+          select: {
+            id: true,
+            name: true,
+            slug: true,
+          },
+        },
+        store: {
+          select: {
+            id: true,
+            name: true,
+            slug: true,
+            isVerified: true,
+          },
+        },
+        variants: {
+          where: { isActive: true },
+          select: {
+            id: true,
+            size: true,
+            color: true,
+            sku: true,
+            image: true,
+            price: true,
+            compareAtPrice: true,
+            stock: true,
+            condition: true,
+            conditionNote: true,
+            weight: true,
+            length: true,
+            width: true,
+            height: true,
+          },
+        },
+        reviews: {
+          select: {
+            id: true,
+            rating: true,
+            comment: true,
+            images: true,
+            createdAt: true,
+            author: {
+              select: {
+                id: true,
+                firstName: true,
+                lastName: true,
+                profile: {
+                  select: {
+                    avatar: true,
+                  },
+                },
+              },
+            },
+          },
+          orderBy: { createdAt: 'desc' },
+        },
+      },
+    });
+    if (!product) {
+      throw new NotFoundException(`Product with slug ${slug} not found`);
+    }
+    this.prisma.product
+      .update({ where: { slug }, data: { viewCount: { increment: 1 } } })
+      .catch(() => {});
+    return product;
+  }
+
   async findOne(id: number) {
     const product = await this.prisma.product.findUnique({
       where: { id },

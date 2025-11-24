@@ -28,9 +28,11 @@ import { formatPrice } from "@/shared/utils/format";
 const ProductDetail = () => {
   const params = useParams();
   const router = useRouter();
-  const productId = params?.id ? parseInt(params.id as string, 10) : null;
+  const productSlug = params?.slug
+    ? decodeURIComponent(params.slug as string)
+    : null;
 
-  const { product, isLoading, error } = useProductDetail(productId);
+  const { product, isLoading, error } = useProductDetail(productSlug);
   const { recommendedProducts, isLoadingRecommended } = useProduct({
     limit: 10,
   });
@@ -53,6 +55,11 @@ const ProductDetail = () => {
     product ? state.items.some((item) => item.productId === product.id) : false
   );
 
+  const allImages =
+    product?.images && Array.isArray(product.images) ? product.images : [];
+  const maxImages = 9;
+  const displayImages = allImages.slice(0, maxImages);
+
   useEffect(() => {
     if (product && product.images && product.images.length > 1) {
       product.images.slice(1, 4).forEach((url) => {
@@ -65,19 +72,63 @@ const ProductDetail = () => {
     }
   }, [product]);
 
+  useEffect(() => {
+    if (
+      product &&
+      displayImages.length > 0 &&
+      selectedImageIndex >= displayImages.length
+    ) {
+      setSelectedImageIndex(0);
+    }
+  }, [displayImages.length, selectedImageIndex, product]);
+
+  useEffect(() => {
+    if (product && product.variants && product.variants.length > 0) {
+      if (selectedVariantIndex >= product.variants.length) {
+        setSelectedVariantIndex(0);
+      }
+    }
+  }, [product?.variants?.length, selectedVariantIndex, product]);
+
   if (isLoading) {
     return <ProductDetailSkeleton />;
   }
 
-  if (error || !product) {
+  if (error || (!isLoading && !product)) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-white dark:bg-gray-900">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-800 dark:text-white mb-4">
             Product Not Found
           </h1>
-          <p className="text-gray-600 dark:text-gray-300">
+          <p className="text-gray-600 dark:text-gray-300 mb-4">
             The product you`re looking for doesn`t exist or could not be loaded.
+          </p>
+          {error && (
+            <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
+              Error: {error}
+            </p>
+          )}
+          <button
+            onClick={() => router.push("/")}
+            className="px-4 py-2 bg-sky-600 text-white rounded-lg hover:bg-sky-700 transition-colors cursor-pointer"
+          >
+            Go to Home
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (!product || !product.variants || product.variants.length === 0) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-white dark:bg-gray-900">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-gray-800 dark:text-white mb-4">
+            Product Not Available
+          </h1>
+          <p className="text-gray-600 dark:text-gray-300">
+            This product is currently not available.
           </p>
         </div>
       </div>
@@ -85,7 +136,7 @@ const ProductDetail = () => {
   }
 
   const selectedVariant = product.variants[selectedVariantIndex];
-  const installmentPrice = selectedVariant.price / 12;
+  const installmentPrice = selectedVariant ? selectedVariant.price / 12 : 0;
 
   const nextImage = () => {
     setIsHovering(false);
@@ -363,7 +414,7 @@ const ProductDetail = () => {
                   )}
                 </div>
                 <div className="flex items-center flex-wrap gap-2 text-xs sm:text-sm">
-                  <div className="w-3 h-3 sm:w-4 sm:h-4 bg-sky-600 dark:bg-sky-500 rounded-sm flex items-center justify-center flex-shrink-0">
+                  <div className="w-3 h-3 sm:w-4 sm:h-4 bg-sky-600 dark:bg-sky-500 rounded-sm flex items-center justify-center shrink-0">
                     <span className="text-[10px] sm:text-xs text-white font-bold">
                       ✓
                     </span>
@@ -455,7 +506,7 @@ const ProductDetail = () => {
                   >
                     <Minus className="w-4 h-4" />
                   </button>
-                  <span className="px-4 sm:px-5 text-base sm:text-lg font-semibold text-gray-800 dark:text-white min-w-[2rem] text-center">
+                  <span className="px-4 sm:px-5 text-base sm:text-lg font-semibold text-gray-800 dark:text-white min-w-8 text-center">
                     {quantity}
                   </span>
                   <button
@@ -582,7 +633,7 @@ const ProductDetail = () => {
                         "https://placehold.co/48x48/e2e8f0/e2e8f0?text=Store"
                       }
                       alt={product.store?.name || "Store"}
-                      className="w-10 h-10 sm:w-12 sm:h-12 object-contain rounded-md flex-shrink-0"
+                      className="w-10 h-10 sm:w-12 sm:h-12 object-contain rounded-md shrink-0"
                     />
                     <div className="flex-1 min-w-0">
                       <p className="font-semibold text-sm sm:text-base text-gray-800 dark:text-white truncate">

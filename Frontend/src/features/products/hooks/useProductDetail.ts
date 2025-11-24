@@ -2,17 +2,17 @@
 
 import { useState, useEffect } from "react";
 import { Product } from "../types";
-import { getProductById } from "../api/productsApi";
+import { getProductBySlug } from "../api/productsApi";
 
-export const useProductDetail = (id: number | null) => {
+export const useProductDetail = (slug: string | null) => {
   const [product, setProduct] = useState<Product | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!id) {
+    if (!slug) {
       setIsLoading(false);
-      setError("Product ID is missing.");
+      setError("Product slug is missing.");
       return;
     }
 
@@ -20,18 +20,23 @@ export const useProductDetail = (id: number | null) => {
       setIsLoading(true);
       setError(null);
       try {
-        const productData = await getProductById(id);
+        const productData = await getProductBySlug(slug);
+        if (!productData) {
+          throw new Error("Product data is empty");
+        }
         setProduct(productData);
-      } catch (err) {
-        console.error("Failed to fetch product:", err);
-        setError("Product not found or failed to load.");
+      } catch (err: any) {
+        console.error("Failed to fetch product:", slug, err);
+        const errorMessage = err?.message || "Product not found or failed to load.";
+        setError(errorMessage);
+        setProduct(null);
       } finally {
         setIsLoading(false);
       }
     };
 
     fetchProduct();
-  }, [id]);
+  }, [slug]);
 
   return { product, isLoading, error };
 };

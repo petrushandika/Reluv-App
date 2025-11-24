@@ -101,7 +101,7 @@ const Wishlist = () => {
                   className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-lg overflow-hidden border border-gray-200/30 dark:border-gray-700/30 shadow-sm"
                 >
                   <div className="relative group/card">
-                    <Link href={`/product/${product.id}`}>
+                    <Link href={`/product/${product.slug}`}>
                       <div className="bg-gray-50 dark:bg-gray-700 overflow-hidden cursor-pointer aspect-square">
                         <img
                           src={imageUrl}
@@ -139,7 +139,7 @@ const Wishlist = () => {
                   </div>
 
                   <div className="p-2.5 sm:p-3 md:p-4">
-                    <Link href={`/product/${product.id}`}>
+                    <Link href={`/product/${product.slug}`}>
                       <div className="text-left cursor-pointer">
                         <p className="font-bold text-xs sm:text-sm text-gray-800 dark:text-white mb-0.5 sm:mb-1 glossy-text-strong">
                           {product.store?.name || "Reluv"}

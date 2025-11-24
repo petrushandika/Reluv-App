@@ -26,6 +26,23 @@ export const getProducts = async (query?: ProductQuery): Promise<Product[]> => {
   }
 };
 
+export const getProductBySlug = async (slug: string): Promise<Product> => {
+  try {
+    const encodedSlug = encodeURIComponent(slug);
+    const response = await api.get<Product>(`/products/slug/${encodedSlug}`);
+    if (!response || !response.data) {
+      throw new Error("Product not found");
+    }
+    return response.data;
+  } catch (error: any) {
+    console.error("Failed to fetch product by slug:", slug, error);
+    if (error.response?.status === 404) {
+      throw new Error("Product not found");
+    }
+    throw new Error(error.message || "Unable to load product.");
+  }
+};
+
 export const getProductById = async (id: number): Promise<Product> => {
   try {
     const response = await api.get<Product>(`/products/${id}`);

@@ -1000,10 +1000,10 @@ const Checkout = () => {
                       </label>
                       <input
                         type="text"
-                        id="firstName"
+                      id="firstName"
                         name="firstName"
-                        value={formData.firstName}
-                        onChange={handleInputChange}
+                      value={formData.firstName}
+                      onChange={handleInputChange}
                         disabled={addressMode === "select"}
                         onClick={
                           addressMode === "select"
@@ -1041,10 +1041,10 @@ const Checkout = () => {
                       </label>
                       <input
                         type="text"
-                        id="lastName"
+                      id="lastName"
                         name="lastName"
-                        value={formData.lastName}
-                        onChange={handleInputChange}
+                      value={formData.lastName}
+                      onChange={handleInputChange}
                         disabled={addressMode === "select"}
                         onClick={
                           addressMode === "select"
@@ -1071,8 +1071,8 @@ const Checkout = () => {
                         }
                         placeholder="Doe"
                         className="block w-full pl-4 pr-3 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder:text-base placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200 disabled:bg-gray-50 dark:disabled:bg-gray-700 disabled:cursor-not-allowed disabled:opacity-60"
-                      />
-                    </div>
+                    />
+                  </div>
                   </div>
                   <div>
                     <label
@@ -1089,11 +1089,11 @@ const Checkout = () => {
                         />
                       </div>
                       <input
-                        type="email"
+                    type="email"
                         id="email"
                         name="email"
-                        value={formData.email}
-                        onChange={handleInputChange}
+                    value={formData.email}
+                    onChange={handleInputChange}
                         placeholder="you@example.com"
                         className="block w-full pl-10 pr-3 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder:text-base placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200"
                       />
@@ -1114,11 +1114,11 @@ const Checkout = () => {
                         />
                       </div>
                       <input
-                        type="tel"
+                    type="tel"
                         id="phone"
                         name="phone"
-                        value={formData.phone}
-                        onChange={handleInputChange}
+                    value={formData.phone}
+                    onChange={handleInputChange}
                         disabled={addressMode === "select"}
                         onClick={
                           addressMode === "select"
@@ -1269,13 +1269,13 @@ const Checkout = () => {
                         </label>
                         <input
                           type="text"
-                          id="address"
+                    id="address"
                           name="address"
-                          value={formData.address}
-                          onChange={handleInputChange}
+                    value={formData.address}
+                    onChange={handleInputChange}
                           placeholder="Sudirman St. No. 52-53"
                           className="block w-full pl-4 pr-3 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder:text-base placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200"
-                        />
+                  />
                       </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     <FormSelect
@@ -1355,10 +1355,10 @@ const Checkout = () => {
                       </label>
                       <input
                         type="text"
-                        id="zip"
+                      id="zip"
                         name="zip"
-                        value={formData.zip}
-                        onChange={handleInputChange}
+                      value={formData.zip}
+                      onChange={handleInputChange}
                         placeholder="12190"
                         className="block w-full pl-4 pr-3 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder:text-base placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200"
                       />

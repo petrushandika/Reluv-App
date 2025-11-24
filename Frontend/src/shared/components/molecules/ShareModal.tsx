@@ -24,7 +24,7 @@ const ShareModal = ({ isOpen, onClose, product }: ShareModalProps) => {
 
   const productUrl =
     typeof window !== "undefined"
-      ? `${window.location.origin}/products/${product.id}`
+      ? `${window.location.origin}/product/${product.slug}`
       : "";
   const shareText = encodeURIComponent(
     `Check out this amazing product: ${product.name} on Reluv!`

@@ -57,7 +57,7 @@ const ProductCard = ({ product, containerClassName }: ProductCardProps) => {
   return (
     <div className={containerClassName || defaultClasses}>
       <div className="relative group/card">
-        <Link href={`/product/${product.id}`} prefetch={true}>
+        <Link href={`/product/${product.slug}`} prefetch={true}>
           <div className="bg-gray-50/90 dark:bg-gray-800/90 backdrop-blur-sm rounded overflow-hidden cursor-pointer aspect-square border border-gray-200/30 dark:border-gray-700/30 shadow-sm">
             <img
               src={imageUrl}
@@ -91,7 +91,7 @@ const ProductCard = ({ product, containerClassName }: ProductCardProps) => {
           />
         </button>
       </div>
-      <Link href={`/product/${product.id}`} prefetch={true}>
+      <Link href={`/product/${product.slug}`} prefetch={true}>
         <div className="pt-3 sm:pt-4 text-left cursor-pointer">
           <p className="font-bold text-xs sm:text-sm text-gray-800 dark:text-white glossy-text-strong">
             {storeName}

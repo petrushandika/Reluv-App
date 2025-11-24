@@ -63,6 +63,12 @@ export class ProductsController {
     return this.productsService.findAll(queryDto);
   }
 
+  @Get('slug/:slug')
+  @HttpCode(HttpStatus.OK)
+  findOneBySlug(@Param('slug') slug: string) {
+    return this.productsService.findOneBySlug(slug);
+  }
+
   @Get(':id')
   @HttpCode(HttpStatus.OK)
   findOne(@Param('id', ParseIntPipe) id: number) {

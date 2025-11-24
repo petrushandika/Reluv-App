@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { X } from "lucide-react";
 
 const promoMessages = [
   "❄️ Holiday Season's Here, Shop Your Winterwear Now!",
@@ -28,7 +27,6 @@ const promoMessages = [
 
 const PromoMarquee = () => {
   const [opacity, setOpacity] = useState(1);
-  const [isClosed, setIsClosed] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -47,12 +45,7 @@ const PromoMarquee = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const handleClose = () => {
-    setIsClosed(true);
-    setOpacity(0);
-  };
-
-  if (isClosed || opacity === 0) {
+  if (opacity === 0) {
     return null;
   }
 
@@ -66,7 +59,7 @@ const PromoMarquee = () => {
     >
       <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent animate-shimmer-bg pointer-events-none"></div>
       <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent pointer-events-none"></div>
-      <div className="container mx-auto px-4 sm:px-6 md:px-10 xl:px-20 2xl:px-40 flex items-center justify-between relative z-10">
+      <div className="container mx-auto px-4 sm:px-6 md:px-10 xl:px-20 2xl:px-40 flex items-center relative z-10">
         <div className="flex-1 overflow-hidden relative">
           <div className="flex animate-marquee whitespace-nowrap">
             {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((repeat) => (
@@ -86,13 +79,6 @@ const PromoMarquee = () => {
             ))}
           </div>
         </div>
-        <button
-          onClick={handleClose}
-          className="ml-4 p-1.5 hover:bg-white/25 rounded-full transition-all duration-200 flex-shrink-0 group backdrop-blur-sm"
-          aria-label="Close promo banner"
-        >
-          <X className="w-3.5 h-3.5 group-hover:rotate-90 transition-transform duration-200 drop-shadow-sm" />
-        </button>
       </div>
     </div>
   );
