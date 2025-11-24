@@ -1,17 +1,17 @@
-'use client';
+"use client";
 
-import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { MapPin, ChevronLeft, Navigation2, Pencil, Trash2 } from 'lucide-react';
-import { useAuthStore } from '@/features/auth/store/auth.store';
-import { getMe } from '@/features/user/api/userApi';
-import { User as UserType } from '@/features/auth/types';
-import { PrivateRoute } from '@/shared/components/guards/RouteGuards';
-import ProfileSidebar from '@/shared/components/organisms/ProfileSidebar';
-import Spinner from '@/shared/components/atoms/Spinner';
-import { getAddresses, deleteAddress } from '@/features/address/api/addressApi';
-import { Address } from '@/features/address/types';
-import { toast } from 'sonner';
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { MapPin, ChevronLeft, Navigation2, Pencil, Trash2 } from "lucide-react";
+import { useAuthStore } from "@/features/auth/store/auth.store";
+import { getMe } from "@/features/user/api/userApi";
+import { User as UserType } from "@/features/auth/types";
+import { PrivateRoute } from "@/shared/components/guards/RouteGuards";
+import ProfileSidebar from "@/shared/components/organisms/ProfileSidebar";
+import Spinner from "@/shared/components/atoms/Spinner";
+import { getAddresses, deleteAddress } from "@/features/address/api/addressApi";
+import { Address } from "@/features/address/types";
+import { toast } from "sonner";
 
 const AddressPage = () => {
   const router = useRouter();
@@ -24,7 +24,7 @@ const AddressPage = () => {
   useEffect(() => {
     const fetchUser = async () => {
       if (!isAuthenticated()) {
-        router.push('/auth/login');
+        router.push("/auth/login");
         return;
       }
 
@@ -32,7 +32,7 @@ const AddressPage = () => {
         const userData = await getMe();
         setUser(userData);
       } catch (error) {
-        console.error('Failed to fetch user data:', error);
+        console.error("Failed to fetch user data:", error);
         setUser(null);
       } finally {
         setIsLoading(false);
@@ -55,7 +55,7 @@ const AddressPage = () => {
         const addressList = await getAddresses();
         setAddresses(addressList);
       } catch (error) {
-        console.error('Failed to fetch addresses:', error);
+        console.error("Failed to fetch addresses:", error);
         setAddresses([]);
       } finally {
         setIsLoadingAddresses(false);
@@ -69,26 +69,29 @@ const AddressPage = () => {
 
   const handleDelete = async (id: number) => {
     if (addresses.length <= 1) {
-      toast.error('Cannot Delete Address', {
-        description: 'You must have at least one address.',
+      toast.error("Cannot Delete Address", {
+        description: "You must have at least one address.",
       });
       return;
     }
 
-    if (!confirm('Are you sure you want to delete this address?')) {
+    if (!confirm("Are you sure you want to delete this address?")) {
       return;
     }
 
     try {
       await deleteAddress(id);
       setAddresses(addresses.filter((addr) => addr.id !== id));
-      toast.success('Address Deleted', {
-        description: 'The address has been deleted successfully.',
+      toast.success("Address Deleted", {
+        description: "The address has been deleted successfully.",
       });
     } catch (error: any) {
-      console.error('Failed to delete address:', error);
-      toast.error('Failed to Delete Address', {
-        description: error?.response?.data?.message || error?.message || 'An error occurred while deleting the address.',
+      console.error("Failed to delete address:", error);
+      toast.error("Failed to Delete Address", {
+        description:
+          error?.response?.data?.message ||
+          error?.message ||
+          "An error occurred while deleting the address.",
       });
     }
   };
@@ -113,12 +116,14 @@ const AddressPage = () => {
                     My Address
                   </h1>
                 </button>
-                <button
-                  onClick={() => router.push('/profile/address/add')}
-                  className="ml-auto px-4 py-2 bg-sky-600 dark:bg-sky-500 text-white font-semibold rounded-lg hover:bg-sky-700 dark:hover:bg-sky-600 transition-colors cursor-pointer"
-                >
-                  Add Address
-                </button>
+                {addresses.length > 0 && (
+                  <button
+                    onClick={() => router.push("/profile/address/add")}
+                    className="ml-auto px-4 py-2 bg-sky-600 dark:bg-sky-500 text-white font-semibold rounded-lg hover:bg-sky-700 dark:hover:bg-sky-600 transition-colors cursor-pointer"
+                  >
+                    Add Address
+                  </button>
+                )}
               </div>
             </div>
 
@@ -131,12 +136,14 @@ const AddressPage = () => {
                   <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 dark:text-white">
                     My Address
                   </h1>
-                  <button
-                    onClick={() => router.push('/profile/address/add')}
-                    className="ml-auto px-4 py-2 bg-sky-600 dark:bg-sky-500 text-white font-semibold rounded-lg hover:bg-sky-700 dark:hover:bg-sky-600 transition-colors cursor-pointer"
-                  >
-                    Add Address
-                  </button>
+                  {addresses.length > 0 && (
+                    <button
+                      onClick={() => router.push("/profile/address/add")}
+                      className="ml-auto px-4 py-2 bg-sky-600 dark:bg-sky-500 text-white font-semibold rounded-lg hover:bg-sky-700 dark:hover:bg-sky-600 transition-colors cursor-pointer"
+                    >
+                      Add Address
+                    </button>
+                  )}
                 </div>
               </div>
 
@@ -155,7 +162,7 @@ const AddressPage = () => {
                   </p>
 
                   <button
-                    onClick={() => router.push('/profile/address/add')}
+                    onClick={() => router.push("/profile/address/add")}
                     className="px-6 py-3 bg-sky-600 dark:bg-sky-500 text-white font-semibold rounded-lg hover:bg-sky-700 dark:hover:bg-sky-600 transition-colors cursor-pointer"
                   >
                     Add Address
@@ -163,7 +170,6 @@ const AddressPage = () => {
                 </div>
               ) : (
                 <div className="space-y-6">
-
                   <div className="space-y-4">
                     {addresses.map((address) => (
                       <div
@@ -183,7 +189,11 @@ const AddressPage = () => {
                           </div>
                           <div className="flex items-center gap-3">
                             <button
-                              onClick={() => router.push(`/profile/address/edit?id=${address.id}`)}
+                              onClick={() =>
+                                router.push(
+                                  `/profile/address/edit?id=${address.id}`
+                                )
+                              }
                               className="flex items-center gap-2 text-sky-600 dark:text-sky-400 hover:bg-sky-50 dark:hover:bg-sky-900/20 px-3 py-2 rounded-lg transition-colors cursor-pointer"
                             >
                               <Pencil className="w-4 h-4" />
@@ -195,7 +205,9 @@ const AddressPage = () => {
                               className="flex items-center gap-2 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 px-3 py-2 rounded-lg transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                               <Trash2 className="w-4 h-4" />
-                              <span className="text-sm font-medium">Delete</span>
+                              <span className="text-sm font-medium">
+                                Delete
+                              </span>
                             </button>
                           </div>
                         </div>
@@ -207,7 +219,9 @@ const AddressPage = () => {
                           <p className="text-sm">{address.phone}</p>
                           <p className="text-sm">
                             {address.address}
-                            {address.address && (address.city || address.province) && ', '}
+                            {address.address &&
+                              (address.city || address.province) &&
+                              ", "}
                             {address.city && address.province
                               ? `${address.city}, ${address.province}`
                               : address.city || address.province}

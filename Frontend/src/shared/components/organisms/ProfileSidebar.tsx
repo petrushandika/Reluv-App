@@ -1,6 +1,7 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
@@ -26,9 +27,65 @@ interface ProfileSidebarProps {
   user?: UserType | null;
 }
 
+const LogoutConfirmationModal = ({
+  isOpen,
+  onClose,
+  onConfirm,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+  onConfirm: () => void;
+}) => {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    return () => setMounted(false);
+  }, []);
+
+  if (!isOpen || !mounted) return null;
+
+  const modalContent = (
+    <div
+      className="fixed inset-0 bg-gray-900/30 backdrop-blur-sm z-[9999] flex justify-center items-center p-4"
+      onClick={onClose}
+    >
+      <div
+        className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-lg rounded-xl shadow-xl w-full max-w-sm sm:max-w-md p-6 border border-gray-200/50 dark:border-gray-700/50"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <h2 className="text-lg font-bold text-black dark:text-white mb-4 glossy-text-title">
+          Sign Out
+        </h2>
+        <p className="text-gray-600 dark:text-gray-300 mb-8 glossy-text">
+          Are you sure you want to sign out? You will need to log in again to
+          access your account.
+        </p>
+        <div className="grid grid-cols-2 sm:flex sm:flex-row sm:justify-end items-center gap-3">
+          <button
+            onClick={onClose}
+            className="w-full px-5 py-2.5 rounded-md text-sm font-medium text-black dark:text-white border border-gray-300/50 dark:border-gray-600/50 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm hover:bg-gray-50/90 dark:hover:bg-gray-700/90 transition-colors shadow-sm glossy-text-strong cursor-pointer"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={onConfirm}
+            className="w-full px-5 py-2.5 rounded-md bg-red-600/90 dark:bg-red-500/90 backdrop-blur-sm text-sm font-medium text-white hover:bg-red-700/90 dark:hover:bg-red-600/90 transition-colors shadow-md glossy-text-strong cursor-pointer"
+          >
+            Sign Out
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+
+  return createPortal(modalContent, document.body);
+};
+
 const ProfileSidebar: React.FC<ProfileSidebarProps> = ({ user }) => {
   const pathname = usePathname();
   const { user: authUser, logout } = useAuthStore();
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
 
   const menuItems: ProfileMenuItem[] = [
     {
@@ -51,8 +108,13 @@ const ProfileSidebar: React.FC<ProfileSidebarProps> = ({ user }) => {
     },
   ];
 
-  const handleLogout = () => {
+  const handleLogoutClick = () => {
+    setIsLogoutModalOpen(true);
+  };
+
+  const handleLogoutConfirm = () => {
     logout();
+    setIsLogoutModalOpen(false);
     window.location.href = '/';
   };
 
@@ -110,7 +172,7 @@ const ProfileSidebar: React.FC<ProfileSidebarProps> = ({ user }) => {
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-white/80 text-sm">0 VP</span>
+            <span className="text-white/80 text-sm">0 Point</span>
           </div>
         </div>
       </div>
@@ -186,7 +248,7 @@ const ProfileSidebar: React.FC<ProfileSidebarProps> = ({ user }) => {
                       })}
                   {category === 'Account Management' && (
                     <button
-                      onClick={handleLogout}
+                      onClick={handleLogoutClick}
                       className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors cursor-pointer"
                     >
                       <LogOut className="w-5 h-5" />
@@ -199,6 +261,11 @@ const ProfileSidebar: React.FC<ProfileSidebarProps> = ({ user }) => {
           )}
         </div>
       </nav>
+      <LogoutConfirmationModal
+        isOpen={isLogoutModalOpen}
+        onClose={() => setIsLogoutModalOpen(false)}
+        onConfirm={handleLogoutConfirm}
+      />
     </aside>
   );
 };

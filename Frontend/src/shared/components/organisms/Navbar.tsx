@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 import {
   Search,
   Heart,
@@ -32,6 +33,61 @@ interface DropdownContent {
   };
 }
 
+const LogoutConfirmationModal = ({
+  isOpen,
+  onClose,
+  onConfirm,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+  onConfirm: () => void;
+}) => {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    return () => setMounted(false);
+  }, []);
+
+  if (!isOpen || !mounted) return null;
+
+  const modalContent = (
+    <div
+      className="fixed inset-0 bg-gray-900/30 backdrop-blur-sm z-[9999] flex justify-center items-center p-4"
+      onClick={onClose}
+    >
+      <div
+        className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-lg rounded-xl shadow-xl w-full max-w-sm sm:max-w-md p-6 border border-gray-200/50 dark:border-gray-700/50"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <h2 className="text-lg font-bold text-black dark:text-white mb-4 glossy-text-title">
+          Sign Out
+        </h2>
+        <p className="text-gray-600 dark:text-gray-300 mb-8 glossy-text">
+          Are you sure you want to sign out? You will need to log in again to
+          access your account.
+        </p>
+        <div className="grid grid-cols-2 sm:flex sm:flex-row sm:justify-end items-center gap-3">
+          <button
+            onClick={onClose}
+            className="w-full px-5 py-2.5 rounded-md text-sm font-medium text-black dark:text-white border border-gray-300/50 dark:border-gray-600/50 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm hover:bg-gray-50/90 dark:hover:bg-gray-700/90 transition-colors shadow-sm glossy-text-strong cursor-pointer"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={onConfirm}
+            className="w-full px-5 py-2.5 rounded-md bg-red-600/90 dark:bg-red-500/90 backdrop-blur-sm text-sm font-medium text-white hover:bg-red-700/90 dark:hover:bg-red-600/90 transition-colors shadow-md glossy-text-strong cursor-pointer"
+          >
+            Sign Out
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+
+  return createPortal(modalContent, document.body);
+};
+
 const Navbar = () => {
   const router = useRouter();
   const user = useAuthStore((state) => state.user);
@@ -61,6 +117,7 @@ const Navbar = () => {
   const [subMenuOpacity, setSubMenuOpacity] = useState(1);
   const [activeCategoryMenu, setActiveCategoryMenu] = useState<string>("Women");
   const [isSubMenuVisible, setIsSubMenuVisible] = useState(true);
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const lastScrollYRef = useRef(0);
   const scrollDirectionRef = useRef<"up" | "down">("up");
 
@@ -491,40 +548,46 @@ const Navbar = () => {
     window.location.href = route;
   };
 
-  const handleLogout = () => {
+  const handleLogoutClick = () => {
+    setIsLogoutModalOpen(true);
+    setIsProfileDropdownOpen(false);
+  };
+
+  const handleLogoutConfirm = () => {
     logout();
     clearCart();
     clearWishlist();
-    setIsProfileDropdownOpen(false);
+    setIsLogoutModalOpen(false);
+    window.location.href = "/";
   };
 
   const formatUserName = () => {
     if (!user) {
       return "";
     }
-    
+
     const firstName = user.firstName?.trim() || "";
     const lastName = user.lastName?.trim() || "";
-    
+
     if (!firstName && !lastName) {
       return "";
     }
-    
+
     if (!firstName) {
       return lastName;
     }
-    
+
     if (!lastName) {
       return firstName;
     }
-    
+
     const fullName = `${firstName} ${lastName}`;
     const maxLength = 15;
-    
+
     if (fullName.length > maxLength) {
       return firstName;
     }
-    
+
     return fullName;
   };
 
@@ -670,7 +733,7 @@ const Navbar = () => {
                             <h3 className="text-lg font-bold mb-1">
                               {displayName || "User"}
                             </h3>
-                            <p className="text-sm text-gray-200">0 VP</p>
+                            <p className="text-sm text-gray-200">0 Point</p>
                           </div>
                         </div>
 
@@ -691,10 +754,10 @@ const Navbar = () => {
                             <span className="font-medium">Order History</span>
                           </Link>
                           <button
-                            onClick={handleLogout}
-                            className="w-full text-left flex items-center px-6 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300 hover:pl-8 cursor-pointer"
+                            onClick={handleLogoutClick}
+                            className="w-full text-left flex items-center px-6 py-3 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all duration-300 hover:pl-8 cursor-pointer"
                           >
-                            <LogOut className="w-5 h-5 mr-3 text-gray-600 dark:text-gray-400 transition-colors duration-300" />
+                            <LogOut className="w-5 h-5 mr-3 text-red-600 dark:text-red-400 transition-colors duration-300" />
                             <span className="font-medium">Sign Out</span>
                           </button>
                         </div>
@@ -836,180 +899,180 @@ const Navbar = () => {
             }
           }
         `}</style>
-          <div className="py-4 px-6 space-y-1 border-b border-gray-200 dark:border-gray-700">
-            <div className="relative">
-              <div className="relative w-full overflow-hidden rounded-md bg-gray-100/80 dark:bg-gray-800/80 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 focus-within:ring-2 focus-within:ring-sky-500 dark:focus-within:ring-sky-400 shadow-sm">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 dark:text-gray-500 z-10" />
-                <input
-                  type="text"
-                  value={searchValue}
-                  onChange={(e) => setSearchValue(e.target.value)}
-                  className="w-full px-4 py-2 pl-10 pr-4 bg-transparent text-gray-700 dark:text-white focus:outline-none placeholder-transparent"
-                />
-                {!searchValue && (
-                  <div className="absolute left-10 top-1/2 -translate-y-1/2 right-4 overflow-hidden pointer-events-none">
-                    <div
-                      className="flex whitespace-nowrap text-gray-400 dark:text-gray-500 text-sm"
-                      style={{
-                        animation: "marquee 15s linear infinite",
-                        width: "fit-content",
-                      }}
-                    >
-                      {[1, 2].map((repeat) => (
-                        <span key={repeat} className="inline-block mr-8">
-                          Search for products or brands
-                        </span>
-                      ))}
-                    </div>
+        <div className="py-4 px-6 space-y-1 border-b border-gray-200 dark:border-gray-700">
+          <div className="relative">
+            <div className="relative w-full overflow-hidden rounded-md bg-gray-100/80 dark:bg-gray-800/80 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 focus-within:ring-2 focus-within:ring-sky-500 dark:focus-within:ring-sky-400 shadow-sm">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 dark:text-gray-500 z-10" />
+              <input
+                type="text"
+                value={searchValue}
+                onChange={(e) => setSearchValue(e.target.value)}
+                className="w-full px-4 py-2 pl-10 pr-4 bg-transparent text-gray-700 dark:text-white focus:outline-none placeholder-transparent"
+              />
+              {!searchValue && (
+                <div className="absolute left-10 top-1/2 -translate-y-1/2 right-4 overflow-hidden pointer-events-none">
+                  <div
+                    className="flex whitespace-nowrap text-gray-400 dark:text-gray-500 text-sm"
+                    style={{
+                      animation: "marquee 15s linear infinite",
+                      width: "fit-content",
+                    }}
+                  >
+                    {[1, 2].map((repeat) => (
+                      <span key={repeat} className="inline-block mr-8">
+                        Search for products or brands
+                      </span>
+                    ))}
                   </div>
-                )}
+                </div>
+              )}
+            </div>
+          </div>
+          {Object.keys(dropdownData).map((menu) => (
+            <div
+              key={menu}
+              className="border-b border-gray-200 dark:border-gray-700 last:border-b-0"
+            >
+              <div
+                onClick={() => toggleMobileMainMenu(menu)}
+                className="w-full flex justify-between items-center py-3 text-left font-semibold cursor-pointer"
+              >
+                <span
+                  onClick={(e) => handleMobileMainMenuClick(e, menu)}
+                  className="hover:text-sky-600 dark:hover:text-sky-400 transition-colors duration-300"
+                >
+                  {menu}
+                </span>
+                <ChevronDown
+                  className={`w-5 h-5 transition-all duration-300 ease-in-out ${
+                    mobileActiveMainMenu === menu ? "rotate-180" : ""
+                  }`}
+                />
+              </div>
+              {mobileActiveMainMenu === menu && (
+                <div className="pl-4 pb-2">
+                  {dropdownData[menu].categories.map((category) => {
+                    const categorySlug = categoryToSlug(category);
+                    const categoryRoute = `${getMainMenuRoute(
+                      menu
+                    )}/${categorySlug}`;
+                    return (
+                      <div
+                        key={category}
+                        className="border-b border-gray-200 dark:border-gray-700 last:border-b-0"
+                      >
+                        <Link
+                          href={categoryRoute}
+                          prefetch={true}
+                          className="w-full flex justify-between items-center py-3 text-left text-sm text-gray-700 dark:text-gray-300 cursor-pointer hover:text-sky-600 dark:hover:text-sky-400 transition-all duration-300"
+                          onClick={() => {
+                            toggleMobileSubMenu(category);
+                            setIsMobileMenuOpen(false);
+                          }}
+                        >
+                          <span className="transition-colors duration-300">
+                            {category}
+                          </span>
+                          <ChevronDown
+                            className={`w-5 h-5 transition-all duration-300 ease-in-out ${
+                              mobileActiveSubMenu === category
+                                ? "rotate-180"
+                                : ""
+                            }`}
+                          />
+                        </Link>
+                        {mobileActiveSubMenu === category && (
+                          <div className="pl-4 py-2 space-y-3 bg-gray-50 dark:bg-gray-800 rounded-md my-2 animate-in slide-in-from-top-2 duration-300">
+                            {dropdownData[menu].subMenus[category]?.map(
+                              (section) => (
+                                <div key={section.title}>
+                                  <h4 className="font-bold text-sky-700 dark:text-sky-400 text-xs uppercase tracking-wider mb-2">
+                                    {section.title}
+                                  </h4>
+                                  <ul className="space-y-2">
+                                    {section.items.map((item, itemIndex) => (
+                                      <li key={itemIndex}>
+                                        <a
+                                          href="#"
+                                          className="block text-xs text-gray-600 dark:text-gray-300 hover:text-sky-600 dark:hover:text-sky-400 transition-all duration-300 hover:pl-2"
+                                        >
+                                          {item}
+                                        </a>
+                                      </li>
+                                    ))}
+                                  </ul>
+                                </div>
+                              )
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          ))}
+          {isAuthenticated ? (
+            <div className="">
+              <Link
+                href="/profile/me"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="flex items-center py-3 text-sm text-gray-700 font-semibold hover:text-sky-600 hover:bg-gray-50 rounded-md transition-all duration-300 hover:pl-2"
+              >
+                <img
+                  src={
+                    user?.profile?.avatar ||
+                    "https://res.cloudinary.com/dqcyabvc2/image/upload/v1753019800/user_nxnpv1.webp"
+                  }
+                  alt="User Avatar"
+                  className="w-6 h-6 rounded-full object-cover mr-3 transition-all duration-300 hover:ring-2 hover:ring-sky-500"
+                />
+                My Profile
+              </Link>
+              <Link
+                href="/profile/orders"
+                className="flex items-center py-3 text-sm text-gray-700 dark:text-gray-300 font-semibold hover:text-sky-600 dark:hover:text-sky-400 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md transition-all duration-300 hover:pl-2"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                <ScrollText className="w-5 h-5 mr-3 text-gray-500 dark:text-gray-400 transition-colors duration-300" />{" "}
+                Order History
+              </Link>
+              <div className="">
+                <button
+                  onClick={() => {
+                    handleLogoutClick();
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className="w-full text-left flex items-center py-3 text-sm text-red-600 dark:text-red-400 font-semibold hover:bg-red-50 dark:hover:bg-red-900/20 rounded-md transition-all duration-300 hover:pl-2"
+                >
+                  <LogOut className="w-5 h-5 mr-3 text-red-600 dark:text-red-400 transition-colors duration-300" />{" "}
+                  Logout
+                </button>
               </div>
             </div>
-            {Object.keys(dropdownData).map((menu) => (
-              <div
-                key={menu}
-                className="border-b border-gray-200 dark:border-gray-700 last:border-b-0"
+          ) : (
+            <div className="flex items-center space-x-2 text-sm py-3 font-semibold">
+              <User className="w-5 h-5 text-gray-800 dark:text-white" />
+              <Link
+                href="/auth/login"
+                className="hover:text-sky-600 dark:hover:text-sky-400 text-gray-800 dark:text-white"
+                onClick={() => setIsMobileMenuOpen(false)}
               >
-                <div
-                  onClick={() => toggleMobileMainMenu(menu)}
-                  className="w-full flex justify-between items-center py-3 text-left font-semibold cursor-pointer"
-                >
-                  <span
-                    onClick={(e) => handleMobileMainMenuClick(e, menu)}
-                    className="hover:text-sky-600 dark:hover:text-sky-400 transition-colors duration-300"
-                  >
-                    {menu}
-                  </span>
-                  <ChevronDown
-                    className={`w-5 h-5 transition-all duration-300 ease-in-out ${
-                      mobileActiveMainMenu === menu ? "rotate-180" : ""
-                    }`}
-                  />
-                </div>
-                {mobileActiveMainMenu === menu && (
-                  <div className="pl-4 pb-2">
-                    {dropdownData[menu].categories.map((category) => {
-                      const categorySlug = categoryToSlug(category);
-                      const categoryRoute = `${getMainMenuRoute(
-                        menu
-                      )}/${categorySlug}`;
-                      return (
-                        <div
-                          key={category}
-                          className="border-b border-gray-200 dark:border-gray-700 last:border-b-0"
-                        >
-                          <Link
-                            href={categoryRoute}
-                            prefetch={true}
-                            className="w-full flex justify-between items-center py-3 text-left text-sm text-gray-700 dark:text-gray-300 cursor-pointer hover:text-sky-600 dark:hover:text-sky-400 transition-all duration-300"
-                            onClick={() => {
-                              toggleMobileSubMenu(category);
-                              setIsMobileMenuOpen(false);
-                            }}
-                          >
-                            <span className="transition-colors duration-300">
-                              {category}
-                            </span>
-                            <ChevronDown
-                              className={`w-5 h-5 transition-all duration-300 ease-in-out ${
-                                mobileActiveSubMenu === category
-                                  ? "rotate-180"
-                                  : ""
-                              }`}
-                            />
-                          </Link>
-                          {mobileActiveSubMenu === category && (
-                            <div className="pl-4 py-2 space-y-3 bg-gray-50 dark:bg-gray-800 rounded-md my-2 animate-in slide-in-from-top-2 duration-300">
-                              {dropdownData[menu].subMenus[category]?.map(
-                                (section) => (
-                                  <div key={section.title}>
-                                    <h4 className="font-bold text-sky-700 dark:text-sky-400 text-xs uppercase tracking-wider mb-2">
-                                      {section.title}
-                                    </h4>
-                                    <ul className="space-y-2">
-                                      {section.items.map((item, itemIndex) => (
-                                        <li key={itemIndex}>
-                                          <a
-                                            href="#"
-                                            className="block text-xs text-gray-600 dark:text-gray-300 hover:text-sky-600 dark:hover:text-sky-400 transition-all duration-300 hover:pl-2"
-                                          >
-                                            {item}
-                                          </a>
-                                        </li>
-                                      ))}
-                                    </ul>
-                                  </div>
-                                )
-                              )}
-                            </div>
-                          )}
-                        </div>
-                      );
-                    })}
-                  </div>
-                )}
-              </div>
-            ))}
-            {isAuthenticated ? (
-              <div className="">
-                <Link
-                  href="/profile/me"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="flex items-center py-3 text-sm text-gray-700 font-semibold hover:text-sky-600 hover:bg-gray-50 rounded-md transition-all duration-300 hover:pl-2"
-                >
-                  <img
-                    src={
-                      user?.profile?.avatar ||
-                      "https://res.cloudinary.com/dqcyabvc2/image/upload/v1753019800/user_nxnpv1.webp"
-                    }
-                    alt="User Avatar"
-                    className="w-6 h-6 rounded-full object-cover mr-3 transition-all duration-300 hover:ring-2 hover:ring-sky-500"
-                  />
-                  My Profile
-                </Link>
-                <Link
-                  href="/profile/orders"
-                  className="flex items-center py-3 text-sm text-gray-700 dark:text-gray-300 font-semibold hover:text-sky-600 dark:hover:text-sky-400 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md transition-all duration-300 hover:pl-2"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  <ScrollText className="w-5 h-5 mr-3 text-gray-500 dark:text-gray-400 transition-colors duration-300" />{" "}
-                  Order History
-                </Link>
-                <div className="">
-                  <button
-                    onClick={() => {
-                      handleLogout();
-                      setIsMobileMenuOpen(false);
-                    }}
-                    className="w-full text-left flex items-center py-3 text-sm text-red-600 dark:text-red-400 font-semibold hover:bg-red-50 dark:hover:bg-red-900/20 rounded-md transition-all duration-300 hover:pl-2"
-                  >
-                    <LogOut className="w-5 h-5 mr-3 transition-colors duration-300" />{" "}
-                    Logout
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <div className="flex items-center space-x-2 text-sm py-3 font-semibold">
-                <User className="w-5 h-5 text-gray-800 dark:text-white" />
-                <Link
-                  href="/auth/login"
-                  className="hover:text-sky-600 dark:hover:text-sky-400 text-gray-800 dark:text-white"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  Sign In
-                </Link>
-                <span className="text-gray-300 dark:text-gray-600">|</span>
-                <Link
-                  href="/auth/register"
-                  className="hover:text-sky-600 dark:hover:text-sky-400 text-gray-800 dark:text-white"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  Register
-                </Link>
-              </div>
-            )}
-          </div>
+                Sign In
+              </Link>
+              <span className="text-gray-300 dark:text-gray-600">|</span>
+              <Link
+                href="/auth/register"
+                className="hover:text-sky-600 dark:hover:text-sky-400 text-gray-800 dark:text-white"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Register
+              </Link>
+            </div>
+          )}
         </div>
+      </div>
 
       {activeMainMenu && (
         <div
@@ -1122,6 +1185,11 @@ const Navbar = () => {
           )}
         </div>
       )}
+      <LogoutConfirmationModal
+        isOpen={isLogoutModalOpen}
+        onClose={() => setIsLogoutModalOpen(false)}
+        onConfirm={handleLogoutConfirm}
+      />
     </header>
   );
 };
