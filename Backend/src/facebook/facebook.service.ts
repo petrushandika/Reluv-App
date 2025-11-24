@@ -14,20 +14,66 @@ export class FacebookService {
   async validateUser(payload: FacebookDto): Promise<User> {
     const user = await this.prisma.user.findUnique({
       where: { facebookId: payload.facebookId },
+      include: { profile: true },
     });
     if (user) {
-      return user;
+      if (payload.avatar && user.profile) {
+        await this.prisma.userProfile.update({
+          where: { userId: user.id },
+          data: { avatar: payload.avatar },
+        });
+      } else if (payload.avatar && !user.profile) {
+        await this.prisma.userProfile.create({
+          data: {
+            userId: user.id,
+            avatar: payload.avatar,
+          },
+        });
+      }
+      const updatedUser = await this.prisma.user.findUnique({
+        where: { id: user.id },
+        include: { profile: true },
+      });
+      if (!updatedUser) {
+        throw new Error('User not found after update');
+      }
+      return updatedUser;
     }
 
     if (payload.email) {
       const userByEmail = await this.prisma.user.findUnique({
         where: { email: payload.email },
+        include: { profile: true },
       });
       if (userByEmail) {
-        return this.prisma.user.update({
+        const updatedUser = await this.prisma.user.update({
           where: { email: payload.email },
           data: { facebookId: payload.facebookId },
+          include: { profile: true },
         });
+        if (payload.avatar) {
+          if (updatedUser.profile) {
+            await this.prisma.userProfile.update({
+              where: { userId: updatedUser.id },
+              data: { avatar: payload.avatar },
+            });
+          } else {
+            await this.prisma.userProfile.create({
+              data: {
+                userId: updatedUser.id,
+                avatar: payload.avatar,
+              },
+            });
+          }
+        }
+        const finalUser = await this.prisma.user.findUnique({
+          where: { id: updatedUser.id },
+          include: { profile: true },
+        });
+        if (!finalUser) {
+          throw new Error('User not found after update');
+        }
+        return finalUser;
       }
     }
 
@@ -44,9 +90,19 @@ export class FacebookService {
       lastName: payload.lastName,
       isVerified: true,
       password: null,
+      profile: payload.avatar
+        ? {
+            create: {
+              avatar: payload.avatar,
+            },
+          }
+        : undefined,
     };
 
-    const newUser = await this.prisma.user.create({ data: dataToCreate });
+    const newUser = await this.prisma.user.create({
+      data: dataToCreate,
+      include: { profile: true },
+    });
     return newUser;
   }
 

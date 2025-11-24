@@ -36,3 +36,22 @@ export const updateMyProfile = async (
     throw error;
   }
 };
+
+export const updateMyProfileAvatar = async (
+  file: File
+): Promise<User> => {
+  try {
+    const formData = new FormData();
+    formData.append('avatar', file);
+
+    const response = await api.patch<User>("/users/me/profile", formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Failed to update avatar:", error);
+    throw error;
+  }
+};

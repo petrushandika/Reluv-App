@@ -39,13 +39,14 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
       return done(new Error('No email found in Google profile'), false);
     }
 
-    const { id, name, emails } = profile;
+    const { id, name, emails, photos } = profile;
 
     const googleDto = new GoogleDto();
     googleDto.googleId = id;
     googleDto.email = emails[0].value;
     googleDto.firstName = name?.givenName ?? null;
     googleDto.lastName = name?.familyName ?? null;
+    googleDto.avatar = photos?.[0]?.value ?? null;
 
     const user = await this.googleService.validateUser(googleDto);
 

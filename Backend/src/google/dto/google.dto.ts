@@ -27,4 +27,9 @@ export class GoogleDto {
   @IsOptional()
   @Length(0, 100, { message: 'Last name must be at most 100 characters' })
   lastName: string | null;
+
+  @IsString()
+  @IsOptional()
+  @MaxLength(500, { message: 'Avatar URL must be at most 500 characters' })
+  avatar: string | null;
 }

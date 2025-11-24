@@ -26,7 +26,7 @@ export class FacebookStrategy extends PassportStrategy(Strategy, 'facebook') {
       clientSecret,
       callbackURL,
       scope: ['email', 'public_profile'],
-      profileFields: ['id', 'name', 'emails'],
+      profileFields: ['id', 'name', 'emails', 'picture'],
     });
   }
 
@@ -36,13 +36,14 @@ export class FacebookStrategy extends PassportStrategy(Strategy, 'facebook') {
     profile: Profile,
     done: (err: any, user: any, info?: any) => void,
   ): Promise<any> {
-    const { id, name, emails } = profile;
+    const { id, name, emails, photos } = profile;
 
     const facebookDto = new FacebookDto();
     facebookDto.facebookId = id;
     facebookDto.email = emails?.[0]?.value ?? null;
     facebookDto.firstName = name?.givenName ?? null;
     facebookDto.lastName = name?.familyName ?? null;
+    facebookDto.avatar = photos?.[0]?.value ?? null;
 
     const user = await this.facebookService.validateUser(facebookDto);
 

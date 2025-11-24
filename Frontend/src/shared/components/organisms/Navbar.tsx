@@ -15,6 +15,7 @@ import {
   Bell,
 } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/features/auth/store/auth.store";
 import { useCartStore } from "@/features/cart/store/cart.store";
@@ -118,6 +119,8 @@ const Navbar = () => {
   const [activeCategoryMenu, setActiveCategoryMenu] = useState<string>("Women");
   const [isSubMenuVisible, setIsSubMenuVisible] = useState(true);
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+  const [avatarError, setAvatarError] = useState(false);
+  const [mobileAvatarError, setMobileAvatarError] = useState(false);
   const lastScrollYRef = useRef(0);
   const scrollDirectionRef = useRef<"up" | "down">("up");
 
@@ -527,11 +530,19 @@ const Navbar = () => {
   }, []);
 
   useEffect(() => {
-    if (token && (!user || !user.firstName)) {
-      fetchAndSetUser().catch((error) => {
-        console.error("Failed to fetch user in Navbar:", error);
-      });
+    if (token) {
+      if (!user || !user.firstName) {
+        fetchAndSetUser().catch((error) => {
+          console.error("Failed to fetch user in Navbar:", error);
+        });
+      } else if (user && !user.profile) {
+        fetchAndSetUser().catch((error) => {
+          console.error("Failed to fetch user profile in Navbar:", error);
+        });
+      }
     }
+    setAvatarError(false);
+    setMobileAvatarError(false);
   }, [token, user, fetchAndSetUser]);
 
   const toggleMobileMainMenu = (menu: string) => {
@@ -712,14 +723,21 @@ const Navbar = () => {
                 onMouseLeave={() => setIsProfileDropdownOpen(false)}
               >
                 <button className="flex items-center space-x-2 text-sm font-semibold hover:text-sky-600 dark:hover:text-sky-400 text-gray-800 dark:text-white transition-all duration-300 cursor-pointer">
-                  <img
-                    src={
-                      user?.profile?.avatar ||
-                      "https://res.cloudinary.com/dqcyabvc2/image/upload/v1753019800/user_nxnpv1.webp"
-                    }
-                    alt="User Avatar"
-                    className="w-7 h-7 rounded-full object-cover transition-all duration-300 hover:ring-2 hover:ring-sky-500 dark:hover:ring-sky-400 cursor-pointer"
-                  />
+                  {user?.profile?.avatar && !avatarError ? (
+                    <Image
+                      src={user.profile.avatar}
+                      alt="User Avatar"
+                      width={28}
+                      height={28}
+                      className="w-7 h-7 rounded-full object-cover transition-all duration-300 hover:ring-2 hover:ring-sky-500 dark:hover:ring-sky-400 cursor-pointer"
+                      unoptimized
+                      onError={() => setAvatarError(true)}
+                    />
+                  ) : (
+                    <div className="w-7 h-7 rounded-full bg-gray-300 dark:bg-gray-600 flex items-center justify-center">
+                      <User className="w-4 h-4 text-gray-500 dark:text-gray-400" />
+                    </div>
+                  )}
                   <span className="cursor-pointer">
                     Hi, {displayName || "User"}!
                   </span>
@@ -1020,14 +1038,21 @@ const Navbar = () => {
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="flex items-center py-3 text-sm text-gray-700 font-semibold hover:text-sky-600 hover:bg-gray-50 rounded-md transition-all duration-300 hover:pl-2"
               >
-                <img
-                  src={
-                    user?.profile?.avatar ||
-                    "https://res.cloudinary.com/dqcyabvc2/image/upload/v1753019800/user_nxnpv1.webp"
-                  }
-                  alt="User Avatar"
-                  className="w-6 h-6 rounded-full object-cover mr-3 transition-all duration-300 hover:ring-2 hover:ring-sky-500"
-                />
+                {user?.profile?.avatar && !mobileAvatarError ? (
+                  <Image
+                    src={user.profile.avatar}
+                    alt="User Avatar"
+                    width={24}
+                    height={24}
+                    className="w-6 h-6 rounded-full object-cover mr-3 transition-all duration-300 hover:ring-2 hover:ring-sky-500"
+                    unoptimized
+                    onError={() => setMobileAvatarError(true)}
+                  />
+                ) : (
+                  <div className="w-6 h-6 rounded-full bg-gray-300 dark:bg-gray-600 flex items-center justify-center mr-3">
+                    <User className="w-3 h-3 text-gray-500 dark:text-gray-400" />
+                  </div>
+                )}
                 My Profile
               </Link>
               <Link
