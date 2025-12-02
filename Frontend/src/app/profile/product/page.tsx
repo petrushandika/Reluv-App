@@ -289,6 +289,72 @@ const DeleteProductModal = ({
   );
 };
 
+const BulkDeleteModal = ({
+  isOpen,
+  onClose,
+  onConfirm,
+  productCount,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+  onConfirm: () => Promise<void>;
+  productCount: number;
+}) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    try {
+      await onConfirm();
+      onClose();
+    } catch {
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  if (!isOpen) return null;
+
+  return (
+    <div
+      className="fixed inset-0 bg-gray-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+      onClick={onClose}
+    >
+      <div
+        className="bg-white dark:bg-gray-800 rounded-xl shadow-xl w-full max-w-md border border-gray-200 dark:border-gray-700"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="p-6">
+          <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4">
+            Delete Products
+          </h2>
+          <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">
+            Are you sure you want to delete {productCount} product{productCount !== 1 ? "s" : ""}? This action cannot be undone.
+          </p>
+          <div className="flex gap-3">
+            <button
+              type="button"
+              onClick={onClose}
+              className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              onClick={handleSubmit}
+              disabled={isSubmitting}
+              className="flex-1 px-4 py-2 bg-red-600 dark:bg-red-500 text-white rounded-lg hover:bg-red-700 dark:hover:bg-red-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isSubmitting ? "Deleting..." : "Delete"}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const ToggleStatusModal = ({
   isOpen,
   onClose,
@@ -388,6 +454,9 @@ const ProductPage = () => {
     isOpen: boolean;
     product: Product | null;
   }>({ isOpen: false, product: null });
+  const [bulkDeleteModal, setBulkDeleteModal] = useState<{
+    isOpen: boolean;
+  }>({ isOpen: false });
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -556,11 +625,13 @@ const ProductPage = () => {
       });
       setProducts(products.filter((p) => !selectedProducts.has(p.id)));
       setSelectedProducts(new Set());
+      setBulkDeleteModal({ isOpen: false });
       } catch (error) {
         const errorMessage = error instanceof Error ? error.message : "Unable to delete products.";
         toast.error("Failed to Delete Products", {
           description: errorMessage,
         });
+        throw error;
       }
   };
 
@@ -759,14 +830,7 @@ const ProductPage = () => {
                       {selectedProducts.size > 0 && (
                         <button
                           onClick={() => {
-                            toast.error("Delete Products", {
-                              description: `Are you sure you want to delete ${selectedProducts.size} product(s)? This action cannot be undone.`,
-                              action: {
-                                label: "Confirm Delete",
-                                onClick: () => handleBulkDelete(),
-                              },
-                              duration: 5000,
-                            });
+                            setBulkDeleteModal({ isOpen: true });
                           }}
                           className="px-3 py-1.5 border border-red-600 dark:border-red-500 text-red-600 dark:text-red-400 text-xs font-medium rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors cursor-pointer"
                         >
@@ -964,6 +1028,12 @@ const ProductPage = () => {
           }}
           productName={toggleStatusModal.product?.name || ""}
           isActive={toggleStatusModal.product?.isActive || false}
+        />
+        <BulkDeleteModal
+          isOpen={bulkDeleteModal.isOpen}
+          onClose={() => setBulkDeleteModal({ isOpen: false })}
+          onConfirm={handleBulkDelete}
+          productCount={selectedProducts.size}
         />
       </div>
     </PrivateRoute>
