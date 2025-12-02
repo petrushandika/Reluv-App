@@ -14,6 +14,7 @@ import {
   ChevronRight,
   Camera,
   Loader2,
+  Package,
 } from "lucide-react";
 import { useAuthStore } from "@/features/auth/store/auth.store";
 import { User as UserType } from "@/features/auth/types";
@@ -124,6 +125,12 @@ const ProfileSidebar: React.FC<ProfileSidebarProps> = ({ user }) => {
       title: "My Address",
       href: "/profile/address",
       icon: MapPin,
+      category: "My Details",
+    },
+    {
+      title: "My Product",
+      href: "/profile/product",
+      icon: Package,
       category: "My Details",
     },
     {

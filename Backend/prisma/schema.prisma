@@ -521,6 +521,7 @@ model Badge {
 enum UserRole {
   USER
   ADMIN
+  STORE
 }
 
 enum Condition {

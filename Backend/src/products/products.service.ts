@@ -417,10 +417,19 @@ export class ProductsService {
   async update(user: User, id: number, updateProductDto: UpdateProductDto) {
     await this.checkProductOwnership(id, user.id);
 
-    const { categoryId, parentCategoryId, childCategoryId, ...otherData } =
-      updateProductDto;
+    const { 
+      categoryId, 
+      parentCategoryId, 
+      childCategoryId, 
+      isActive,
+      ...otherData 
+    } = updateProductDto;
 
     const storeId = (otherData as any).storeId;
+    
+    if ('storeId' in otherData) {
+      delete (otherData as any).storeId;
+    }
 
     const [parentCategoryExists, childCategoryExists, storeToUse] =
       await Promise.all([
@@ -484,6 +493,9 @@ export class ProductsService {
       }),
       ...(storeId !== undefined && {
         store: storeId ? { connect: { id: storeId } } : { disconnect: true },
+      }),
+      ...(isActive !== undefined && {
+        isActive: isActive,
       }),
     };
 
