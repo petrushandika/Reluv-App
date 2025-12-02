@@ -76,10 +76,10 @@ const ChangePriceModal = ({
       onClick={onClose}
     >
       <div
-        className="bg-white dark:bg-gray-800 rounded-xl shadow-xl w-full max-w-md border border-gray-200 dark:border-gray-700"
+        className="bg-white dark:bg-gray-800 rounded-xl shadow-xl w-full max-w-md border border-gray-200 dark:border-gray-700 mx-4"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="p-6">
+        <div className="p-4 sm:p-6">
           <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4">
             Change Price
           </h2>
@@ -174,10 +174,10 @@ const ChangeStockModal = ({
       onClick={onClose}
     >
       <div
-        className="bg-white dark:bg-gray-800 rounded-xl shadow-xl w-full max-w-md border border-gray-200 dark:border-gray-700"
+        className="bg-white dark:bg-gray-800 rounded-xl shadow-xl w-full max-w-md border border-gray-200 dark:border-gray-700 mx-4"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="p-6">
+        <div className="p-4 sm:p-6">
           <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4">
             Change Stock
           </h2>
@@ -255,10 +255,10 @@ const DeleteProductModal = ({
       onClick={onClose}
     >
       <div
-        className="bg-white dark:bg-gray-800 rounded-xl shadow-xl w-full max-w-md border border-gray-200 dark:border-gray-700"
+        className="bg-white dark:bg-gray-800 rounded-xl shadow-xl w-full max-w-md border border-gray-200 dark:border-gray-700 mx-4"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="p-6">
+        <div className="p-4 sm:p-6">
           <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4">
             Delete Product
           </h2>
@@ -322,10 +322,10 @@ const BulkDeleteModal = ({
       onClick={onClose}
     >
       <div
-        className="bg-white dark:bg-gray-800 rounded-xl shadow-xl w-full max-w-md border border-gray-200 dark:border-gray-700"
+        className="bg-white dark:bg-gray-800 rounded-xl shadow-xl w-full max-w-md border border-gray-200 dark:border-gray-700 mx-4"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="p-6">
+        <div className="p-4 sm:p-6">
           <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4">
             Delete Products
           </h2>
@@ -390,10 +390,10 @@ const ToggleStatusModal = ({
       onClick={onClose}
     >
       <div
-        className="bg-white dark:bg-gray-800 rounded-xl shadow-xl w-full max-w-md border border-gray-200 dark:border-gray-700"
+        className="bg-white dark:bg-gray-800 rounded-xl shadow-xl w-full max-w-md border border-gray-200 dark:border-gray-700 mx-4"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="p-6">
+        <div className="p-4 sm:p-6">
           <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4">
             {isActive ? "Deactivate Product" : "Activate Product"}
           </h2>
@@ -436,6 +436,7 @@ const ProductPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [filterStatus, setFilterStatus] = useState<"all" | "active" | "inactive">("all");
   const [sortBy, setSortBy] = useState<"price_asc" | "price_desc" | "name_asc" | "name_desc" | "newest" | "oldest">("newest");
+  const [isSortDropdownOpen, setIsSortDropdownOpen] = useState(false);
   const [changePriceModal, setChangePriceModal] = useState<{
     isOpen: boolean;
     product: Product | null;
@@ -503,6 +504,23 @@ const ProductPage = () => {
       fetchProducts();
     }
   }, [isAuthenticated]);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      if (!target.closest('.sort-dropdown-container')) {
+        setIsSortDropdownOpen(false);
+      }
+    };
+
+    if (isSortDropdownOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isSortDropdownOpen]);
 
   const handleToggleSelect = (productId: number) => {
     setSelectedProducts((prev) => {
@@ -742,12 +760,12 @@ const ProductPage = () => {
                   </button>
                 </div>
               ) : (
-                <div className="space-y-6">
-                  <div className="border-b border-gray-200 dark:border-gray-700">
-                    <div className="flex gap-6">
+                <div className="space-y-4 sm:space-y-6">
+                  <div className="border-b border-gray-200 dark:border-gray-700 overflow-x-auto">
+                    <div className="flex gap-4 sm:gap-6 min-w-max">
                       <button
                         onClick={() => setFilterStatus("all")}
-                        className={`pb-3 px-1 text-sm font-semibold transition-colors ${
+                        className={`pb-3 px-2 sm:px-1 text-xs sm:text-sm font-semibold transition-colors whitespace-nowrap ${
                           filterStatus === "all"
                             ? "text-sky-600 dark:text-sky-400 border-b-2 border-sky-600 dark:border-sky-400"
                             : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
@@ -757,7 +775,7 @@ const ProductPage = () => {
                       </button>
                       <button
                         onClick={() => setFilterStatus("active")}
-                        className={`pb-3 px-1 text-sm font-semibold transition-colors ${
+                        className={`pb-3 px-2 sm:px-1 text-xs sm:text-sm font-semibold transition-colors whitespace-nowrap ${
                           filterStatus === "active"
                             ? "text-sky-600 dark:text-sky-400 border-b-2 border-sky-600 dark:border-sky-400"
                             : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
@@ -767,7 +785,7 @@ const ProductPage = () => {
                       </button>
                       <button
                         onClick={() => setFilterStatus("inactive")}
-                        className={`pb-3 px-1 text-sm font-semibold transition-colors ${
+                        className={`pb-3 px-2 sm:px-1 text-xs sm:text-sm font-semibold transition-colors whitespace-nowrap ${
                           filterStatus === "inactive"
                             ? "text-sky-600 dark:text-sky-400 border-b-2 border-sky-600 dark:border-sky-400"
                             : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
@@ -778,66 +796,100 @@ const ProductPage = () => {
                     </div>
                   </div>
 
-                  <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
+                  <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-stretch sm:items-center justify-between">
                     <div className="flex flex-col sm:flex-row gap-3 w-full sm:flex-1">
                       <div className="relative flex-1 sm:w-64">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-gray-400 dark:text-gray-500" />
                         <input
                           type="text"
                           value={searchQuery}
                           onChange={(e) => setSearchQuery(e.target.value)}
                           placeholder="Search Product"
-                          className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400"
+                          className="w-full pl-10 sm:pl-11 pr-4 py-2.5 sm:py-2.5 text-sm sm:text-base border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-all duration-200 hover:border-gray-400 dark:hover:border-gray-500 shadow-sm hover:shadow-md"
                         />
                       </div>
 
-                      <div className="relative">
-                        <select
-                          value={sortBy}
-                          onChange={(e) =>
-                            setSortBy(
-                              e.target.value as "price_asc" | "price_desc" | "name_asc" | "name_desc" | "newest" | "oldest"
-                            )
-                          }
-                          className="appearance-none pl-4 pr-10 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 cursor-pointer min-w-[180px]"
+                      <div className="relative w-full sm:w-auto sort-dropdown-container">
+                        <button
+                          type="button"
+                          onClick={() => setIsSortDropdownOpen(!isSortDropdownOpen)}
+                          className="w-full sm:min-w-[200px] flex items-center justify-between px-4 py-2.5 sm:py-2.5 text-sm sm:text-base border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 cursor-pointer transition-all duration-200 hover:border-gray-400 dark:hover:border-gray-500 shadow-sm hover:shadow-md"
                         >
-                          <option value="newest">Newest</option>
-                          <option value="oldest">Oldest</option>
-                          <option value="price_asc">Price: Low to High</option>
-                          <option value="price_desc">Price: High to Low</option>
-                          <option value="name_asc">Name: A to Z</option>
-                          <option value="name_desc">Name: Z to A</option>
-                        </select>
-                        <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+                          <span className="text-left">
+                            {sortBy === "newest" && "Newest"}
+                            {sortBy === "oldest" && "Oldest"}
+                            {sortBy === "price_asc" && "Price: Low to High"}
+                            {sortBy === "price_desc" && "Price: High to Low"}
+                            {sortBy === "name_asc" && "Name: A to Z"}
+                            {sortBy === "name_desc" && "Name: Z to A"}
+                          </span>
+                          <ChevronDown
+                            className={`w-5 h-5 text-gray-400 dark:text-gray-500 ml-2 flex-shrink-0 transition-transform duration-200 ${
+                              isSortDropdownOpen ? "rotate-180" : ""
+                            }`}
+                          />
+                        </button>
+                        {isSortDropdownOpen && (
+                          <div className="absolute z-50 w-full sm:min-w-[200px] mt-1 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg overflow-hidden">
+                            <div className="py-1">
+                              {[
+                                { value: "newest", label: "Newest" },
+                                { value: "oldest", label: "Oldest" },
+                                { value: "price_asc", label: "Price: Low to High" },
+                                { value: "price_desc", label: "Price: High to Low" },
+                                { value: "name_asc", label: "Name: A to Z" },
+                                { value: "name_desc", label: "Name: Z to A" },
+                              ].map((option) => (
+                                <button
+                                  key={option.value}
+                                  type="button"
+                                  onClick={() => {
+                                    setSortBy(
+                                      option.value as "price_asc" | "price_desc" | "name_asc" | "name_desc" | "newest" | "oldest"
+                                    );
+                                    setIsSortDropdownOpen(false);
+                                  }}
+                                  className={`w-full text-left px-4 py-2.5 text-sm sm:text-base transition-colors ${
+                                    sortBy === option.value
+                                      ? "bg-sky-50 dark:bg-sky-900/20 text-sky-600 dark:text-sky-400 font-medium"
+                                      : "text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-700"
+                                  }`}
+                                >
+                                  {option.label}
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                        )}
                       </div>
                     </div>
 
                     <button
                       onClick={() => router.push("/sell")}
-                      className="px-4 py-2 bg-sky-600 dark:bg-sky-500 text-white font-semibold rounded-lg hover:bg-sky-700 dark:hover:bg-sky-600 transition-colors cursor-pointer flex items-center gap-2 whitespace-nowrap"
+                      className="px-4 py-2.5 sm:py-2 bg-sky-600 dark:bg-sky-500 text-white text-sm sm:text-base font-semibold rounded-lg hover:bg-sky-700 dark:hover:bg-sky-600 transition-colors cursor-pointer flex items-center justify-center gap-2 whitespace-nowrap w-full sm:w-auto"
                     >
                       <Plus className="w-4 h-4" />
                       Add Product
                     </button>
                   </div>
 
-                  <div className="flex items-center justify-between mb-4">
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0 mb-4">
+                    <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
                       {filteredProducts.length} product
                       {filteredProducts.length !== 1 ? "s" : ""}
                     </p>
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto">
                       {selectedProducts.size > 0 && (
                         <button
                           onClick={() => {
                             setBulkDeleteModal({ isOpen: true });
                           }}
-                          className="px-3 py-1.5 border border-red-600 dark:border-red-500 text-red-600 dark:text-red-400 text-xs font-medium rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors cursor-pointer"
+                          className="px-3 py-1.5 border border-red-600 dark:border-red-500 text-red-600 dark:text-red-400 text-xs font-medium rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors cursor-pointer flex-1 sm:flex-none"
                         >
                           Delete Product
                         </button>
                       )}
-                      <label className="flex items-center gap-2 cursor-pointer">
+                      <label className="flex items-center gap-2 cursor-pointer flex-1 sm:flex-none justify-end sm:justify-start">
                         <input
                           type="checkbox"
                           checked={
@@ -847,21 +899,21 @@ const ProductPage = () => {
                           onChange={handleSelectAll}
                           className="w-4 h-4 text-sky-600 bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded focus:ring-sky-500 dark:focus:ring-sky-400"
                         />
-                        <span className="text-sm text-gray-700 dark:text-gray-300">
+                        <span className="text-xs sm:text-sm text-gray-700 dark:text-gray-300">
                           Select All
                         </span>
                       </label>
                     </div>
                   </div>
 
-                  <div className="space-y-4">
+                  <div className="space-y-3 sm:space-y-4">
                     {filteredProducts.map((product) => (
                       <div
                         key={product.id}
-                        className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 sm:p-6"
+                        className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-3 sm:p-4 md:p-6"
                       >
-                        <div className="flex items-center gap-4 min-h-[120px]">
-                          <div className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-700 flex-shrink-0">
+                        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4">
+                          <div className="relative w-full h-48 sm:w-28 sm:h-28 md:w-32 md:h-32 rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-700 flex-shrink-0">
                             {product.images && product.images.length > 0 ? (
                               <Image
                                 src={product.images[0]}
@@ -872,33 +924,59 @@ const ProductPage = () => {
                               />
                             ) : (
                               <div className="w-full h-full flex items-center justify-center">
-                                <Package className="w-8 h-8 text-gray-400" />
+                                <Package className="w-8 h-8 sm:w-10 sm:h-10 text-gray-400" />
                               </div>
                             )}
                           </div>
                           
-                          <div className="flex-1 min-w-0">
-                            <h3 className="text-base sm:text-lg font-bold text-gray-900 dark:text-white mb-2 truncate">
-                              {product.name}
-                            </h3>
+                          <div className="flex-1 min-w-0 w-full sm:w-auto">
+                            <div className="flex items-start justify-between gap-2 mb-2">
+                              <h3 className="text-sm sm:text-base md:text-lg font-bold text-gray-900 dark:text-white flex-1 line-clamp-2 sm:truncate">
+                                {product.name}
+                              </h3>
+                              <div className="flex items-center gap-2 sm:hidden flex-shrink-0">
+                                <input
+                                  type="checkbox"
+                                  checked={selectedProducts.has(product.id)}
+                                  onChange={() => handleToggleSelect(product.id)}
+                                  className="w-4 h-4 text-sky-600 bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded focus:ring-sky-500 dark:focus:ring-sky-400 cursor-pointer"
+                                />
+                                <button
+                                  onClick={() => setToggleStatusModal({ isOpen: true, product })}
+                                  className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2 ${
+                                    product.isActive
+                                      ? "bg-sky-600 dark:bg-sky-500"
+                                      : "bg-gray-300 dark:bg-gray-600"
+                                  }`}
+                                >
+                                  <span
+                                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                                      product.isActive
+                                        ? "translate-x-5"
+                                        : "translate-x-1"
+                                    }`}
+                                  />
+                                </button>
+                              </div>
+                            </div>
                             
-                            <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm">
-                              <div>
-                                <span className="text-gray-500 dark:text-gray-400">Price: </span>
+                            <div className="flex flex-wrap items-center gap-x-3 sm:gap-x-4 gap-y-1.5 text-xs sm:text-sm mb-3">
+                              <div className="flex items-center gap-1">
+                                <span className="text-gray-500 dark:text-gray-400">Price:</span>
                                 <span className="text-gray-900 dark:text-white font-medium">
                                   {formatPrice(product.variants[0]?.price || 0)}
                                 </span>
                               </div>
-                              <div>
-                                <span className="text-gray-500 dark:text-gray-400">Stock: </span>
+                              <div className="flex items-center gap-1">
+                                <span className="text-gray-500 dark:text-gray-400">Stock:</span>
                                 <span className="text-gray-900 dark:text-white font-medium">
                                   {getTotalStock(product)}
                                 </span>
                               </div>
                               {product.variants.length > 0 && (
-                                <div>
-                                  <span className="text-gray-500 dark:text-gray-400">Variants: </span>
-                                  <span className="text-gray-900 dark:text-white font-medium">
+                                <div className="w-full sm:w-auto flex items-center gap-1">
+                                  <span className="text-gray-500 dark:text-gray-400">Variants:</span>
+                                  <span className="text-gray-900 dark:text-white font-medium text-xs sm:text-sm">
                                     {product.variants.map((v, idx) => (
                                       <span key={v.id}>
                                         {v.size || "N/A"} / {v.color || "N/A"}
@@ -910,7 +988,7 @@ const ProductPage = () => {
                               )}
                             </div>
 
-                            <div className="mt-3 flex flex-wrap gap-1.5">
+                            <div className="flex flex-wrap gap-1.5 sm:gap-1.5">
                               {product.variants.map((variant) => (
                                 <React.Fragment key={variant.id}>
                                   <button
@@ -956,7 +1034,7 @@ const ProductPage = () => {
                             </div>
                           </div>
 
-                          <div className="flex flex-col items-center justify-between min-h-[120px]">
+                          <div className="hidden sm:flex flex-col items-center justify-between min-h-[120px] flex-shrink-0">
                             <input
                               type="checkbox"
                               checked={selectedProducts.has(product.id)}
