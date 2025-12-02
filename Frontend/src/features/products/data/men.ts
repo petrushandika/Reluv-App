@@ -1,6 +1,6 @@
-import { Product } from "../types";
+import { MockProduct } from "../types/mock";
 
-export const trendingNow: Product[] = [
+export const trendingNow: MockProduct[] = [
   {
     id: 1,
     brand: "NIKE",
@@ -60,7 +60,7 @@ export const trendingNow: Product[] = [
   },
 ];
 
-export const slashedPrices: Product[] = [
+export const slashedPrices: MockProduct[] = [
   {
     id: 1,
     brand: "NIKE",
@@ -120,7 +120,7 @@ export const slashedPrices: Product[] = [
   },
 ];
 
-export const recommended: Product[] = [
+export const recommended: MockProduct[] = [
   {
     id: 1,
     brand: "NIKE",

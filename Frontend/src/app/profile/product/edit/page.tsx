@@ -3,10 +3,8 @@
 import React, { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
-  Package,
   ChevronLeft,
   Save,
-  Plus,
   Trash2,
   X,
 } from "lucide-react";

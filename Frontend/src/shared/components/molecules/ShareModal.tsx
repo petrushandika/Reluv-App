@@ -123,35 +123,49 @@ const ShareModal = ({ isOpen, onClose, product }: ShareModalProps) => {
         <div className="flex space-x-4 overflow-x-auto overflow-y-hidden pb-3 share-modal-scroll snap-x snap-mandatory">
           {shareOptions.map((option) => {
             const isCopyButton = option.name === "Copy";
-            const Component = isCopyButton ? "button" : "a";
-            const props = isCopyButton
-              ? {
-                  onClick: option.onClick,
-                  type: "button" as const,
-                }
-              : {
-                  href: option.href,
-                  target: "_blank",
-                  rel: "noopener noreferrer",
-                };
+            const baseClassName = "group flex-shrink-0 flex flex-col items-center justify-center p-3 bg-gray-50/80 dark:bg-gray-700/80 backdrop-blur-sm rounded-lg hover:bg-gray-100/90 dark:hover:bg-gray-600/90 transition-colors w-20 shadow-sm cursor-pointer snap-start";
+
+            if (isCopyButton) {
+              return (
+                <button
+                  key={option.name}
+                  onClick={option.onClick}
+                  type="button"
+                  className={baseClassName}
+                >
+                  <div
+                    className={`w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center rounded-full text-white ${option.color}`}
+                  >
+                    {React.cloneElement(option.icon as React.ReactElement<{ className?: string }>, {
+                      className: "w-5 h-5 sm:w-6 sm:h-6",
+                    })}
+                  </div>
+                  <span className="text-xs mt-2 text-gray-700 dark:text-gray-300 group-hover:text-sky-600 dark:group-hover:text-sky-400">
+                    {option.name}
+                  </span>
+                </button>
+              );
+            }
 
             return (
-              <Component
-              key={option.name}
-                {...props}
-                className="group flex-shrink-0 flex flex-col items-center justify-center p-3 bg-gray-50/80 dark:bg-gray-700/80 backdrop-blur-sm rounded-lg hover:bg-gray-100/90 dark:hover:bg-gray-600/90 transition-colors w-20 shadow-sm cursor-pointer snap-start"
-            >
-              <div
-                className={`w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center rounded-full text-white ${option.color}`}
+              <a
+                key={option.name}
+                href={option.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={baseClassName}
               >
-                {React.cloneElement(option.icon, {
-                  className: "w-5 h-5 sm:w-6 sm:h-6",
-                })}
-              </div>
-              <span className="text-xs mt-2 text-gray-700 dark:text-gray-300 group-hover:text-sky-600 dark:group-hover:text-sky-400">
-                {option.name}
-              </span>
-              </Component>
+                <div
+                  className={`w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center rounded-full text-white ${option.color}`}
+                >
+                  {React.cloneElement(option.icon as React.ReactElement<{ className?: string }>, {
+                    className: "w-5 h-5 sm:w-6 sm:h-6",
+                  })}
+                </div>
+                <span className="text-xs mt-2 text-gray-700 dark:text-gray-300 group-hover:text-sky-600 dark:group-hover:text-sky-400">
+                  {option.name}
+                </span>
+              </a>
             );
           })}
         </div>

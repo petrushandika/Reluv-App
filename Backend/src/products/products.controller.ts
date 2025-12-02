@@ -63,6 +63,16 @@ export class ProductsController {
     return this.productsService.findAll(queryDto);
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Get('me')
+  @HttpCode(HttpStatus.OK)
+  findMyProducts(
+    @GetUser() user: User,
+    @Query(new ValidationPipe({ transform: true })) queryDto: QueryProductDto,
+  ) {
+    return this.productsService.findMyProducts(user, queryDto);
+  }
+
   @Get('slug/:slug')
   @HttpCode(HttpStatus.OK)
   findOneBySlug(@Param('slug') slug: string) {

@@ -37,4 +37,7 @@ export interface ShippingData {
   sicepat: ShippingProvider;
   jne: ShippingProvider;
   gosend: ShippingProvider;
+  tiki: ShippingProvider;
+  jnt: ShippingProvider;
+  pos: ShippingProvider;
 }

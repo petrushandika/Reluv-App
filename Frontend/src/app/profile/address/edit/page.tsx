@@ -22,7 +22,6 @@ import type { SearchResult } from "leaflet-geosearch/dist/providers/provider.js"
 import { toast } from "sonner";
 import Spinner from "@/shared/components/atoms/Spinner";
 import { getAddress, updateAddress } from "@/features/address/api/addressApi";
-import { Address } from "@/features/address/types";
 import {
   Province,
   Regency,

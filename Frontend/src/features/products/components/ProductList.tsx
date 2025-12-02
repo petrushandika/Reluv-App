@@ -51,10 +51,6 @@ const ProductList = ({
 }: ProductListProps) => {
   const safeProducts = Array.isArray(products) ? products : [];
 
-  if (!isLoading && safeProducts.length === 0) {
-    return null;
-  }
-
   const [emblaRef, emblaApi] = useEmblaCarousel({
     align: "start",
     containScroll: "trimSnaps",
@@ -98,6 +94,10 @@ const ProductList = ({
       emblaApi.off("scroll", onScroll);
     };
   }, [emblaApi, onSelect, onScroll]);
+
+  if (!isLoading && safeProducts.length === 0) {
+    return null;
+  }
 
   return (
     <div

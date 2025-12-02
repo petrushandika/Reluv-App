@@ -210,9 +210,79 @@ export class ProductsService {
     };
   }
 
+  async findMyProducts(user: User, queryDto: QueryProductDto) {
+    const { page = 1, limit = 100, categoryId, search } = queryDto;
+    const skip = (page - 1) * limit;
+    const where: Prisma.ProductWhereInput = {
+      sellerId: user.id,
+      categoryId,
+      ...(search && {
+        OR: [
+          { name: { contains: search, mode: 'insensitive' } },
+          { description: { contains: search, mode: 'insensitive' } },
+        ],
+      }),
+    };
+
+    const [products, total] = await this.prisma.$transaction([
+      this.prisma.product.findMany({
+        where,
+        skip,
+        take: limit,
+        select: {
+          id: true,
+          name: true,
+          slug: true,
+          description: true,
+          images: true,
+          isPreloved: true,
+          isPublished: true,
+          isActive: true,
+          viewCount: true,
+          createdAt: true,
+          updatedAt: true,
+          variants: {
+            select: {
+              id: true,
+              size: true,
+              color: true,
+              price: true,
+              compareAtPrice: true,
+              stock: true,
+              condition: true,
+              image: true,
+            },
+          },
+          category: {
+            select: {
+              id: true,
+              name: true,
+              slug: true,
+            },
+          },
+          store: {
+            select: {
+              id: true,
+              name: true,
+              slug: true,
+            },
+          },
+        },
+        orderBy: { createdAt: 'desc' },
+      }),
+      this.prisma.product.count({ where }),
+    ]);
+
+    return products;
+  }
+
   async findOneBySlug(slug: string) {
-    const product = await this.prisma.product.findUnique({
-      where: { slug },
+    const product = await this.prisma.product.findFirst({
+      where: { 
+        slug,
+        isActive: true,
+        isPublished: true,
+      },
       select: {
         id: true,
         name: true,
@@ -313,8 +383,12 @@ export class ProductsService {
   }
 
   async findOne(id: number) {
-    const product = await this.prisma.product.findUnique({
-      where: { id },
+    const product = await this.prisma.product.findFirst({
+      where: { 
+        id,
+        isActive: true,
+        isPublished: true,
+      },
       select: {
         id: true,
         name: true,

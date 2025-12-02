@@ -2,6 +2,7 @@
 
 import { api } from "@/shared/lib/axios";
 import { Product, ProductQuery } from "../types";
+import { AxiosError } from "axios";
 
 export const getProducts = async (query?: ProductQuery): Promise<Product[]> => {
   try {
@@ -34,12 +35,15 @@ export const getProductBySlug = async (slug: string): Promise<Product> => {
       throw new Error("Product not found");
     }
     return response.data;
-  } catch (error: any) {
+  } catch (error) {
     console.error("Failed to fetch product by slug:", slug, error);
-    if (error.response?.status === 404) {
+    const apiError = error as AxiosError<{ message?: string; error?: string }> | Error;
+    if ("response" in apiError && apiError.response?.status === 404) {
       throw new Error("Product not found");
     }
-    throw new Error(error.message || "Unable to load product.");
+    throw new Error(
+      (apiError as Error).message || "Unable to load product."
+    );
   }
 };
 
@@ -50,18 +54,21 @@ export const getProductById = async (id: number): Promise<Product> => {
       throw new Error("Product not found");
     }
     return response.data;
-  } catch (error: any) {
+  } catch (error) {
     console.error("Failed to fetch product:", error);
-    if (error.response?.status === 404) {
+    const apiError = error as AxiosError<{ message?: string; error?: string }> | Error;
+    if ("response" in apiError && apiError.response?.status === 404) {
       throw new Error("Product not found");
     }
-    throw new Error(error.message || "Unable to load product.");
+    throw new Error(
+      (apiError as Error).message || "Unable to load product."
+    );
   }
 };
 
 export const getMyProducts = async (query?: ProductQuery): Promise<Product[]> => {
   try {
-    const response = await api.get<Product[]>("/products", {
+    const response = await api.get<{ data: Product[] }>("/products/me", {
       params: { ...query, page: query?.page || 1, limit: query?.limit || 100 },
     });
 
@@ -70,11 +77,13 @@ export const getMyProducts = async (query?: ProductQuery): Promise<Product[]> =>
       return [];
     }
 
-    if (Array.isArray(response.data)) {
-      return response.data;
+    const products = response.data.data || response.data;
+    
+    if (Array.isArray(products)) {
+      return products;
     }
 
-    console.warn("Response data is not an array:", response.data);
+    console.warn("Response data is not an array:", products);
     return [];
   } catch (error) {
     console.error("Failed to fetch my products:", error);
@@ -104,18 +113,24 @@ export const updateProduct = async (
       throw new Error("Failed to update product");
     }
     return response.data;
-  } catch (error: any) {
+  } catch (error) {
     console.error("Failed to update product:", error);
-    throw new Error(error.message || "Unable to update product.");
+    const apiError = error as AxiosError<{ message?: string; error?: string }> | Error;
+    throw new Error(
+      (apiError as Error).message || "Unable to update product."
+    );
   }
 };
 
 export const deleteProduct = async (id: number): Promise<void> => {
   try {
     await api.delete(`/products/${id}`);
-  } catch (error: any) {
+  } catch (error) {
     console.error("Failed to delete product:", error);
-    throw new Error(error.message || "Unable to delete product.");
+    const apiError = error as AxiosError<{ message?: string; error?: string }> | Error;
+    throw new Error(
+      (apiError as Error).message || "Unable to delete product."
+    );
   }
 };
 
@@ -140,9 +155,12 @@ export const updateProductVariant = async (
 ): Promise<void> => {
   try {
     await api.patch(`/products/${productId}/variants/${variantId}`, payload);
-  } catch (error: any) {
+  } catch (error) {
     console.error("Failed to update variant:", error);
-    throw new Error(error.message || "Unable to update variant.");
+    const apiError = error as AxiosError<{ message?: string; error?: string }> | Error;
+    throw new Error(
+      (apiError as Error).message || "Unable to update variant."
+    );
   }
 };
 
@@ -152,9 +170,12 @@ export const deleteProductVariant = async (
 ): Promise<void> => {
   try {
     await api.delete(`/products/${productId}/variants/${variantId}`);
-  } catch (error: any) {
+  } catch (error) {
     console.error("Failed to delete variant:", error);
-    throw new Error(error.message || "Unable to delete variant.");
+    const apiError = error as AxiosError<{ message?: string; error?: string }> | Error;
+    throw new Error(
+      (apiError as Error).message || "Unable to delete variant."
+    );
   }
 };
 
@@ -165,9 +186,12 @@ export const updateProductPrice = async (
 ): Promise<void> => {
   try {
     await api.patch(`/products/${productId}/variants/${variantId}`, { price });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Failed to update product price:", error);
-    throw new Error(error.message || "Unable to update product price.");
+    const apiError = error as AxiosError<{ message?: string; error?: string }> | Error;
+    throw new Error(
+      (apiError as Error).message || "Unable to update product price."
+    );
   }
 };
 
@@ -178,9 +202,12 @@ export const updateProductStock = async (
 ): Promise<void> => {
   try {
     await api.patch(`/products/${productId}/variants/${variantId}`, { stock });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Failed to update product stock:", error);
-    throw new Error(error.message || "Unable to update product stock.");
+    const apiError = error as AxiosError<{ message?: string; error?: string }> | Error;
+    throw new Error(
+      (apiError as Error).message || "Unable to update product stock."
+    );
   }
 };
 
@@ -196,8 +223,11 @@ export const toggleProductStatus = async (
       throw new Error("Failed to update product status");
     }
     return response.data;
-  } catch (error: any) {
+  } catch (error) {
     console.error("Failed to toggle product status:", error);
-    throw new Error(error.message || "Unable to update product status.");
+    const apiError = error as AxiosError<{ message?: string; error?: string }> | Error;
+    throw new Error(
+      (apiError as Error).message || "Unable to update product status."
+    );
   }
 };

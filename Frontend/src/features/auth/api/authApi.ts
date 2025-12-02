@@ -8,6 +8,8 @@ import {
 } from "../types";
 import { api } from "@/shared/lib/axios";
 
+export { api };
+
 export const registerUser = async (data: RegisterPayload) => {
   const response = await api.post("/auth/register", data);
   return response.data;

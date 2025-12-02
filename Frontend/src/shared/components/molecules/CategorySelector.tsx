@@ -111,10 +111,6 @@ const CategorySelector = ({
       )
     : categories;
 
-  const selectedCategory = selectedCategoryId
-    ? findCategoryById(categories, selectedCategoryId)
-    : null;
-
   const selectedCategoryPath = selectedCategoryId
     ? findCategoryPath(categories, selectedCategoryId)
     : null;
