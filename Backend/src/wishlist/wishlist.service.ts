@@ -1,5 +1,6 @@
 import {
   ConflictException,
+  ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -70,11 +71,17 @@ export class WishlistService {
   async addToWishlist(userId: number, productId: number) {
     const product = await this.prisma.product.findUnique({
       where: { id: productId },
-      select: { id: true },
+      select: { id: true, sellerId: true },
     });
 
     if (!product) {
       throw new NotFoundException(`Product with ID ${productId} not found.`);
+    }
+
+    if (product.sellerId === userId) {
+      throw new ForbiddenException(
+        'You cannot add your own product to the wishlist.',
+      );
     }
 
     const existingWishlistItem = await this.prisma.wishlist.findUnique({

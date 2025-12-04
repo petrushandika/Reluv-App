@@ -5,6 +5,8 @@ import Link from "next/link";
 import { Heart } from "lucide-react";
 import { Product } from "@/features/products/types";
 import { useWishlist } from "@/features/wishlist/hooks/useWishlist";
+import { useAuthStore } from "@/features/auth/store/auth.store";
+import { toast } from "sonner";
 
 const formatPrice = (price: number): string => {
   return `Rp${new Intl.NumberFormat("id-ID").format(price)}`;
@@ -24,7 +26,9 @@ interface ProductCardProps {
 
 const ProductCard = ({ product, containerClassName }: ProductCardProps) => {
   const { addItem, removeItem, isInWishlist } = useWishlist();
+  const { user } = useAuthStore();
   const isWishlisted = isInWishlist({ productId: product.id });
+  const isOwnProduct = Boolean(user && product && Number(user.id) === Number(product.sellerId));
 
   const firstVariant =
     product.variants && product.variants.length > 0
@@ -44,6 +48,13 @@ const ProductCard = ({ product, containerClassName }: ProductCardProps) => {
   const handleWishlistToggle = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    if (!user || !product) return;
+    if (Number(user.id) === Number(product.sellerId)) {
+      toast.error("Cannot Add to Wishlist", {
+        description: "You cannot add your own product to the wishlist.",
+      });
+      return;
+    }
     if (isWishlisted) {
       removeItem({ productId: product.id });
     } else {
@@ -75,10 +86,13 @@ const ProductCard = ({ product, containerClassName }: ProductCardProps) => {
 
         <button
           onClick={handleWishlistToggle}
-          className={`absolute top-3 right-3 z-10 p-1.5 bg-white/80 dark:bg-gray-800/80 backdrop-blur-md rounded-full border border-white/30 dark:border-gray-700/30 shadow-md transition-all duration-200 cursor-pointer ${
-            isWishlisted
-              ? "text-red-500 dark:text-red-400 fill-red-500 dark:fill-red-400 hover:bg-white dark:hover:bg-gray-700"
-              : "text-gray-700 dark:text-gray-300 hover:text-red-500 dark:hover:text-red-400 hover:bg-white dark:hover:bg-gray-700"
+          disabled={isOwnProduct}
+          className={`absolute top-3 right-3 z-10 p-1.5 bg-white/80 dark:bg-gray-800/80 backdrop-blur-md rounded-full border border-white/30 dark:border-gray-700/30 shadow-md transition-all duration-200 ${
+            isOwnProduct
+              ? "text-gray-400 dark:text-gray-500 cursor-not-allowed opacity-50"
+              : isWishlisted
+              ? "text-red-500 dark:text-red-400 fill-red-500 dark:fill-red-400 hover:bg-white dark:hover:bg-gray-700 cursor-pointer"
+              : "text-gray-700 dark:text-gray-300 hover:text-red-500 dark:hover:text-red-400 hover:bg-white dark:hover:bg-gray-700 cursor-pointer"
           }`}
           aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
         >

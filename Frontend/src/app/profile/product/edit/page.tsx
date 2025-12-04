@@ -288,7 +288,7 @@ const EditProductPage = () => {
             }}
           >
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
-              <div className="space-y-4">
+              <div className="space-y-4 lg:sticky lg:top-8 lg:self-start">
                 {formData.images.length > 0 ? (
                   <>
                     {formData.images[0] && (

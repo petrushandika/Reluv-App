@@ -2,6 +2,7 @@ import {
   Injectable,
   NotFoundException,
   BadRequestException,
+  ForbiddenException,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateOrderDto } from './dto/create-order.dto';
@@ -39,6 +40,7 @@ export class OrdersService {
                 product: {
                   select: {
                     id: true,
+                    sellerId: true,
                     categoryId: true,
                     storeId: true,
                   },
@@ -62,6 +64,11 @@ export class OrdersService {
     }> = [];
 
     for (const item of cart.items) {
+      if (item.variant.product.sellerId === userId) {
+        throw new ForbiddenException(
+          'You cannot purchase your own products.',
+        );
+      }
       if (item.variant.stock < item.quantity) {
         throw new BadRequestException(
           `Not enough stock for variant ID ${item.variant.id}.`,

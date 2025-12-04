@@ -21,9 +21,11 @@ import { useCart } from "@/features/cart/hooks/useCart";
 import { useWishlist } from "@/features/wishlist/hooks/useWishlist";
 import { useWishlistStore } from "@/features/wishlist/store/wishlist.store";
 import { useBuyStore } from "@/features/checkout/store/buy.store";
+import { useAuthStore } from "@/features/auth/store/auth.store";
 import ShareModal from "@/shared/components/molecules/ShareModal";
 import ProductDetailSkeleton from "@/shared/components/molecules/ProductDetailSkeleton";
 import { formatPrice } from "@/shared/utils/format";
+import { toast } from "sonner";
 
 const ProductDetail = () => {
   const params = useParams();
@@ -40,6 +42,7 @@ const ProductDetail = () => {
   const { addItem: addItemToWishlist, removeItem: removeItemFromWishlist } =
     useWishlist();
   const { setBuyItem } = useBuyStore();
+  const { user } = useAuthStore();
 
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [selectedVariantIndex, setSelectedVariantIndex] = useState(0);
@@ -137,6 +140,7 @@ const ProductDetail = () => {
 
   const selectedVariant = product.variants[selectedVariantIndex];
   const installmentPrice = selectedVariant ? selectedVariant.price / 12 : 0;
+  const isOwnProduct = Boolean(user && product && Number(user.id) === Number(product.sellerId));
 
   const nextImage = () => {
     setIsHovering(false);
@@ -202,12 +206,26 @@ const ProductDetail = () => {
   };
 
   const handleAddToCart = () => {
+    if (!user || !product) return;
+    if (Number(user.id) === Number(product.sellerId)) {
+      toast.error("Cannot Add to Cart", {
+        description: "You cannot add your own product to the cart.",
+      });
+      return;
+    }
     if (selectedVariant) {
       addItemToCart({ variantId: selectedVariant.id, quantity });
     }
   };
 
   const handleBuyNow = () => {
+    if (!user || !product) return;
+    if (Number(user.id) === Number(product.sellerId)) {
+      toast.error("Cannot Buy Now", {
+        description: "You cannot purchase your own product.",
+      });
+      return;
+    }
     if (!selectedVariant || !product) {
       return;
     }
@@ -228,6 +246,13 @@ const ProductDetail = () => {
   };
 
   const handleWishlistToggle = async () => {
+    if (!user || !product) return;
+    if (Number(user.id) === Number(product.sellerId)) {
+      toast.error("Cannot Add to Wishlist", {
+        description: "You cannot add your own product to the wishlist.",
+      });
+      return;
+    }
     if (isWishlisted) {
       await removeItemFromWishlist({ productId: product.id });
     } else {
@@ -520,41 +545,57 @@ const ProductDetail = () => {
                   </button>
                 </div>
               </div>
-              <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 pt-2">
-                <button
-                  onClick={handleAddToCart}
-                  disabled={isAdding}
-                  className="w-full sm:w-auto flex-1 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm border-2 border-sky-600/50 dark:border-sky-400/50 text-sky-600 dark:text-sky-400 font-semibold py-3 sm:py-3 px-4 sm:px-6 rounded-lg transition-colors hover:bg-sky-50/90 dark:hover:bg-sky-900/30 text-sm sm:text-base cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation shadow-md glossy-text-strong"
-                >
-                  {isAdding ? "Adding..." : "Add To Cart"}
-                </button>
-                <button
-                  onClick={handleBuyNow}
-                  className="w-full sm:w-auto flex-1 bg-sky-600/90 dark:bg-sky-500/90 backdrop-blur-sm hover:bg-sky-700/90 dark:hover:bg-sky-600/90 text-white font-semibold py-3 sm:py-3 px-4 sm:px-6 rounded-lg transition-transform text-sm sm:text-base cursor-pointer touch-manipulation shadow-md glossy-text-strong"
-                >
-                  Buy Now
-                </button>
-              </div>
+              {isOwnProduct ? (
+                <div className="pt-2 p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg">
+                  <p className="text-sm text-yellow-800 dark:text-yellow-200 text-center">
+                    You cannot add or purchase your own product.
+                  </p>
+                </div>
+              ) : (
+                <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 pt-2">
+                  <button
+                    onClick={handleAddToCart}
+                    disabled={isAdding || isOwnProduct}
+                    className="w-full sm:w-auto flex-1 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm border-2 border-sky-600/50 dark:border-sky-400/50 text-sky-600 dark:text-sky-400 font-semibold py-3 sm:py-3 px-4 sm:px-6 rounded-lg transition-colors hover:bg-sky-50/90 dark:hover:bg-sky-900/30 text-sm sm:text-base cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation shadow-md glossy-text-strong"
+                  >
+                    {isAdding ? "Adding..." : "Add To Cart"}
+                  </button>
+                  <button
+                    onClick={handleBuyNow}
+                    disabled={isOwnProduct}
+                    className="w-full sm:w-auto flex-1 bg-sky-600/90 dark:bg-sky-500/90 backdrop-blur-sm hover:bg-sky-700/90 dark:hover:bg-sky-600/90 text-white font-semibold py-3 sm:py-3 px-4 sm:px-6 rounded-lg transition-transform text-sm sm:text-base cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation shadow-md glossy-text-strong"
+                  >
+                    Buy Now
+                  </button>
+                </div>
+              )}
               <div className="flex flex-col gap-2 sm:gap-3 md:flex-row">
                 <button
                   type="button"
                   onClick={handleWishlistToggle}
-                  className={`flex items-center justify-center w-full md:w-1/3 border font-medium py-2.5 sm:py-3 px-3 sm:px-4 rounded-lg transition-all duration-200 cursor-pointer text-sm sm:text-base touch-manipulation ${
-                    isWishlisted
-                      ? "border-red-300 dark:border-red-600 bg-red-50 dark:bg-red-900/20 text-red-500 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/30"
-                      : "border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  disabled={isOwnProduct}
+                  className={`flex items-center justify-center w-full md:w-1/3 border font-medium py-2.5 sm:py-3 px-3 sm:px-4 rounded-lg transition-all duration-200 text-sm sm:text-base touch-manipulation ${
+                    isOwnProduct
+                      ? "border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-500 cursor-not-allowed opacity-50"
+                      : isWishlisted
+                      ? "border-red-300 dark:border-red-600 bg-red-50 dark:bg-red-900/20 text-red-500 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/30 cursor-pointer"
+                      : "border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer"
                   }`}
                 >
                   <Heart
                     className={`w-4 h-4 sm:w-5 sm:h-5 mr-2 transition-all duration-200 ${
-                      isWishlisted
+                      isOwnProduct
+                        ? "text-gray-400 dark:text-gray-500"
+                        : isWishlisted
                         ? "text-red-500 dark:text-red-400 fill-red-500 dark:fill-red-400"
                         : "text-gray-700 dark:text-gray-300"
                     }`}
                   />
                   <span
                     className={
-                      isWishlisted
+                      isOwnProduct
+                        ? "text-gray-400 dark:text-gray-500"
+                        : isWishlisted
                         ? "text-red-500 dark:text-red-400"
                         : "text-inherit"
                     }

@@ -85,10 +85,24 @@ export class CartService {
 
     const variant = await this.prisma.variant.findUnique({
       where: { id: variantId },
-      select: { id: true, stock: true },
+      select: { 
+        id: true, 
+        stock: true,
+        product: {
+          select: {
+            id: true,
+            sellerId: true,
+          },
+        },
+      },
     });
     if (!variant) {
       throw new NotFoundException(`Variant with ID ${variantId} not found.`);
+    }
+    if (variant.product.sellerId === userId) {
+      throw new ForbiddenException(
+        'You cannot add your own product to the cart.',
+      );
     }
     if (variant.stock < quantity) {
       throw new NotFoundException(`Not enough stock for this variant.`);
