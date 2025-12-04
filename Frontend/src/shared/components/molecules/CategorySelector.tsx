@@ -74,20 +74,6 @@ const CategorySelector = ({
     return result;
   };
 
-  const findCategoryById = (
-    cats: Category[],
-    id: number
-  ): Category | null => {
-    for (const cat of cats) {
-      if (cat.id === id) return cat;
-      if (cat.childCategories) {
-        const found = findCategoryById(cat.childCategories, id);
-        if (found) return found;
-      }
-    }
-    return null;
-  };
-
   const findCategoryPath = (
     cats: Category[],
     id: number,

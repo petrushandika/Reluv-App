@@ -22,7 +22,6 @@ export default function MenCategory() {
     isLoadingRecommended,
   } = useProduct({ categoryId: 2 });
 
-  // Convert slug back to readable format
   const categoryTitle = category
     ? category
         .split("-")

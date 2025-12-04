@@ -20,10 +20,8 @@ export const useThemeStore = create<ThemeState>()(
         const currentTheme = get().theme;
         const newTheme = currentTheme === "light" ? "dark" : "light";
 
-        // Update state first
         set({ theme: newTheme });
 
-        // Then update DOM
         if (typeof window !== "undefined") {
           const root = document.documentElement;
           if (newTheme === "dark") {
@@ -66,7 +64,6 @@ export const useThemeStore = create<ThemeState>()(
             if (state && state.theme === "dark") {
               root.classList.add("dark");
             } else {
-              // Default to light mode
               root.classList.remove("dark");
             }
           }

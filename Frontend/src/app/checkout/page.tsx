@@ -242,7 +242,6 @@ const Checkout = () => {
 
   useEffect(() => {
     if (hasCheckedCart && !isFetchingCart) {
-      // Only redirect if no buy item and cart is empty
       if (!buyItem && (!cart || (cart.items && cart.items.length === 0))) {
         const timer = setTimeout(() => {
           router.push("/cart");
@@ -566,12 +565,9 @@ const Checkout = () => {
       }
     }
 
-    // Continue with order submission logic here
-    // For now, just show a success message
     toast.success("Order submitted successfully!");
   };
 
-  // If buy item exists, use it; otherwise use cart
   const checkoutItems = buyItem
     ? [
         {

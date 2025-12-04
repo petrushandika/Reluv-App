@@ -96,7 +96,6 @@ const RegisterForm = ({
     e.preventDefault();
     const validation = validateForm();
     if (!validation.isValid) {
-      // Show first error - you can enhance this to show all errors
       alert(validation.errors[0]);
       return;
     }

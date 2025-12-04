@@ -72,7 +72,6 @@ const Promotion = () => {
               transition={{ duration: 0.5, delay: 0.4 }}
               className="mt-8 flex flex-row items-center justify-center md:justify-start gap-6"
             >
-              {/* Kolom untuk tombol download */}
               <div className="flex flex-col gap-4">
                 <motion.a
                   whileHover={{ scale: 1.05 }}

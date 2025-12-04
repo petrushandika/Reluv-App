@@ -36,30 +36,24 @@ export default function RootLayout({
                   const root = document.documentElement;
                   const themeStorage = localStorage.getItem('theme-storage');
                   
-                  // Always start with light mode (remove dark class)
                   root.classList.remove('dark');
                   
-                  // If there's stored theme, apply it
                   if (themeStorage) {
                     try {
                       const parsed = JSON.parse(themeStorage);
                       if (parsed && parsed.state && parsed.state.theme === 'dark') {
                         root.classList.add('dark');
                       } else {
-                        // Ensure light mode if stored theme is not dark
                         root.classList.remove('dark');
                       }
                     } catch (e) {
-                      // If parsing fails, clear storage and use light mode
                       localStorage.removeItem('theme-storage');
                       root.classList.remove('dark');
                     }
                   } else {
-                    // No storage, ensure light mode
                     root.classList.remove('dark');
                   }
                 } catch (e) {
-                  // On any error, ensure light mode
                   document.documentElement.classList.remove('dark');
                 }
               })();
