@@ -93,7 +93,7 @@ const ReviewList = () => {
         </div>
 
         <div className="text-center mt-12">
-          <button className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm text-sky-600 dark:text-sky-400 font-semibold py-3 px-8 border border-sky-600/50 dark:border-sky-400/50 rounded-md hover:bg-sky-600/90 dark:hover:bg-sky-500/90 hover:text-white transition-all duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:ring-opacity-50 shadow-md hover:shadow-lg">
+          <button className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm text-sky-600 dark:text-sky-400 font-semibold py-3 px-8 border border-sky-600/50 dark:border-sky-400/50 rounded-md hover:bg-sky-600/90 dark:hover:bg-sky-500/90 hover:text-white transition-all duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:ring-opacity-50 shadow-md hover:shadow-lg cursor-pointer">
             More About reluv
           </button>
         </div>

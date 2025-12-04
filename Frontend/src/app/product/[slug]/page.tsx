@@ -448,7 +448,7 @@ const ProductDetail = () => {
                     <span className="font-medium">Installment</span> from
                     {formatPrice(installmentPrice)}/month
                   </span>
-                  <button className="text-sky-600 dark:text-sky-400 font-medium hover:underline">
+                  <button className="text-sky-600 dark:text-sky-400 font-medium hover:underline cursor-pointer">
                     See Detail
                   </button>
                 </div>
@@ -663,7 +663,7 @@ const ProductDetail = () => {
                     {selectedVariant.height} cm
                   </p>
                 </div>
-                <button className="text-sky-600 dark:text-sky-400 font-medium text-xs sm:text-sm mt-2 hover:underline">
+                <button className="text-sky-600 dark:text-sky-400 font-medium text-xs sm:text-sm mt-2 hover:underline cursor-pointer">
                   Read More
                 </button>
                 <div className="mt-4 sm:mt-6 p-3 sm:p-4 border border-gray-200/50 dark:border-gray-700/50 rounded-lg bg-white/90 dark:bg-gray-800/90 backdrop-blur-md shadow-sm">

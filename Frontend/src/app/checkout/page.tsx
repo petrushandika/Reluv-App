@@ -1512,7 +1512,7 @@ const Checkout = () => {
                         </div>
                         <button
                           onClick={() => setSelectedVoucher(null)}
-                          className="p-1 hover:bg-sky-100 dark:hover:bg-sky-800 rounded-full"
+                          className="p-1 hover:bg-sky-100 dark:hover:bg-sky-800 rounded-full cursor-pointer"
                         >
                           <X size={16} />
                         </button>
@@ -1520,7 +1520,7 @@ const Checkout = () => {
                     ) : (
                       <button
                         onClick={() => setIsVoucherModalOpen(true)}
-                        className="w-full flex items-center justify-center gap-2 border-2 border-dashed border-gray-300 dark:border-gray-600 text-gray-500 dark:text-gray-400 hover:border-sky-500 dark:hover:border-sky-400 hover:text-sky-600 dark:hover:text-sky-400 transition-colors p-3 rounded-lg"
+                        className="w-full flex items-center justify-center gap-2 border-2 border-dashed border-gray-300 dark:border-gray-600 text-gray-500 dark:text-gray-400 hover:border-sky-500 dark:hover:border-sky-400 hover:text-sky-600 dark:hover:text-sky-400 transition-colors p-3 rounded-lg cursor-pointer"
                       >
                         <Ticket size={18} />
                         <span className="text-sm font-semibold">

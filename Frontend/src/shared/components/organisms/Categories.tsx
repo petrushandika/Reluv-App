@@ -174,7 +174,7 @@ const Categories: React.FC = () => {
             <div className="w-12 sm:w-16 md:w-20 h-0.5 sm:h-1 bg-gradient-to-r from-sky-400 to-sky-600 rounded-full"></div>
           </div>
 
-          <button className="group flex items-center gap-1.5 sm:gap-2 text-sky-500 dark:text-sky-400 hover:text-sky-600 dark:hover:text-sky-300 transition-all duration-300 font-medium text-xs sm:text-sm md:text-base touch-manipulation">
+          <button className="group flex items-center gap-1.5 sm:gap-2 text-sky-500 dark:text-sky-400 hover:text-sky-600 dark:hover:text-sky-300 transition-all duration-300 font-medium text-xs sm:text-sm md:text-base touch-manipulation cursor-pointer">
             <Grid3X3
               size={16}
               className="sm:w-[18px] sm:h-[18px] group-hover:rotate-90 transition-transform duration-300"

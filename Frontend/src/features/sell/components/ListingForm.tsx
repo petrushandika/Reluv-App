@@ -223,7 +223,7 @@ const ListingForm = ({
                           condition: key as Condition,
                         }))
                       }
-                      className={`px-4 py-2 text-sm rounded-full border transition-colors ${
+                      className={`px-4 py-2 text-sm rounded-full border transition-colors cursor-pointer ${
                         listingData.condition === key
                           ? "bg-sky-600 text-white border-sky-600"
                           : "bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-300 border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600"
@@ -464,7 +464,7 @@ const ListingForm = ({
           <button
             type="submit"
             disabled={isLoading || !isFormValid()}
-            className="w-full bg-sky-600 dark:bg-sky-500 text-white font-bold py-3 rounded-lg hover:bg-sky-700 dark:hover:bg-sky-600 shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+            className="w-full bg-sky-600 dark:bg-sky-500 text-white font-bold py-3 rounded-lg hover:bg-sky-700 dark:hover:bg-sky-600 shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed transition-all cursor-pointer"
           >
             {isLoading ? "Selling..." : "Sell Now"}
           </button>

@@ -39,13 +39,13 @@ const ConfirmationModal = ({
         <div className="flex justify-end items-center space-x-3">
           <button
             onClick={onClose}
-            className="px-5 py-2.5 rounded-md text-sm font-medium text-black dark:text-white border border-gray-300/50 dark:border-gray-600/50 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm hover:bg-gray-50/90 dark:hover:bg-gray-700/90 transition-colors shadow-sm glossy-text-strong"
+            className="px-5 py-2.5 rounded-md text-sm font-medium text-black dark:text-white border border-gray-300/50 dark:border-gray-600/50 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm hover:bg-gray-50/90 dark:hover:bg-gray-700/90 transition-colors shadow-sm glossy-text-strong cursor-pointer"
           >
             Cancel
           </button>
           <button
             onClick={onConfirm}
-            className="px-5 py-2.5 rounded-md bg-red-600/90 dark:bg-red-500/90 backdrop-blur-sm text-sm font-medium text-white hover:bg-red-700/90 dark:hover:bg-red-600/90 transition-colors shadow-md glossy-text-strong"
+            className="px-5 py-2.5 rounded-md bg-red-600/90 dark:bg-red-500/90 backdrop-blur-sm text-sm font-medium text-white hover:bg-red-700/90 dark:hover:bg-red-600/90 transition-colors shadow-md glossy-text-strong cursor-pointer"
           >
             Remove
           </button>

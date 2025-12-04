@@ -848,7 +848,7 @@ const Navbar = () => {
 
             <button
               onClick={toggleMobileMenu}
-              className="p-1 transition-all duration-300 transform hover:scale-110 active:scale-95"
+              className="p-1 transition-all duration-300 transform hover:scale-110 active:scale-95 cursor-pointer"
             >
               {isMobileMenuOpen ? (
                 <X className="w-6 h-6 text-gray-800 dark:text-white transition-all duration-300" />
