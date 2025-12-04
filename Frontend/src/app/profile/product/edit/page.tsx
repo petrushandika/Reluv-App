@@ -269,13 +269,13 @@ const EditProductPage = () => {
     <PrivateRoute>
       <div className="min-h-screen bg-white dark:bg-gray-900 w-full flex items-center justify-center p-3 sm:p-4">
         <div className="container mx-auto px-4 sm:px-6 md:px-10 xl:px-20 2xl:px-40 py-4 sm:py-5">
-          <div className="mb-6">
+          <div className="mb-4 sm:mb-6">
             <button
               onClick={() => router.push("/profile/product")}
-              className="flex items-center gap-2 text-gray-700 dark:text-gray-300 mb-4 cursor-pointer hover:text-gray-900 dark:hover:text-white transition-colors"
+              className="flex items-center gap-2 text-gray-700 dark:text-gray-300 mb-3 sm:mb-4 cursor-pointer hover:text-gray-900 dark:hover:text-white transition-colors"
             >
-              <ChevronLeft className="w-5 h-5" />
-              <h1 className="text-xl font-bold text-gray-900 dark:text-white">
+              <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
+              <h1 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">
                 Edit Product
               </h1>
             </button>
@@ -287,8 +287,8 @@ const EditProductPage = () => {
               handleSaveProduct(); 
             }}
           >
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
-              <div className="space-y-4 lg:sticky lg:top-8 lg:self-start">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 items-start">
+              <div className="space-y-3 sm:space-y-4 lg:sticky lg:top-8 lg:self-start">
                 {formData.images.length > 0 ? (
                   <>
                     {formData.images[0] && (
@@ -301,7 +301,7 @@ const EditProductPage = () => {
                             className="object-cover"
                             unoptimized
                           />
-                          <div className="absolute top-2 left-2 bg-black bg-opacity-60 dark:bg-gray-900 dark:bg-opacity-80 text-white text-xs font-bold px-2 py-1 rounded">
+                          <div className="absolute top-2 left-2 bg-black bg-opacity-60 dark:bg-gray-900 dark:bg-opacity-80 text-white text-[10px] sm:text-xs font-bold px-1.5 sm:px-2 py-0.5 sm:py-1 rounded">
                             COVER
                           </div>
                           <button
@@ -317,16 +317,16 @@ const EditProductPage = () => {
                               });
                               setNewImageFiles(newImageFiles.filter((_, i) => i !== 0));
                             }}
-                            className="absolute top-2 right-2 bg-red-500 dark:bg-red-600 text-white rounded-full p-1.5 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+                            className="absolute top-2 right-2 bg-red-500 dark:bg-red-600 text-white rounded-full p-1 sm:p-1.5 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
                             aria-label="Remove cover image"
                           >
-                            <X className="w-4 h-4" />
+                            <X className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                           </button>
                         </div>
                       </div>
                     )}
 
-                    <div className="grid grid-cols-4 gap-3">
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3">
                       {formData.images.slice(1).map((image, index) => {
                         const actualIndex = index + 1;
                         return (
@@ -353,10 +353,10 @@ const EditProductPage = () => {
                                 });
                                 setNewImageFiles(newImageFiles.filter((_, i) => i !== actualIndex));
                               }}
-                              className="absolute top-1 right-1 bg-red-500 dark:bg-red-600 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
-                              aria-label="Remove image"
-                            >
-                              <X className="w-3 h-3" />
+                            className="absolute top-1 right-1 bg-red-500 dark:bg-red-600 text-white rounded-full p-0.5 sm:p-1 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+                            aria-label="Remove image"
+                          >
+                            <X className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
                             </button>
                           </div>
                         );
@@ -383,25 +383,25 @@ const EditProductPage = () => {
                             onDrop={handleDrop}
                             onClick={() => fileInputRef.current?.click()}
                           >
-                            <ImagePlus className="h-8 w-8 text-sky-500 dark:text-sky-400" />
-                            <p className="mt-1 text-xs text-center">Add more</p>
+                            <ImagePlus className="h-6 w-6 sm:h-8 sm:w-8 text-sky-500 dark:text-sky-400" />
+                            <p className="mt-1 text-[10px] sm:text-xs text-center">Add more</p>
                           </div>
                         </>
                       )}
                     </div>
                   </>
                 ) : (
-                  <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-8 shadow-sm">
-                    <p className="text-center text-gray-500 dark:text-gray-400">
+                  <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6 sm:p-8 shadow-sm">
+                    <p className="text-center text-sm sm:text-base text-gray-500 dark:text-gray-400">
                       No images available
                     </p>
                   </div>
                 )}
               </div>
 
-              <div className="border border-gray-200 dark:border-gray-700 p-6 rounded-lg space-y-6 bg-white dark:bg-gray-800 shadow-sm">
+              <div className="border border-gray-200 dark:border-gray-700 p-4 sm:p-6 rounded-lg space-y-4 sm:space-y-6 bg-white dark:bg-gray-800 shadow-sm">
                 <div>
-                  <h5 className="text-sm font-semibold text-gray-900 dark:text-white">
+                  <h5 className="text-xs sm:text-sm font-semibold text-gray-900 dark:text-white">
                     Product Details
                   </h5>
                 </div>
@@ -416,7 +416,7 @@ const EditProductPage = () => {
                 <div>
                   <label
                     htmlFor="name"
-                    className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                    className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5 sm:mb-2"
                   >
                     Listing Title *
                   </label>
@@ -428,22 +428,22 @@ const EditProductPage = () => {
                       setFormData({ ...formData, name: e.target.value })
                     }
                     placeholder="e.g. Vintage Leather Handbag"
-                    className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
+                    className="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
                     required
                   />
                 </div>
 
                 {variants.length > 0 && variants[0] && (
                   <div>
-                    <h4 className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    <h4 className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 sm:mb-2">
                       About the item
                     </h4>
-                    <div className="space-y-4">
+                    <div className="space-y-3 sm:space-y-4">
                       <div>
-                        <label className="block text-xs text-gray-500 dark:text-gray-400 mb-2">
+                        <label className="block text-[10px] sm:text-xs text-gray-500 dark:text-gray-400 mb-1.5 sm:mb-2">
                           Condition *
                         </label>
-                        <div className="flex flex-wrap gap-2">
+                        <div className="flex flex-wrap gap-1.5 sm:gap-2">
                           {(["NEW", "LIKE_NEW", "GOOD", "FAIR", "POOR"] as Condition[]).map((condition) => (
                             <button
                               key={condition}
@@ -451,7 +451,7 @@ const EditProductPage = () => {
                               onClick={() =>
                                 handleVariantChange(variants[0].id, "condition", condition)
                               }
-                              className={`px-4 py-2 text-sm rounded-full border transition-colors cursor-pointer ${
+                              className={`px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm rounded-full border transition-colors cursor-pointer ${
                                 variants[0].condition === condition
                                   ? "bg-sky-600 text-white border-sky-600"
                                   : "bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-300 border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600"
@@ -470,7 +470,7 @@ const EditProductPage = () => {
                       <div>
                         <label
                           htmlFor="conditionNote"
-                          className="block text-xs text-gray-500 dark:text-gray-400 mb-1"
+                          className="block text-[10px] sm:text-xs text-gray-500 dark:text-gray-400 mb-1"
                         >
                           Condition Note (Optional)
                         </label>
@@ -485,21 +485,21 @@ const EditProductPage = () => {
                               e.target.value
                             )
                           }
-                          className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
+                          className="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
                           placeholder="e.g. Slight scratch on the buckle"
                         />
                       </div>
 
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
                         <div>
                           <label
                             htmlFor="price"
-                            className="block text-xs text-gray-500 dark:text-gray-400 mb-1"
+                            className="block text-[10px] sm:text-xs text-gray-500 dark:text-gray-400 mb-1"
                           >
                             Price (IDR) *
                           </label>
                           <div className="relative">
-                            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400">
+                            <span className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 text-xs sm:text-sm text-gray-500 dark:text-gray-400">
                               Rp
                             </span>
                             <input
@@ -508,7 +508,7 @@ const EditProductPage = () => {
                               value={formatPrice(variants[0].price)}
                               onChange={(e) => handlePriceChange(variants[0].id, e.target.value)}
                               placeholder="0"
-                              className="w-full pl-12 pr-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
+                              className="w-full pl-10 sm:pl-12 pr-3 sm:pr-4 py-2 sm:py-3 text-sm sm:text-base bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
                               required
                             />
                           </div>
@@ -516,7 +516,7 @@ const EditProductPage = () => {
                         <div>
                           <label
                             htmlFor="stock"
-                            className="block text-xs text-gray-500 dark:text-gray-400 mb-1"
+                            className="block text-[10px] sm:text-xs text-gray-500 dark:text-gray-400 mb-1"
                           >
                             Stock
                           </label>
@@ -534,7 +534,7 @@ const EditProductPage = () => {
                             placeholder="1"
                             min="0"
                             max="999999"
-                            className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
+                            className="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
                           />
                         </div>
                       </div>
@@ -543,7 +543,7 @@ const EditProductPage = () => {
                 )}
 
                 {variants.length > 0 && variants[0] && (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
                     <CustomSelect
                       label="Size (Optional)"
                       placeholder="Select a size"
@@ -608,7 +608,7 @@ const EditProductPage = () => {
                 <div>
                   <label
                     htmlFor="description"
-                    className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                    className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5 sm:mb-2"
                   >
                     Description (Optional)
                   </label>
@@ -621,10 +621,10 @@ const EditProductPage = () => {
                     rows={4}
                     placeholder="Describe your item in detail..."
                     maxLength={10000}
-                    className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 resize-none"
+                    className="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 resize-none"
                   />
                   {formData.description.length > 9500 && (
-                    <p className="text-xs text-amber-600 dark:text-amber-400 mt-1">
+                    <p className="text-[10px] sm:text-xs text-amber-600 dark:text-amber-400 mt-1">
                       {10000 - formData.description.length} characters remaining
                     </p>
                   )}
@@ -632,14 +632,14 @@ const EditProductPage = () => {
 
                 {variants.length > 0 && variants[0] && (
                   <div>
-                    <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    <h4 className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                       Shipping Details (Optional)
                     </h4>
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-4">
                       <div>
                         <label
                           htmlFor="weight"
-                          className="block text-xs text-gray-500 dark:text-gray-400 mb-1"
+                          className="block text-[10px] sm:text-xs text-gray-500 dark:text-gray-400 mb-1"
                         >
                           Weight (g)
                         </label>
@@ -657,13 +657,13 @@ const EditProductPage = () => {
                           placeholder="e.g. 500"
                           min="1"
                           max="999999"
-                          className="w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
+                          className="w-full px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
                         />
                       </div>
                       <div>
                         <label
                           htmlFor="length"
-                          className="block text-xs text-gray-500 dark:text-gray-400 mb-1"
+                          className="block text-[10px] sm:text-xs text-gray-500 dark:text-gray-400 mb-1"
                         >
                           Length (cm)
                         </label>
@@ -681,13 +681,13 @@ const EditProductPage = () => {
                           placeholder="e.g. 20"
                           min="1"
                           max="9999"
-                          className="w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
+                          className="w-full px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
                         />
                       </div>
                       <div>
                         <label
                           htmlFor="width"
-                          className="block text-xs text-gray-500 dark:text-gray-400 mb-1"
+                          className="block text-[10px] sm:text-xs text-gray-500 dark:text-gray-400 mb-1"
                         >
                           Width (cm)
                         </label>
@@ -705,13 +705,13 @@ const EditProductPage = () => {
                           placeholder="e.g. 15"
                           min="1"
                           max="9999"
-                          className="w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
+                          className="w-full px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
                         />
                       </div>
                       <div>
                         <label
                           htmlFor="height"
-                          className="block text-xs text-gray-500 dark:text-gray-400 mb-1"
+                          className="block text-[10px] sm:text-xs text-gray-500 dark:text-gray-400 mb-1"
                         >
                           Height (cm)
                         </label>
@@ -729,7 +729,7 @@ const EditProductPage = () => {
                           placeholder="e.g. 10"
                           min="1"
                           max="9999"
-                          className="w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
+                          className="w-full px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
                         />
                       </div>
                     </div>
@@ -745,11 +745,11 @@ const EditProductPage = () => {
                     onChange={(e) =>
                       setFormData({ ...formData, isPreloved: e.target.checked })
                     }
-                    className="h-4 w-4 text-sky-600 focus:ring-sky-500 border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700"
+                    className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-sky-600 focus:ring-sky-500 border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 cursor-pointer"
                   />
                   <label
                     htmlFor="isPreloved"
-                    className="ml-2 block text-sm text-gray-900 dark:text-gray-300"
+                    className="ml-2 block text-xs sm:text-sm text-gray-900 dark:text-gray-300 cursor-pointer"
                   >
                     This is a pre-loved item
                   </label>
@@ -758,7 +758,7 @@ const EditProductPage = () => {
                 <button
                   type="submit"
                   disabled={isSaving || !formData.name}
-                  className="w-full bg-sky-600 dark:bg-sky-500 text-white font-bold py-3 rounded-lg hover:bg-sky-700 dark:hover:bg-sky-600 shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed transition-all cursor-pointer"
+                  className="w-full bg-sky-600 dark:bg-sky-500 text-white font-bold py-2.5 sm:py-3 text-sm sm:text-base rounded-lg hover:bg-sky-700 dark:hover:bg-sky-600 shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed transition-all cursor-pointer"
                 >
                   {isSaving ? "Saving..." : "Save Product"}
                 </button>
