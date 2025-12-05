@@ -16,7 +16,7 @@ async function bootstrap() {
 
   app.use(compression());
 
-  app.enableCors();
+  app.enableCors({ origin: true, credentials: true });
 
   app.use(json({ limit: '1mb' }));
 
