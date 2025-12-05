@@ -177,7 +177,7 @@ Access to XMLHttpRequest has been blocked by CORS policy
 **Solutions:**
 1. Check FRONTEND_URL in `.env`:
    ```env
-   FRONTEND_URL=http://localhost:3000
+   FRONTEND_URL=http://localhost:3099
    ```
 
 2. Verify CORS is enabled in `main.ts`

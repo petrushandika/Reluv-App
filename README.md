@@ -44,7 +44,7 @@ cp .env.example .env.local
 npm run dev
 ```
 
-Frontend akan berjalan di `http://localhost:3000`
+Frontend akan berjalan di `http://localhost:3099`
 
 ## 📚 Documentation
 

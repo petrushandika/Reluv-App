@@ -28,7 +28,7 @@ export class FacebookController {
   ) {
     const { token } = this.facebookService.login(req.user);
     const frontendUrl =
-      this.configService.get<string>('FRONTEND_URL') || 'http://localhost:3000';
+      this.configService.get<string>('FRONTEND_URL') || 'http://localhost:3099';
 
     res.redirect(`${frontendUrl}/auth/callback?token=${token}`);
   }

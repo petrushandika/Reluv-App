@@ -25,7 +25,7 @@ export class GoogleController {
   async googleAuthRedirect(@Req() req: RequestWithUser, @Res() res: Response) {
     const { token } = this.googleService.login(req.user);
     const frontendUrl =
-      this.configService.get<string>('FRONTEND_URL') || 'http://localhost:3000';
+      this.configService.get<string>('FRONTEND_URL') || 'http://localhost:3099';
 
     res.redirect(`${frontendUrl}/auth/callback?token=${token}`);
   }

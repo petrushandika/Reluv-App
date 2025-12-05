@@ -29,7 +29,7 @@ export class EmailService {
   }
 
   async sendPasswordReset(user: User, token: string) {
-    const url = `http://localhost:3000/auth/reset?token=${token}`;
+    const url = `http://localhost:3099/auth/reset?token=${token}`;
 
     await this.mailerService.sendMail({
       to: user.email,
@@ -43,7 +43,7 @@ export class EmailService {
   }
 
   async sendOrderStatusUpdate(user: User, order: OrderWithDetails) {
-    const orderUrl = `http://localhost:3000/orders/${order.id}`;
+    const orderUrl = `http://localhost:3099/orders/${order.id}`;
 
     const formattedItems = order.items.map((item) => ({
       productName: item.variant.product.name,

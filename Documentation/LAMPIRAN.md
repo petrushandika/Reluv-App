@@ -859,7 +859,7 @@ JWT_REFRESH_EXPIRES_IN=7d
 # Application Configuration
 PORT=8000
 NODE_ENV=development
-FRONTEND_URL=http://localhost:3000
+FRONTEND_URL=http://localhost:3099
 API_PREFIX=/api/v1
 
 # Cloudinary Configuration
@@ -912,7 +912,7 @@ NEXT_PUBLIC_MIDTRANS_IS_PRODUCTION=false
 
 # Application
 NEXT_PUBLIC_APP_NAME=Reluv App
-NEXT_PUBLIC_APP_URL=http://localhost:3000
+NEXT_PUBLIC_APP_URL=http://localhost:3099
 ```
 
 ## Lampiran E: Testing Scenarios

@@ -77,7 +77,7 @@ JWT_EXPIRES_IN="7d"
 # Server
 PORT=8000
 NODE_ENV=development
-FRONTEND_URL=http://localhost:3000
+FRONTEND_URL=http://localhost:3099
 ```
 
 ### Optional Environment Variables
