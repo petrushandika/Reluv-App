@@ -902,6 +902,7 @@ const Checkout = () => {
     placeholder,
     isOpen,
     setIsOpen,
+    required = false,
   }: {
     id: string;
     label: string;
@@ -912,6 +913,7 @@ const Checkout = () => {
     placeholder?: string;
     isOpen: boolean;
     setIsOpen: (open: boolean) => void;
+    required?: boolean;
   }) => {
     const selectRef = React.useRef<HTMLDivElement>(null);
 
