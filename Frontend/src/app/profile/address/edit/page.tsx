@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { z } from "zod";
 import {
   MapPin,
   ChevronLeft,
@@ -9,6 +10,7 @@ import {
   Navigation,
   ChevronDown,
   Search,
+  AlertCircle,
 } from "lucide-react";
 import { useAuthStore } from "@/features/auth/store/auth.store";
 import { getMe } from "@/features/user/api/userApi";
@@ -28,6 +30,49 @@ import {
   District,
   SubDistrict,
 } from "@/features/checkout/types";
+
+const addressFormSchema = z.object({
+  label: z
+    .string()
+    .min(1, { message: "Address label is required" })
+    .max(50, { message: "Address label must be at most 50 characters" })
+    .trim(),
+  recipientName: z
+    .string()
+    .min(1, { message: "Recipient name is required" })
+    .max(100, { message: "Recipient name must be at most 100 characters" })
+    .trim(),
+  phoneNumber: z
+    .string()
+    .min(1, { message: "Phone number is required" })
+    .regex(/^[0-9+\-\s()]+$/, { message: "Please provide a valid phone number" })
+    .min(10, { message: "Phone number must be at least 10 digits" })
+    .max(20, { message: "Phone number must be at most 20 characters" })
+    .trim(),
+  streetAddress: z
+    .string()
+    .min(1, { message: "Street address is required" })
+    .max(255, { message: "Street address must be at most 255 characters" })
+    .trim(),
+  country: z.string().min(1, { message: "Country is required" }),
+  province: z.string().min(1, { message: "Province is required" }),
+  city: z.string().min(1, { message: "City is required" }),
+  district: z.string().min(1, { message: "District is required" }),
+  subDistrict: z.string().min(1, { message: "Sub-district is required" }),
+  postalCode: z
+    .string()
+    .min(1, { message: "Postal code is required" })
+    .regex(/^[0-9]+$/, { message: "Postal code must contain only numbers" })
+    .min(5, { message: "Postal code must be at least 5 digits" })
+    .max(10, { message: "Postal code must be at most 10 digits" })
+    .trim(),
+  notes: z
+    .string()
+    .max(500, { message: "Notes must be at most 500 characters" })
+    .optional()
+    .or(z.literal("")),
+  isDefault: z.boolean(),
+});
 
 const EditAddressPage = () => {
   const router = useRouter();
@@ -77,6 +122,8 @@ const EditAddressPage = () => {
   const [isCityOpen, setIsCityOpen] = useState(false);
   const [isDistrictOpen, setIsDistrictOpen] = useState(false);
   const [isSubDistrictOpen, setIsSubDistrictOpen] = useState(false);
+  const [validationError, setValidationError] = useState<string | null>(null);
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -327,6 +374,14 @@ const EditAddressPage = () => {
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+    if (fieldErrors[name]) {
+      setFieldErrors((prev) => {
+        const newErrors = { ...prev };
+        delete newErrors[name];
+        return newErrors;
+      });
+    }
+    setValidationError(null);
   };
 
   const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -366,6 +421,31 @@ const EditAddressPage = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!addressId) return;
+
+    setValidationError(null);
+    setFieldErrors({});
+
+    const formValidation = addressFormSchema.safeParse(formData);
+
+    if (!formValidation.success) {
+      const errors: Record<string, string> = {};
+      formValidation.error.errors.forEach((err) => {
+        if (err.path.length > 0) {
+          const fieldName = err.path[0] as string;
+          errors[fieldName] = err.message;
+        } else {
+          setValidationError(err.message);
+        }
+      });
+      setFieldErrors(errors);
+      if (Object.keys(errors).length === 0 && formValidation.error.errors[0]) {
+        setValidationError(formValidation.error.errors[0].message);
+      }
+      toast.error("Validation Failed", {
+        description: "Please fix the errors in the form before submitting.",
+      });
+      return;
+    }
 
     try {
       const selectedProvince = provinces.find(

@@ -2,10 +2,12 @@
 
 import React, { useEffect, useState, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { z } from "zod";
 import {
   ChevronLeft,
   X,
   ImagePlus,
+  AlertCircle,
 } from "lucide-react";
 import { useAuthStore } from "@/features/auth/store/auth.store";
 import { PrivateRoute } from "@/shared/components/guards/RouteGuards";
@@ -41,6 +43,41 @@ const colorOptions = [
   { value: "OTHER", label: "Another Color..." },
 ];
 
+const productSchema = z.object({
+  name: z
+    .string()
+    .min(1, { message: "Listing title is required" })
+    .max(255, { message: "Listing title must be at most 255 characters" })
+    .trim(),
+  description: z
+    .string()
+    .max(10000, { message: "Description must be at most 10000 characters" })
+    .optional()
+    .or(z.literal("")),
+  categoryId: z.number().min(1, { message: "Category is required" }).nullable(),
+  images: z.array(z.string()).min(1, { message: "At least one image is required" }),
+  isPreloved: z.boolean(),
+});
+
+const variantSchema = z.object({
+  condition: z.enum(["NEW", "LIKE_NEW", "GOOD", "FAIR", "POOR"], {
+    required_error: "Condition is required",
+  }),
+  conditionNote: z
+    .string()
+    .max(500, { message: "Condition note must be at most 500 characters" })
+    .optional()
+    .or(z.literal("")),
+  price: z.number().min(0, { message: "Price must be 0 or greater" }).max(999999999, { message: "Price must be less than 1 billion" }),
+  stock: z.number().min(0, { message: "Stock must be 0 or greater" }).max(999999, { message: "Stock must be less than 1 million" }),
+  weight: z.number().min(1, { message: "Weight must be at least 1 gram" }).max(999999, { message: "Weight must be less than 1 million grams" }).optional(),
+  length: z.number().min(1, { message: "Length must be at least 1 cm" }).max(9999, { message: "Length must be less than 10000 cm" }).optional(),
+  width: z.number().min(1, { message: "Width must be at least 1 cm" }).max(9999, { message: "Width must be less than 10000 cm" }).optional(),
+  height: z.number().min(1, { message: "Height must be at least 1 cm" }).max(9999, { message: "Height must be less than 10000 cm" }).optional(),
+  size: z.string().max(50, { message: "Size must be at most 50 characters" }).optional().nullable(),
+  color: z.string().max(50, { message: "Color must be at most 50 characters" }).optional().nullable(),
+});
+
 const EditProductPage = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -60,6 +97,9 @@ const EditProductPage = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const maxTotalImages = 9;
   const [newImageFiles, setNewImageFiles] = useState<(File | null)[]>([]);
+  const [validationError, setValidationError] = useState<string | null>(null);
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+  const [variantErrors, setVariantErrors] = useState<Record<number, Record<string, string>>>({});
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -102,6 +142,70 @@ const EditProductPage = () => {
 
   const handleSaveProduct = async () => {
     if (!product) return;
+
+    setValidationError(null);
+    setFieldErrors({});
+    setVariantErrors({});
+
+    const productValidation = productSchema.safeParse({
+      ...formData,
+      categoryId: formData.categoryId,
+    });
+
+    if (!productValidation.success) {
+      const errors: Record<string, string> = {};
+      productValidation.error.errors.forEach((err) => {
+        if (err.path.length > 0) {
+          const fieldName = err.path[0] as string;
+          errors[fieldName] = err.message;
+        } else {
+          setValidationError(err.message);
+        }
+      });
+      setFieldErrors(errors);
+      if (Object.keys(errors).length === 0 && productValidation.error.errors[0]) {
+        setValidationError(productValidation.error.errors[0].message);
+      }
+      return;
+    }
+
+    const variantValidationErrors: Record<number, Record<string, string>> = {};
+    let hasVariantErrors = false;
+
+    for (const variant of variants) {
+      const variantValidation = variantSchema.safeParse({
+        condition: variant.condition,
+        conditionNote: variant.conditionNote || "",
+        price: variant.price,
+        stock: variant.stock,
+        weight: variant.weight || undefined,
+        length: variant.length || undefined,
+        width: variant.width || undefined,
+        height: variant.height || undefined,
+        size: variant.size || null,
+        color: variant.color || null,
+      });
+
+      if (!variantValidation.success) {
+        const errors: Record<string, string> = {};
+        variantValidation.error.errors.forEach((err) => {
+          if (err.path.length > 0) {
+            const fieldName = err.path[0] as string;
+            errors[fieldName] = err.message;
+          }
+        });
+        variantValidationErrors[variant.id] = errors;
+        hasVariantErrors = true;
+      }
+    }
+
+    if (hasVariantErrors) {
+      setVariantErrors(variantValidationErrors);
+      toast.error("Validation Failed", {
+        description: "Please fix the errors in the form before saving.",
+      });
+      return;
+    }
 
     try {
       setIsSaving(true);
@@ -183,6 +287,21 @@ const EditProductPage = () => {
     setVariants((prev) =>
       prev.map((v) => (v.id === variantId ? { ...v, [field]: value } : v))
     );
+    if (variantErrors[variantId]?.[field]) {
+      setVariantErrors((prev) => {
+        const newErrors = { ...prev };
+        if (newErrors[variantId]) {
+          const variantErrs = { ...newErrors[variantId] };
+          delete variantErrs[field];
+          if (Object.keys(variantErrs).length === 0) {
+            delete newErrors[variantId];
+          } else {
+            newErrors[variantId] = variantErrs;
+          }
+        }
+        return newErrors;
+      });
+    }
   };
 
   const formatPrice = (value: number): string => {
@@ -418,19 +537,35 @@ const EditProductPage = () => {
                     htmlFor="name"
                     className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5 sm:mb-2"
                   >
-                    Listing Title *
+                    Listing Title <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
                     id="name"
                     value={formData.name}
-                    onChange={(e) =>
-                      setFormData({ ...formData, name: e.target.value })
-                    }
+                    onChange={(e) => {
+                      setFormData({ ...formData, name: e.target.value });
+                      if (fieldErrors.name) {
+                        setFieldErrors((prev) => {
+                          const newErrors = { ...prev };
+                          delete newErrors.name;
+                          return newErrors;
+                        });
+                      }
+                    }}
                     placeholder="e.g. Vintage Leather Handbag"
-                    className="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
+                    className={`w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base bg-gray-50 dark:bg-gray-700 border rounded-lg focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 ${
+                      fieldErrors.name
+                        ? "border-red-500 dark:border-red-500"
+                        : "border-gray-300 dark:border-gray-600"
+                    }`}
                     required
                   />
+                  {fieldErrors.name && (
+                    <p className="mt-1 text-xs sm:text-sm text-red-600 dark:text-red-400">
+                      {fieldErrors.name}
+                    </p>
+                  )}
                 </div>
 
                 {variants.length > 0 && variants[0] && (
@@ -441,7 +576,7 @@ const EditProductPage = () => {
                     <div className="space-y-3 sm:space-y-4">
                       <div>
                         <label className="block text-[10px] sm:text-xs text-gray-500 dark:text-gray-400 mb-1.5 sm:mb-2">
-                          Condition *
+                          Condition <span className="text-red-500">*</span>
                         </label>
                         <div className="flex flex-wrap gap-1.5 sm:gap-2">
                           {(["NEW", "LIKE_NEW", "GOOD", "FAIR", "POOR"] as Condition[]).map((condition) => (
@@ -485,9 +620,18 @@ const EditProductPage = () => {
                               e.target.value
                             )
                           }
-                          className="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
+                          className={`w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base bg-gray-50 dark:bg-gray-700 border rounded-lg focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 ${
+                            variantErrors[variants[0].id]?.conditionNote
+                              ? "border-red-500 dark:border-red-500"
+                              : "border-gray-300 dark:border-gray-600"
+                          }`}
                           placeholder="e.g. Slight scratch on the buckle"
                         />
+                        {variantErrors[variants[0].id]?.conditionNote && (
+                          <p className="mt-1 text-xs text-red-600 dark:text-red-400">
+                            {variantErrors[variants[0].id].conditionNote}
+                          </p>
+                        )}
                       </div>
 
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
@@ -496,7 +640,7 @@ const EditProductPage = () => {
                             htmlFor="price"
                             className="block text-[10px] sm:text-xs text-gray-500 dark:text-gray-400 mb-1"
                           >
-                            Price (IDR) *
+                            Price (IDR) <span className="text-red-500">*</span>
                           </label>
                           <div className="relative">
                             <span className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 text-xs sm:text-sm text-gray-500 dark:text-gray-400">
@@ -508,10 +652,19 @@ const EditProductPage = () => {
                               value={formatPrice(variants[0].price)}
                               onChange={(e) => handlePriceChange(variants[0].id, e.target.value)}
                               placeholder="0"
-                              className="w-full pl-10 sm:pl-12 pr-3 sm:pr-4 py-2 sm:py-3 text-sm sm:text-base bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
+                              className={`w-full pl-10 sm:pl-12 pr-3 sm:pr-4 py-2 sm:py-3 text-sm sm:text-base bg-gray-50 dark:bg-gray-700 border rounded-lg focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 ${
+                                variantErrors[variants[0].id]?.price
+                                  ? "border-red-500 dark:border-red-500"
+                                  : "border-gray-300 dark:border-gray-600"
+                              }`}
                               required
                             />
                           </div>
+                          {variantErrors[variants[0].id]?.price && (
+                            <p className="mt-1 text-xs text-red-600 dark:text-red-400">
+                              {variantErrors[variants[0].id].price}
+                            </p>
+                          )}
                         </div>
                         <div>
                           <label
@@ -534,8 +687,17 @@ const EditProductPage = () => {
                             placeholder="1"
                             min="0"
                             max="999999"
-                            className="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
+                            className={`w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base bg-gray-50 dark:bg-gray-700 border rounded-lg focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 ${
+                              variantErrors[variants[0].id]?.stock
+                                ? "border-red-500 dark:border-red-500"
+                                : "border-gray-300 dark:border-gray-600"
+                            }`}
                           />
+                          {variantErrors[variants[0].id]?.stock && (
+                            <p className="mt-1 text-xs text-red-600 dark:text-red-400">
+                              {variantErrors[variants[0].id].stock}
+                            </p>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -615,15 +777,31 @@ const EditProductPage = () => {
                   <textarea
                     id="description"
                     value={formData.description}
-                    onChange={(e) =>
-                      setFormData({ ...formData, description: e.target.value })
-                    }
+                    onChange={(e) => {
+                      setFormData({ ...formData, description: e.target.value });
+                      if (fieldErrors.description) {
+                        setFieldErrors((prev) => {
+                          const newErrors = { ...prev };
+                          delete newErrors.description;
+                          return newErrors;
+                        });
+                      }
+                    }}
                     rows={4}
                     placeholder="Describe your item in detail..."
                     maxLength={10000}
-                    className="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 resize-none"
+                    className={`w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base bg-gray-50 dark:bg-gray-700 border rounded-lg focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 resize-none ${
+                      fieldErrors.description
+                        ? "border-red-500 dark:border-red-500"
+                        : "border-gray-300 dark:border-gray-600"
+                    }`}
                   />
-                  {formData.description.length > 9500 && (
+                  {fieldErrors.description && (
+                    <p className="mt-1 text-xs sm:text-sm text-red-600 dark:text-red-400">
+                      {fieldErrors.description}
+                    </p>
+                  )}
+                  {!fieldErrors.description && formData.description.length > 9500 && (
                     <p className="text-[10px] sm:text-xs text-amber-600 dark:text-amber-400 mt-1">
                       {10000 - formData.description.length} characters remaining
                     </p>
@@ -755,9 +933,37 @@ const EditProductPage = () => {
                   </label>
                 </div>
 
+                {validationError && (
+                  <div className="flex items-center p-3 text-sm text-red-700 dark:text-red-400 bg-red-100 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg">
+                    <AlertCircle className="w-5 h-5 mr-2 shrink-0" />
+                    <span>{validationError}</span>
+                  </div>
+                )}
+
+                {fieldErrors.categoryId && (
+                  <div className="flex items-center p-3 text-sm text-red-700 dark:text-red-400 bg-red-100 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg">
+                    <AlertCircle className="w-5 h-5 mr-2 shrink-0" />
+                    <span>{fieldErrors.categoryId}</span>
+                  </div>
+                )}
+
+                {fieldErrors.images && (
+                  <div className="flex items-center p-3 text-sm text-red-700 dark:text-red-400 bg-red-100 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg">
+                    <AlertCircle className="w-5 h-5 mr-2 shrink-0" />
+                    <span>{fieldErrors.images}</span>
+                  </div>
+                )}
+
+                {variants.length > 0 && variants[0] && variantErrors[variants[0].id]?.condition && (
+                  <div className="flex items-center p-3 text-sm text-red-700 dark:text-red-400 bg-red-100 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg">
+                    <AlertCircle className="w-5 h-5 mr-2 shrink-0" />
+                    <span>{variantErrors[variants[0].id].condition}</span>
+                  </div>
+                )}
+
                 <button
                   type="submit"
-                  disabled={isSaving || !formData.name}
+                  disabled={isSaving || !formData.name || Object.keys(fieldErrors).length > 0 || Object.keys(variantErrors).length > 0}
                   className="w-full bg-sky-600 dark:bg-sky-500 text-white font-bold py-2.5 sm:py-3 text-sm sm:text-base rounded-lg hover:bg-sky-700 dark:hover:bg-sky-600 shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed transition-all cursor-pointer"
                 >
                   {isSaving ? "Saving..." : "Save Product"}

@@ -2,12 +2,14 @@
 
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { z } from "zod";
 import {
   Package,
   ChevronLeft,
   Plus,
   Search,
   ChevronDown,
+  AlertCircle,
 } from "lucide-react";
 import { useAuthStore } from "@/features/auth/store/auth.store";
 import { getMe } from "@/features/user/api/userApi";
@@ -26,6 +28,28 @@ import { Product, Variant } from "@/features/products/types";
 import { toast } from "sonner";
 import Image from "next/image";
 
+const priceSchema = z
+  .string()
+  .min(1, { message: "Price is required" })
+  .refine(
+    (val) => {
+      const num = parseInt(val, 10);
+      return !isNaN(num) && num >= 0 && num <= 999999999;
+    },
+    { message: "Price must be between 0 and 999,999,999" }
+  );
+
+const stockSchema = z
+  .string()
+  .min(1, { message: "Stock is required" })
+  .refine(
+    (val) => {
+      const num = parseInt(val, 10);
+      return !isNaN(num) && num >= 0 && num <= 999999;
+    },
+    { message: "Stock must be between 0 and 999,999" }
+  );
+
 const ChangePriceModal = ({
   isOpen,
   onClose,
@@ -41,22 +65,30 @@ const ChangePriceModal = ({
 }) => {
   const [price, setPrice] = useState(currentPrice.toString());
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [priceError, setPriceError] = useState<string | null>(null);
 
   useEffect(() => {
     if (isOpen) {
       setPrice(currentPrice.toString());
+      setPriceError(null);
     }
   }, [isOpen, currentPrice]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const priceNum = parseInt(price);
-    if (isNaN(priceNum) || priceNum < 0) {
-      toast.error("Invalid Price", {
-        description: "Please enter a valid price.",
+
+    setPriceError(null);
+
+    const validation = priceSchema.safeParse(price);
+    if (!validation.success) {
+      setPriceError(validation.error.errors[0]?.message || "Invalid price");
+      toast.error("Validation Failed", {
+        description: "Please fix the price before submitting.",
       });
       return;
     }
+
+    const priceNum = parseInt(price, 10);
 
     setIsSubmitting(true);
     try {
@@ -94,12 +126,26 @@ const ChangePriceModal = ({
               <input
                 type="number"
                 value={price}
-                onChange={(e) => setPrice(e.target.value)}
+                onChange={(e) => {
+                  setPrice(e.target.value);
+                  if (priceError) {
+                    setPriceError(null);
+                  }
+                }}
                 min="0"
                 required
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-transparent"
+                className={`w-full px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-transparent ${
+                  priceError
+                    ? "border-red-500 dark:border-red-500"
+                    : "border-gray-300 dark:border-gray-600"
+                }`}
                 placeholder="Enter new price"
               />
+              {priceError && (
+                <p className="mt-1 text-sm text-red-600 dark:text-red-400">
+                  {priceError}
+                </p>
+              )}
             </div>
             <div className="flex gap-3">
               <button
@@ -139,22 +185,30 @@ const ChangeStockModal = ({
 }) => {
   const [stock, setStock] = useState(currentStock.toString());
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [stockError, setStockError] = useState<string | null>(null);
 
   useEffect(() => {
     if (isOpen) {
       setStock(currentStock.toString());
+      setStockError(null);
     }
   }, [isOpen, currentStock]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const stockNum = parseInt(stock);
-    if (isNaN(stockNum) || stockNum < 0) {
-      toast.error("Invalid Stock", {
-        description: "Please enter a valid stock quantity.",
+
+    setStockError(null);
+
+    const validation = stockSchema.safeParse(stock);
+    if (!validation.success) {
+      setStockError(validation.error.errors[0]?.message || "Invalid stock");
+      toast.error("Validation Failed", {
+        description: "Please fix the stock before submitting.",
       });
       return;
     }
+
+    const stockNum = parseInt(stock, 10);
 
     setIsSubmitting(true);
     try {
@@ -192,12 +246,26 @@ const ChangeStockModal = ({
               <input
                 type="number"
                 value={stock}
-                onChange={(e) => setStock(e.target.value)}
+                onChange={(e) => {
+                  setStock(e.target.value);
+                  if (stockError) {
+                    setStockError(null);
+                  }
+                }}
                 min="0"
                 required
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-transparent"
+                className={`w-full px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-transparent ${
+                  stockError
+                    ? "border-red-500 dark:border-red-500"
+                    : "border-gray-300 dark:border-gray-600"
+                }`}
                 placeholder="Enter new stock"
               />
+              {stockError && (
+                <p className="mt-1 text-sm text-red-600 dark:text-red-400">
+                  {stockError}
+                </p>
+              )}
             </div>
             <div className="flex gap-3">
               <button

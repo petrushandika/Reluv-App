@@ -1,9 +1,11 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
+import { z } from "zod";
 import { ListingData, Condition } from "../types";
 import CategorySelector from "@/shared/components/molecules/CategorySelector";
 import CustomSelect from "@/shared/components/molecules/CustomSelect";
+import { AlertCircle } from "lucide-react";
 
 const conditionOptions: Record<Condition, string> = {
   NEW: "New",
@@ -42,6 +44,119 @@ interface ListingFormProps {
   isLoading: boolean;
 }
 
+const createListingSchema = (listingData: ListingData) => {
+  const numericPrice = listingData.price.replace(/\./g, "");
+  const priceValue = numericPrice ? parseFloat(numericPrice) : NaN;
+
+  return z.object({
+    categoryId: z.number().min(1, { message: "Category is required" }),
+    name: z
+      .string()
+      .min(1, { message: "Listing title is required" })
+      .max(255, { message: "Listing title must be at most 255 characters" })
+      .trim(),
+    condition: z.enum(["NEW", "LIKE_NEW", "GOOD", "FAIR", "POOR"], {
+      required_error: "Condition is required",
+      invalid_type_error: "Please select a valid condition",
+    }),
+    price: z
+      .string()
+      .min(1, { message: "Price is required" })
+      .refine(
+        () => {
+          return !isNaN(priceValue) && priceValue >= 0;
+        },
+        { message: "Price must be 0 or greater" }
+      )
+      .refine(
+        () => {
+          return !isNaN(priceValue) && priceValue <= 999999999;
+        },
+        { message: "Price must be less than 1 billion" }
+      ),
+    description: z
+      .string()
+      .max(10000, { message: "Description must be at most 10000 characters" })
+      .optional()
+      .or(z.literal("")),
+    conditionNote: z
+      .string()
+      .max(500, { message: "Condition note must be at most 500 characters" })
+      .optional()
+      .or(z.literal("")),
+    customSize: z
+      .string()
+      .max(50, { message: "Custom size must be at most 50 characters" })
+      .optional()
+      .or(z.literal("")),
+    customColor: z
+      .string()
+      .max(50, { message: "Custom color must be at most 50 characters" })
+      .optional()
+      .or(z.literal("")),
+    weight: z
+      .string()
+      .optional()
+      .or(z.literal(""))
+      .refine(
+        (val) => {
+          if (!val) return true;
+          const num = parseInt(val, 10);
+          return !isNaN(num) && num >= 1 && num <= 999999;
+        },
+        { message: "Weight must be between 1 and 999999 grams" }
+      ),
+    length: z
+      .string()
+      .optional()
+      .or(z.literal(""))
+      .refine(
+        (val) => {
+          if (!val) return true;
+          const num = parseInt(val, 10);
+          return !isNaN(num) && num >= 1 && num <= 9999;
+        },
+        { message: "Length must be between 1 and 9999 cm" }
+      ),
+    width: z
+      .string()
+      .optional()
+      .or(z.literal(""))
+      .refine(
+        (val) => {
+          if (!val) return true;
+          const num = parseInt(val, 10);
+          return !isNaN(num) && num >= 1 && num <= 9999;
+        },
+        { message: "Width must be between 1 and 9999 cm" }
+      ),
+    height: z
+      .string()
+      .optional()
+      .or(z.literal(""))
+      .refine(
+        (val) => {
+          if (!val) return true;
+          const num = parseInt(val, 10);
+          return !isNaN(num) && num >= 1 && num <= 9999;
+        },
+        { message: "Height must be between 1 and 9999 cm" }
+      ),
+    stock: z
+      .string()
+      .optional()
+      .or(z.literal(""))
+      .refine(
+        (val) => {
+          if (!val) return true;
+          const num = Number(val);
+          return !isNaN(num) && num >= 0 && num <= 999999;
+        },
+        { message: "Stock must be between 0 and 999999" }
+      ),
+  });
+};
+
 const ListingForm = ({
   listingData,
   setListingData,
@@ -49,6 +164,9 @@ const ListingForm = ({
   handleSubmit,
   isLoading,
 }: ListingFormProps) => {
+  const [validationError, setValidationError] = useState<string | null>(null);
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+
   const formatPrice = (value: string): string => {
     const numericValue = value.replace(/\./g, "");
     if (!numericValue) return "";
@@ -61,113 +179,61 @@ const ListingForm = ({
     const value = e.target.value;
     const formattedValue = formatPrice(value);
     setListingData((prev) => ({ ...prev, price: formattedValue }));
+    if (fieldErrors.price) {
+      setFieldErrors((prev) => {
+        const newErrors = { ...prev };
+        delete newErrors.price;
+        return newErrors;
+      });
+    }
+  };
+
+  const handleFormInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    handleInputChange(e);
+    if (fieldErrors[e.target.name]) {
+      setFieldErrors((prev) => {
+        const newErrors = { ...prev };
+        delete newErrors[e.target.name];
+        return newErrors;
+      });
+    }
+    setValidationError(null);
   };
 
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    setValidationError(null);
+    setFieldErrors({});
+
+    const schema = createListingSchema(listingData);
+    const validationResult = schema.safeParse(listingData);
+
+    if (!validationResult.success) {
+      const errors: Record<string, string> = {};
+      validationResult.error.errors.forEach((err) => {
+        if (err.path.length > 0) {
+          const fieldName = err.path[0] as string;
+          errors[fieldName] = err.message;
+        } else {
+          setValidationError(err.message);
+        }
+      });
+      setFieldErrors(errors);
+      if (Object.keys(errors).length === 0 && validationResult.error.errors[0]) {
+        setValidationError(validationResult.error.errors[0].message);
+      }
+      return;
+    }
+
     handleSubmit();
   };
 
-  const validateForm = (): { isValid: boolean; errors: string[] } => {
-    const errors: string[] = [];
-    const numericPrice = listingData.price.replace(/\./g, "");
-
-    if (!listingData.categoryId) {
-      errors.push("Category is required");
-    }
-
-    if (!listingData.name.trim()) {
-      errors.push("Listing title is required");
-    } else if (listingData.name.trim().length > 255) {
-      errors.push("Listing title must be at most 255 characters");
-    }
-
-    if (!listingData.condition) {
-      errors.push("Condition is required");
-    }
-
-    if (!listingData.price || numericPrice === "") {
-      errors.push("Price is required");
-    } else {
-      const priceValue = parseFloat(numericPrice);
-      if (isNaN(priceValue) || priceValue < 0) {
-        errors.push("Price must be 0 or greater");
-      } else if (priceValue > 999999999) {
-        errors.push("Price must be less than 1 billion");
-      }
-    }
-
-    if (listingData.description && listingData.description.length > 10000) {
-      errors.push("Description must be at most 10000 characters");
-    }
-
-    if (listingData.conditionNote && listingData.conditionNote.length > 500) {
-      errors.push("Condition note must be at most 500 characters");
-    }
-
-    if (listingData.size === "OTHER" && listingData.customSize) {
-      if (listingData.customSize.length > 50) {
-        errors.push("Custom size must be at most 50 characters");
-      }
-    }
-
-    if (listingData.color === "OTHER" && listingData.customColor) {
-      if (listingData.customColor.length > 50) {
-        errors.push("Custom color must be at most 50 characters");
-      }
-    }
-
-    const weight = parseInt(listingData.weight, 10);
-    if (listingData.weight && !isNaN(weight)) {
-      if (weight < 1) {
-        errors.push("Weight must be at least 1 gram");
-      } else if (weight > 999999) {
-        errors.push("Weight must be less than 1 million grams");
-      }
-    }
-
-    const length = parseInt(listingData.length, 10);
-    if (listingData.length && !isNaN(length)) {
-      if (length < 1) {
-        errors.push("Length must be at least 1 cm");
-      } else if (length > 9999) {
-        errors.push("Length must be less than 10000 cm");
-      }
-    }
-
-    const width = parseInt(listingData.width, 10);
-    if (listingData.width && !isNaN(width)) {
-      if (width < 1) {
-        errors.push("Width must be at least 1 cm");
-      } else if (width > 9999) {
-        errors.push("Width must be less than 10000 cm");
-      }
-    }
-
-    const height = parseInt(listingData.height, 10);
-    if (listingData.height && !isNaN(height)) {
-      if (height < 1) {
-        errors.push("Height must be at least 1 cm");
-      } else if (height > 9999) {
-        errors.push("Height must be less than 10000 cm");
-      }
-    }
-
-    const stock = Number(listingData.stock);
-    if (!isNaN(stock) && stock < 0) {
-      errors.push("Stock must be 0 or greater");
-    } else if (!isNaN(stock) && stock > 999999) {
-      errors.push("Stock must be less than 1 million");
-    }
-
-    return {
-      isValid: errors.length === 0,
-      errors,
-    };
-  };
-
   const isFormValid = () => {
-    return validateForm().isValid;
+    const schema = createListingSchema(listingData);
+    const validationResult = schema.safeParse(listingData);
+    return validationResult.success;
   };
 
   return (
@@ -189,18 +255,27 @@ const ListingForm = ({
               htmlFor="name"
               className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
             >
-              Listing Title *
+              Listing Title <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
               id="name"
               name="name"
               value={listingData.name}
-              onChange={handleInputChange}
+              onChange={handleFormInputChange}
               placeholder="e.g. Vintage Leather Handbag"
-              className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
+              className={`w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border rounded-lg focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 ${
+                fieldErrors.name
+                  ? "border-red-500 dark:border-red-500"
+                  : "border-gray-300 dark:border-gray-600"
+              }`}
               required
             />
+            {fieldErrors.name && (
+              <p className="mt-1 text-sm text-red-600 dark:text-red-400">
+                {fieldErrors.name}
+              </p>
+            )}
           </div>
 
           <div>
@@ -210,7 +285,7 @@ const ListingForm = ({
             <div className="space-y-4">
               <div>
                 <label className="block text-xs text-gray-500 dark:text-gray-400 mb-2">
-                  Condition *
+                  Condition <span className="text-red-500">*</span>
                 </label>
                 <div className="flex flex-wrap gap-2">
                   {Object.entries(conditionOptions).map(([key, value]) => (
@@ -246,10 +321,19 @@ const ListingForm = ({
                   id="conditionNote"
                   name="conditionNote"
                   value={listingData.conditionNote}
-                  onChange={handleInputChange}
+                  onChange={handleFormInputChange}
                   placeholder="e.g. Slight scratch on the buckle"
-                  className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
+                  className={`w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border rounded-lg focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 ${
+                    fieldErrors.conditionNote
+                      ? "border-red-500 dark:border-red-500"
+                      : "border-gray-300 dark:border-gray-600"
+                  }`}
                 />
+                {fieldErrors.conditionNote && (
+                  <p className="mt-1 text-sm text-red-600 dark:text-red-400">
+                    {fieldErrors.conditionNote}
+                  </p>
+                )}
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
@@ -257,7 +341,7 @@ const ListingForm = ({
                     htmlFor="price"
                     className="block text-xs text-gray-500 dark:text-gray-400 mb-1"
                   >
-                    Price (IDR) *
+                    Price (IDR) <span className="text-red-500">*</span>
                   </label>
                   <div className="relative">
                     <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400">
@@ -270,10 +354,19 @@ const ListingForm = ({
                       value={listingData.price}
                       onChange={handlePriceChange}
                       placeholder="0"
-                      className="w-full pl-12 pr-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
+                      className={`w-full pl-12 pr-4 py-3 bg-gray-50 dark:bg-gray-700 border rounded-lg focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 ${
+                        fieldErrors.price
+                          ? "border-red-500 dark:border-red-500"
+                          : "border-gray-300 dark:border-gray-600"
+                      }`}
                       required
                     />
                   </div>
+                  {fieldErrors.price && (
+                    <p className="mt-1 text-sm text-red-600 dark:text-red-400">
+                      {fieldErrors.price}
+                    </p>
+                  )}
                 </div>
                 <div>
                   <label
@@ -342,13 +435,22 @@ const ListingForm = ({
               id="description"
               name="description"
               value={listingData.description}
-              onChange={handleInputChange}
+              onChange={handleFormInputChange}
               rows={4}
               placeholder="Describe your item in detail..."
               maxLength={10000}
-              className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
+              className={`w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border rounded-lg focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 ${
+                fieldErrors.description
+                  ? "border-red-500 dark:border-red-500"
+                  : "border-gray-300 dark:border-gray-600"
+              }`}
             />
-            {listingData.description.length > 9500 && (
+            {fieldErrors.description && (
+              <p className="mt-1 text-sm text-red-600 dark:text-red-400">
+                {fieldErrors.description}
+              </p>
+            )}
+            {!fieldErrors.description && listingData.description.length > 9500 && (
               <p className="text-xs text-amber-600 dark:text-amber-400 mt-1">
                 {10000 - listingData.description.length} characters remaining
               </p>
@@ -460,6 +562,27 @@ const ListingForm = ({
               This is a pre-loved item
             </label>
           </div>
+
+          {validationError && (
+            <div className="flex items-center p-3 text-sm text-red-700 dark:text-red-400 bg-red-100 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg">
+              <AlertCircle className="w-5 h-5 mr-2 flex-shrink-0" />
+              <span>{validationError}</span>
+            </div>
+          )}
+
+          {fieldErrors.categoryId && (
+            <div className="flex items-center p-3 text-sm text-red-700 dark:text-red-400 bg-red-100 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg">
+              <AlertCircle className="w-5 h-5 mr-2 flex-shrink-0" />
+              <span>{fieldErrors.categoryId}</span>
+            </div>
+          )}
+
+          {fieldErrors.condition && (
+            <div className="flex items-center p-3 text-sm text-red-700 dark:text-red-400 bg-red-100 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg">
+              <AlertCircle className="w-5 h-5 mr-2 flex-shrink-0" />
+              <span>{fieldErrors.condition}</span>
+            </div>
+          )}
 
           <button
             type="submit"

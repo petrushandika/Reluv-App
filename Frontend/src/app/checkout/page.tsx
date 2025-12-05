@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
+import { z } from "zod";
 import {
   User,
   Mail,
@@ -17,6 +18,7 @@ import {
   Search,
   Edit,
   Info,
+  AlertCircle,
 } from "lucide-react";
 import type { LatLngExpression } from "leaflet";
 import { useCart } from "@/features/cart/hooks/useCart";
@@ -32,6 +34,61 @@ import {
   ShippingData,
 } from "@/features/checkout/types";
 import { toast } from "sonner";
+
+const checkoutFormSchema = z.object({
+  firstName: z
+    .string()
+    .min(1, { message: "First name is required" })
+    .max(100, { message: "First name must be at most 100 characters" })
+    .trim(),
+  lastName: z
+    .string()
+    .max(100, { message: "Last name must be at most 100 characters" })
+    .trim()
+    .optional()
+    .or(z.literal("")),
+  email: z
+    .string()
+    .min(1, { message: "Email is required" })
+    .email({ message: "Please provide a valid email address" })
+    .max(255, { message: "Email must be at most 255 characters" })
+    .trim(),
+  phone: z
+    .string()
+    .min(1, { message: "Phone number is required" })
+    .regex(/^[0-9+\-\s()]+$/, { message: "Please provide a valid phone number" })
+    .min(10, { message: "Phone number must be at least 10 digits" })
+    .max(20, { message: "Phone number must be at most 20 characters" })
+    .trim(),
+  address: z
+    .string()
+    .min(1, { message: "Street address is required" })
+    .max(255, { message: "Street address must be at most 255 characters" })
+    .trim(),
+  country: z.string().min(1, { message: "Country is required" }),
+  province: z.string().min(1, { message: "Province is required" }),
+  city: z.string().min(1, { message: "City is required" }),
+  district: z.string().min(1, { message: "District is required" }),
+  subDistrict: z.string().min(1, { message: "Sub-district is required" }),
+  zip: z
+    .string()
+    .min(1, { message: "Postal code is required" })
+    .regex(/^[0-9]+$/, { message: "Postal code must contain only numbers" })
+    .min(5, { message: "Postal code must be at least 5 digits" })
+    .max(10, { message: "Postal code must be at most 10 digits" })
+    .trim(),
+  detailAddress: z
+    .string()
+    .max(500, { message: "Detail address must be at most 500 characters" })
+    .optional()
+    .or(z.literal("")),
+});
+
+const orderNotesSchema = z
+  .string()
+  .max(1000, { message: "Order notes must be at most 1000 characters" })
+  .optional()
+  .or(z.literal(""));
 
 const MapPicker = dynamic(
   () => import("@/shared/components/organisms/MapPicker"),
@@ -233,6 +290,9 @@ const Checkout = () => {
   const [isLoadingAddresses, setIsLoadingAddresses] = useState(false);
   const [addressMode, setAddressMode] = useState<"select" | "new">("select");
   const [selectedAddressId, setSelectedAddressId] = useState<number | null>(null);
+  const [validationError, setValidationError] = useState<string | null>(null);
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+  const [orderNotesError, setOrderNotesError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!isFetchingCart) {
@@ -372,6 +432,21 @@ const Checkout = () => {
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+    if (fieldErrors[name]) {
+      setFieldErrors((prev) => {
+        const newErrors = { ...prev };
+        delete newErrors[name];
+        return newErrors;
+      });
+    }
+    setValidationError(null);
+  };
+
+  const handleOrderNotesChange = (value: string) => {
+    setOrderNotes(value);
+    if (orderNotesError) {
+      setOrderNotesError(null);
+    }
   };
 
   const handleProvinceChange = (provinceId: string) => {
@@ -513,7 +588,41 @@ const Checkout = () => {
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    setValidationError(null);
+    setFieldErrors({});
+    setOrderNotesError(null);
+
+    if (orderNotes) {
+      const notesValidation = orderNotesSchema.safeParse(orderNotes);
+      if (!notesValidation.success) {
+        setOrderNotesError(notesValidation.error.errors[0]?.message || "Invalid order notes");
+        return;
+      }
+    }
+
     if (addressMode === "new") {
+      const formValidation = checkoutFormSchema.safeParse(formData);
+
+      if (!formValidation.success) {
+        const errors: Record<string, string> = {};
+        formValidation.error.errors.forEach((err) => {
+          if (err.path.length > 0) {
+            const fieldName = err.path[0] as string;
+            errors[fieldName] = err.message;
+          } else {
+            setValidationError(err.message);
+          }
+        });
+        setFieldErrors(errors);
+        if (Object.keys(errors).length === 0 && formValidation.error.errors[0]) {
+          setValidationError(formValidation.error.errors[0].message);
+        }
+        toast.error("Validation Failed", {
+          description: "Please fix the errors in the form before submitting.",
+        });
+        return;
+      }
+
       try {
         const selectedProvince = provinces.find((p) => p.id === formData.province);
         const selectedCity = regencies.find((r) => r.id === formData.city);
@@ -653,6 +762,7 @@ const Checkout = () => {
     onSelect,
     disabled = false,
     placeholder,
+    required = false,
   }: {
     id: string;
     label: string;
@@ -666,6 +776,7 @@ const Checkout = () => {
     onSelect: (id: string) => void;
     disabled?: boolean;
     placeholder?: string;
+    required?: boolean;
   }) => {
     const selectRef = React.useRef<HTMLDivElement>(null);
 
@@ -707,7 +818,7 @@ const Checkout = () => {
           htmlFor={id}
           className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5"
         >
-          {label}
+          {label} {required && <span className="text-red-500">*</span>}
         </label>
         <div className="relative">
           <button
@@ -838,7 +949,7 @@ const Checkout = () => {
           htmlFor={id}
           className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5"
         >
-          {label}
+          {label} {required && <span className="text-red-500">*</span>}
         </label>
         <div className="relative">
           <button
@@ -901,6 +1012,7 @@ const Checkout = () => {
     placeholder,
     isOpen,
     setIsOpen,
+    required = false,
   }: {
     id: string;
     label: string;
@@ -911,13 +1023,14 @@ const Checkout = () => {
     placeholder?: string;
     isOpen: boolean;
     setIsOpen: (open: boolean) => void;
+    required?: boolean;
   }) => (
     <div>
       <label
         htmlFor={id}
         className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5"
       >
-        {label}
+        {label} {required && <span className="text-red-500">*</span>}
       </label>
       <div className="relative">
         <select
@@ -966,6 +1079,42 @@ const Checkout = () => {
           <div className="flex flex-col lg:grid lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
             <div className="lg:col-span-2 border border-gray-200 dark:border-gray-700 rounded-lg p-4 sm:p-6 md:p-8 bg-white dark:bg-gray-800 shadow-sm">
               <form className="space-y-6 sm:space-y-8" onSubmit={handleFormSubmit}>
+                {validationError && (
+                  <div className="flex items-center p-3 text-sm text-red-700 dark:text-red-400 bg-red-100 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg">
+                    <AlertCircle className="w-5 h-5 mr-2 shrink-0" />
+                    <span>{validationError}</span>
+                  </div>
+                )}
+
+                {addressMode === "new" && (
+                  <>
+                    {fieldErrors.province && (
+                      <div className="flex items-center p-3 text-sm text-red-700 dark:text-red-400 bg-red-100 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg">
+                        <AlertCircle className="w-5 h-5 mr-2 shrink-0" />
+                        <span>{fieldErrors.province}</span>
+                      </div>
+                    )}
+                    {fieldErrors.city && (
+                      <div className="flex items-center p-3 text-sm text-red-700 dark:text-red-400 bg-red-100 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg">
+                        <AlertCircle className="w-5 h-5 mr-2 shrink-0" />
+                        <span>{fieldErrors.city}</span>
+                      </div>
+                    )}
+                    {fieldErrors.district && (
+                      <div className="flex items-center p-3 text-sm text-red-700 dark:text-red-400 bg-red-100 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg">
+                        <AlertCircle className="w-5 h-5 mr-2 shrink-0" />
+                        <span>{fieldErrors.district}</span>
+                      </div>
+                    )}
+                    {fieldErrors.subDistrict && (
+                      <div className="flex items-center p-3 text-sm text-red-700 dark:text-red-400 bg-red-100 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg">
+                        <AlertCircle className="w-5 h-5 mr-2 shrink-0" />
+                        <span>{fieldErrors.subDistrict}</span>
+                      </div>
+                    )}
+                  </>
+                )}
+
                 <div className="space-y-4 sm:space-y-6">
                   <h2 className="text-base sm:text-lg md:text-xl font-semibold text-sky-600 dark:text-sky-400 flex items-center gap-2 sm:gap-3">
                     <User className="w-5 h-5 sm:w-6 sm:h-6" /> Contact
@@ -992,7 +1141,7 @@ const Checkout = () => {
                         htmlFor="firstName"
                         className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5"
                       >
-                        First Name
+                        First Name <span className="text-red-500">*</span>
                       </label>
                       <input
                         type="text"
@@ -1025,8 +1174,17 @@ const Checkout = () => {
                             : undefined
                         }
                         placeholder="John"
-                        className="block w-full pl-4 pr-3 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder:text-base placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200 disabled:bg-gray-50 dark:disabled:bg-gray-700 disabled:cursor-not-allowed disabled:opacity-60"
+                        className={`block w-full pl-4 pr-3 py-3 border rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder:text-base placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200 disabled:bg-gray-50 dark:disabled:bg-gray-700 disabled:cursor-not-allowed disabled:opacity-60 ${
+                          fieldErrors.firstName
+                            ? "border-red-500 dark:border-red-500"
+                            : "border-gray-300 dark:border-gray-600"
+                        }`}
                       />
+                      {fieldErrors.firstName && (
+                        <p className="mt-1 text-sm text-red-600 dark:text-red-400">
+                          {fieldErrors.firstName}
+                        </p>
+                      )}
                     </div>
                     <div>
                       <label
@@ -1066,8 +1224,17 @@ const Checkout = () => {
                             : undefined
                         }
                         placeholder="Doe"
-                        className="block w-full pl-4 pr-3 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder:text-base placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200 disabled:bg-gray-50 dark:disabled:bg-gray-700 disabled:cursor-not-allowed disabled:opacity-60"
+                        className={`block w-full pl-4 pr-3 py-3 border rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder:text-base placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200 disabled:bg-gray-50 dark:disabled:bg-gray-700 disabled:cursor-not-allowed disabled:opacity-60 ${
+                          fieldErrors.lastName
+                            ? "border-red-500 dark:border-red-500"
+                            : "border-gray-300 dark:border-gray-600"
+                        }`}
                     />
+                    {fieldErrors.lastName && (
+                      <p className="mt-1 text-sm text-red-600 dark:text-red-400">
+                        {fieldErrors.lastName}
+                      </p>
+                    )}
                   </div>
                   </div>
                   <div>
@@ -1075,7 +1242,7 @@ const Checkout = () => {
                       htmlFor="email"
                       className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5"
                     >
-                      Email Address
+                      Email Address <span className="text-red-500">*</span>
                     </label>
                     <div className="relative">
                       <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5">
@@ -1091,16 +1258,25 @@ const Checkout = () => {
                     value={formData.email}
                     onChange={handleInputChange}
                         placeholder="you@example.com"
-                        className="block w-full pl-10 pr-3 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder:text-base placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200"
+                        className={`block w-full pl-10 pr-3 py-3 border rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder:text-base placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200 ${
+                          fieldErrors.email
+                            ? "border-red-500 dark:border-red-500"
+                            : "border-gray-300 dark:border-gray-600"
+                        }`}
                       />
                     </div>
+                    {fieldErrors.email && (
+                      <p className="mt-1 text-sm text-red-600 dark:text-red-400">
+                        {fieldErrors.email}
+                      </p>
+                    )}
                   </div>
                   <div>
                     <label
                       htmlFor="phone"
                       className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5"
                     >
-                      Phone Number
+                      Phone Number <span className="text-red-500">*</span>
                     </label>
                     <div className="relative">
                       <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5">
@@ -1140,9 +1316,18 @@ const Checkout = () => {
                             : undefined
                         }
                         placeholder="+62 812-3456-7890"
-                        className="block w-full pl-10 pr-3 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder:text-base placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200 disabled:bg-gray-50 dark:disabled:bg-gray-700 disabled:cursor-not-allowed disabled:opacity-60"
+                        className={`block w-full pl-10 pr-3 py-3 border rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder:text-base placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200 disabled:bg-gray-50 dark:disabled:bg-gray-700 disabled:cursor-not-allowed disabled:opacity-60 ${
+                          fieldErrors.phone
+                            ? "border-red-500 dark:border-red-500"
+                            : "border-gray-300 dark:border-gray-600"
+                        }`}
                       />
                     </div>
+                    {fieldErrors.phone && (
+                      <p className="mt-1 text-sm text-red-600 dark:text-red-400">
+                        {fieldErrors.phone}
+                      </p>
+                    )}
                   </div>
                 </div>
 
@@ -1261,7 +1446,7 @@ const Checkout = () => {
                           htmlFor="address"
                           className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5"
                         >
-                          Street Address
+                          Street Address <span className="text-red-500">*</span>
                         </label>
                         <input
                           type="text"
@@ -1270,8 +1455,17 @@ const Checkout = () => {
                     value={formData.address}
                     onChange={handleInputChange}
                           placeholder="Sudirman St. No. 52-53"
-                          className="block w-full pl-4 pr-3 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder:text-base placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200"
+                          className={`block w-full pl-4 pr-3 py-3 border rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder:text-base placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200 ${
+                            fieldErrors.address
+                              ? "border-red-500 dark:border-red-500"
+                              : "border-gray-300 dark:border-gray-600"
+                          }`}
                   />
+                      {fieldErrors.address && (
+                        <p className="mt-1 text-sm text-red-600 dark:text-red-400">
+                          {fieldErrors.address}
+                        </p>
+                      )}
                       </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     <FormSelect
@@ -1282,6 +1476,7 @@ const Checkout = () => {
                       onChange={handleInputChange}
                       isOpen={isCountryOpen}
                       setIsOpen={setIsCountryOpen}
+                      required={true}
                     />
                     <SearchableSelect
                       id="province"
@@ -1295,6 +1490,7 @@ const Checkout = () => {
                       setIsOpen={setIsProvinceOpen}
                       onSelect={handleProvinceChange}
                       placeholder="Select Province"
+                      required={true}
                     />
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -1311,6 +1507,7 @@ const Checkout = () => {
                       onSelect={handleCityChange}
                       disabled={!formData.province}
                       placeholder="Select City"
+                      required={true}
                     />
                     <SearchableSelect
                       id="district"
@@ -1325,6 +1522,7 @@ const Checkout = () => {
                       onSelect={handleDistrictChange}
                       disabled={!formData.city}
                       placeholder="Select District"
+                      required={true}
                     />
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -1341,13 +1539,14 @@ const Checkout = () => {
                       onSelect={handleSubDistrictChange}
                       disabled={!formData.district}
                       placeholder="Select Sub District"
+                      required={true}
                     />
                     <div>
                       <label
                         htmlFor="zip"
                         className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5"
                       >
-                        Postal Code
+                        Postal Code <span className="text-red-500">*</span>
                       </label>
                       <input
                         type="text"
@@ -1356,8 +1555,17 @@ const Checkout = () => {
                       value={formData.zip}
                       onChange={handleInputChange}
                         placeholder="12190"
-                        className="block w-full pl-4 pr-3 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder:text-base placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200"
+                        className={`block w-full pl-4 pr-3 py-3 border rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder:text-base placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200 ${
+                          fieldErrors.zip
+                            ? "border-red-500 dark:border-red-500"
+                            : "border-gray-300 dark:border-gray-600"
+                        }`}
                       />
+                      {fieldErrors.zip && (
+                        <p className="mt-1 text-sm text-red-600 dark:text-red-400">
+                          {fieldErrors.zip}
+                        </p>
+                      )}
                     </div>
                   </div>
 
@@ -1372,8 +1580,17 @@ const Checkout = () => {
                       onChange={handleInputChange}
                       rows={3}
                       placeholder="Additional address details (e.g., building name, floor, unit number)"
-                      className="block w-full text-sm p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder:text-base placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200 resize-y"
+                      className={`block w-full text-sm p-3 border rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder:text-base placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200 resize-y ${
+                        fieldErrors.detailAddress
+                          ? "border-red-500 dark:border-red-500"
+                          : "border-gray-300 dark:border-gray-600"
+                      }`}
                     />
+                    {fieldErrors.detailAddress && (
+                      <p className="mt-1 text-sm text-red-600 dark:text-red-400">
+                        {fieldErrors.detailAddress}
+                      </p>
+                    )}
                   </div>
 
                   <div>
@@ -1541,11 +1758,20 @@ const Checkout = () => {
                       id="orderNotes"
                       name="orderNotes"
                       value={orderNotes}
-                      onChange={(e) => setOrderNotes(e.target.value)}
+                      onChange={(e) => handleOrderNotesChange(e.target.value)}
                       rows={3}
                       placeholder="e.g., Please pack securely..."
-                      className="block w-full text-sm p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder:text-base placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200"
+                      className={`block w-full text-sm p-3 border rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder:text-base placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200 ${
+                        orderNotesError
+                          ? "border-red-500 dark:border-red-500"
+                          : "border-gray-300 dark:border-gray-600"
+                      }`}
                     ></textarea>
+                    {orderNotesError && (
+                      <p className="mt-1 text-sm text-red-600 dark:text-red-400">
+                        {orderNotesError}
+                      </p>
+                    )}
                   </div>
                 </div>
 

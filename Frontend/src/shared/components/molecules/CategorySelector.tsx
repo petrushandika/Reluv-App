@@ -225,7 +225,7 @@ const CategorySelector = ({
         htmlFor="category"
         className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
       >
-        Category *
+        Category <span className="text-red-500">*</span>
       </label>
       <button
         type="button"

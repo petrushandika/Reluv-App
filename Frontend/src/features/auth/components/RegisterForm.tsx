@@ -1,7 +1,44 @@
 "use client";
 
 import React, { useState } from "react";
-import { Eye, EyeOff, Mail, Lock, User } from "lucide-react";
+import { z } from "zod";
+import { Eye, EyeOff, Mail, Lock, User, AlertCircle } from "lucide-react";
+
+const registerSchema = z
+  .object({
+    firstName: z
+      .string()
+      .min(1, { message: "First name is required" })
+      .max(100, { message: "First name must be at most 100 characters" })
+      .trim(),
+    lastName: z
+      .string()
+      .max(100, { message: "Last name must be at most 100 characters" })
+      .trim()
+      .optional()
+      .or(z.literal("")),
+    email: z
+      .string()
+      .min(1, { message: "Email is required" })
+      .email({ message: "Please provide a valid email address" })
+      .max(255, { message: "Email must be at most 255 characters" })
+      .trim(),
+    password: z
+      .string()
+      .min(1, { message: "Password is required" })
+      .min(6, { message: "Password must be at least 6 characters long" })
+      .max(100, { message: "Password must be at most 100 characters" }),
+    confirmPassword: z
+      .string()
+      .min(1, { message: "Confirm password is required" }),
+    agreeToTerms: z.boolean().refine((val) => val === true, {
+      message: "You must agree to the terms and conditions",
+    }),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  });
 
 interface RegisterFormData {
   firstName: string;
@@ -25,6 +62,8 @@ const RegisterForm = ({
 }: RegisterFormProps) => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [validationError, setValidationError] = useState<string | null>(null);
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
   const [formData, setFormData] = useState<RegisterFormData>({
     firstName: "",
@@ -45,61 +84,47 @@ const RegisterForm = ({
       ...prev,
       [name]: type === "checkbox" ? checked : value,
     }));
-  };
-
-  const validateForm = (): { isValid: boolean; errors: string[] } => {
-    const errors: string[] = [];
-
-    if (!formData.firstName.trim()) {
-      errors.push("First name is required");
-    } else if (formData.firstName.trim().length > 100) {
-      errors.push("First name must be at most 100 characters");
+    if (fieldErrors[name]) {
+      setFieldErrors((prev) => {
+        const newErrors = { ...prev };
+        delete newErrors[name];
+        return newErrors;
+      });
     }
-
-    if (formData.lastName && formData.lastName.length > 100) {
-      errors.push("Last name must be at most 100 characters");
-    }
-
-    if (!formData.email.trim()) {
-      errors.push("Email is required");
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      errors.push("Please provide a valid email address");
-    } else if (formData.email.length > 255) {
-      errors.push("Email must be at most 255 characters");
-    }
-
-    if (!formData.password) {
-      errors.push("Password is required");
-    } else if (formData.password.length < 6) {
-      errors.push("Password must be at least 6 characters long");
-    } else if (formData.password.length > 100) {
-      errors.push("Password must be at most 100 characters");
-    }
-
-    if (!formData.confirmPassword) {
-      errors.push("Confirm password is required");
-    } else if (formData.password !== formData.confirmPassword) {
-      errors.push("Passwords do not match");
-    }
-
-    if (!formData.agreeToTerms) {
-      errors.push("You must agree to the terms and conditions");
-    }
-
-    return {
-      isValid: errors.length === 0,
-      errors,
-    };
+    setValidationError(null);
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const validation = validateForm();
-    if (!validation.isValid) {
-      alert(validation.errors[0]);
+    setValidationError(null);
+    setFieldErrors({});
+
+    const validationResult = registerSchema.safeParse(formData);
+
+    if (!validationResult.success) {
+      const errors: Record<string, string> = {};
+      validationResult.error.errors.forEach((err) => {
+        if (err.path.length > 0) {
+          const fieldName = err.path[0] as string;
+          errors[fieldName] = err.message;
+        } else {
+          setValidationError(err.message);
+        }
+      });
+      setFieldErrors(errors);
+      if (
+        Object.keys(errors).length === 0 &&
+        validationResult.error.errors[0]
+      ) {
+        setValidationError(validationResult.error.errors[0].message);
+      }
       return;
     }
-    onSubmit(formData);
+
+    onSubmit({
+      ...validationResult.data,
+      lastName: validationResult.data.lastName || "",
+    });
   };
 
   return (
@@ -132,10 +157,19 @@ const RegisterForm = ({
                 onChange={handleInputChange}
                 maxLength={100}
                 required
-                className="block w-full pl-10 pr-3 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200 placeholder-gray-400 dark:placeholder-gray-500"
+                className={`block w-full pl-10 pr-3 py-3 border rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200 placeholder-gray-400 dark:placeholder-gray-500 ${
+                  fieldErrors.firstName
+                    ? "border-red-500 dark:border-red-500"
+                    : "border-gray-300 dark:border-gray-600"
+                }`}
                 placeholder="First name"
               />
             </div>
+            {fieldErrors.firstName && (
+              <p className="mt-1 text-sm text-red-600 dark:text-red-400">
+                {fieldErrors.firstName}
+              </p>
+            )}
           </div>
           <div>
             <label
@@ -153,10 +187,19 @@ const RegisterForm = ({
                 value={formData.lastName}
                 onChange={handleInputChange}
                 maxLength={100}
-                className="block w-full pl-10 pr-3 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200 placeholder-gray-400 dark:placeholder-gray-500"
+                className={`block w-full pl-10 pr-3 py-3 border rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200 placeholder-gray-400 dark:placeholder-gray-500 ${
+                  fieldErrors.lastName
+                    ? "border-red-500 dark:border-red-500"
+                    : "border-gray-300 dark:border-gray-600"
+                }`}
                 placeholder="Last name"
               />
             </div>
+            {fieldErrors.lastName && (
+              <p className="mt-1 text-sm text-red-600 dark:text-red-400">
+                {fieldErrors.lastName}
+              </p>
+            )}
           </div>
         </div>
         <div>
@@ -177,10 +220,19 @@ const RegisterForm = ({
               onChange={handleInputChange}
               maxLength={255}
               required
-              className="block w-full pl-10 pr-3 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 dark:focus:bg-gray-800 transition-colors duration-200 placeholder-gray-400 dark:placeholder-gray-500"
+              className={`block w-full pl-10 pr-3 py-3 border rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 dark:focus:bg-gray-800 transition-colors duration-200 placeholder-gray-400 dark:placeholder-gray-500 ${
+                fieldErrors.email
+                  ? "border-red-500 dark:border-red-500"
+                  : "border-gray-300 dark:border-gray-600"
+              }`}
               placeholder="Enter your email"
             />
           </div>
+          {fieldErrors.email && (
+            <p className="mt-1 text-sm text-red-600 dark:text-red-400">
+              {fieldErrors.email}
+            </p>
+          )}
         </div>
         <div>
           <label
@@ -201,7 +253,11 @@ const RegisterForm = ({
               minLength={6}
               maxLength={100}
               required
-              className="block w-full pl-10 pr-12 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 dark:focus:bg-gray-800 transition-colors duration-200 placeholder-gray-400 dark:placeholder-gray-500"
+              className={`block w-full pl-10 pr-12 py-3 border rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 dark:focus:bg-gray-800 transition-colors duration-200 placeholder-gray-400 dark:placeholder-gray-500 ${
+                fieldErrors.password
+                  ? "border-red-500 dark:border-red-500"
+                  : "border-gray-300 dark:border-gray-600"
+              }`}
               placeholder="Create a password"
             />
             <button
@@ -216,6 +272,11 @@ const RegisterForm = ({
               )}
             </button>
           </div>
+          {fieldErrors.password && (
+            <p className="mt-1 text-sm text-red-600 dark:text-red-400">
+              {fieldErrors.password}
+            </p>
+          )}
         </div>
         <div>
           <label
@@ -236,7 +297,11 @@ const RegisterForm = ({
               minLength={6}
               maxLength={100}
               required
-              className="block w-full pl-10 pr-12 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 dark:focus:bg-gray-800 transition-colors duration-200 placeholder-gray-400 dark:placeholder-gray-500"
+              className={`block w-full pl-10 pr-12 py-3 border rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 dark:focus:bg-gray-800 transition-colors duration-200 placeholder-gray-400 dark:placeholder-gray-500 ${
+                fieldErrors.confirmPassword
+                  ? "border-red-500 dark:border-red-500"
+                  : "border-gray-300 dark:border-gray-600"
+              }`}
               placeholder="Confirm your password"
             />
             <button
@@ -251,6 +316,11 @@ const RegisterForm = ({
               )}
             </button>
           </div>
+          {fieldErrors.confirmPassword && (
+            <p className="mt-1 text-sm text-red-600 dark:text-red-400">
+              {fieldErrors.confirmPassword}
+            </p>
+          )}
         </div>
         <div className="flex items-center">
           <input
@@ -281,6 +351,19 @@ const RegisterForm = ({
             </a>
           </label>
         </div>
+        {fieldErrors.agreeToTerms && (
+          <p className="text-sm text-red-600 dark:text-red-400">
+            {fieldErrors.agreeToTerms}
+          </p>
+        )}
+
+        {validationError && (
+          <div className="flex items-center p-3 text-sm text-red-700 dark:text-red-400 bg-red-100 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg">
+            <AlertCircle className="w-5 h-5 mr-2 shrink-0" />
+            <span>{validationError}</span>
+          </div>
+        )}
+
         <button
           type="submit"
           disabled={isLoading}

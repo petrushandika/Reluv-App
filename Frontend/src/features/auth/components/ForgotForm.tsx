@@ -1,7 +1,17 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
+import { z } from "zod";
 import { Mail, AlertCircle } from "lucide-react";
+
+const forgotPasswordSchema = z.object({
+  email: z
+    .string()
+    .min(1, { message: "Email is required" })
+    .email({ message: "Please provide a valid email address" })
+    .max(255, { message: "Email must be at most 255 characters" })
+    .trim(),
+});
 
 interface ForgotFormProps {
   email: string;
@@ -24,8 +34,45 @@ const ForgotForm = ({
   onBackToLogin,
   onTryAnotherEmail,
 }: ForgotFormProps) => {
+  const [validationError, setValidationError] = useState<string | null>(null);
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+
+  const handleEmailChange = (value: string) => {
+    onEmailChange(value);
+    if (fieldErrors.email) {
+      setFieldErrors((prev) => {
+        const newErrors = { ...prev };
+        delete newErrors.email;
+        return newErrors;
+      });
+    }
+    setValidationError(null);
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    setValidationError(null);
+    setFieldErrors({});
+
+    const validationResult = forgotPasswordSchema.safeParse({ email });
+
+    if (!validationResult.success) {
+      const errors: Record<string, string> = {};
+      validationResult.error.errors.forEach((err) => {
+        if (err.path.length > 0) {
+          const fieldName = err.path[0] as string;
+          errors[fieldName] = err.message;
+        } else {
+          setValidationError(err.message);
+        }
+      });
+      setFieldErrors(errors);
+      if (Object.keys(errors).length === 0 && validationResult.error.errors[0]) {
+        setValidationError(validationResult.error.errors[0].message);
+      }
+      return;
+    }
+
     onSubmit();
   };
 
@@ -58,18 +105,27 @@ const ForgotForm = ({
                   type="email"
                   required
                   value={email}
-                  onChange={(e) => onEmailChange(e.target.value)}
+                  onChange={(e) => handleEmailChange(e.target.value)}
                   maxLength={255}
-                  className="block w-full pl-10 pr-3 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 dark:focus:bg-gray-800 transition-colors duration-200 placeholder-gray-400 dark:placeholder-gray-500"
+                  className={`block w-full pl-10 pr-3 py-3 border rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 dark:focus:bg-gray-800 transition-colors duration-200 placeholder-gray-400 dark:placeholder-gray-500 ${
+                    fieldErrors.email
+                      ? "border-red-500 dark:border-red-500"
+                      : "border-gray-300 dark:border-gray-600"
+                  }`}
                   placeholder="Enter your email address"
                 />
               </div>
+              {fieldErrors.email && (
+                <p className="mt-1 text-sm text-red-600 dark:text-red-400">
+                  {fieldErrors.email}
+                </p>
+              )}
             </div>
 
-            {error && (
+            {(error || validationError) && (
               <div className="flex items-center p-3 text-sm text-red-700 dark:text-red-400 bg-red-100 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg">
                 <AlertCircle className="w-5 h-5 mr-2 flex-shrink-0" />
-                <span>{error}</span>
+                <span>{error || validationError}</span>
               </div>
             )}
 

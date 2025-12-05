@@ -1,7 +1,27 @@
 "use client";
 
 import React, { useState } from "react";
+import { z } from "zod";
 import { Eye, EyeOff, Lock, CheckCircle, AlertCircle } from "lucide-react";
+
+const resetPasswordSchema = z
+  .object({
+    password: z
+      .string()
+      .min(1, { message: "Password is required" })
+      .min(6, { message: "Password must be at least 6 characters long" })
+      .max(100, { message: "Password must be at most 100 characters" })
+      .regex(/[a-z]/, { message: "Password must contain at least one lowercase letter" })
+      .regex(/[A-Z]/, { message: "Password must contain at least one uppercase letter" })
+      .regex(/[0-9]/, { message: "Password must contain at least one number" }),
+    confirmPassword: z
+      .string()
+      .min(1, { message: "Confirm password is required" }),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  });
 
 interface ResetFormProps {
   isReset: boolean;
@@ -20,6 +40,8 @@ const ResetForm = ({
 }: ResetFormProps) => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [validationError, setValidationError] = useState<string | null>(null);
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [formData, setFormData] = useState({
     password: "",
     confirmPassword: "",
@@ -39,11 +61,41 @@ const ResetForm = ({
       ...prev,
       [name]: value,
     }));
+    if (fieldErrors[name]) {
+      setFieldErrors((prev) => {
+        const newErrors = { ...prev };
+        delete newErrors[name];
+        return newErrors;
+      });
+    }
+    setValidationError(null);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit(formData);
+    setValidationError(null);
+    setFieldErrors({});
+
+    const validationResult = resetPasswordSchema.safeParse(formData);
+
+    if (!validationResult.success) {
+      const errors: Record<string, string> = {};
+      validationResult.error.errors.forEach((err) => {
+        if (err.path.length > 0) {
+          const fieldName = err.path[0] as string;
+          errors[fieldName] = err.message;
+        } else {
+          setValidationError(err.message);
+        }
+      });
+      setFieldErrors(errors);
+      if (Object.keys(errors).length === 0 && validationResult.error.errors[0]) {
+        setValidationError(validationResult.error.errors[0].message);
+      }
+      return;
+    }
+
+    onSubmit(validationResult.data);
   };
 
   const getPasswordStrength = (password: string) => {
@@ -98,7 +150,11 @@ const ResetForm = ({
                   onChange={handleInputChange}
                   minLength={6}
                   maxLength={100}
-                  className="block w-full pl-10 pr-12 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 dark:focus:bg-gray-800 transition-colors duration-200 placeholder-gray-400 dark:placeholder-gray-500"
+                  className={`block w-full pl-10 pr-12 py-3 border rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 dark:focus:bg-gray-800 transition-colors duration-200 placeholder-gray-400 dark:placeholder-gray-500 ${
+                    fieldErrors.password
+                      ? "border-red-500 dark:border-red-500"
+                      : "border-gray-300 dark:border-gray-600"
+                  }`}
                   placeholder="Enter new password"
                 />
                 <button
@@ -114,7 +170,12 @@ const ResetForm = ({
                 </button>
               </div>
 
-              {formData.password && (
+              {fieldErrors.password && (
+                <p className="mt-1 text-sm text-red-600 dark:text-red-400">
+                  {fieldErrors.password}
+                </p>
+              )}
+              {formData.password && !fieldErrors.password && (
                 <div className="mt-2">
                   <div className="flex items-center space-x-2">
                     <div className="flex-1 h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
@@ -154,7 +215,11 @@ const ResetForm = ({
                   onChange={handleInputChange}
                   minLength={6}
                   maxLength={100}
-                  className="block w-full pl-10 pr-12 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 dark:focus:bg-gray-800 transition-colors duration-200 placeholder-gray-400 dark:placeholder-gray-500"
+                  className={`block w-full pl-10 pr-12 py-3 border rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 dark:focus:bg-gray-800 transition-colors duration-200 placeholder-gray-400 dark:placeholder-gray-500 ${
+                    fieldErrors.confirmPassword
+                      ? "border-red-500 dark:border-red-500"
+                      : "border-gray-300 dark:border-gray-600"
+                  }`}
                   placeholder="Confirm new password"
                 />
                 <button
@@ -170,26 +235,27 @@ const ResetForm = ({
                 </button>
               </div>
 
-              {formData.confirmPassword && (
-                <div className="mt-2">
-                  {formData.password === formData.confirmPassword ? (
+              {fieldErrors.confirmPassword && (
+                <p className="mt-1 text-sm text-red-600 dark:text-red-400">
+                  {fieldErrors.confirmPassword}
+                </p>
+              )}
+              {formData.confirmPassword &&
+                !fieldErrors.confirmPassword &&
+                formData.password === formData.confirmPassword && (
+                  <div className="mt-2">
                     <div className="flex items-center text-green-600 dark:text-green-400 text-sm">
                       <CheckCircle className="h-4 w-4 mr-1" />
                       Passwords match
                     </div>
-                  ) : (
-                    <div className="text-red-600 dark:text-red-400 text-sm">
-                      Passwords do not match
-                    </div>
-                  )}
-                </div>
-              )}
+                  </div>
+                )}
             </div>
 
-            {error && (
+            {(error || validationError) && (
               <div className="flex items-center p-3 text-sm text-red-700 dark:text-red-400 bg-red-100 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg">
                 <AlertCircle className="w-5 h-5 mr-2 flex-shrink-0" />
-                <span>{error}</span>
+                <span>{error || validationError}</span>
               </div>
             )}
 
@@ -271,7 +337,7 @@ const ResetForm = ({
                 isLoading ||
                 !formData.password ||
                 !formData.confirmPassword ||
-                formData.password !== formData.confirmPassword
+                Object.keys(fieldErrors).length > 0
               }
               className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-sky-600 hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 transition-all duration-200 transform disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
             >

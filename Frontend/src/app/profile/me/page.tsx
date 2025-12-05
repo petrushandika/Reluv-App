@@ -36,6 +36,9 @@ const ProfilePage = () => {
   const [isPhoneInputOpen, setIsPhoneInputOpen] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState("");
   const [isSubmittingPhone, setIsSubmittingPhone] = useState(false);
+  const [validationError, setValidationError] = useState<string | null>(null);
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+  const [phoneError, setPhoneError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -83,6 +86,32 @@ const ProfilePage = () => {
 
   const handleSubmitPersonalInfo = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    setValidationError(null);
+    setFieldErrors({});
+
+    const formValidation = personalInfoSchema.safeParse(formData);
+
+    if (!formValidation.success) {
+      const errors: Record<string, string> = {};
+      formValidation.error.errors.forEach((err) => {
+        if (err.path.length > 0) {
+          const fieldName = err.path[0] as string;
+          errors[fieldName] = err.message;
+        } else {
+          setValidationError(err.message);
+        }
+      });
+      setFieldErrors(errors);
+      if (Object.keys(errors).length === 0 && formValidation.error.errors[0]) {
+        setValidationError(formValidation.error.errors[0].message);
+      }
+      toast.error("Validation Failed", {
+        description: "Please fix the errors in the form before submitting.",
+      });
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
@@ -139,6 +168,19 @@ const ProfilePage = () => {
 
   const handleSubmitPhoneNumber = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    setPhoneError(null);
+
+    const phoneValidation = phoneNumberSchema.safeParse(phoneNumber);
+
+    if (!phoneValidation.success) {
+      setPhoneError(phoneValidation.error.errors[0]?.message || "Invalid phone number");
+      toast.error("Validation Failed", {
+        description: "Please fix the phone number before submitting.",
+      });
+      return;
+    }
+
     setIsSubmittingPhone(true);
 
     try {
@@ -196,6 +238,13 @@ const ProfilePage = () => {
 
               <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 shadow-sm">
                 <form onSubmit={handleSubmitPersonalInfo} className="space-y-5">
+                  {validationError && (
+                    <div className="flex items-center p-3 text-sm text-red-700 dark:text-red-400 bg-red-100 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg">
+                      <AlertCircle className="w-5 h-5 mr-2 shrink-0" />
+                      <span>{validationError}</span>
+                    </div>
+                  )}
+
                   <div>
                     <label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block">
                       Title
@@ -241,13 +290,29 @@ const ProfilePage = () => {
                     <input
                       type="text"
                       value={formData.firstName}
-                      onChange={(e) =>
-                        setFormData({ ...formData, firstName: e.target.value })
-                      }
+                      onChange={(e) => {
+                        setFormData({ ...formData, firstName: e.target.value });
+                        if (fieldErrors.firstName) {
+                          setFieldErrors((prev) => {
+                            const newErrors = { ...prev };
+                            delete newErrors.firstName;
+                            return newErrors;
+                          });
+                        }
+                      }}
                       required
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-transparent transition-colors"
+                      className={`w-full px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-transparent transition-colors ${
+                        fieldErrors.firstName
+                          ? "border-red-500 dark:border-red-500"
+                          : "border-gray-300 dark:border-gray-600"
+                      }`}
                       placeholder="First Name*"
                     />
+                    {fieldErrors.firstName && (
+                      <p className="mt-1 text-sm text-red-600 dark:text-red-400">
+                        {fieldErrors.firstName}
+                      </p>
+                    )}
                   </div>
 
                   <div>
@@ -257,13 +322,29 @@ const ProfilePage = () => {
                     <input
                       type="text"
                       value={formData.lastName}
-                      onChange={(e) =>
-                        setFormData({ ...formData, lastName: e.target.value })
-                      }
+                      onChange={(e) => {
+                        setFormData({ ...formData, lastName: e.target.value });
+                        if (fieldErrors.lastName) {
+                          setFieldErrors((prev) => {
+                            const newErrors = { ...prev };
+                            delete newErrors.lastName;
+                            return newErrors;
+                          });
+                        }
+                      }}
                       required
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-transparent transition-colors"
+                      className={`w-full px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-transparent transition-colors ${
+                        fieldErrors.lastName
+                          ? "border-red-500 dark:border-red-500"
+                          : "border-gray-300 dark:border-gray-600"
+                      }`}
                       placeholder="Last Name*"
                     />
+                    {fieldErrors.lastName && (
+                      <p className="mt-1 text-sm text-red-600 dark:text-red-400">
+                        {fieldErrors.lastName}
+                      </p>
+                    )}
                   </div>
 
                   <div>
@@ -274,20 +355,38 @@ const ProfilePage = () => {
                       <input
                         type="date"
                         value={formData.dateOfBirth}
-                        onChange={(e) =>
+                        onChange={(e) => {
                           setFormData({
                             ...formData,
                             dateOfBirth: e.target.value,
-                          })
-                        }
-                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-transparent transition-colors"
+                          });
+                          if (fieldErrors.dateOfBirth) {
+                            setFieldErrors((prev) => {
+                              const newErrors = { ...prev };
+                              delete newErrors.dateOfBirth;
+                              return newErrors;
+                            });
+                          }
+                        }}
+                        className={`w-full px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-transparent transition-colors ${
+                          fieldErrors.dateOfBirth
+                            ? "border-red-500 dark:border-red-500"
+                            : "border-gray-300 dark:border-gray-600"
+                        }`}
                         placeholder="Date of Birth"
                       />
                     </div>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                      Fill your date of birth to get birthday reward once a
-                      year.
-                    </p>
+                    {fieldErrors.dateOfBirth && (
+                      <p className="mt-1 text-sm text-red-600 dark:text-red-400">
+                        {fieldErrors.dateOfBirth}
+                      </p>
+                    )}
+                    {!fieldErrors.dateOfBirth && (
+                      <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                        Fill your date of birth to get birthday reward once a
+                        year.
+                      </p>
+                    )}
                   </div>
 
                   <button
@@ -451,6 +550,13 @@ const ProfilePage = () => {
               onSubmit={handleSubmitPersonalInfo}
               className="flex-1 overflow-y-auto p-4 space-y-5"
             >
+              {validationError && (
+                <div className="flex items-center p-3 text-sm text-red-700 dark:text-red-400 bg-red-100 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg">
+                  <AlertCircle className="w-5 h-5 mr-2 shrink-0" />
+                  <span>{validationError}</span>
+                </div>
+              )}
+
               <div>
                 <label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block">
                   Title
@@ -619,10 +725,24 @@ const ProfilePage = () => {
                     <input
                       type="tel"
                       value={phoneNumber}
-                      onChange={(e) => setPhoneNumber(e.target.value)}
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-transparent transition-colors"
+                      onChange={(e) => {
+                        setPhoneNumber(e.target.value);
+                        if (phoneError) {
+                          setPhoneError(null);
+                        }
+                      }}
+                      className={`w-full px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-transparent transition-colors ${
+                        phoneError
+                          ? "border-red-500 dark:border-red-500"
+                          : "border-gray-300 dark:border-gray-600"
+                      }`}
                       placeholder="Enter phone number"
                     />
+                    {phoneError && (
+                      <p className="mt-1 text-sm text-red-600 dark:text-red-400">
+                        {phoneError}
+                      </p>
+                    )}
                   </div>
                   <div className="flex gap-2">
                     <button

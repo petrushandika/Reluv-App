@@ -2,7 +2,8 @@
 
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { MapPin, ChevronLeft, X, Navigation, ChevronDown, Search } from 'lucide-react';
+import { z } from 'zod';
+import { MapPin, ChevronLeft, X, Navigation, ChevronDown, Search, AlertCircle } from 'lucide-react';
 import { useAuthStore } from '@/features/auth/store/auth.store';
 import { getMe } from '@/features/user/api/userApi';
 import { User as UserType } from '@/features/auth/types';
@@ -16,6 +17,49 @@ import { toast } from 'sonner';
 import Spinner from '@/shared/components/atoms/Spinner';
 import { createAddress, getAddresses } from '@/features/address/api/addressApi';
 import { Province, Regency, District, SubDistrict } from '@/features/checkout/types';
+
+const addressFormSchema = z.object({
+  label: z
+    .string()
+    .min(1, { message: "Address label is required" })
+    .max(50, { message: "Address label must be at most 50 characters" })
+    .trim(),
+  recipientName: z
+    .string()
+    .min(1, { message: "Recipient name is required" })
+    .max(100, { message: "Recipient name must be at most 100 characters" })
+    .trim(),
+  phoneNumber: z
+    .string()
+    .min(1, { message: "Phone number is required" })
+    .regex(/^[0-9+\-\s()]+$/, { message: "Please provide a valid phone number" })
+    .min(10, { message: "Phone number must be at least 10 digits" })
+    .max(20, { message: "Phone number must be at most 20 characters" })
+    .trim(),
+  streetAddress: z
+    .string()
+    .min(1, { message: "Street address is required" })
+    .max(255, { message: "Street address must be at most 255 characters" })
+    .trim(),
+  country: z.string().min(1, { message: "Country is required" }),
+  province: z.string().min(1, { message: "Province is required" }),
+  city: z.string().min(1, { message: "City is required" }),
+  district: z.string().min(1, { message: "District is required" }),
+  subDistrict: z.string().min(1, { message: "Sub-district is required" }),
+  postalCode: z
+    .string()
+    .min(1, { message: "Postal code is required" })
+    .regex(/^[0-9]+$/, { message: "Postal code must contain only numbers" })
+    .min(5, { message: "Postal code must be at least 5 digits" })
+    .max(10, { message: "Postal code must be at most 10 digits" })
+    .trim(),
+  notes: z
+    .string()
+    .max(500, { message: "Notes must be at most 500 characters" })
+    .optional()
+    .or(z.literal("")),
+  isDefault: z.boolean(),
+});
 
 const AddAddressPage = () => {
   const router = useRouter();
@@ -64,6 +108,8 @@ const AddAddressPage = () => {
   const [isCityOpen, setIsCityOpen] = useState(false);
   const [isDistrictOpen, setIsDistrictOpen] = useState(false);
   const [isSubDistrictOpen, setIsSubDistrictOpen] = useState(false);
+  const [validationError, setValidationError] = useState<string | null>(null);
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -206,6 +252,14 @@ const AddAddressPage = () => {
       ...prev,
       [name]: value,
     }));
+    if (fieldErrors[name]) {
+      setFieldErrors((prev) => {
+        const newErrors = { ...prev };
+        delete newErrors[name];
+        return newErrors;
+      });
+    }
+    setValidationError(null);
   };
 
   const handleProvinceChange = (provinceId: string) => {
@@ -234,6 +288,32 @@ const AddAddressPage = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    setValidationError(null);
+    setFieldErrors({});
+
+    const formValidation = addressFormSchema.safeParse(formData);
+
+    if (!formValidation.success) {
+      const errors: Record<string, string> = {};
+      formValidation.error.errors.forEach((err) => {
+        if (err.path.length > 0) {
+          const fieldName = err.path[0] as string;
+          errors[fieldName] = err.message;
+        } else {
+          setValidationError(err.message);
+        }
+      });
+      setFieldErrors(errors);
+      if (Object.keys(errors).length === 0 && formValidation.error.errors[0]) {
+        setValidationError(formValidation.error.errors[0].message);
+      }
+      toast.error("Validation Failed", {
+        description: "Please fix the errors in the form before submitting.",
+      });
+      return;
+    }
+
     try {
       const selectedProvince = provinces.find((p) => p.id === formData.province);
       const selectedCity = regencies.find((r) => r.id === formData.city);
@@ -522,6 +602,42 @@ const AddAddressPage = () => {
               </div>
 
               <form id="address-form" onSubmit={handleSubmit}>
+                {validationError && (
+                  <div className="mb-6 flex items-center p-3 text-sm text-red-700 dark:text-red-400 bg-red-100 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg">
+                    <AlertCircle className="w-5 h-5 mr-2 shrink-0" />
+                    <span>{validationError}</span>
+                  </div>
+                )}
+
+                {(fieldErrors.province || fieldErrors.city || fieldErrors.district || fieldErrors.subDistrict) && (
+                  <div className="mb-6 space-y-2">
+                    {fieldErrors.province && (
+                      <div className="flex items-center p-3 text-sm text-red-700 dark:text-red-400 bg-red-100 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg">
+                        <AlertCircle className="w-5 h-5 mr-2 shrink-0" />
+                        <span>{fieldErrors.province}</span>
+                      </div>
+                    )}
+                    {fieldErrors.city && (
+                      <div className="flex items-center p-3 text-sm text-red-700 dark:text-red-400 bg-red-100 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg">
+                        <AlertCircle className="w-5 h-5 mr-2 shrink-0" />
+                        <span>{fieldErrors.city}</span>
+                      </div>
+                    )}
+                    {fieldErrors.district && (
+                      <div className="flex items-center p-3 text-sm text-red-700 dark:text-red-400 bg-red-100 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg">
+                        <AlertCircle className="w-5 h-5 mr-2 shrink-0" />
+                        <span>{fieldErrors.district}</span>
+                      </div>
+                    )}
+                    {fieldErrors.subDistrict && (
+                      <div className="flex items-center p-3 text-sm text-red-700 dark:text-red-400 bg-red-100 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg">
+                        <AlertCircle className="w-5 h-5 mr-2 shrink-0" />
+                        <span>{fieldErrors.subDistrict}</span>
+                      </div>
+                    )}
+                  </div>
+                )}
+
                 <div className="flex flex-col lg:flex-row lg:gap-8">
                   <div className="flex-1 space-y-6 mb-6 lg:mb-0">
                     <div>
@@ -535,8 +651,17 @@ const AddAddressPage = () => {
                         onChange={handleInputChange}
                         required
                         placeholder="Example: Home, Office, etc."
-                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder:text-base placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-transparent transition-colors"
+                        className={`w-full px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder:text-base placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-transparent transition-colors ${
+                          fieldErrors.label
+                            ? "border-red-500 dark:border-red-500"
+                            : "border-gray-300 dark:border-gray-600"
+                        }`}
                       />
+                      {fieldErrors.label && (
+                        <p className="mt-1 text-sm text-red-600 dark:text-red-400">
+                          {fieldErrors.label}
+                        </p>
+                      )}
                     </div>
 
                     <div>
@@ -585,8 +710,17 @@ const AddAddressPage = () => {
                             }}
                             required
                             placeholder="Name*"
-                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder:text-base placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-transparent transition-colors"
+                            className={`w-full px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder:text-base placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-transparent transition-colors ${
+                              fieldErrors.recipientName
+                                ? "border-red-500 dark:border-red-500"
+                                : "border-gray-300 dark:border-gray-600"
+                            }`}
                           />
+                          {fieldErrors.recipientName && (
+                            <p className="mt-1 text-sm text-red-600 dark:text-red-400">
+                              {fieldErrors.recipientName}
+                            </p>
+                          )}
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -629,8 +763,17 @@ const AddAddressPage = () => {
                             }}
                             required
                             placeholder="Phone Number*"
-                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder:text-base placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-transparent transition-colors"
+                            className={`w-full px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder:text-base placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-transparent transition-colors ${
+                              fieldErrors.phoneNumber
+                                ? "border-red-500 dark:border-red-500"
+                                : "border-gray-300 dark:border-gray-600"
+                            }`}
                           />
+                          {fieldErrors.phoneNumber && (
+                            <p className="mt-1 text-sm text-red-600 dark:text-red-400">
+                              {fieldErrors.phoneNumber}
+                            </p>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -675,8 +818,17 @@ const AddAddressPage = () => {
                             onChange={handleInputChange}
                             required
                             placeholder="Sudirman St. No. 52-53"
-                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder:text-base placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-transparent transition-colors"
+                            className={`w-full px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder:text-base placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-transparent transition-colors ${
+                              fieldErrors.streetAddress
+                                ? "border-red-500 dark:border-red-500"
+                                : "border-gray-300 dark:border-gray-600"
+                            }`}
                           />
+                          {fieldErrors.streetAddress && (
+                            <p className="mt-1 text-sm text-red-600 dark:text-red-400">
+                              {fieldErrors.streetAddress}
+                            </p>
+                          )}
                         </div>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                           <FormSelect
@@ -767,8 +919,17 @@ const AddAddressPage = () => {
                               onChange={handleInputChange}
                               required
                               placeholder="12190"
-                              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder:text-base placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-transparent transition-colors"
+                              className={`w-full px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder:text-base placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-transparent transition-colors ${
+                                fieldErrors.postalCode
+                                  ? "border-red-500 dark:border-red-500"
+                                  : "border-gray-300 dark:border-gray-600"
+                              }`}
                             />
+                            {fieldErrors.postalCode && (
+                              <p className="mt-1 text-sm text-red-600 dark:text-red-400">
+                                {fieldErrors.postalCode}
+                              </p>
+                            )}
                           </div>
                         </div>
                         <div>
@@ -811,8 +972,17 @@ const AddAddressPage = () => {
                             }}
                             rows={3}
                             placeholder="Additional address details (e.g., building name, floor, unit number)"
-                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder:text-base placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-transparent transition-colors resize-y"
+                            className={`w-full px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder:text-base placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-transparent transition-colors resize-y ${
+                              fieldErrors.notes
+                                ? "border-red-500 dark:border-red-500"
+                                : "border-gray-300 dark:border-gray-600"
+                            }`}
                           />
+                          {fieldErrors.notes && (
+                            <p className="mt-1 text-sm text-red-600 dark:text-red-400">
+                              {fieldErrors.notes}
+                            </p>
+                          )}
                         </div>
                         {hasExistingAddresses && (
                           <div className="flex items-center">
