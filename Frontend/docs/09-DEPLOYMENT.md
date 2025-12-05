@@ -33,7 +33,8 @@ npm run build
 npm run start
 ```
 
-Visit `http://localhost:3099` untuk test production build.
+Visit `https://fe-reluv-app.vercel.app` untuk test production build.
+# Visit `http://localhost:3099` untuk test production build.
 
 ## 🌐 Deployment Options
 

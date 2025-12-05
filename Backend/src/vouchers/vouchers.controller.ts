@@ -17,8 +17,8 @@ import { CreateVoucherDto } from './dto/create-voucher.dto';
 import { UpdateVoucherDto } from './dto/update-voucher.dto';
 import { User } from '@prisma/client';
 import { ApplyVoucherDto } from './dto/apply-voucher.dto';
-import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
-import { GetUser } from 'src/common/decorators/get-user.decorator';
+import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
+import { GetUser } from '../common/decorators/get-user.decorator';
 
 @Controller('vouchers')
 export class VouchersController {

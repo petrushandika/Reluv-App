@@ -3,7 +3,7 @@ import { ShippingRatesService } from './shipping-rates.service';
 import { ShippingRatesController } from './shipping-rates.controller';
 import { HttpModule } from '@nestjs/axios';
 import { ConfigModule } from '@nestjs/config';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Module({
   imports: [HttpModule, ConfigModule],

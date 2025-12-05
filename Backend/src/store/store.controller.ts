@@ -20,7 +20,7 @@ import { User } from '@prisma/client';
 import { UpdateStoreProfileDto } from './dto/update-store-profile.dto';
 import { QueryStoreDto } from './dto/query-store.dto';
 import { AdminCreateStoreDto } from './dto/admin-create-store.dto';
-import { AdminGuard } from 'src/common/guards/admin.guard';
+import { AdminGuard } from '../common/guards/admin.guard';
 
 @Controller('store')
 export class StoreController {

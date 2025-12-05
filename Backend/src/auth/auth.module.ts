@@ -6,7 +6,7 @@ import { AuthController } from './auth.controller';
 import { PrismaService } from '../prisma/prisma.service';
 import { JwtStrategy } from './jwt.strategy';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { EmailModule } from 'src/email/email.module';
+import { EmailModule } from '../email/email.module';
 import { SignOptions } from 'jsonwebtoken';
 import type { StringValue } from 'ms';
 

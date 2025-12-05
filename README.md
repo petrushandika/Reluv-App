@@ -44,7 +44,8 @@ cp .env.example .env.local
 npm run dev
 ```
 
-Frontend akan berjalan di `http://localhost:3099`
+Frontend akan berjalan di `https://fe-reluv-app.vercel.app`
+# Frontend akan berjalan di `http://localhost:3099`
 
 ## 📚 Documentation
 

@@ -14,6 +14,11 @@
     },
     {
       "key": "FRONTEND",
+      "value": "https://fe-reluv-app.vercel.app",
+      "type": "string"
+    },
+    {
+      "key": "FRONTEND_LOCAL",
       "value": "http://localhost:3099",
       "type": "string"
     },

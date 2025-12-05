@@ -5,7 +5,7 @@ import {
   InternalServerErrorException,
 } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
-import CONFIG from 'src/configs/config';
+import CONFIG from '../../configs/config';
 
 @Injectable()
 export class AuthMiddleware implements NestMiddleware {

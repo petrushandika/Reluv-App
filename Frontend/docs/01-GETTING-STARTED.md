@@ -40,7 +40,8 @@ Edit file `.env.local` dengan konfigurasi yang sesuai (lihat [Configuration](#co
 npm run dev
 ```
 
-Aplikasi akan berjalan di `http://localhost:3099`
+Aplikasi akan berjalan di `https://fe-reluv-app.vercel.app`
+# Aplikasi akan berjalan di `http://localhost:3099`
 
 ## ⚙️ Configuration
 
@@ -57,7 +58,8 @@ NEXT_PUBLIC_API_URL=http://localhost:8000/api/v1
 
 ```env
 # NextAuth (jika digunakan)
-NEXTAUTH_URL=http://localhost:3099
+NEXTAUTH_URL=https://fe-reluv-app.vercel.app
+# NEXTAUTH_URL=http://localhost:3099
 NEXTAUTH_SECRET=your-secret-key
 
 # Cloudinary (jika diperlukan di frontend)
@@ -102,7 +104,8 @@ Setelah setup, verifikasi bahwa semuanya berjalan dengan baik:
 
 1. **Check server running**
 
-   - Buka browser: `http://localhost:3099`
+   - Buka browser: `https://fe-reluv-app.vercel.app`
+   # - Buka browser: `http://localhost:3099`
    - Halaman home harus muncul
 
 2. **Check API connection**
