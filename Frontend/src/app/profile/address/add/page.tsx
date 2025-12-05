@@ -1,22 +1,48 @@
-'use client';
+"use client";
 
-import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { z } from 'zod';
-import { MapPin, ChevronLeft, X, Navigation, ChevronDown, Search, AlertCircle } from 'lucide-react';
-import { useAuthStore } from '@/features/auth/store/auth.store';
-import { getMe } from '@/features/user/api/userApi';
-import { User as UserType } from '@/features/auth/types';
-import { PrivateRoute } from '@/shared/components/guards/RouteGuards';
-import ProfileSidebar from '@/shared/components/organisms/ProfileSidebar';
-import MapPicker from '@/shared/components/organisms/MapPicker';
-import GeoSearch from '@/shared/components/organisms/GeoSearch';
-import type { LatLngExpression } from 'leaflet';
-import type { SearchResult } from 'leaflet-geosearch/dist/providers/provider.js';
-import { toast } from 'sonner';
-import Spinner from '@/shared/components/atoms/Spinner';
-import { createAddress, getAddresses } from '@/features/address/api/addressApi';
-import { Province, Regency, District, SubDistrict } from '@/features/checkout/types';
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { z } from "zod";
+import {
+  MapPin,
+  ChevronLeft,
+  X,
+  Navigation,
+  ChevronDown,
+  Search,
+  AlertCircle,
+} from "lucide-react";
+import { useAuthStore } from "@/features/auth/store/auth.store";
+import { getMe } from "@/features/user/api/userApi";
+import { User as UserType } from "@/features/auth/types";
+import { PrivateRoute } from "@/shared/components/guards/RouteGuards";
+import ProfileSidebar from "@/shared/components/organisms/ProfileSidebar";
+import dynamic from "next/dynamic";
+
+const MapPicker = dynamic(
+  () => import("@/shared/components/organisms/MapPicker"),
+  {
+    ssr: false,
+  }
+);
+
+const GeoSearch = dynamic(
+  () => import("@/shared/components/organisms/GeoSearch"),
+  {
+    ssr: false,
+  }
+);
+import type { LatLngExpression } from "leaflet";
+import type { SearchResult } from "leaflet-geosearch/dist/providers/provider.js";
+import { toast } from "sonner";
+import Spinner from "@/shared/components/atoms/Spinner";
+import { createAddress, getAddresses } from "@/features/address/api/addressApi";
+import {
+  Province,
+  Regency,
+  District,
+  SubDistrict,
+} from "@/features/checkout/types";
 
 const addressFormSchema = z.object({
   label: z
@@ -32,7 +58,9 @@ const addressFormSchema = z.object({
   phoneNumber: z
     .string()
     .min(1, { message: "Phone number is required" })
-    .regex(/^[0-9+\-\s()]+$/, { message: "Please provide a valid phone number" })
+    .regex(/^[0-9+\-\s()]+$/, {
+      message: "Please provide a valid phone number",
+    })
     .min(10, { message: "Phone number must be at least 10 digits" })
     .max(20, { message: "Phone number must be at most 20 characters" })
     .trim(),
@@ -77,17 +105,17 @@ const AddAddressPage = () => {
   } | null>(null);
 
   const [formData, setFormData] = useState({
-    label: '',
-    recipientName: '',
-    phoneNumber: '',
-    streetAddress: '',
-    country: 'ID',
-    province: '',
-    city: '',
-    district: '',
-    subDistrict: '',
-    postalCode: '',
-    notes: '',
+    label: "",
+    recipientName: "",
+    phoneNumber: "",
+    streetAddress: "",
+    country: "ID",
+    province: "",
+    city: "",
+    district: "",
+    subDistrict: "",
+    postalCode: "",
+    notes: "",
     isDefault: false,
   });
 
@@ -99,10 +127,10 @@ const AddAddressPage = () => {
   const [isLoadingRegencies, setIsLoadingRegencies] = useState(false);
   const [isLoadingDistricts, setIsLoadingDistricts] = useState(false);
   const [isLoadingSubDistricts, setIsLoadingSubDistricts] = useState(false);
-  const [provinceSearchTerm, setProvinceSearchTerm] = useState('');
-  const [citySearchTerm, setCitySearchTerm] = useState('');
-  const [districtSearchTerm, setDistrictSearchTerm] = useState('');
-  const [subDistrictSearchTerm, setSubDistrictSearchTerm] = useState('');
+  const [provinceSearchTerm, setProvinceSearchTerm] = useState("");
+  const [citySearchTerm, setCitySearchTerm] = useState("");
+  const [districtSearchTerm, setDistrictSearchTerm] = useState("");
+  const [subDistrictSearchTerm, setSubDistrictSearchTerm] = useState("");
   const [isCountryOpen, setIsCountryOpen] = useState(false);
   const [isProvinceOpen, setIsProvinceOpen] = useState(false);
   const [isCityOpen, setIsCityOpen] = useState(false);
@@ -114,7 +142,7 @@ const AddAddressPage = () => {
   useEffect(() => {
     const fetchUser = async () => {
       if (!isAuthenticated()) {
-        router.push('/auth/login');
+        router.push("/auth/login");
         return;
       }
 
@@ -122,7 +150,7 @@ const AddAddressPage = () => {
         const userData = await getMe();
         setUser(userData);
       } catch (error) {
-        console.error('Failed to fetch user data:', error);
+        console.error("Failed to fetch user data:", error);
         setUser(null);
       } finally {
         setIsLoading(false);
@@ -144,7 +172,7 @@ const AddAddressPage = () => {
         const addresses = await getAddresses();
         setHasExistingAddresses(addresses.length > 0);
       } catch (error) {
-        console.error('Failed to check existing addresses:', error);
+        console.error("Failed to check existing addresses:", error);
         setHasExistingAddresses(false);
       }
     };
@@ -159,12 +187,12 @@ const AddAddressPage = () => {
       setIsLoadingProvinces(true);
       try {
         const response = await fetch(
-          'https://www.emsifa.com/api-wilayah-indonesia/api/provinces.json'
+          "https://www.emsifa.com/api-wilayah-indonesia/api/provinces.json"
         );
         const data: Province[] = await response.json();
         setProvinces(data);
       } catch (error) {
-        console.error('Failed to fetch provinces:', error);
+        console.error("Failed to fetch provinces:", error);
       } finally {
         setIsLoadingProvinces(false);
       }
@@ -183,7 +211,7 @@ const AddAddressPage = () => {
           const data: Regency[] = await response.json();
           setRegencies(data);
         } catch (error) {
-          console.error('Failed to fetch regencies:', error);
+          console.error("Failed to fetch regencies:", error);
           setRegencies([]);
         } finally {
           setIsLoadingRegencies(false);
@@ -192,7 +220,12 @@ const AddAddressPage = () => {
       fetchRegencies();
     } else {
       setRegencies([]);
-      setFormData((prev) => ({ ...prev, city: '', district: '', subDistrict: '' }));
+      setFormData((prev) => ({
+        ...prev,
+        city: "",
+        district: "",
+        subDistrict: "",
+      }));
     }
   }, [formData.province]);
 
@@ -207,7 +240,7 @@ const AddAddressPage = () => {
           const data: District[] = await response.json();
           setDistricts(data);
         } catch (error) {
-          console.error('Failed to fetch districts:', error);
+          console.error("Failed to fetch districts:", error);
           setDistricts([]);
         } finally {
           setIsLoadingDistricts(false);
@@ -216,7 +249,7 @@ const AddAddressPage = () => {
       fetchDistricts();
     } else {
       setDistricts([]);
-      setFormData((prev) => ({ ...prev, district: '', subDistrict: '' }));
+      setFormData((prev) => ({ ...prev, district: "", subDistrict: "" }));
     }
   }, [formData.city]);
 
@@ -231,7 +264,7 @@ const AddAddressPage = () => {
           const data: SubDistrict[] = await response.json();
           setSubDistricts(data);
         } catch (error) {
-          console.error('Failed to fetch sub-districts:', error);
+          console.error("Failed to fetch sub-districts:", error);
           setSubDistricts([]);
         } finally {
           setIsLoadingSubDistricts(false);
@@ -240,12 +273,14 @@ const AddAddressPage = () => {
       fetchSubDistricts();
     } else {
       setSubDistricts([]);
-      setFormData((prev) => ({ ...prev, subDistrict: '' }));
+      setFormData((prev) => ({ ...prev, subDistrict: "" }));
     }
   }, [formData.district]);
 
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -263,27 +298,32 @@ const AddAddressPage = () => {
   };
 
   const handleProvinceChange = (provinceId: string) => {
-    setFormData((prev) => ({ ...prev, province: provinceId, city: '' }));
+    setFormData((prev) => ({ ...prev, province: provinceId, city: "" }));
     setIsProvinceOpen(false);
-    setProvinceSearchTerm('');
+    setProvinceSearchTerm("");
   };
 
   const handleCityChange = (regencyId: string) => {
-    setFormData((prev) => ({ ...prev, city: regencyId, district: '', subDistrict: '' }));
+    setFormData((prev) => ({
+      ...prev,
+      city: regencyId,
+      district: "",
+      subDistrict: "",
+    }));
     setIsCityOpen(false);
-    setCitySearchTerm('');
+    setCitySearchTerm("");
   };
 
   const handleDistrictChange = (districtId: string) => {
-    setFormData((prev) => ({ ...prev, district: districtId, subDistrict: '' }));
+    setFormData((prev) => ({ ...prev, district: districtId, subDistrict: "" }));
     setIsDistrictOpen(false);
-    setDistrictSearchTerm('');
+    setDistrictSearchTerm("");
   };
 
   const handleSubDistrictChange = (subDistrictId: string) => {
     setFormData((prev) => ({ ...prev, subDistrict: subDistrictId }));
     setIsSubDistrictOpen(false);
-    setSubDistrictSearchTerm('');
+    setSubDistrictSearchTerm("");
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -315,14 +355,20 @@ const AddAddressPage = () => {
     }
 
     try {
-      const selectedProvince = provinces.find((p) => p.id === formData.province);
+      const selectedProvince = provinces.find(
+        (p) => p.id === formData.province
+      );
       const selectedCity = regencies.find((r) => r.id === formData.city);
-      const selectedDistrict = districts.find((d) => d.id === formData.district);
-      const selectedSubDistrict = subDistricts.find((s) => s.id === formData.subDistrict);
+      const selectedDistrict = districts.find(
+        (d) => d.id === formData.district
+      );
+      const selectedSubDistrict = subDistricts.find(
+        (s) => s.id === formData.subDistrict
+      );
 
       if (!selectedProvince || !selectedCity) {
-        toast.error('Invalid Selection', {
-          description: 'Please select both province and city.',
+        toast.error("Invalid Selection", {
+          description: "Please select both province and city.",
         });
         return;
       }
@@ -331,7 +377,7 @@ const AddAddressPage = () => {
       if (formData.notes.trim()) {
         addressParts.push(formData.notes.trim());
       }
-      const fullAddress = addressParts.join('\n');
+      const fullAddress = addressParts.join("\n");
 
       const addressData = {
         label: formData.label.trim(),
@@ -349,20 +395,29 @@ const AddAddressPage = () => {
       };
 
       await createAddress(addressData);
-      toast.success('Address Saved', {
-        description: 'Your address has been saved successfully.',
+      toast.success("Address Saved", {
+        description: "Your address has been saved successfully.",
       });
-      router.push('/profile/address');
+      router.push("/profile/address");
     } catch (error: unknown) {
-      console.error('Failed to save address:', error);
-      const errorMessage = (error as { response?: { data?: { message?: string | string[] } }; message?: string })?.response?.data?.message || (error as { message?: string })?.message || 'An error occurred while saving the address.';
-      const errorDetails = Array.isArray(errorMessage) ? errorMessage.join(', ') : errorMessage;
-      toast.error('Failed to Save Address', {
+      console.error("Failed to save address:", error);
+      const errorMessage =
+        (
+          error as {
+            response?: { data?: { message?: string | string[] } };
+            message?: string;
+          }
+        )?.response?.data?.message ||
+        (error as { message?: string })?.message ||
+        "An error occurred while saving the address.";
+      const errorDetails = Array.isArray(errorMessage)
+        ? errorMessage.join(", ")
+        : errorMessage;
+      toast.error("Failed to Save Address", {
         description: errorDetails,
       });
     }
   };
-
 
   const FormSelect = ({
     id,
@@ -419,7 +474,7 @@ const AddAddressPage = () => {
         </select>
         <ChevronDown
           className={`absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 dark:text-gray-500 pointer-events-none transition-transform duration-200 ${
-            isOpen ? 'rotate-180' : ''
+            isOpen ? "rotate-180" : ""
           }`}
         />
       </div>
@@ -463,17 +518,17 @@ const AddAddressPage = () => {
         if (
           selectRef.current &&
           !selectRef.current.contains(target) &&
-          !target.closest('input') &&
-          !target.closest('textarea')
+          !target.closest("input") &&
+          !target.closest("textarea")
         ) {
           setIsOpen(false);
         }
       };
       if (isOpen) {
-        document.addEventListener('mousedown', handleClickOutside);
+        document.addEventListener("mousedown", handleClickOutside);
       }
       return () => {
-        document.removeEventListener('mousedown', handleClickOutside);
+        document.removeEventListener("mousedown", handleClickOutside);
       };
     }, [isOpen, setIsOpen]);
 
@@ -501,19 +556,19 @@ const AddAddressPage = () => {
           >
             <span
               className={
-                selectedOption ? '' : 'text-gray-400 dark:text-gray-500'
+                selectedOption ? "" : "text-gray-400 dark:text-gray-500"
               }
             >
               {isLoading
-                ? 'Loading...'
+                ? "Loading..."
                 : selectedOption
-                  ? selectedOption.name
-                  : placeholder || `Select ${label}`}
+                ? selectedOption.name
+                : placeholder || `Select ${label}`}
             </span>
           </button>
           <ChevronDown
             className={`absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 dark:text-gray-500 pointer-events-none transition-transform duration-200 ${
-              isOpen ? 'rotate-180' : ''
+              isOpen ? "rotate-180" : ""
             }`}
           />
         </div>
@@ -609,7 +664,10 @@ const AddAddressPage = () => {
                   </div>
                 )}
 
-                {(fieldErrors.province || fieldErrors.city || fieldErrors.district || fieldErrors.subDistrict) && (
+                {(fieldErrors.province ||
+                  fieldErrors.city ||
+                  fieldErrors.district ||
+                  fieldErrors.subDistrict) && (
                   <div className="mb-6 space-y-2">
                     {fieldErrors.province && (
                       <div className="flex items-center p-3 text-sm text-red-700 dark:text-red-400 bg-red-100 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg">
@@ -808,7 +866,8 @@ const AddAddressPage = () => {
                             htmlFor="streetAddress"
                             className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
                           >
-                            Street Address<span className="text-red-500">*</span>
+                            Street Address
+                            <span className="text-red-500">*</span>
                           </label>
                           <input
                             type="text"
@@ -834,7 +893,7 @@ const AddAddressPage = () => {
                           <FormSelect
                             id="country"
                             label="Country"
-                            options={[{ value: 'ID', label: 'Indonesia' }]}
+                            options={[{ value: "ID", label: "Indonesia" }]}
                             value={formData.country}
                             onChange={handleInputChange}
                             isOpen={isCountryOpen}
@@ -1089,7 +1148,7 @@ const AddAddressPage = () => {
                         ];
                         setMapPosition(newPos);
                         setSelectedLocation({
-                          name: location.label.split(',')[0],
+                          name: location.label.split(",")[0],
                           fullAddress: location.label,
                         });
                       }}
@@ -1130,8 +1189,8 @@ const AddAddressPage = () => {
                     if (selectedLocation || mapPosition) {
                       if (!selectedLocation) {
                         setSelectedLocation({
-                          name: 'Selected Location',
-                          fullAddress: 'Location selected',
+                          name: "Selected Location",
+                          fullAddress: "Location selected",
                         });
                       }
                       setShowPinpointModal(false);
@@ -1165,8 +1224,8 @@ const AddAddressPage = () => {
                 <MapPicker
                   key={
                     showPinpointModal
-                      ? 'pinpoint-map-open'
-                      : 'pinpoint-map-closed'
+                      ? "pinpoint-map-open"
+                      : "pinpoint-map-closed"
                   }
                   position={mapPosition}
                   setPosition={setMapPosition}

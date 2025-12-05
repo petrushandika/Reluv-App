@@ -1,14 +1,9 @@
 "use client";
 
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { z } from "zod";
-import {
-  ChevronLeft,
-  X,
-  ImagePlus,
-  AlertCircle,
-} from "lucide-react";
+import { ChevronLeft, X, ImagePlus, AlertCircle } from "lucide-react";
 import { useAuthStore } from "@/features/auth/store/auth.store";
 import { PrivateRoute } from "@/shared/components/guards/RouteGuards";
 import Spinner from "@/shared/components/atoms/Spinner";
@@ -55,7 +50,9 @@ const productSchema = z.object({
     .optional()
     .or(z.literal("")),
   categoryId: z.number().min(1, { message: "Category is required" }).nullable(),
-  images: z.array(z.string()).min(1, { message: "At least one image is required" }),
+  images: z
+    .array(z.string())
+    .min(1, { message: "At least one image is required" }),
   isPreloved: z.boolean(),
 });
 
@@ -68,17 +65,47 @@ const variantSchema = z.object({
     .max(500, { message: "Condition note must be at most 500 characters" })
     .optional()
     .or(z.literal("")),
-  price: z.number().min(0, { message: "Price must be 0 or greater" }).max(999999999, { message: "Price must be less than 1 billion" }),
-  stock: z.number().min(0, { message: "Stock must be 0 or greater" }).max(999999, { message: "Stock must be less than 1 million" }),
-  weight: z.number().min(1, { message: "Weight must be at least 1 gram" }).max(999999, { message: "Weight must be less than 1 million grams" }).optional(),
-  length: z.number().min(1, { message: "Length must be at least 1 cm" }).max(9999, { message: "Length must be less than 10000 cm" }).optional(),
-  width: z.number().min(1, { message: "Width must be at least 1 cm" }).max(9999, { message: "Width must be less than 10000 cm" }).optional(),
-  height: z.number().min(1, { message: "Height must be at least 1 cm" }).max(9999, { message: "Height must be less than 10000 cm" }).optional(),
-  size: z.string().max(50, { message: "Size must be at most 50 characters" }).optional().nullable(),
-  color: z.string().max(50, { message: "Color must be at most 50 characters" }).optional().nullable(),
+  price: z
+    .number()
+    .min(0, { message: "Price must be 0 or greater" })
+    .max(999999999, { message: "Price must be less than 1 billion" }),
+  stock: z
+    .number()
+    .min(0, { message: "Stock must be 0 or greater" })
+    .max(999999, { message: "Stock must be less than 1 million" }),
+  weight: z
+    .number()
+    .min(1, { message: "Weight must be at least 1 gram" })
+    .max(999999, { message: "Weight must be less than 1 million grams" })
+    .optional(),
+  length: z
+    .number()
+    .min(1, { message: "Length must be at least 1 cm" })
+    .max(9999, { message: "Length must be less than 10000 cm" })
+    .optional(),
+  width: z
+    .number()
+    .min(1, { message: "Width must be at least 1 cm" })
+    .max(9999, { message: "Width must be less than 10000 cm" })
+    .optional(),
+  height: z
+    .number()
+    .min(1, { message: "Height must be at least 1 cm" })
+    .max(9999, { message: "Height must be less than 10000 cm" })
+    .optional(),
+  size: z
+    .string()
+    .max(50, { message: "Size must be at most 50 characters" })
+    .optional()
+    .nullable(),
+  color: z
+    .string()
+    .max(50, { message: "Color must be at most 50 characters" })
+    .optional()
+    .nullable(),
 });
 
-const EditProductPage = () => {
+const EditProductPageContent = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { isAuthenticated } = useAuthStore();
@@ -99,7 +126,9 @@ const EditProductPage = () => {
   const [newImageFiles, setNewImageFiles] = useState<(File | null)[]>([]);
   const [validationError, setValidationError] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
-  const [variantErrors, setVariantErrors] = useState<Record<number, Record<string, string>>>({});
+  const [variantErrors, setVariantErrors] = useState<
+    Record<number, Record<string, string>>
+  >({});
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -125,7 +154,8 @@ const EditProductPage = () => {
         setNewImageFiles(new Array(productData.images?.length || 0).fill(null));
       } catch (error) {
         console.error("Failed to fetch product:", error);
-        const errorMessage = error instanceof Error ? error.message : "Unable to load product.";
+        const errorMessage =
+          error instanceof Error ? error.message : "Unable to load product.";
         toast.error("Failed to Load Product", {
           description: errorMessage,
         });
@@ -163,7 +193,10 @@ const EditProductPage = () => {
         }
       });
       setFieldErrors(errors);
-      if (Object.keys(errors).length === 0 && productValidation.error.errors[0]) {
+      if (
+        Object.keys(errors).length === 0 &&
+        productValidation.error.errors[0]
+      ) {
         setValidationError(productValidation.error.errors[0].message);
       }
       return;
@@ -211,8 +244,10 @@ const EditProductPage = () => {
       setIsSaving(true);
 
       const finalImages = [...formData.images];
-      const filesToUpload = newImageFiles.filter((file): file is File => file !== null);
-      
+      const filesToUpload = newImageFiles.filter(
+        (file): file is File => file !== null
+      );
+
       if (filesToUpload.length > 0) {
         toast.info("Uploading Images", {
           description: "Please wait while we upload your new images...",
@@ -221,12 +256,12 @@ const EditProductPage = () => {
 
         const uploadPromises = filesToUpload.map((file) => uploadImage(file));
         const uploadedUrls = await Promise.all(uploadPromises);
-        
+
         let uploadIndex = 0;
         finalImages.forEach((url, index) => {
           if (newImageFiles[index] !== null) {
             finalImages[index] = uploadedUrls[uploadIndex];
-            if (url.startsWith('blob:')) {
+            if (url.startsWith("blob:")) {
               URL.revokeObjectURL(url);
             }
             uploadIndex++;
@@ -238,7 +273,7 @@ const EditProductPage = () => {
           id: "upload-toast",
         });
       }
-      
+
       await updateProduct(product.id, {
         name: formData.name,
         description: formData.description,
@@ -268,7 +303,8 @@ const EditProductPage = () => {
       });
       router.push("/profile/product");
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : "Unable to update product.";
+      const errorMessage =
+        error instanceof Error ? error.message : "Unable to update product.";
       toast.error("Failed to Update Product", {
         description: errorMessage,
       });
@@ -276,8 +312,6 @@ const EditProductPage = () => {
       setIsSaving(false);
     }
   };
-
-
 
   const handleVariantChange = (
     variantId: number,
@@ -328,7 +362,7 @@ const EditProductPage = () => {
       const remainingSlots = maxTotalImages - currentCount;
 
       if (remainingSlots <= 0) {
-        toast.warning('Upload Limit Reached', {
+        toast.warning("Upload Limit Reached", {
           description: `Maximum ${maxTotalImages} images allowed. No images were added.`,
         });
         return;
@@ -338,14 +372,16 @@ const EditProductPage = () => {
         const filesToAdd = newFiles.slice(0, remainingSlots);
         const rejectedCount = newFiles.length - remainingSlots;
 
-        const newImageUrls = filesToAdd.map((file) => URL.createObjectURL(file));
+        const newImageUrls = filesToAdd.map((file) =>
+          URL.createObjectURL(file)
+        );
         setFormData({
           ...formData,
           images: [...formData.images, ...newImageUrls],
         });
         setNewImageFiles([...newImageFiles, ...filesToAdd]);
 
-        toast.warning('Upload Limit Reached', {
+        toast.warning("Upload Limit Reached", {
           description: `Maximum ${maxTotalImages} images allowed. ${rejectedCount} image(s) were not added.`,
         });
       } else {
@@ -375,7 +411,6 @@ const EditProductPage = () => {
     handleFileSelect(e.dataTransfer.files);
   };
 
-
   if (isLoading) {
     return <Spinner />;
   }
@@ -400,10 +435,10 @@ const EditProductPage = () => {
             </button>
           </div>
 
-          <form 
-            onSubmit={(e) => { 
-              e.preventDefault(); 
-              handleSaveProduct(); 
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleSaveProduct();
             }}
           >
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 items-start">
@@ -427,14 +462,18 @@ const EditProductPage = () => {
                             type="button"
                             onClick={() => {
                               const imageUrl = formData.images[0];
-                              if (imageUrl.startsWith('blob:')) {
+                              if (imageUrl.startsWith("blob:")) {
                                 URL.revokeObjectURL(imageUrl);
                               }
                               setFormData({
                                 ...formData,
-                                images: formData.images.filter((_, i) => i !== 0),
+                                images: formData.images.filter(
+                                  (_, i) => i !== 0
+                                ),
                               });
-                              setNewImageFiles(newImageFiles.filter((_, i) => i !== 0));
+                              setNewImageFiles(
+                                newImageFiles.filter((_, i) => i !== 0)
+                              );
                             }}
                             className="absolute top-2 right-2 bg-red-500 dark:bg-red-600 text-white rounded-full p-1 sm:p-1.5 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
                             aria-label="Remove cover image"
@@ -449,7 +488,10 @@ const EditProductPage = () => {
                       {formData.images.slice(1).map((image, index) => {
                         const actualIndex = index + 1;
                         return (
-                          <div key={actualIndex} className="relative group aspect-square">
+                          <div
+                            key={actualIndex}
+                            className="relative group aspect-square"
+                          >
                             <div className="relative w-full h-full rounded-md overflow-hidden border-2 border-transparent group-hover:border-sky-500 dark:group-hover:border-sky-400 transition-colors">
                               <Image
                                 src={image}
@@ -463,19 +505,25 @@ const EditProductPage = () => {
                               type="button"
                               onClick={() => {
                                 const imageUrl = formData.images[actualIndex];
-                                if (imageUrl.startsWith('blob:')) {
+                                if (imageUrl.startsWith("blob:")) {
                                   URL.revokeObjectURL(imageUrl);
                                 }
                                 setFormData({
                                   ...formData,
-                                  images: formData.images.filter((_, i) => i !== actualIndex),
+                                  images: formData.images.filter(
+                                    (_, i) => i !== actualIndex
+                                  ),
                                 });
-                                setNewImageFiles(newImageFiles.filter((_, i) => i !== actualIndex));
+                                setNewImageFiles(
+                                  newImageFiles.filter(
+                                    (_, i) => i !== actualIndex
+                                  )
+                                );
                               }}
-                            className="absolute top-1 right-1 bg-red-500 dark:bg-red-600 text-white rounded-full p-0.5 sm:p-1 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
-                            aria-label="Remove image"
-                          >
-                            <X className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
+                              className="absolute top-1 right-1 bg-red-500 dark:bg-red-600 text-white rounded-full p-0.5 sm:p-1 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+                              aria-label="Remove image"
+                            >
+                              <X className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
                             </button>
                           </div>
                         );
@@ -503,7 +551,9 @@ const EditProductPage = () => {
                             onClick={() => fileInputRef.current?.click()}
                           >
                             <ImagePlus className="h-6 w-6 sm:h-8 sm:w-8 text-sky-500 dark:text-sky-400" />
-                            <p className="mt-1 text-[10px] sm:text-xs text-center">Add more</p>
+                            <p className="mt-1 text-[10px] sm:text-xs text-center">
+                              Add more
+                            </p>
                           </div>
                         </>
                       )}
@@ -524,7 +574,7 @@ const EditProductPage = () => {
                     Product Details
                   </h5>
                 </div>
-                
+
                 <CategorySelector
                   selectedCategoryId={formData.categoryId}
                   onSelectCategory={(id) =>
@@ -579,12 +629,24 @@ const EditProductPage = () => {
                           Condition <span className="text-red-500">*</span>
                         </label>
                         <div className="flex flex-wrap gap-1.5 sm:gap-2">
-                          {(["NEW", "LIKE_NEW", "GOOD", "FAIR", "POOR"] as Condition[]).map((condition) => (
+                          {(
+                            [
+                              "NEW",
+                              "LIKE_NEW",
+                              "GOOD",
+                              "FAIR",
+                              "POOR",
+                            ] as Condition[]
+                          ).map((condition) => (
                             <button
                               key={condition}
                               type="button"
                               onClick={() =>
-                                handleVariantChange(variants[0].id, "condition", condition)
+                                handleVariantChange(
+                                  variants[0].id,
+                                  "condition",
+                                  condition
+                                )
                               }
                               className={`px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm rounded-full border transition-colors cursor-pointer ${
                                 variants[0].condition === condition
@@ -650,7 +712,12 @@ const EditProductPage = () => {
                               type="text"
                               id="price"
                               value={formatPrice(variants[0].price)}
-                              onChange={(e) => handlePriceChange(variants[0].id, e.target.value)}
+                              onChange={(e) =>
+                                handlePriceChange(
+                                  variants[0].id,
+                                  e.target.value
+                                )
+                              }
                               placeholder="0"
                               className={`w-full pl-10 sm:pl-12 pr-3 sm:pr-4 py-2 sm:py-3 text-sm sm:text-base bg-gray-50 dark:bg-gray-700 border rounded-lg focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 ${
                                 variantErrors[variants[0].id]?.price
@@ -711,26 +778,40 @@ const EditProductPage = () => {
                       placeholder="Select a size"
                       options={sizeOptions}
                       value={
-                        variants[0].size && sizeOptions.find(opt => opt.value === variants[0].size)
+                        variants[0].size &&
+                        sizeOptions.find(
+                          (opt) => opt.value === variants[0].size
+                        )
                           ? variants[0].size
                           : variants[0].size
-                            ? "OTHER"
-                            : ""
+                          ? "OTHER"
+                          : ""
                       }
                       onChange={(value) => {
                         if (value === "OTHER") {
                           handleVariantChange(variants[0].id, "size", "OTHER");
                         } else {
-                          handleVariantChange(variants[0].id, "size", value || null);
+                          handleVariantChange(
+                            variants[0].id,
+                            "size",
+                            value || null
+                          );
                         }
                       }}
                       allowCustom={true}
                       customPlaceholder="Enter custom size"
                       onCustomChange={(value) =>
-                        handleVariantChange(variants[0].id, "size", value || null)
+                        handleVariantChange(
+                          variants[0].id,
+                          "size",
+                          value || null
+                        )
                       }
                       customValue={
-                        variants[0].size && !sizeOptions.find(opt => opt.value === variants[0].size)
+                        variants[0].size &&
+                        !sizeOptions.find(
+                          (opt) => opt.value === variants[0].size
+                        )
                           ? variants[0].size
                           : ""
                       }
@@ -740,26 +821,40 @@ const EditProductPage = () => {
                       placeholder="Select a color"
                       options={colorOptions}
                       value={
-                        variants[0].color && colorOptions.find(opt => opt.value === variants[0].color)
+                        variants[0].color &&
+                        colorOptions.find(
+                          (opt) => opt.value === variants[0].color
+                        )
                           ? variants[0].color
                           : variants[0].color
-                            ? "OTHER"
-                            : ""
+                          ? "OTHER"
+                          : ""
                       }
                       onChange={(value) => {
                         if (value === "OTHER") {
                           handleVariantChange(variants[0].id, "color", "OTHER");
                         } else {
-                          handleVariantChange(variants[0].id, "color", value || null);
+                          handleVariantChange(
+                            variants[0].id,
+                            "color",
+                            value || null
+                          );
                         }
                       }}
                       allowCustom={true}
                       customPlaceholder="Enter custom color"
                       onCustomChange={(value) =>
-                        handleVariantChange(variants[0].id, "color", value || null)
+                        handleVariantChange(
+                          variants[0].id,
+                          "color",
+                          value || null
+                        )
                       }
                       customValue={
-                        variants[0].color && !colorOptions.find(opt => opt.value === variants[0].color)
+                        variants[0].color &&
+                        !colorOptions.find(
+                          (opt) => opt.value === variants[0].color
+                        )
                           ? variants[0].color
                           : ""
                       }
@@ -801,11 +896,13 @@ const EditProductPage = () => {
                       {fieldErrors.description}
                     </p>
                   )}
-                  {!fieldErrors.description && formData.description.length > 9500 && (
-                    <p className="text-[10px] sm:text-xs text-amber-600 dark:text-amber-400 mt-1">
-                      {10000 - formData.description.length} characters remaining
-                    </p>
-                  )}
+                  {!fieldErrors.description &&
+                    formData.description.length > 9500 && (
+                      <p className="text-[10px] sm:text-xs text-amber-600 dark:text-amber-400 mt-1">
+                        {10000 - formData.description.length} characters
+                        remaining
+                      </p>
+                    )}
                 </div>
 
                 {variants.length > 0 && variants[0] && (
@@ -954,16 +1051,23 @@ const EditProductPage = () => {
                   </div>
                 )}
 
-                {variants.length > 0 && variants[0] && variantErrors[variants[0].id]?.condition && (
-                  <div className="flex items-center p-3 text-sm text-red-700 dark:text-red-400 bg-red-100 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg">
-                    <AlertCircle className="w-5 h-5 mr-2 shrink-0" />
-                    <span>{variantErrors[variants[0].id].condition}</span>
-                  </div>
-                )}
+                {variants.length > 0 &&
+                  variants[0] &&
+                  variantErrors[variants[0].id]?.condition && (
+                    <div className="flex items-center p-3 text-sm text-red-700 dark:text-red-400 bg-red-100 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg">
+                      <AlertCircle className="w-5 h-5 mr-2 shrink-0" />
+                      <span>{variantErrors[variants[0].id].condition}</span>
+                    </div>
+                  )}
 
                 <button
                   type="submit"
-                  disabled={isSaving || !formData.name || Object.keys(fieldErrors).length > 0 || Object.keys(variantErrors).length > 0}
+                  disabled={
+                    isSaving ||
+                    !formData.name ||
+                    Object.keys(fieldErrors).length > 0 ||
+                    Object.keys(variantErrors).length > 0
+                  }
                   className="w-full bg-sky-600 dark:bg-sky-500 text-white font-bold py-2.5 sm:py-3 text-sm sm:text-base rounded-lg hover:bg-sky-700 dark:hover:bg-sky-600 shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed transition-all cursor-pointer"
                 >
                   {isSaving ? "Saving..." : "Save Product"}
@@ -977,5 +1081,12 @@ const EditProductPage = () => {
   );
 };
 
-export default EditProductPage;
+const EditProductPage = () => {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <EditProductPageContent />
+    </Suspense>
+  );
+};
 
+export default EditProductPage;

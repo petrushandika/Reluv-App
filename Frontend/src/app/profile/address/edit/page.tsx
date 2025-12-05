@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { z } from "zod";
 import {
@@ -17,8 +17,21 @@ import { getMe } from "@/features/user/api/userApi";
 import { User as UserType } from "@/features/auth/types";
 import { PrivateRoute } from "@/shared/components/guards/RouteGuards";
 import ProfileSidebar from "@/shared/components/organisms/ProfileSidebar";
-import MapPicker from "@/shared/components/organisms/MapPicker";
-import GeoSearch from "@/shared/components/organisms/GeoSearch";
+import dynamic from "next/dynamic";
+
+const MapPicker = dynamic(
+  () => import("@/shared/components/organisms/MapPicker"),
+  {
+    ssr: false,
+  }
+);
+
+const GeoSearch = dynamic(
+  () => import("@/shared/components/organisms/GeoSearch"),
+  {
+    ssr: false,
+  }
+);
 import type { LatLngExpression } from "leaflet";
 import type { SearchResult } from "leaflet-geosearch/dist/providers/provider.js";
 import { toast } from "sonner";
@@ -45,7 +58,9 @@ const addressFormSchema = z.object({
   phoneNumber: z
     .string()
     .min(1, { message: "Phone number is required" })
-    .regex(/^[0-9+\-\s()]+$/, { message: "Please provide a valid phone number" })
+    .regex(/^[0-9+\-\s()]+$/, {
+      message: "Please provide a valid phone number",
+    })
     .min(10, { message: "Phone number must be at least 10 digits" })
     .max(20, { message: "Phone number must be at most 20 characters" })
     .trim(),
@@ -74,7 +89,7 @@ const addressFormSchema = z.object({
   isDefault: z.boolean(),
 });
 
-const EditAddressPage = () => {
+const EditAddressPageContent = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const addressId = searchParams.get("id");
@@ -1313,6 +1328,14 @@ const EditAddressPage = () => {
         )}
       </div>
     </PrivateRoute>
+  );
+};
+
+const EditAddressPage = () => {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <EditAddressPageContent />
+    </Suspense>
   );
 };
 

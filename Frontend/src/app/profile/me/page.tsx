@@ -10,7 +10,9 @@ import {
   X,
   Plus,
   Mail,
+  AlertCircle,
 } from "lucide-react";
+import { z } from "zod";
 import { useAuthStore } from "@/features/auth/store/auth.store";
 import { getMe, updateMe } from "@/features/user/api/userApi";
 import { User as UserType } from "@/features/auth/types";
@@ -18,6 +20,27 @@ import { PrivateRoute } from "@/shared/components/guards/RouteGuards";
 import { toast } from "sonner";
 import ProfileSidebar from "@/shared/components/organisms/ProfileSidebar";
 import Spinner from "@/shared/components/atoms/Spinner";
+
+const personalInfoSchema = z.object({
+  title: z.string().optional(),
+  firstName: z
+    .string()
+    .min(1, { message: "First name is required" })
+    .max(100, { message: "First name must be at most 100 characters" })
+    .trim(),
+  lastName: z
+    .string()
+    .min(1, { message: "Last name is required" })
+    .max(100, { message: "Last name must be at most 100 characters" })
+    .trim(),
+  dateOfBirth: z.string().optional(),
+});
+
+const phoneNumberSchema = z
+  .string()
+  .min(1, { message: "Phone number is required" })
+  .regex(/^\+?[0-9]{7,15}$/, { message: "Invalid phone number format" })
+  .trim();
 
 const ProfilePage = () => {
   const router = useRouter();
@@ -174,7 +197,9 @@ const ProfilePage = () => {
     const phoneValidation = phoneNumberSchema.safeParse(phoneNumber);
 
     if (!phoneValidation.success) {
-      setPhoneError(phoneValidation.error.errors[0]?.message || "Invalid phone number");
+      setPhoneError(
+        phoneValidation.error.errors[0]?.message || "Invalid phone number"
+      );
       toast.error("Validation Failed", {
         description: "Please fix the phone number before submitting.",
       });

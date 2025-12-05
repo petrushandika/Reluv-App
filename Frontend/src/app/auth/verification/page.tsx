@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import axios from "axios";
@@ -24,7 +24,7 @@ const emailSchema = z
   .string()
   .email({ message: "Please enter a valid email address." });
 
-const Verification = () => {
+const VerificationContent = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [email, setEmail] = useState(searchParams.get("email") || "");
@@ -181,6 +181,14 @@ const Verification = () => {
         />
       </div>
     </div>
+  );
+};
+
+const Verification = () => {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <VerificationContent />
+    </Suspense>
   );
 };
 
