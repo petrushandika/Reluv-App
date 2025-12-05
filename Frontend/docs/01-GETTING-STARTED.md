@@ -40,7 +40,7 @@ Edit file `.env.local` dengan konfigurasi yang sesuai (lihat [Configuration](#co
 npm run dev
 ```
 
-Aplikasi akan berjalan di `http://localhost:3000`
+Aplikasi akan berjalan di `http://localhost:3099`
 
 ## ⚙️ Configuration
 
@@ -57,7 +57,7 @@ NEXT_PUBLIC_API_URL=http://localhost:8000/api/v1
 
 ```env
 # NextAuth (jika digunakan)
-NEXTAUTH_URL=http://localhost:3000
+NEXTAUTH_URL=http://localhost:3099
 NEXTAUTH_SECRET=your-secret-key
 
 # Cloudinary (jika diperlukan di frontend)
@@ -102,7 +102,7 @@ Setelah setup, verifikasi bahwa semuanya berjalan dengan baik:
 
 1. **Check server running**
 
-   - Buka browser: `http://localhost:3000`
+   - Buka browser: `http://localhost:3099`
    - Halaman home harus muncul
 
 2. **Check API connection**
@@ -147,15 +147,15 @@ Frontend/
 
 ### Port Already in Use
 
-Jika port 3000 sudah digunakan:
+Jika port 3099 sudah digunakan:
 
 ```bash
 # Windows
-netstat -ano | findstr :3000
+netstat -ano | findstr :3099
 taskkill /PID <PID> /F
 
 # Linux/Mac
-lsof -ti:3000 | xargs kill -9
+lsof -ti:3099 | xargs kill -9
 ```
 
 Atau gunakan port lain:

@@ -33,7 +33,7 @@ npm run build
 npm run start
 ```
 
-Visit `http://localhost:3000` untuk test production build.
+Visit `http://localhost:3099` untuk test production build.
 
 ## 🌐 Deployment Options
 
@@ -136,7 +136,7 @@ RUN npm ci --only=production
 COPY . .
 RUN npm run build
 
-EXPOSE 3000
+EXPOSE 3099
 
 CMD ["npm", "start"]
 ```
@@ -145,7 +145,7 @@ Build and run:
 
 ```bash
 docker build -t reluv-frontend .
-docker run -p 3000:3000 reluv-frontend
+docker run -p 3099:3099 reluv-frontend
 ```
 
 ## ⚙️ Environment Variables

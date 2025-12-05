@@ -69,7 +69,7 @@ cp .env.example .env.local
 npm run dev
 ```
 
-Aplikasi akan berjalan di `http://localhost:3000`
+Aplikasi akan berjalan di `http://localhost:3099`
 
 ## ⚙️ Configuration
 
@@ -80,7 +80,7 @@ Buat file `.env.local` di root directory Frontend:
 NEXT_PUBLIC_API_URL=http://localhost:8000/api/v1
 
 # NextAuth (jika digunakan)
-NEXTAUTH_URL=http://localhost:3000
+NEXTAUTH_URL=http://localhost:3099
 NEXTAUTH_SECRET=your-secret-key
 
 # Cloudinary (jika diperlukan di frontend)
