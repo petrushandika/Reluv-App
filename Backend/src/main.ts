@@ -16,11 +16,7 @@ async function bootstrap() {
 
   app.use(compression());
 
-  app.enableCors({
-    origin: process.env.FRONTEND_URL || 'https://fe-reluv-app.vercel.app',
-    // origin: process.env.FRONTEND_URL || 'http://localhost:3099',
-    credentials: true,
-  });
+  app.enableCors({ origin: true, credentials: true });
 
   app.use(json({ limit: '1mb' }));
 
