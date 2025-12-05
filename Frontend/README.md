@@ -59,7 +59,7 @@ npm install
 
 3. **Setup environment variables**
 ```bash
-cp .env.example .env.local
+cp .env.example .env
 ```
 
 4. **Configure environment variables** (lihat [Configuration](#configuration))
@@ -69,20 +69,19 @@ cp .env.example .env.local
 npm run dev
 ```
 
-Aplikasi akan berjalan di `https://fe-reluv-app.vercel.app`
+Aplikasi akan berjalan di `http://localhost:3099`
 # Aplikasi akan berjalan di `http://localhost:3099`
 
 ## ⚙️ Configuration
 
-Buat file `.env.local` di root directory Frontend:
+Buat file `.env` di root directory Frontend:
 
 ```env
 # API
 NEXT_PUBLIC_API_URL=http://localhost:8000/api/v1
 
 # NextAuth (jika digunakan)
-NEXTAUTH_URL=https://fe-reluv-app.vercel.app
-# NEXTAUTH_URL=http://localhost:3099
+NEXTAUTH_URL=http://localhost:3099
 NEXTAUTH_SECRET=your-secret-key
 
 # Cloudinary (jika diperlukan di frontend)
@@ -164,7 +163,7 @@ Frontend/
 │   │   └── types/              # Shared types
 │   ├── context/                # React contexts
 │   └── public/                 # Static assets
-├── .env.local                  # Environment variables
+├── .env                        # Environment variables
 ├── next.config.js              # Next.js configuration
 ├── tailwind.config.ts          # Tailwind configuration
 └── package.json

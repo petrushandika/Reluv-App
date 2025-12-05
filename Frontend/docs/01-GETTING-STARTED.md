@@ -26,13 +26,13 @@ npm install
 
 ### 3. Environment Setup
 
-Buat file `.env.local` di root directory Frontend:
+Buat file `.env` di root directory Frontend:
 
 ```bash
-cp .env.example .env.local
+cp .env.example .env
 ```
 
-Edit file `.env.local` dengan konfigurasi yang sesuai (lihat [Configuration](#configuration)).
+Edit file `.env` dengan konfigurasi yang sesuai (lihat [Configuration](#configuration)).
 
 ### 4. Start Development Server
 
@@ -40,14 +40,14 @@ Edit file `.env.local` dengan konfigurasi yang sesuai (lihat [Configuration](#co
 npm run dev
 ```
 
-Aplikasi akan berjalan di `https://fe-reluv-app.vercel.app`
+Aplikasi akan berjalan di `http://localhost:3099`
 # Aplikasi akan berjalan di `http://localhost:3099`
 
 ## ⚙️ Configuration
 
 ### Required Environment Variables
 
-Buat file `.env.local`:
+Buat file `.env`:
 
 ```env
 # API Base URL
@@ -58,8 +58,7 @@ NEXT_PUBLIC_API_URL=http://localhost:8000/api/v1
 
 ```env
 # NextAuth (jika digunakan)
-NEXTAUTH_URL=https://fe-reluv-app.vercel.app
-# NEXTAUTH_URL=http://localhost:3099
+NEXTAUTH_URL=http://localhost:3099
 NEXTAUTH_SECRET=your-secret-key
 
 # Cloudinary (jika diperlukan di frontend)
@@ -104,7 +103,7 @@ Setelah setup, verifikasi bahwa semuanya berjalan dengan baik:
 
 1. **Check server running**
 
-   - Buka browser: `https://fe-reluv-app.vercel.app`
+   - Buka browser: `http://localhost:3099`
    # - Buka browser: `http://localhost:3099`
    - Halaman home harus muncul
 
@@ -178,7 +177,7 @@ npm install
 ### API Connection Error
 
 1. Verify backend API is running
-2. Check `NEXT_PUBLIC_API_URL` di `.env.local`
+2. Check `NEXT_PUBLIC_API_URL` di `.env`
 3. Check CORS settings di backend
 4. Verify network connectivity
 

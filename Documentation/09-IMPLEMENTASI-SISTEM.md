@@ -74,7 +74,7 @@ FACEBOOK_APP_SECRET="your-facebook-app-secret"
 # Application
 PORT=8000
 NODE_ENV=development
-FRONTEND_URL="https://fe-reluv-app.vercel.app"
+FRONTEND_URL="http://localhost:3099"
 # FRONTEND_URL="http://localhost:3099"
 ```
 

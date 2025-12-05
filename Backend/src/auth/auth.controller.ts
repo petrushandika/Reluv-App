@@ -41,11 +41,11 @@ export class AuthController {
   ) {
     try {
       await this.authService.confirm(query.token);
-      return res.redirect('https://fe-reluv-app.vercel.app/auth/login?verified=true');
+      return res.redirect('http://localhost:3099/auth/login?verified=true');
       // return res.redirect('http://localhost:3099/auth/login?verified=true');
     } catch (error) {
       return res.redirect(
-        `https://fe-reluv-app.vercel.app/auth/login?error=${encodeURIComponent(
+        `http://localhost:3099/auth/login?error=${encodeURIComponent(
           error.message || 'Token is invalid or has expired.',
         )}`,
         // `http://localhost:3099/auth/login?error=${encodeURIComponent(
