@@ -15,6 +15,7 @@ import { LoginDto } from './dto/login.dto';
 import { ForgotDto } from './dto/forgot.dto';
 import { ResetDto } from './dto/reset.dto';
 import { ConfirmDto } from './dto/confirm.dto';
+import { VerificationDto } from './dto/verification.dto';
 import { Response } from 'express';
 
 @Controller('auth')
@@ -60,5 +61,13 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   reset(@Body(new ValidationPipe()) resetDto: ResetDto) {
     return this.authService.reset(resetDto);
+  }
+
+  @Post('verification')
+  @HttpCode(HttpStatus.OK)
+  verification(
+    @Body(new ValidationPipe()) verificationDto: VerificationDto,
+  ) {
+    return this.authService.verification(verificationDto.email);
   }
 }

@@ -85,7 +85,11 @@ const Register = () => {
         description:
           "Your account has been created! Please check your email for verification.",
       });
-      router.push("/auth/login");
+      router.push(
+        `/auth/verification?email=${encodeURIComponent(
+          validationResult.data.email
+        )}`
+      );
     } catch (err: unknown) {
       let errorMessage = "An unknown error occurred.";
       if (axios.isAxiosError(err)) {
@@ -211,7 +215,10 @@ const Register = () => {
           ))}
         </div>
         <div className="relative z-10 flex flex-col justify-center items-center text-white px-12 text-center">
-          <Link href="/" className="cursor-pointer hover:opacity-80 transition-opacity">
+          <Link
+            href="/"
+            className="cursor-pointer hover:opacity-80 transition-opacity"
+          >
             <h1 className="text-6xl font-bold text-white mb-4 tracking-wide [text-shadow:_2px_2px_8px_rgba(0,0,0,0.2)] animate-fade-in">
               Reluv
             </h1>

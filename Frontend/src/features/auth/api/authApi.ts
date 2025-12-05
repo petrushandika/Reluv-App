@@ -73,3 +73,8 @@ export const redirectToFacebookAuth = () => {
     window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/auth/facebook`;
   }
 };
+
+export const verification = async (email: string) => {
+  const response = await api.post("/auth/verification", { email });
+  return response.data;
+};

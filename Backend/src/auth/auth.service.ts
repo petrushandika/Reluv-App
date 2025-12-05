@@ -57,7 +57,6 @@ export class AuthService {
 
     await this.emailService.sendUserConfirmation(user, tokenDetails.token);
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password: _, ...result } = user;
     return result;
   }
@@ -153,6 +152,38 @@ export class AuthService {
     });
 
     return { message: 'Password has been reset successfully.' };
+  }
+
+  async verification(email: string) {
+    const user = await this.prisma.user.findUnique({ where: { email } });
+
+    if (!user) {
+      return {
+        message:
+          'If a user with that email exists, a verification email has been sent.',
+      };
+    }
+
+    if (user.isVerified) {
+      throw new BadRequestException('Email is already verified.');
+    }
+
+    const tokenDetails = this._createVerificationToken();
+
+    await this.prisma.user.update({
+      where: { id: user.id },
+      data: {
+        verificationToken: tokenDetails.hashedToken,
+        verificationTokenExpiry: tokenDetails.expiry,
+      },
+    });
+
+    await this.emailService.sendUserConfirmation(user, tokenDetails.token);
+
+    return {
+      message:
+        'If a user with that email exists, a verification email has been sent.',
+    };
   }
 
   private _createVerificationToken() {

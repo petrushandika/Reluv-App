@@ -51,6 +51,12 @@ const Login = () => {
           err.response?.data?.message ||
           err.message ||
           "Login failed. Please check your credentials.";
+        
+        if (errorMessage.includes("verify your email") || errorMessage.includes("email")) {
+          const email = data.email;
+          router.push(`/auth/verification?email=${encodeURIComponent(email)}`);
+          return;
+        }
       } else if (err instanceof Error) {
         errorMessage = err.message;
       }

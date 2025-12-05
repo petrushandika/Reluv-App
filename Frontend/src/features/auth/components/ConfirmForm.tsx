@@ -72,7 +72,11 @@ const ConfirmForms = () => {
     );
   }
 
-  return <ErrorState message={message} />;
+  return (
+    <Suspense fallback={<LoadingState message="Loading..." />}>
+      <ErrorState message={message} />
+    </Suspense>
+  );
 };
 
 const LoadingState = ({ message = "Loading..." }: { message?: string }) => (
@@ -105,20 +109,37 @@ const SuccessState = ({
   </div>
 );
 
-const ErrorState = ({ message }: { message: string }) => (
-  <div className="text-center max-w-sm w-full bg-white dark:bg-gray-800 p-8 border border-red-200 dark:border-red-800 rounded-lg shadow-md">
-    <AlertTriangle className="w-16 h-16 text-red-500 dark:text-red-400 mx-auto mb-4" />
-    <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-      Verification Failed
-    </h2>
-    <p className="text-gray-600 dark:text-gray-300 mb-6">{message}</p>
-    <button
-      onClick={() => (window.location.href = "/")}
-      className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gray-600 dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 dark:focus:ring-gray-400 cursor-pointer"
-    >
-      Back to Homepage
-    </button>
-  </div>
-);
+const ErrorState = ({ message }: { message: string }) => {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const email = searchParams.get("email") || "";
+  const isExpired = message.toLowerCase().includes("expired") || message.toLowerCase().includes("expire");
+
+  return (
+    <div className="text-center max-w-sm w-full bg-white dark:bg-gray-800 p-8 border border-red-200 dark:border-red-800 rounded-lg shadow-md">
+      <AlertTriangle className="w-16 h-16 text-red-500 dark:text-red-400 mx-auto mb-4" />
+      <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+        Verification Failed
+      </h2>
+      <p className="text-gray-600 dark:text-gray-300 mb-6">{message}</p>
+      {isExpired && (
+        <div className="mb-4">
+          <button
+            onClick={() => router.push(`/auth/verification${email ? `?email=${encodeURIComponent(email)}` : ""}`)}
+            className="w-full flex justify-center py-3 px-4 border border-sky-600 dark:border-sky-400 rounded-lg shadow-sm text-sm font-medium text-sky-600 dark:text-sky-400 bg-white dark:bg-gray-800 hover:bg-sky-50 dark:hover:bg-sky-900/20 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 dark:focus:ring-sky-400 transition-all duration-200 cursor-pointer mb-3"
+          >
+            Resend Verification Email
+          </button>
+        </div>
+      )}
+      <button
+        onClick={() => router.push("/auth/login")}
+        className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gray-600 dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 dark:focus:ring-gray-400 cursor-pointer"
+      >
+        Back to Login
+      </button>
+    </div>
+  );
+};
 
 export default ConfirmForm;
