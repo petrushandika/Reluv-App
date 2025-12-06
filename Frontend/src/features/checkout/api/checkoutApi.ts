@@ -121,6 +121,32 @@ export const checkShippingRatesByCoords = async (data: {
   }
 };
 
+export interface Voucher {
+  id: number;
+  name: string;
+  code: string;
+  description: string | null;
+  type: 'PERCENTAGE' | 'FIXED_AMOUNT' | 'FREE_SHIPPING';
+  value: number;
+  maxDiscount: number | null;
+  minPurchase: number | null;
+  usageLimit: number | null;
+  expiry: string;
+  isActive: boolean;
+  storeId: number | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export const getVouchers = async (): Promise<Voucher[]> => {
+  try {
+    const response = await api.get<Voucher[]>("/vouchers");
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const createOrder = async (
   data: CreateOrderDto
 ): Promise<CreateOrderResponse> => {

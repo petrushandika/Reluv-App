@@ -1002,13 +1002,11 @@ const Navbar = () => {
                   maxHeight: mobileActiveMainMenu === menu ? '2000px' : '0',
                   opacity: mobileActiveMainMenu === menu ? 1 : 0,
                   transform: mobileActiveMainMenu === menu ? 'translateY(0)' : 'translateY(-10px)',
-                  paddingLeft: mobileActiveMainMenu === menu ? '1rem' : '0',
-                  paddingBottom: mobileActiveMainMenu === menu ? '0.5rem' : '0',
-                  transition: 'max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), padding-left 0.4s cubic-bezier(0.4, 0, 0.2, 1), padding-bottom 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+                  transition: 'max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), margin-bottom 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
                 }}
               >
                 {mobileActiveMainMenu === menu && (
-                  <div className="pl-4 pb-2">
+                  <div className="pb-2">
                   {dropdownData[menu].categories.map((category) => {
                     const categorySlug = categoryToSlug(category);
                     const categoryRoute = `${getMainMenuRoute(

@@ -17,7 +17,6 @@ import {
   ChevronDown,
   Search,
   Edit,
-  Info,
 } from "lucide-react";
 import type { LatLngExpression } from "leaflet";
 import { useCart } from "@/features/cart/hooks/useCart";
@@ -37,6 +36,8 @@ import {
   checkShippingRates,
   createOrder,
   type ShippingRate,
+  getVouchers,
+  type Voucher,
 } from "@/features/checkout/api/checkoutApi";
 
 const checkoutFormSchema = z.object({
@@ -201,33 +202,6 @@ const shippingData: ShippingData = {
   },
 };
 
-const voucherData = [
-  {
-    id: 1,
-    code: "SAVE20",
-    description: "20% discount for all items",
-    type: "percentage",
-    value: 0.2,
-    maxDiscount: 50000,
-    expiry: "Valid until 31 Jul 2025",
-  },
-  {
-    id: 2,
-    code: "SUPERDEAL",
-    description: "Direct discount of Rp 75,000",
-    type: "fixed",
-    value: 75000,
-    expiry: "Valid until 15 Aug 2025",
-  },
-  {
-    id: 3,
-    code: "FREESHIP",
-    description: "Free Shipping up to Rp 20,000",
-    type: "shipping",
-    value: 20000,
-    expiry: "Valid until 30 Sep 2025",
-  },
-];
 
 const formatPrice = (price: number) =>
   `Rp${new Intl.NumberFormat("id-ID").format(price)}`;
@@ -271,9 +245,9 @@ const Checkout = () => {
   } | null>(null);
   const [orderNotes, setOrderNotes] = useState("");
   const [isVoucherModalOpen, setIsVoucherModalOpen] = useState(false);
-  const [selectedVoucher, setSelectedVoucher] = useState<
-    (typeof voucherData)[0] | null
-  >(null);
+  const [vouchers, setVouchers] = useState<Voucher[]>([]);
+  const [isLoadingVouchers, setIsLoadingVouchers] = useState(false);
+  const [selectedVoucher, setSelectedVoucher] = useState<Voucher | null>(null);
 
   const [isCountryOpen, setIsCountryOpen] = useState(false);
   const [isProvinceOpen, setIsProvinceOpen] = useState(false);
@@ -302,6 +276,7 @@ const Checkout = () => {
   const [validationError, setValidationError] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [orderNotesError, setOrderNotesError] = useState<string | null>(null);
+  const [hasShownAddressToast, setHasShownAddressToast] = useState(false);
 
   useEffect(() => {
     if (validationError) {
@@ -380,8 +355,32 @@ const Checkout = () => {
         setIsLoadingAddresses(false);
       }
     };
+
+    const fetchVouchers = async () => {
+      setIsLoadingVouchers(true);
+      try {
+        const data = await getVouchers();
+        setVouchers(data);
+      } catch {
+        setVouchers([]);
+      } finally {
+        setIsLoadingVouchers(false);
+      }
+    };
+
     fetchAddresses();
+    fetchVouchers();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    if (addressMode === "select" && addresses.length > 0 && !hasShownAddressToast && !isLoadingAddresses) {
+      toast.info("Using Saved Address", {
+        description: "Contact information is locked because you're using a saved address. To edit these details, please use the 'Edit' button on the address card or switch to 'Add New Address' mode.",
+        duration: 5000,
+      });
+      setHasShownAddressToast(true);
+    }
+  }, [addressMode, addresses.length, hasShownAddressToast, isLoadingAddresses]);
 
   useEffect(() => {
     const fetchProvinces = async () => {
@@ -649,7 +648,7 @@ const Checkout = () => {
     }
   };
 
-  const handleVoucherSelect = (voucher: (typeof voucherData)[0]) => {
+  const handleVoucherSelect = (voucher: Voucher) => {
     setSelectedVoucher(voucher);
     setIsVoucherModalOpen(false);
   };
@@ -989,22 +988,27 @@ const Checkout = () => {
   let voucherDiscount = 0;
   if (selectedVoucher) {
     switch (selectedVoucher.type) {
-      case "percentage":
-        voucherDiscount = Math.min(
-          checkoutSubtotal * selectedVoucher.value,
-          selectedVoucher.maxDiscount || Infinity
-        );
+      case "PERCENTAGE":
+        const percentageDiscount = Math.floor((checkoutSubtotal * selectedVoucher.value) / 100);
+        voucherDiscount = selectedVoucher.maxDiscount
+          ? Math.min(percentageDiscount, selectedVoucher.maxDiscount)
+          : percentageDiscount;
         break;
-      case "fixed":
+      case "FIXED_AMOUNT":
         voucherDiscount = Math.min(selectedVoucher.value, checkoutSubtotal);
         break;
-      case "shipping":
-        voucherDiscount = Math.min(shippingCost, selectedVoucher.value);
+      case "FREE_SHIPPING":
+        voucherDiscount = Math.min(shippingCost, selectedVoucher.value || shippingCost);
         break;
       default:
         voucherDiscount = 0;
     }
   }
+
+  const formatVoucherExpiry = (expiryDate: string): string => {
+    const date = new Date(expiryDate);
+    return `Valid until ${date.toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })}`;
+  };
 
   const totalSavings = checkoutItems.reduce((sum, item) => {
     if (item.variant.compareAtPrice) {
@@ -1218,14 +1222,14 @@ const Checkout = () => {
     const selectedOption = options.find((opt) => opt.value === value);
 
     return (
-      <div ref={selectRef} className="relative">
+      <div ref={selectRef} className="relative w-full">
         <label
           htmlFor={id}
           className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5"
         >
           {label} {required && <span className="text-red-500">*</span>}
         </label>
-        <div className="relative">
+        <div className="relative w-full">
           <button
             type="button"
             onClick={() => !disabled && setIsOpen(!isOpen)}
@@ -1249,7 +1253,7 @@ const Checkout = () => {
           />
         </div>
         {isOpen && (
-          <div className="absolute top-full left-0 mt-1 w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg z-10">
+          <div className="relative w-full mt-1 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg z-50">
             <ul className="max-h-60 overflow-y-auto scrollbar-hide">
               {options.length === 0 ? (
                 <li className="px-4 py-3 text-gray-500 dark:text-gray-400 text-sm text-center">
@@ -1360,19 +1364,6 @@ const Checkout = () => {
                     Information
                   </h2>
                   
-                  {addressMode === "select" && (
-                    <div className="flex items-start gap-3 p-3 sm:p-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg">
-                      <Info className="w-5 h-5 text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5" />
-                      <div className="flex-1">
-                        <p className="text-sm font-medium text-amber-800 dark:text-amber-300 mb-1">
-                          Using Saved Address
-                        </p>
-                        <p className="text-xs sm:text-sm text-amber-700 dark:text-amber-400">
-                          Contact information is locked because you&apos;re using a saved address. To edit these details, please use the &quot;Edit&quot; button on the address card or switch to &quot;Add New Address&quot; mode.
-                        </p>
-                      </div>
-                    </div>
-                  )}
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     <div>
@@ -2209,34 +2200,71 @@ const Checkout = () => {
                 <X size={20} />
               </button>
             </div>
-            <div className="p-3 sm:p-5 space-y-3 max-h-[60vh] overflow-y-auto">
-              {voucherData.map((voucher) => (
-                <div
-                  key={voucher.id}
-                  onClick={() => handleVoucherSelect(voucher)}
-                  className={`flex items-center p-4 rounded-lg cursor-pointer transition-all duration-300 ease-in-out border-2 bg-white dark:bg-gray-800 ${
-                    selectedVoucher?.id === voucher.id
-                      ? "border-sky-500 dark:border-sky-400 shadow"
-                      : "border-gray-200 dark:border-gray-700 shadow hover:border-sky-300 dark:hover:border-sky-500"
-                  }`}
-                >
-                  <div className="flex-shrink-0 flex items-center justify-center w-16 h-16 rounded-full bg-sky-100/70 dark:bg-sky-900/30">
-                    <Ticket className="w-8 h-8 text-sky-600 dark:text-sky-400" />
-                  </div>
-                  <div className="ml-4 flex-grow">
-                    <p className="font-bold text-sky-700 dark:text-sky-400 text-base">
-                      {voucher.code}
-                    </p>
-                    <p className="text-gray-600 dark:text-gray-300 text-sm mt-1">
-                      {voucher.description}
-                    </p>
-                    <div className="flex items-center text-gray-400 dark:text-gray-500 text-xs mt-2">
-                      <Clock size={14} className="mr-1.5" />
-                      <span>{voucher.expiry}</span>
+            <div 
+              className="p-3 sm:p-5 space-y-3 max-h-[60vh] overflow-y-auto voucher-scrollbar"
+            >
+              <style jsx>{`
+                .voucher-scrollbar {
+                  scrollbar-width: thin;
+                  scrollbar-color: #0ea5e9 transparent;
+                }
+                .voucher-scrollbar::-webkit-scrollbar {
+                  width: 3px;
+                }
+                .voucher-scrollbar::-webkit-scrollbar-track {
+                  background: transparent;
+                }
+                .voucher-scrollbar::-webkit-scrollbar-thumb {
+                  background-color: #0ea5e9;
+                  border-radius: 10px;
+                }
+                .voucher-scrollbar::-webkit-scrollbar-thumb:hover {
+                  background-color: #0284c7;
+                }
+              `}</style>
+              {isLoadingVouchers ? (
+                <div className="flex items-center justify-center py-8">
+                  <Spinner size="md" />
+                </div>
+              ) : vouchers.length === 0 ? (
+                <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+                  <Ticket className="w-12 h-12 mx-auto mb-2 opacity-50" />
+                  <p>No vouchers available</p>
+                </div>
+              ) : (
+                vouchers.map((voucher) => (
+                  <div
+                    key={voucher.id}
+                    onClick={() => handleVoucherSelect(voucher)}
+                    className={`flex items-center p-4 rounded-lg cursor-pointer transition-all duration-300 ease-in-out border-2 bg-white dark:bg-gray-800 ${
+                      selectedVoucher?.id === voucher.id
+                        ? "border-sky-500 dark:border-sky-400 shadow"
+                        : "border-gray-200 dark:border-gray-700 shadow hover:border-sky-300 dark:hover:border-sky-500"
+                    }`}
+                  >
+                    <div className="flex-shrink-0 flex items-center justify-center w-16 h-16 rounded-full bg-sky-100/70 dark:bg-sky-900/30">
+                      <Ticket className="w-8 h-8 text-sky-600 dark:text-sky-400" />
+                    </div>
+                    <div className="ml-4 flex-grow">
+                      <p className="font-bold text-sky-700 dark:text-sky-400 text-base">
+                        {voucher.code}
+                      </p>
+                      <p className="text-gray-600 dark:text-gray-300 text-sm mt-1">
+                        {voucher.description || voucher.name}
+                      </p>
+                      {voucher.minPurchase && (
+                        <p className="text-gray-500 dark:text-gray-400 text-xs mt-1">
+                          Min. purchase: {formatPrice(voucher.minPurchase)}
+                        </p>
+                      )}
+                      <div className="flex items-center text-gray-400 dark:text-gray-500 text-xs mt-2">
+                        <Clock size={14} className="mr-1.5" />
+                        <span>{formatVoucherExpiry(voucher.expiry)}</span>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))
+              )}
             </div>
           </div>
         </div>
