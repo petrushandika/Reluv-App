@@ -45,7 +45,7 @@ export class AuthController {
   ) {
     const frontendUrl =
       this.configService.get<string>('FRONTEND_URL') ||
-      'http://localhost:3099';
+      'https://fe-reluv-app.vercel.app';
     try {
       await this.authService.confirm(query.token);
       return res.redirect(`${frontendUrl}/auth/login?verified=true`);
