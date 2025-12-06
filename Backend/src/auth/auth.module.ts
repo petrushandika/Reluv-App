@@ -7,6 +7,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { JwtStrategy } from './jwt.strategy';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { EmailModule } from '../email/email.module';
+import { RateLimitGuard } from '../common/guards/rate-limit.guard';
 import { SignOptions } from 'jsonwebtoken';
 import type { StringValue } from 'ms';
 
@@ -31,6 +32,7 @@ import type { StringValue } from 'ms';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, PrismaService, JwtStrategy],
+  providers: [AuthService, PrismaService, JwtStrategy, RateLimitGuard],
+  exports: [AuthService],
 })
 export class AuthModule {}

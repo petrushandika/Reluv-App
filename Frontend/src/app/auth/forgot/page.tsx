@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import ForgotForm from "@/features/auth/components/ForgotForm";
 import { forgotPassword } from "@/features/auth/api/authApi";
+import { useRateLimit } from "@/shared/hooks/useRateLimit";
 
 const emailSchema = z
   .string()
@@ -29,9 +30,16 @@ const Forgot = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { isBlocked, remainingSeconds, checkRateLimit, recordRequest } = useRateLimit(30);
 
   const handleSubmit = async () => {
     setError(null);
+    
+    if (checkRateLimit()) {
+      setError(`Please wait ${remainingSeconds} seconds before making another request.`);
+      return;
+    }
+
     const validationResult = emailSchema.safeParse(email);
 
     if (!validationResult.success) {
@@ -42,14 +50,20 @@ const Forgot = () => {
     setLoading(true);
     try {
       await forgotPassword({ email });
+      recordRequest();
       setIsSubmitted(true);
     } catch (err: unknown) {
       let errorMessage = "An unknown error occurred.";
       if (axios.isAxiosError(err)) {
-        errorMessage =
-          err.response?.data?.message ||
-          err.message ||
-          "Failed to send reset link.";
+        if (err.response?.status === 429) {
+          errorMessage = err.response?.data?.message || "Please wait 30 seconds before making another request.";
+          recordRequest();
+        } else {
+          errorMessage =
+            err.response?.data?.message ||
+            err.message ||
+            "Failed to send reset link.";
+        }
       } else if (err instanceof Error) {
         errorMessage = err.message;
       }
@@ -182,14 +196,14 @@ const Forgot = () => {
         </div>
       </div>
       <div className="w-full lg:w-1/2 flex items-center justify-center p-8">
-        <ForgotForm
+          <ForgotForm
           isSubmitted={isSubmitted}
           email={email}
           onEmailChange={setEmail}
           onSubmit={handleSubmit}
           onBackToLogin={handleBackToLogin}
           onTryAnotherEmail={handleTryAnotherEmail}
-          isLoading={loading}
+          isLoading={loading || isBlocked}
           error={error}
         />
       </div>

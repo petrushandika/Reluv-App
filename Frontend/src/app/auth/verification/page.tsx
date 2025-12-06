@@ -7,7 +7,6 @@ import axios from "axios";
 import { z } from "zod";
 import {
   Tag,
-  Truck,
   Gift,
   Package,
   Star,
@@ -19,6 +18,7 @@ import {
 } from "lucide-react";
 import VerificationForm from "@/features/auth/components/VerificationForm";
 import { verification } from "@/features/auth/api/authApi";
+import { useRateLimit } from "@/shared/hooks/useRateLimit";
 
 const emailSchema = z
   .string()
@@ -31,6 +31,7 @@ const VerificationContent = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { isBlocked, remainingSeconds, checkRateLimit, recordRequest } = useRateLimit(30);
 
   useEffect(() => {
     if (searchParams.get("email")) {
@@ -40,6 +41,12 @@ const VerificationContent = () => {
 
   const handleSubmit = async () => {
     setError(null);
+    
+    if (checkRateLimit()) {
+      setError(`Please wait ${remainingSeconds} seconds before making another request.`);
+      return;
+    }
+
     const validationResult = emailSchema.safeParse(email);
 
     if (!validationResult.success) {
@@ -50,14 +57,20 @@ const VerificationContent = () => {
     setLoading(true);
     try {
       await verification(email);
+      recordRequest();
       setIsSubmitted(true);
     } catch (err: unknown) {
       let errorMessage = "An unknown error occurred.";
       if (axios.isAxiosError(err)) {
-        errorMessage =
-          err.response?.data?.message ||
-          err.message ||
-          "Failed to send verification email.";
+        if (err.response?.status === 429) {
+          errorMessage = err.response?.data?.message || "Please wait 30 seconds before making another request.";
+          recordRequest();
+        } else {
+          errorMessage =
+            err.response?.data?.message ||
+            err.message ||
+            "Failed to send verification email.";
+        }
       } else if (err instanceof Error) {
         errorMessage = err.message;
       }
@@ -176,7 +189,7 @@ const VerificationContent = () => {
           onSubmit={handleSubmit}
           onBackToLogin={handleBackToLogin}
           onTryAnotherEmail={handleTryAnotherEmail}
-          isLoading={loading}
+          isLoading={loading || isBlocked}
           error={error}
         />
       </div>

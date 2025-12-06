@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import { KeyRound, ShieldCheck, UserCheck } from "lucide-react";
 import ResetForm from "@/features/auth/components/ResetForm";
 import { resetPassword } from "@/features/auth/api/authApi";
+import { useRateLimit } from "@/shared/hooks/useRateLimit";
 
 const resetSchema = z
   .object({
@@ -29,12 +30,22 @@ const ResetComponent = () => {
   const [isReset, setIsReset] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { isBlocked, remainingSeconds, checkRateLimit, recordRequest } = useRateLimit(30);
 
   const handleSubmit = async (data: {
     password: string;
     confirmPassword: string;
   }) => {
     setError(null);
+
+    if (checkRateLimit()) {
+      const msg = `Please wait ${remainingSeconds} seconds before making another request.`;
+      toast.error("Rate Limit", {
+        description: msg,
+      });
+      setError(msg);
+      return;
+    }
 
     if (!token) {
       const msg = "Reset token is missing or invalid.";
@@ -62,6 +73,7 @@ const ResetComponent = () => {
         newPassword: validationResult.data.password,
         confirmNewPassword: validationResult.data.confirmPassword,
       });
+      recordRequest();
       toast.success("Password Reset Successful!", {
         description: "You can now log in with your new password.",
       });
@@ -69,10 +81,15 @@ const ResetComponent = () => {
     } catch (err: unknown) {
       let errorMessage = "An unknown error occurred.";
       if (axios.isAxiosError(err)) {
-        errorMessage =
-          err.response?.data?.message ||
-          err.message ||
-          "Failed to reset password.";
+        if (err.response?.status === 429) {
+          errorMessage = err.response?.data?.message || "Please wait 30 seconds before making another request.";
+          recordRequest();
+        } else {
+          errorMessage =
+            err.response?.data?.message ||
+            err.message ||
+            "Failed to reset password.";
+        }
       } else if (err instanceof Error) {
         errorMessage = err.message;
       }
@@ -146,7 +163,7 @@ const ResetComponent = () => {
           onSubmit={handleSubmit}
           onBackToLogin={handleBackToLogin}
           isReset={isReset}
-          isLoading={loading}
+          isLoading={loading || isBlocked}
           error={error}
         />
       </div>

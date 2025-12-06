@@ -8,6 +8,7 @@ import {
   Query,
   Res,
   ValidationPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
@@ -18,6 +19,7 @@ import { ConfirmDto } from './dto/confirm.dto';
 import { VerificationDto } from './dto/verification.dto';
 import { Response } from 'express';
 import { ConfigService } from '@nestjs/config';
+import { RateLimitGuard } from '../common/guards/rate-limit.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -66,18 +68,21 @@ export class AuthController {
 
   @Post('forgot')
   @HttpCode(HttpStatus.OK)
+  @UseGuards(RateLimitGuard)
   forgot(@Body(new ValidationPipe()) forgotDto: ForgotDto) {
     return this.authService.forgot(forgotDto.email);
   }
 
   @Post('reset')
   @HttpCode(HttpStatus.OK)
+  @UseGuards(RateLimitGuard)
   reset(@Body(new ValidationPipe()) resetDto: ResetDto) {
     return this.authService.reset(resetDto);
   }
 
   @Post('verification')
   @HttpCode(HttpStatus.OK)
+  @UseGuards(RateLimitGuard)
   verification(
     @Body(new ValidationPipe()) verificationDto: VerificationDto,
   ) {
