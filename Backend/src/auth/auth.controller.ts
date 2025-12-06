@@ -17,10 +17,14 @@ import { ResetDto } from './dto/reset.dto';
 import { ConfirmDto } from './dto/confirm.dto';
 import { VerificationDto } from './dto/verification.dto';
 import { Response } from 'express';
+import { ConfigService } from '@nestjs/config';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly configService: ConfigService,
+  ) {}
 
   @Post('register')
   @HttpCode(HttpStatus.CREATED)
@@ -39,18 +43,17 @@ export class AuthController {
     @Query(new ValidationPipe()) query: ConfirmDto,
     @Res() res: Response,
   ) {
+    const frontendUrl =
+      this.configService.get<string>('FRONTEND_URL') ||
+      'http://localhost:3099';
     try {
       await this.authService.confirm(query.token);
-      return res.redirect('http://localhost:3099/auth/login?verified=true');
-      // return res.redirect('http://localhost:3099/auth/login?verified=true');
+      return res.redirect(`${frontendUrl}/auth/login?verified=true`);
     } catch (error) {
       return res.redirect(
-        `http://localhost:3099/auth/login?error=${encodeURIComponent(
+        `${frontendUrl}/auth/login?error=${encodeURIComponent(
           error.message || 'Token is invalid or has expired.',
         )}`,
-        // `http://localhost:3099/auth/login?error=${encodeURIComponent(
-        //   error.message || 'Token is invalid or has expired.',
-        // )}`,
       );
     }
   }
