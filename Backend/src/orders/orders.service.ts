@@ -21,39 +21,98 @@ export class OrdersService {
   ) {}
 
   async createOrder(userId: number, createOrderDto: CreateOrderDto) {
-    const { locationId, shippingCost, notes, voucherCode } = createOrderDto;
+    const { locationId, shippingCost, notes, voucherCode, items: directItems } = createOrderDto;
 
-    const cart = await this.prisma.cart.findUnique({
-      where: { userId },
-      select: {
-        id: true,
-        items: {
+    let orderItems: Array<{
+      variantId: number;
+      quantity: number;
+      variant: {
+        id: number;
+        price: number;
+        stock: number;
+        product: {
+          id: number;
+          sellerId: number;
+          categoryId: number | null;
+          storeId: number | null;
+        };
+      };
+    }> = [];
+    let cartId: number | null = null;
+
+    if (directItems && directItems.length > 0) {
+      for (const item of directItems) {
+        const variant = await this.prisma.variant.findUnique({
+          where: { id: item.variantId },
           select: {
             id: true,
-            variantId: true,
-            quantity: true,
-            variant: {
+            price: true,
+            stock: true,
+            product: {
               select: {
                 id: true,
-                price: true,
-                stock: true,
-                product: {
-                  select: {
-                    id: true,
-                    sellerId: true,
-                    categoryId: true,
-                    storeId: true,
+                sellerId: true,
+                categoryId: true,
+                storeId: true,
+              },
+            },
+          },
+        });
+
+        if (!variant) {
+          throw new NotFoundException(`Variant with ID ${item.variantId} not found.`);
+        }
+
+        orderItems.push({
+          variantId: item.variantId,
+          quantity: item.quantity,
+          variant,
+        });
+      }
+    } else {
+      const cart = await this.prisma.cart.findUnique({
+        where: { userId },
+        select: {
+          id: true,
+          items: {
+            select: {
+              id: true,
+              variantId: true,
+              quantity: true,
+              variant: {
+                select: {
+                  id: true,
+                  price: true,
+                  stock: true,
+                  product: {
+                    select: {
+                      id: true,
+                      sellerId: true,
+                      categoryId: true,
+                      storeId: true,
+                    },
                   },
                 },
               },
             },
           },
         },
-      },
-    });
+      });
 
-    if (!cart || cart.items.length === 0) {
-      throw new BadRequestException('Your cart is empty.');
+      if (!cart || cart.items.length === 0) {
+        throw new BadRequestException('Your cart is empty.');
+      }
+
+      cartId = cart.id;
+      orderItems = cart.items.map((item) => ({
+        variantId: item.variantId,
+        quantity: item.quantity,
+        variant: item.variant,
+      }));
+    }
+
+    if (orderItems.length === 0) {
+      throw new BadRequestException('No items to order.');
     }
 
     let itemsAmount = 0;
@@ -63,7 +122,7 @@ export class OrdersService {
       discountId: number | null;
     }> = [];
 
-    for (const item of cart.items) {
+    for (const item of orderItems) {
       if (item.variant.product.sellerId === userId) {
         throw new ForbiddenException(
           'You cannot purchase your own products.',
@@ -79,7 +138,7 @@ export class OrdersService {
 
       const discountResult = await this.discountsService.applyDiscount(
         item.variant.product.id,
-        item.variant.product.categoryId,
+        item.variant.product.categoryId ?? 0,
         item.variant.product.storeId,
         itemSubtotal,
       );
@@ -147,7 +206,7 @@ export class OrdersService {
         },
       });
 
-      const orderItemsData = cart.items.map((item) => {
+      const orderItemsData = orderItems.map((item) => {
         const itemDiscount = itemDiscounts.find(
           (d) => d.variantId === item.variantId,
         );
@@ -163,11 +222,15 @@ export class OrdersService {
       });
       await tx.orderItem.createMany({ data: orderItemsData });
 
-      for (const item of cart.items) {
+      for (const item of orderItems) {
         await tx.variant.update({
           where: { id: item.variantId },
           data: { stock: { decrement: item.quantity } },
         });
+      }
+
+      if (cartId) {
+        await tx.cartItem.deleteMany({ where: { cartId } });
       }
 
       if (voucherId) {
@@ -185,8 +248,6 @@ export class OrdersService {
           data: { voucherUsageId: voucherUsageId },
         });
       }
-
-      await tx.cartItem.deleteMany({ where: { cartId: cart.id } });
 
       return tx.order.findUnique({
         where: { id: order.id },

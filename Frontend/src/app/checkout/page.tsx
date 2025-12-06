@@ -887,6 +887,12 @@ const Checkout = () => {
         shippingCost: selectedService!.price,
         notes: orderNotes || undefined,
         voucherCode: selectedVoucher?.code || undefined,
+        ...(buyItem ? {
+          items: [{
+            variantId: buyItem.variantId,
+            quantity: buyItem.quantity,
+          }],
+        } : {}),
       };
 
       const response = await createOrder(orderData);

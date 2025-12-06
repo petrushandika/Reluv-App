@@ -218,7 +218,7 @@ const ProductDetail = () => {
     addItemToCart({ variantId: selectedVariant.id, quantity });
   };
 
-  const handleBuyNow = () => {
+  const handleBuyNow = async () => {
     if (!product || !selectedVariant) {
       return;
     }
@@ -238,7 +238,7 @@ const ProductDetail = () => {
       return;
     }
 
-    setBuyItem({
+    const buyItemData = {
       variantId: selectedVariant.id,
       productId: product.id,
       productName: product.name || "Product",
@@ -247,7 +247,9 @@ const ProductDetail = () => {
       variantSize: selectedVariant.size || undefined,
       variantColor: selectedVariant.color || undefined,
       quantity: quantity,
-    });
+    };
+
+    setBuyItem(buyItemData);
 
     router.prefetch("/checkout");
     router.push("/checkout");

@@ -27,11 +27,17 @@ export interface ShippingRate {
   price: number;
 }
 
+export interface OrderItemDto {
+  variantId: number;
+  quantity: number;
+}
+
 export interface CreateOrderDto {
   locationId: number;
   shippingCost: number;
   notes?: string;
   voucherCode?: string;
+  items?: OrderItemDto[];
 }
 
 export interface CreateOrderResponse {

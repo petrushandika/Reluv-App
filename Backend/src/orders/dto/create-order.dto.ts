@@ -1,4 +1,17 @@
-import { IsInt, IsNotEmpty, IsOptional, IsString, Min, Max, Length } from 'class-validator';
+import { IsInt, IsNotEmpty, IsOptional, IsString, Min, Max, Length, IsArray, ValidateNested } from 'class-validator';
+import { Type } from 'class-transformer';
+
+class OrderItemDto {
+  @IsInt()
+  @IsNotEmpty()
+  @Min(1, { message: 'Variant ID must be a positive integer' })
+  variantId: number;
+
+  @IsInt()
+  @IsNotEmpty()
+  @Min(1, { message: 'Quantity must be at least 1' })
+  quantity: number;
+}
 
 export class CreateOrderDto {
   @IsInt()
@@ -21,4 +34,10 @@ export class CreateOrderDto {
   @IsOptional()
   @Length(0, 50, { message: 'Voucher code must be at most 50 characters' })
   voucherCode?: string;
+
+  @IsArray()
+  @IsOptional()
+  @ValidateNested({ each: true })
+  @Type(() => OrderItemDto)
+  items?: OrderItemDto[];
 }

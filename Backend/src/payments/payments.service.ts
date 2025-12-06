@@ -47,6 +47,8 @@ export class PaymentsService {
       throw new NotFoundException(`Buyer for order ID ${order.id} not found.`);
     }
 
+    const frontendUrl = this.configService.get<string>('FRONTEND_URL');
+
     const parameter = {
       transaction_details: {
         order_id: order.orderNumber,
@@ -57,6 +59,11 @@ export class PaymentsService {
         last_name: buyer.lastName,
         email: buyer.email,
         phone: buyer.phone,
+      },
+      callbacks: {
+        finish: `${frontendUrl}/profile/orders?order_id=${order.orderNumber}&status=success`,
+        error: `${frontendUrl}/profile/orders?order_id=${order.orderNumber}&status=failed`,
+        pending: `${frontendUrl}/profile/orders?order_id=${order.orderNumber}&status=pending`,
       },
     };
 
