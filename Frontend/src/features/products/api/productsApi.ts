@@ -30,7 +30,7 @@ export const getProducts = async (query?: ProductQuery): Promise<Product[]> => {
 export const getProductBySlug = async (slug: string): Promise<Product> => {
   try {
     const encodedSlug = encodeURIComponent(slug);
-    const response = await api.get<Product>(`/products/slug/${encodedSlug}`);
+    const response = await api.get<Product>(`/products/${encodedSlug}`);
     if (!response || !response.data) {
       throw new Error("Product not found");
     }

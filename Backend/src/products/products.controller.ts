@@ -73,18 +73,6 @@ export class ProductsController {
     return this.productsService.findMyProducts(user, queryDto);
   }
 
-  @Get('slug/:slug')
-  @HttpCode(HttpStatus.OK)
-  findOneBySlug(@Param('slug') slug: string) {
-    return this.productsService.findOneBySlug(slug);
-  }
-
-  @Get(':id')
-  @HttpCode(HttpStatus.OK)
-  findOne(@Param('id', ParseIntPipe) id: number) {
-    return this.productsService.findOne(id);
-  }
-
   @UseGuards(JwtAuthGuard)
   @Post(':productId/variants')
   @HttpCode(HttpStatus.CREATED)
@@ -122,5 +110,12 @@ export class ProductsController {
     @Param('variantId', ParseIntPipe) variantId: number,
   ) {
     return this.productsService.removeVariant(user, productId, variantId);
+  }
+
+  @Get(':slug')
+  @HttpCode(HttpStatus.OK)
+  findOneBySlug(@Param('slug') slug: string) {
+    const decodedSlug = decodeURIComponent(slug);
+    return this.productsService.findOneBySlug(decodedSlug);
   }
 }
