@@ -753,28 +753,15 @@ const Navbar = () => {
                         <div className="bg-white dark:bg-gray-700 py-2">
                           <Link
                             href="/profile/me"
-                            onClick={() => setIsMobileMenuOpen(false)}
+                            onClick={() => setIsProfileDropdownOpen(false)}
                             className="flex items-center px-6 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300 hover:pl-8 cursor-pointer"
                           >
                             <User className="w-5 h-5 mr-3 text-gray-600 dark:text-gray-400 transition-colors duration-300" />
                             <span className="font-medium">My Profile</span>
                           </Link>
                           <Link
-                            href="/profile/addresses"
-                            className="flex items-center px-6 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300 hover:pl-8 cursor-pointer"
-                          >
-                            <MapPin className="w-5 h-5 mr-3 text-gray-600 dark:text-gray-400 transition-colors duration-300" />
-                            <span className="font-medium">My Address</span>
-                          </Link>
-                          <Link
-                            href="/profile/products"
-                            className="flex items-center px-6 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300 hover:pl-8 cursor-pointer"
-                          >
-                            <Package className="w-5 h-5 mr-3 text-gray-600 dark:text-gray-400 transition-colors duration-300" />
-                            <span className="font-medium">My Product</span>
-                          </Link>
-                          <Link
                             href="/profile/orders"
+                            onClick={() => setIsProfileDropdownOpen(false)}
                             className="flex items-center px-6 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300 hover:pl-8 cursor-pointer"
                           >
                             <ShoppingBag className="w-5 h-5 mr-3 text-gray-600 dark:text-gray-400 transition-colors duration-300" />
@@ -1126,12 +1113,20 @@ const Navbar = () => {
                 My Profile
               </Link>
               <Link
-                href="/profile/addresses"
+                href="/profile/address"
                 className="flex items-center py-3 text-sm text-gray-700 dark:text-gray-300 font-semibold hover:text-sky-600 dark:hover:text-sky-400 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md transition-all duration-300 hover:pl-2"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 <MapPin className="w-5 h-5 mr-3 text-gray-500 dark:text-gray-400 transition-colors duration-300" />
                 My Address
+              </Link>
+              <Link
+                href="/profile/orders"
+                className="flex items-center py-3 text-sm text-gray-700 dark:text-gray-300 font-semibold hover:text-sky-600 dark:hover:text-sky-400 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md transition-all duration-300 hover:pl-2"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                <ShoppingBag className="w-5 h-5 mr-3 text-gray-500 dark:text-gray-400 transition-colors duration-300" />
+                Order History
               </Link>
               <Link
                 href="/profile/products"
@@ -1142,12 +1137,12 @@ const Navbar = () => {
                 My Product
               </Link>
               <Link
-                href="/profile/orders"
+                href="/profile/orders/seller"
                 className="flex items-center py-3 text-sm text-gray-700 dark:text-gray-300 font-semibold hover:text-sky-600 dark:hover:text-sky-400 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md transition-all duration-300 hover:pl-2"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 <ScrollText className="w-5 h-5 mr-3 text-gray-500 dark:text-gray-400 transition-colors duration-300" />
-                Order History
+                Order List
               </Link>
               <div className="">
                 <button

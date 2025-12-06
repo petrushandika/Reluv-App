@@ -127,16 +127,22 @@ const ProfileSidebar: React.FC<ProfileSidebarProps> = ({ user }) => {
       category: "My Details",
     },
     {
-      title: "My Product",
-      href: "/profile/product",
-      icon: Package,
-      category: "My Details",
-    },
-    {
       title: "Order History",
       href: "/profile/orders",
       icon: ShoppingBag,
       category: "My Purchases",
+    },
+    {
+      title: "My Product",
+      href: "/profile/products",
+      icon: Package,
+      category: "My Sales",
+    },
+    {
+      title: "Order List",
+      href: "/profile/orders/seller",
+      icon: ShoppingBag,
+      category: "My Sales",
     },
   ];
 
@@ -280,7 +286,7 @@ const ProfileSidebar: React.FC<ProfileSidebarProps> = ({ user }) => {
 
       <nav className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
         <div className="space-y-6">
-          {["My Details", "My Purchases", "Account Management"].map(
+          {["My Details", "My Purchases", "My Sales", "Account Management"].map(
             (category) => (
               <div key={category}>
                 <h3 className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3 px-2">
@@ -320,6 +326,36 @@ const ProfileSidebar: React.FC<ProfileSidebarProps> = ({ user }) => {
                   {category === "My Purchases" &&
                     menuItems
                       .filter((item) => item.category === "My Purchases")
+                      .map((item) => {
+                        const isActive = pathname === item.href;
+                        const Icon = item.icon;
+                        return (
+                          <Link
+                            key={item.href}
+                            href={item.href}
+                            className={`relative flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors ${
+                              isActive
+                                ? "bg-sky-50 dark:bg-sky-900/20 text-sky-600 dark:text-sky-400"
+                                : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
+                            }`}
+                          >
+                            {isActive && (
+                              <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-sky-600 dark:bg-sky-400 rounded-r-full" />
+                            )}
+                            <Icon
+                              className={`w-5 h-5 ${
+                                isActive
+                                  ? "text-sky-600 dark:text-sky-400"
+                                  : "text-gray-500 dark:text-gray-400"
+                              }`}
+                            />
+                            <span className="font-medium">{item.title}</span>
+                          </Link>
+                        );
+                      })}
+                  {category === "My Sales" &&
+                    menuItems
+                      .filter((item) => item.category === "My Sales")
                       .map((item) => {
                         const isActive = pathname === item.href;
                         const Icon = item.icon;

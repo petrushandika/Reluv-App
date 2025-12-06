@@ -32,3 +32,21 @@ export const getOrderByOrderNumber = async (
   }
 };
 
+export const getSellerOrders = async (): Promise<Order[]> => {
+  try {
+    const response = await api.get<Order[]>("/orders/seller/all");
+    return Array.isArray(response.data) ? response.data : [];
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getSellerOrder = async (id: number): Promise<Order> => {
+  try {
+    const response = await api.get<Order>(`/orders/seller/${id}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+

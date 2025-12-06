@@ -423,4 +423,195 @@ export class OrdersService {
     }
     return order;
   }
+
+  async findAllForSeller(userId: number) {
+    const orders = await this.prisma.order.findMany({
+      where: {
+        items: {
+          some: {
+            variant: {
+              product: {
+                sellerId: userId,
+              },
+            },
+          },
+        },
+      },
+      select: {
+        id: true,
+        orderNumber: true,
+        totalAmount: true,
+        itemsAmount: true,
+        shippingCost: true,
+        discountAmount: true,
+        status: true,
+        createdAt: true,
+        updatedAt: true,
+        buyer: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            email: true,
+            phone: true,
+          },
+        },
+        items: {
+          where: {
+            variant: {
+              product: {
+                sellerId: userId,
+              },
+            },
+          },
+          select: {
+            id: true,
+            quantity: true,
+            price: true,
+            total: true,
+            variant: {
+              select: {
+                id: true,
+                size: true,
+                color: true,
+                image: true,
+                product: {
+                  select: {
+                    id: true,
+                    name: true,
+                    slug: true,
+                    images: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+
+    return orders;
+  }
+
+  async findOneForSeller(id: number, userId: number) {
+    const order = await this.prisma.order.findFirst({
+      where: {
+        id,
+        items: {
+          some: {
+            variant: {
+              product: {
+                sellerId: userId,
+              },
+            },
+          },
+        },
+      },
+      select: {
+        id: true,
+        orderNumber: true,
+        totalAmount: true,
+        itemsAmount: true,
+        shippingCost: true,
+        discountAmount: true,
+        voucherCode: true,
+        status: true,
+        notes: true,
+        createdAt: true,
+        updatedAt: true,
+        buyer: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            email: true,
+            phone: true,
+          },
+        },
+        items: {
+          where: {
+            variant: {
+              product: {
+                sellerId: userId,
+              },
+            },
+          },
+          select: {
+            id: true,
+            quantity: true,
+            price: true,
+            total: true,
+            discountAmount: true,
+            variant: {
+              select: {
+                id: true,
+                size: true,
+                color: true,
+                sku: true,
+                image: true,
+                price: true,
+                condition: true,
+                product: {
+                  select: {
+                    id: true,
+                    name: true,
+                    slug: true,
+                    images: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+        payment: {
+          select: {
+            id: true,
+            method: true,
+            amount: true,
+            status: true,
+            snap_token: true,
+            snap_redirect_url: true,
+            midtrans_order_id: true,
+            paidAt: true,
+            expiresAt: true,
+            createdAt: true,
+          },
+        },
+        shipment: {
+          select: {
+            id: true,
+            courier: true,
+            service: true,
+            trackingNumber: true,
+            status: true,
+            estimatedDays: true,
+            shippingCost: true,
+            shippedAt: true,
+            deliveredAt: true,
+            createdAt: true,
+          },
+        },
+        location: {
+          select: {
+            id: true,
+            label: true,
+            recipient: true,
+            phone: true,
+            province: true,
+            city: true,
+            district: true,
+            subDistrict: true,
+            postalCode: true,
+            address: true,
+          },
+        },
+      },
+    });
+
+    if (!order) {
+      throw new NotFoundException(`Order with ID ${id} not found.`);
+    }
+    return order;
+  }
 }

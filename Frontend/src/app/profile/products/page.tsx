@@ -9,7 +9,6 @@ import {
   Plus,
   Search,
   ChevronDown,
-  AlertCircle,
 } from "lucide-react";
 import { useAuthStore } from "@/features/auth/store/auth.store";
 import { getMe } from "@/features/user/api/userApi";
@@ -890,7 +889,7 @@ const ProductPage = () => {
                             {sortBy === "name_desc" && "Name: Z to A"}
                           </span>
                           <ChevronDown
-                            className={`w-5 h-5 text-gray-400 dark:text-gray-500 ml-2 flex-shrink-0 transition-transform duration-200 ${
+                            className={`w-5 h-5 text-gray-400 dark:text-gray-500 ml-2 shrink-0 transition-transform duration-200 ${
                               isSortDropdownOpen ? "rotate-180" : ""
                             }`}
                           />
@@ -979,7 +978,7 @@ const ProductPage = () => {
                         className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-3 sm:p-4 md:p-6"
                       >
                         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4">
-                          <div className="relative w-full h-48 sm:w-28 sm:h-28 md:w-32 md:h-32 rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-700 flex-shrink-0">
+                          <div className="relative w-full h-48 sm:w-28 sm:h-28 md:w-32 md:h-32 rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-700 shrink-0">
                             {product.images && product.images.length > 0 ? (
                               <Image
                                 src={product.images[0]}
@@ -1000,7 +999,7 @@ const ProductPage = () => {
                               <h3 className="text-sm sm:text-base md:text-lg font-bold text-gray-900 dark:text-white flex-1 line-clamp-2 sm:truncate">
                                 {product.name}
                               </h3>
-                              <div className="flex items-center gap-2 sm:hidden flex-shrink-0">
+                              <div className="flex items-center gap-2 sm:hidden shrink-0">
                                 <input
                                   type="checkbox"
                                   checked={selectedProducts.has(product.id)}
@@ -1085,7 +1084,7 @@ const ProductPage = () => {
                               ))}
                               <button
                                 onClick={() =>
-                                  router.push(`/profile/product/edit?id=${product.id}`)
+                                  router.push(`/profile/products/edit?id=${product.id}`)
                                 }
                                 className="px-2 py-1 text-xs border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors cursor-pointer"
                               >
@@ -1100,7 +1099,7 @@ const ProductPage = () => {
                             </div>
                           </div>
 
-                          <div className="hidden sm:flex flex-col items-center justify-between min-h-[120px] flex-shrink-0">
+                          <div className="hidden sm:flex flex-col items-center justify-between min-h-[120px] shrink-0">
                             <input
                               type="checkbox"
                               checked={selectedProducts.has(product.id)}

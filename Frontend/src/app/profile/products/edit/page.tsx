@@ -167,7 +167,7 @@ const EditProductPageContent = () => {
       const productId = searchParams.get("id");
       if (!productId) {
         toast.error("Product ID is required");
-        router.push("/profile/product");
+        router.push("/profile/products");
         return;
       }
 
@@ -190,7 +190,7 @@ const EditProductPageContent = () => {
         toast.error("Failed to Load Product", {
           description: errorMessage,
         });
-        router.push("/profile/product");
+        router.push("/profile/products");
       } finally {
         setIsLoading(false);
       }
@@ -332,7 +332,7 @@ const EditProductPageContent = () => {
       toast.success("Product Updated", {
         description: "Product and all variants have been updated successfully.",
       });
-      router.push("/profile/product");
+      router.push("/profile/products");
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : "Unable to update product.";
@@ -456,7 +456,7 @@ const EditProductPageContent = () => {
         <div className="container mx-auto px-4 sm:px-6 md:px-10 xl:px-20 2xl:px-40 py-4 sm:py-5">
           <div className="mb-4 sm:mb-6">
             <button
-              onClick={() => router.push("/profile/product")}
+              onClick={() => router.push("/profile/products")}
               className="flex items-center gap-2 text-gray-700 dark:text-gray-300 mb-3 sm:mb-4 cursor-pointer hover:text-gray-900 dark:hover:text-white transition-colors"
             >
               <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />

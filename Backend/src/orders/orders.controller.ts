@@ -41,4 +41,16 @@ export class OrdersController {
   findOneForUser(@GetUser() user: User, @Param('id', ParseIntPipe) id: number) {
     return this.ordersService.findOneForUser(id, user.id);
   }
+
+  @Get('seller/all')
+  @HttpCode(HttpStatus.OK)
+  findAllForSeller(@GetUser() user: User) {
+    return this.ordersService.findAllForSeller(user.id);
+  }
+
+  @Get('seller/:id')
+  @HttpCode(HttpStatus.OK)
+  findOneForSeller(@GetUser() user: User, @Param('id', ParseIntPipe) id: number) {
+    return this.ordersService.findOneForSeller(id, user.id);
+  }
 }
