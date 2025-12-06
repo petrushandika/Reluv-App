@@ -3,7 +3,7 @@
 import React, { useEffect, useState, useRef, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { z } from "zod";
-import { ChevronLeft, X, ImagePlus, AlertCircle } from "lucide-react";
+import { ChevronLeft, X, ImagePlus } from "lucide-react";
 import { useAuthStore } from "@/features/auth/store/auth.store";
 import { PrivateRoute } from "@/shared/components/guards/RouteGuards";
 import Spinner from "@/shared/components/atoms/Spinner";
@@ -129,6 +129,38 @@ const EditProductPageContent = () => {
   const [variantErrors, setVariantErrors] = useState<
     Record<number, Record<string, string>>
   >({});
+
+  useEffect(() => {
+    if (validationError) {
+      toast.error("Validation Error", {
+        description: validationError,
+      });
+    }
+  }, [validationError]);
+
+  useEffect(() => {
+    if (fieldErrors.categoryId) {
+      toast.error("Validation Error", {
+        description: fieldErrors.categoryId,
+      });
+    }
+  }, [fieldErrors.categoryId]);
+
+  useEffect(() => {
+    if (fieldErrors.images) {
+      toast.error("Validation Error", {
+        description: fieldErrors.images,
+      });
+    }
+  }, [fieldErrors.images]);
+
+  useEffect(() => {
+    if (variants.length > 0 && variants[0] && variantErrors[variants[0].id]?.condition) {
+      toast.error("Validation Error", {
+        description: variantErrors[variants[0].id].condition,
+      });
+    }
+  }, [variants, variantErrors]);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -1030,35 +1062,6 @@ const EditProductPageContent = () => {
                   </label>
                 </div>
 
-                {validationError && (
-                  <div className="flex items-center p-3 text-sm text-red-700 dark:text-red-400 bg-red-100 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg">
-                    <AlertCircle className="w-5 h-5 mr-2 shrink-0" />
-                    <span>{validationError}</span>
-                  </div>
-                )}
-
-                {fieldErrors.categoryId && (
-                  <div className="flex items-center p-3 text-sm text-red-700 dark:text-red-400 bg-red-100 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg">
-                    <AlertCircle className="w-5 h-5 mr-2 shrink-0" />
-                    <span>{fieldErrors.categoryId}</span>
-                  </div>
-                )}
-
-                {fieldErrors.images && (
-                  <div className="flex items-center p-3 text-sm text-red-700 dark:text-red-400 bg-red-100 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg">
-                    <AlertCircle className="w-5 h-5 mr-2 shrink-0" />
-                    <span>{fieldErrors.images}</span>
-                  </div>
-                )}
-
-                {variants.length > 0 &&
-                  variants[0] &&
-                  variantErrors[variants[0].id]?.condition && (
-                    <div className="flex items-center p-3 text-sm text-red-700 dark:text-red-400 bg-red-100 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg">
-                      <AlertCircle className="w-5 h-5 mr-2 shrink-0" />
-                      <span>{variantErrors[variants[0].id].condition}</span>
-                    </div>
-                  )}
 
                 <button
                   type="submit"

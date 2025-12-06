@@ -657,44 +657,6 @@ const AddAddressPage = () => {
               </div>
 
               <form id="address-form" onSubmit={handleSubmit}>
-                {validationError && (
-                  <div className="mb-6 flex items-center p-3 text-sm text-red-700 dark:text-red-400 bg-red-100 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg">
-                    <AlertCircle className="w-5 h-5 mr-2 shrink-0" />
-                    <span>{validationError}</span>
-                  </div>
-                )}
-
-                {(fieldErrors.province ||
-                  fieldErrors.city ||
-                  fieldErrors.district ||
-                  fieldErrors.subDistrict) && (
-                  <div className="mb-6 space-y-2">
-                    {fieldErrors.province && (
-                      <div className="flex items-center p-3 text-sm text-red-700 dark:text-red-400 bg-red-100 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg">
-                        <AlertCircle className="w-5 h-5 mr-2 shrink-0" />
-                        <span>{fieldErrors.province}</span>
-                      </div>
-                    )}
-                    {fieldErrors.city && (
-                      <div className="flex items-center p-3 text-sm text-red-700 dark:text-red-400 bg-red-100 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg">
-                        <AlertCircle className="w-5 h-5 mr-2 shrink-0" />
-                        <span>{fieldErrors.city}</span>
-                      </div>
-                    )}
-                    {fieldErrors.district && (
-                      <div className="flex items-center p-3 text-sm text-red-700 dark:text-red-400 bg-red-100 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg">
-                        <AlertCircle className="w-5 h-5 mr-2 shrink-0" />
-                        <span>{fieldErrors.district}</span>
-                      </div>
-                    )}
-                    {fieldErrors.subDistrict && (
-                      <div className="flex items-center p-3 text-sm text-red-700 dark:text-red-400 bg-red-100 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg">
-                        <AlertCircle className="w-5 h-5 mr-2 shrink-0" />
-                        <span>{fieldErrors.subDistrict}</span>
-                      </div>
-                    )}
-                  </div>
-                )}
 
                 <div className="flex flex-col lg:flex-row lg:gap-8">
                   <div className="flex-1 space-y-6 mb-6 lg:mb-0">

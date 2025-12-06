@@ -295,6 +295,46 @@ const Checkout = () => {
   const [orderNotesError, setOrderNotesError] = useState<string | null>(null);
 
   useEffect(() => {
+    if (validationError) {
+      toast.error("Validation Error", {
+        description: validationError,
+      });
+    }
+  }, [validationError]);
+
+  useEffect(() => {
+    if (fieldErrors.province) {
+      toast.error("Validation Error", {
+        description: fieldErrors.province,
+      });
+    }
+  }, [fieldErrors.province]);
+
+  useEffect(() => {
+    if (fieldErrors.city) {
+      toast.error("Validation Error", {
+        description: fieldErrors.city,
+      });
+    }
+  }, [fieldErrors.city]);
+
+  useEffect(() => {
+    if (fieldErrors.district) {
+      toast.error("Validation Error", {
+        description: fieldErrors.district,
+      });
+    }
+  }, [fieldErrors.district]);
+
+  useEffect(() => {
+    if (fieldErrors.subDistrict) {
+      toast.error("Validation Error", {
+        description: fieldErrors.subDistrict,
+      });
+    }
+  }, [fieldErrors.subDistrict]);
+
+  useEffect(() => {
     if (!isFetchingCart) {
       setHasCheckedCart(true);
     }
@@ -1081,41 +1121,6 @@ const Checkout = () => {
           <div className="flex flex-col lg:grid lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
             <div className="lg:col-span-2 border border-gray-200 dark:border-gray-700 rounded-lg p-4 sm:p-6 md:p-8 bg-white dark:bg-gray-800 shadow-sm">
               <form className="space-y-6 sm:space-y-8" onSubmit={handleFormSubmit}>
-                {validationError && (
-                  <div className="flex items-center p-3 text-sm text-red-700 dark:text-red-400 bg-red-100 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg">
-                    <AlertCircle className="w-5 h-5 mr-2 shrink-0" />
-                    <span>{validationError}</span>
-                  </div>
-                )}
-
-                {addressMode === "new" && (
-                  <>
-                    {fieldErrors.province && (
-                      <div className="flex items-center p-3 text-sm text-red-700 dark:text-red-400 bg-red-100 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg">
-                        <AlertCircle className="w-5 h-5 mr-2 shrink-0" />
-                        <span>{fieldErrors.province}</span>
-                      </div>
-                    )}
-                    {fieldErrors.city && (
-                      <div className="flex items-center p-3 text-sm text-red-700 dark:text-red-400 bg-red-100 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg">
-                        <AlertCircle className="w-5 h-5 mr-2 shrink-0" />
-                        <span>{fieldErrors.city}</span>
-                      </div>
-                    )}
-                    {fieldErrors.district && (
-                      <div className="flex items-center p-3 text-sm text-red-700 dark:text-red-400 bg-red-100 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg">
-                        <AlertCircle className="w-5 h-5 mr-2 shrink-0" />
-                        <span>{fieldErrors.district}</span>
-                      </div>
-                    )}
-                    {fieldErrors.subDistrict && (
-                      <div className="flex items-center p-3 text-sm text-red-700 dark:text-red-400 bg-red-100 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg">
-                        <AlertCircle className="w-5 h-5 mr-2 shrink-0" />
-                        <span>{fieldErrors.subDistrict}</span>
-                      </div>
-                    )}
-                  </>
-                )}
 
                 <div className="space-y-4 sm:space-y-6">
                   <h2 className="text-base sm:text-lg md:text-xl font-semibold text-sky-600 dark:text-sky-400 flex items-center gap-2 sm:gap-3">

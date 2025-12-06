@@ -10,7 +10,6 @@ import {
   X,
   Plus,
   Mail,
-  AlertCircle,
 } from "lucide-react";
 import { z } from "zod";
 import { useAuthStore } from "@/features/auth/store/auth.store";
@@ -62,6 +61,14 @@ const ProfilePage = () => {
   const [validationError, setValidationError] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [phoneError, setPhoneError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (validationError) {
+      toast.error("Validation Error", {
+        description: validationError,
+      });
+    }
+  }, [validationError]);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -263,12 +270,6 @@ const ProfilePage = () => {
 
               <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 shadow-sm">
                 <form onSubmit={handleSubmitPersonalInfo} className="space-y-5">
-                  {validationError && (
-                    <div className="flex items-center p-3 text-sm text-red-700 dark:text-red-400 bg-red-100 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg">
-                      <AlertCircle className="w-5 h-5 mr-2 shrink-0" />
-                      <span>{validationError}</span>
-                    </div>
-                  )}
 
                   <div>
                     <label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block">
@@ -575,12 +576,6 @@ const ProfilePage = () => {
               onSubmit={handleSubmitPersonalInfo}
               className="flex-1 overflow-y-auto p-4 space-y-5"
             >
-              {validationError && (
-                <div className="flex items-center p-3 text-sm text-red-700 dark:text-red-400 bg-red-100 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg">
-                  <AlertCircle className="w-5 h-5 mr-2 shrink-0" />
-                  <span>{validationError}</span>
-                </div>
-              )}
 
               <div>
                 <label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block">

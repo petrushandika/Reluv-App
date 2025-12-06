@@ -19,6 +19,7 @@ import {
 import VerificationForm from "@/features/auth/components/VerificationForm";
 import { verification } from "@/features/auth/api/authApi";
 import { useRateLimit } from "@/shared/hooks/useRateLimit";
+import { toast } from "sonner";
 
 const emailSchema = z
   .string()
@@ -43,14 +44,22 @@ const VerificationContent = () => {
     setError(null);
     
     if (checkRateLimit()) {
-      setError(`Please wait ${remainingSeconds} seconds before making another request.`);
+      const msg = `Please wait ${remainingSeconds} seconds before making another request.`;
+      setError(msg);
+      toast.error("Rate Limit", {
+        description: msg,
+      });
       return;
     }
 
     const validationResult = emailSchema.safeParse(email);
 
     if (!validationResult.success) {
-      setError(validationResult.error.errors[0].message);
+      const msg = validationResult.error.errors[0].message;
+      setError(msg);
+      toast.error("Validation Error", {
+        description: msg,
+      });
       return;
     }
 
@@ -58,6 +67,9 @@ const VerificationContent = () => {
     try {
       await verification(email);
       recordRequest();
+      toast.success("Email Sent", {
+        description: "Verification email has been sent to your email.",
+      });
       setIsSubmitted(true);
     } catch (err: unknown) {
       let errorMessage = "An unknown error occurred.";
@@ -75,6 +87,9 @@ const VerificationContent = () => {
         errorMessage = err.message;
       }
       setError(errorMessage);
+      toast.error("Error", {
+        description: errorMessage,
+      });
     } finally {
       setLoading(false);
     }

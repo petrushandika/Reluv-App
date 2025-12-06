@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { z } from "zod";
-import { Eye, EyeOff, Mail, Lock, AlertCircle } from "lucide-react";
+import { Eye, EyeOff, Mail, Lock } from "lucide-react";
 import { LoginPayload } from "../types";
+import { toast } from "sonner";
 
 const loginSchema = z.object({
   email: z.string().email({ message: "Invalid email address." }),
@@ -32,6 +33,22 @@ const LoginForm = ({
     setShowPassword(!showPassword);
   };
 
+  useEffect(() => {
+    if (error) {
+      toast.error("Error", {
+        description: error,
+      });
+    }
+  }, [error]);
+
+  useEffect(() => {
+    if (validationError) {
+      toast.error("Validation Error", {
+        description: validationError,
+      });
+    }
+  }, [validationError]);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setValidationError(null);
@@ -39,7 +56,11 @@ const LoginForm = ({
     const validationResult = loginSchema.safeParse({ email, password });
 
     if (!validationResult.success) {
-      setValidationError(validationResult.error.errors[0].message);
+      const errorMsg = validationResult.error.errors[0].message;
+      setValidationError(errorMsg);
+      toast.error("Validation Error", {
+        description: errorMsg,
+      });
       return;
     }
     onSubmit(validationResult.data);
@@ -112,12 +133,6 @@ const LoginForm = ({
           </div>
         </div>
 
-        {(error || validationError) && (
-          <div className="flex items-center p-3 text-sm text-red-700 dark:text-red-400 bg-red-100 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg">
-            <AlertCircle className="w-5 h-5 mr-2 flex-shrink-0" />
-            <span>{error || validationError}</span>
-          </div>
-        )}
 
         <div className="flex items-center justify-between">
           <div className="flex items-center">

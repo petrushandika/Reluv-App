@@ -1,11 +1,11 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { z } from "zod";
 import { ListingData, Condition } from "../types";
 import CategorySelector from "@/shared/components/molecules/CategorySelector";
 import CustomSelect from "@/shared/components/molecules/CustomSelect";
-import { AlertCircle } from "lucide-react";
+import { toast } from "sonner";
 
 const conditionOptions: Record<Condition, string> = {
   NEW: "New",
@@ -202,6 +202,30 @@ const ListingForm = ({
     setValidationError(null);
   };
 
+  useEffect(() => {
+    if (validationError) {
+      toast.error("Validation Error", {
+        description: validationError,
+      });
+    }
+  }, [validationError]);
+
+  useEffect(() => {
+    if (fieldErrors.categoryId) {
+      toast.error("Validation Error", {
+        description: fieldErrors.categoryId,
+      });
+    }
+  }, [fieldErrors.categoryId]);
+
+  useEffect(() => {
+    if (fieldErrors.condition) {
+      toast.error("Validation Error", {
+        description: fieldErrors.condition,
+      });
+    }
+  }, [fieldErrors.condition]);
+
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setValidationError(null);
@@ -217,12 +241,20 @@ const ListingForm = ({
           const fieldName = err.path[0] as string;
           errors[fieldName] = err.message;
         } else {
-          setValidationError(err.message);
+          const errorMsg = err.message;
+          setValidationError(errorMsg);
+          toast.error("Validation Error", {
+            description: errorMsg,
+          });
         }
       });
       setFieldErrors(errors);
       if (Object.keys(errors).length === 0 && validationResult.error.errors[0]) {
-        setValidationError(validationResult.error.errors[0].message);
+        const errorMsg = validationResult.error.errors[0].message;
+        setValidationError(errorMsg);
+        toast.error("Validation Error", {
+          description: errorMsg,
+        });
       }
       return;
     }
@@ -563,26 +595,6 @@ const ListingForm = ({
             </label>
           </div>
 
-          {validationError && (
-            <div className="flex items-center p-3 text-sm text-red-700 dark:text-red-400 bg-red-100 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg">
-              <AlertCircle className="w-5 h-5 mr-2 flex-shrink-0" />
-              <span>{validationError}</span>
-            </div>
-          )}
-
-          {fieldErrors.categoryId && (
-            <div className="flex items-center p-3 text-sm text-red-700 dark:text-red-400 bg-red-100 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg">
-              <AlertCircle className="w-5 h-5 mr-2 flex-shrink-0" />
-              <span>{fieldErrors.categoryId}</span>
-            </div>
-          )}
-
-          {fieldErrors.condition && (
-            <div className="flex items-center p-3 text-sm text-red-700 dark:text-red-400 bg-red-100 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg">
-              <AlertCircle className="w-5 h-5 mr-2 flex-shrink-0" />
-              <span>{fieldErrors.condition}</span>
-            </div>
-          )}
 
           <button
             type="submit"

@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import ForgotForm from "@/features/auth/components/ForgotForm";
 import { forgotPassword } from "@/features/auth/api/authApi";
+import { toast } from "sonner";
 import { useRateLimit } from "@/shared/hooks/useRateLimit";
 
 const emailSchema = z
@@ -36,14 +37,22 @@ const Forgot = () => {
     setError(null);
     
     if (checkRateLimit()) {
-      setError(`Please wait ${remainingSeconds} seconds before making another request.`);
+      const msg = `Please wait ${remainingSeconds} seconds before making another request.`;
+      setError(msg);
+      toast.error("Rate Limit", {
+        description: msg,
+      });
       return;
     }
 
     const validationResult = emailSchema.safeParse(email);
 
     if (!validationResult.success) {
-      setError(validationResult.error.errors[0].message);
+      const msg = validationResult.error.errors[0].message;
+      setError(msg);
+      toast.error("Validation Error", {
+        description: msg,
+      });
       return;
     }
 
@@ -51,6 +60,9 @@ const Forgot = () => {
     try {
       await forgotPassword({ email });
       recordRequest();
+      toast.success("Email Sent", {
+        description: "Password reset instructions have been sent to your email.",
+      });
       setIsSubmitted(true);
     } catch (err: unknown) {
       let errorMessage = "An unknown error occurred.";
@@ -68,6 +80,9 @@ const Forgot = () => {
         errorMessage = err.message;
       }
       setError(errorMessage);
+      toast.error("Error", {
+        description: errorMessage,
+      });
     } finally {
       setLoading(false);
     }

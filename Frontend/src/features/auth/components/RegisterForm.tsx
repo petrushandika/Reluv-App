@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { z } from "zod";
-import { Eye, EyeOff, Mail, Lock, User, AlertCircle } from "lucide-react";
+import { Eye, EyeOff, Mail, Lock, User } from "lucide-react";
+import { toast } from "sonner";
 
 const registerSchema = z
   .object({
@@ -94,6 +95,14 @@ const RegisterForm = ({
     setValidationError(null);
   };
 
+  useEffect(() => {
+    if (validationError) {
+      toast.error("Validation Error", {
+        description: validationError,
+      });
+    }
+  }, [validationError]);
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setValidationError(null);
@@ -108,7 +117,11 @@ const RegisterForm = ({
           const fieldName = err.path[0] as string;
           errors[fieldName] = err.message;
         } else {
-          setValidationError(err.message);
+          const errorMsg = err.message;
+          setValidationError(errorMsg);
+          toast.error("Validation Error", {
+            description: errorMsg,
+          });
         }
       });
       setFieldErrors(errors);
@@ -116,7 +129,11 @@ const RegisterForm = ({
         Object.keys(errors).length === 0 &&
         validationResult.error.errors[0]
       ) {
-        setValidationError(validationResult.error.errors[0].message);
+        const errorMsg = validationResult.error.errors[0].message;
+        setValidationError(errorMsg);
+        toast.error("Validation Error", {
+          description: errorMsg,
+        });
       }
       return;
     }
@@ -357,12 +374,6 @@ const RegisterForm = ({
           </p>
         )}
 
-        {validationError && (
-          <div className="flex items-center p-3 text-sm text-red-700 dark:text-red-400 bg-red-100 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg">
-            <AlertCircle className="w-5 h-5 mr-2 shrink-0" />
-            <span>{validationError}</span>
-          </div>
-        )}
 
         <button
           type="submit"
