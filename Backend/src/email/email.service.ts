@@ -19,8 +19,11 @@ export class EmailService {
   ) {}
 
   async sendUserConfirmation(user: User, token: string) {
-    const backendUrl = this.configService.get<string>('BACKEND_URL') || 'http://localhost:8000';
+    let backendUrl = this.configService.get<string>('BACKEND_URL') || 'https://be-reluv-app.vercel.app';
+    backendUrl = backendUrl.replace(/\/$/, '');
     const url = `${backendUrl}/api/v1/auth/confirm?token=${token}`;
+
+    console.log('Sending confirmation email with URL:', url);
 
     await this.mailerService.sendMail({
       to: user.email,
@@ -34,7 +37,7 @@ export class EmailService {
   }
 
   async sendPasswordReset(user: User, token: string) {
-    const frontendUrl = this.configService.get<string>('FRONTEND_URL') || 'http://localhost:3099';
+    const frontendUrl = this.configService.get<string>('FRONTEND_URL') || 'https://fe-reluv-app.vercel.app';
     const url = `${frontendUrl}/auth/reset?token=${token}`;
 
     await this.mailerService.sendMail({
@@ -49,7 +52,7 @@ export class EmailService {
   }
 
   async sendOrderStatusUpdate(user: User, order: OrderWithDetails) {
-    const frontendUrl = this.configService.get<string>('FRONTEND_URL') || 'http://localhost:3099';
+    const frontendUrl = this.configService.get<string>('FRONTEND_URL') || 'https://fe-reluv-app.vercel.app';
     const orderUrl = `${frontendUrl}/orders/${order.id}`;
 
     const formattedItems = order.items.map((item) => ({

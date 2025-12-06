@@ -43,9 +43,15 @@ export class AuthController {
     @Query(new ValidationPipe()) query: ConfirmDto,
     @Res() res: Response,
   ) {
-    const frontendUrl =
+    let frontendUrl =
       this.configService.get<string>('FRONTEND_URL') ||
       'https://fe-reluv-app.vercel.app';
+    
+    frontendUrl = frontendUrl.replace(/\/$/, '');
+    
+    console.log('FRONTEND_URL from config:', this.configService.get<string>('FRONTEND_URL'));
+    console.log('Using frontendUrl:', frontendUrl);
+    
     try {
       await this.authService.confirm(query.token);
       return res.redirect(`${frontendUrl}/auth/login?verified=true`);

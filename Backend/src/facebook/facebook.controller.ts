@@ -28,8 +28,7 @@ export class FacebookController {
   ) {
     const { token } = this.facebookService.login(req.user);
     const frontendUrl =
-      this.configService.get<string>('FRONTEND_URL') || 'http://localhost:3099';
-      // this.configService.get<string>('FRONTEND_URL') || 'http://localhost:3099';
+      this.configService.get<string>('FRONTEND_URL') || 'https://fe-reluv-app.vercel.app';
 
     res.redirect(`${frontendUrl}/auth/callback?token=${token}`);
   }
