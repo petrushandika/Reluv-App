@@ -4,6 +4,7 @@ import { Module } from '@nestjs/common';
 import { EmailService } from './email.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { join } from 'path';
+import { existsSync } from 'fs';
 
 @Module({
   imports: [
@@ -25,7 +26,18 @@ import { join } from 'path';
           from: configService.get<string>('MAIL_FROM'),
         },
         template: {
-          dir: join(__dirname, '..', '..', 'templates'),
+          dir: (() => {
+            if (process.env.NODE_ENV === 'production') {
+              const distPath = join(process.cwd(), 'dist', 'templates');
+              const srcPath = join(process.cwd(), 'src', 'templates');
+              const relativePath = join(__dirname, '..', 'templates');
+              
+              if (existsSync(distPath)) return distPath;
+              if (existsSync(srcPath)) return srcPath;
+              return relativePath;
+            }
+            return join(__dirname, '..', 'templates');
+          })(),
           adapter: new HandlebarsAdapter(),
           options: {
             strict: true,

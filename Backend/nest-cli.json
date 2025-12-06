@@ -10,7 +10,8 @@
       {
         "include": "templates/**/*",
         "outDir": "dist",
-        "watch": true
+        "watch": true,
+        "exclude": ["**/*.ts"]
       }
     ]
   }

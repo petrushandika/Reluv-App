@@ -1,5 +1,6 @@
 import { MailerService } from '@nestjs-modules/mailer';
 import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { User, Order, OrderItem, Variant, Product } from '@prisma/client';
 
 type OrderWithDetails = Order & {
@@ -12,10 +13,14 @@ type OrderWithDetails = Order & {
 
 @Injectable()
 export class EmailService {
-  constructor(private mailerService: MailerService) {}
+  constructor(
+    private mailerService: MailerService,
+    private configService: ConfigService,
+  ) {}
 
   async sendUserConfirmation(user: User, token: string) {
-    const url = `http://localhost:8000/api/v1/auth/confirm?token=${token}`;
+    const backendUrl = this.configService.get<string>('BACKEND_URL') || 'http://localhost:8000';
+    const url = `${backendUrl}/api/v1/auth/confirm?token=${token}`;
 
     await this.mailerService.sendMail({
       to: user.email,
@@ -29,8 +34,8 @@ export class EmailService {
   }
 
   async sendPasswordReset(user: User, token: string) {
-    const url = `http://localhost:3099/auth/reset?token=${token}`;
-    // const url = `http://localhost:3099/auth/reset?token=${token}`;
+    const frontendUrl = this.configService.get<string>('FRONTEND_URL') || 'http://localhost:3099';
+    const url = `${frontendUrl}/auth/reset?token=${token}`;
 
     await this.mailerService.sendMail({
       to: user.email,
@@ -44,8 +49,8 @@ export class EmailService {
   }
 
   async sendOrderStatusUpdate(user: User, order: OrderWithDetails) {
-    const orderUrl = `http://localhost:3099/orders/${order.id}`;
-    // const orderUrl = `http://localhost:3099/orders/${order.id}`;
+    const frontendUrl = this.configService.get<string>('FRONTEND_URL') || 'http://localhost:3099';
+    const orderUrl = `${frontendUrl}/orders/${order.id}`;
 
     const formattedItems = order.items.map((item) => ({
       productName: item.variant.product.name,
