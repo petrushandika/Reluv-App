@@ -187,6 +187,36 @@
           }
         },
         {
+          "name": "Resend Verification Email",
+          "request": {
+            "description": "Resend email verification link to user's email address",
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"user@example.com\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BACKEND}}/api/v1/auth/verification",
+              "host": ["{{BACKEND}}"],
+              "path": ["api", "v1", "auth", "verification"]
+            }
+          }
+        },
+        {
           "name": "Google OAuth",
           "request": {
             "auth": {
@@ -1133,17 +1163,51 @@
           }
         },
         {
-          "name": "Get Product By ID",
+          "name": "Get Product By Slug",
           "request": {
+            "description": "Get product details by slug (URL-friendly identifier)",
             "auth": {
               "type": "noauth"
             },
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{BACKEND}}/api/v1/products/1",
+              "raw": "{{BACKEND}}/api/v1/products/vintage-t-shirt-12345",
               "host": ["{{BACKEND}}"],
-              "path": ["api", "v1", "products", "1"]
+              "path": ["api", "v1", "products", "vintage-t-shirt-12345"]
+            }
+          }
+        },
+        {
+          "name": "Get My Products",
+          "request": {
+            "description": "Get all products created by the authenticated user",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BACKEND}}/api/v1/products/me?page=1&limit=10",
+              "host": ["{{BACKEND}}"],
+              "path": ["api", "v1", "products", "me"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
             }
           }
         },
@@ -1596,6 +1660,52 @@
               "raw": "{{BACKEND}}/api/v1/orders/1",
               "host": ["{{BACKEND}}"],
               "path": ["api", "v1", "orders", "1"]
+            }
+          }
+        },
+        {
+          "name": "Get Seller Orders",
+          "request": {
+            "description": "Get all orders for products sold by the authenticated seller",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BACKEND}}/api/v1/orders/seller/all",
+              "host": ["{{BACKEND}}"],
+              "path": ["api", "v1", "orders", "seller", "all"]
+            }
+          }
+        },
+        {
+          "name": "Get Seller Order By ID",
+          "request": {
+            "description": "Get specific order details for seller",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BACKEND}}/api/v1/orders/seller/1",
+              "host": ["{{BACKEND}}"],
+              "path": ["api", "v1", "orders", "seller", "1"]
             }
           }
         }

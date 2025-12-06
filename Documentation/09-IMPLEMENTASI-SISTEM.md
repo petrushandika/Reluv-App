@@ -147,6 +147,34 @@ Backend menggunakan arsitektur modular dengan NestJS, di mana setiap fitur diorg
 - Product reviews
 - Rating system
 - Review moderation
+
+**Vouchers Module:**
+
+- Voucher creation and management
+- Voucher application
+- Store-specific vouchers
+- Usage tracking
+
+**Discounts Module:**
+
+- Multi-scope discounts (Global, Category, Product, Store)
+- Discount calculation
+- Automatic discount application
+- Discount management
+
+**Promotions Module:**
+
+- Flash sales
+- BOGO (Buy One Get One)
+- Bundle promotions
+- Seasonal promotions
+- Custom promotion types
+
+**Badges Module:**
+
+- Store badges (Verified, Premium, Featured, etc.)
+- Badge management
+- Badge display on store profiles
 - Verified purchase badge
 
 **Vouchers Module:**

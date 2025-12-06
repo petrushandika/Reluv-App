@@ -161,6 +161,21 @@ Sistem promosi yang terintegrasi:
    - Category discount
    - Store discount
    - Global discount
+   - Multi-scope discount system
+   - Automatic discount application
+
+3. **Promotions**
+   - Flash sales
+   - BOGO (Buy One Get One)
+   - Bundle promotions
+   - Seasonal promotions
+   - Custom promotion types
+
+4. **Badges**
+   - Store badges (Verified, Premium, Featured, Trending, Best Seller, New Store)
+   - Badge management
+   - Badge display on store profiles
+   - Custom badges
 
 ### 4.1.9 Manajemen Toko (Store Management)
 
@@ -181,10 +196,12 @@ Tools untuk penjual dalam mengelola toko mereka:
    - Revenue reports
 
 3. **Order Management**
-   - View orders
+   - View orders (buyer and seller views)
    - Update order status
    - Process orders
    - Cancel orders
+   - Seller order dashboard
+   - Order tracking for sellers
 
 ### 4.1.10 Sistem Notifikasi
 

@@ -77,6 +77,49 @@ Content-Type: application/json
 }
 ```
 
+#### Resend Verification Email
+
+```http
+POST /auth/verification
+Content-Type: application/json
+
+{
+  "email": "john@example.com"
+}
+```
+
+#### Google OAuth
+
+```http
+GET /auth/google
+```
+
+Redirects to Google OAuth consent screen.
+
+#### Google OAuth Callback
+
+```http
+GET /auth/google/callback?code=<oauth-code>
+```
+
+Handled automatically by OAuth flow.
+
+#### Facebook OAuth
+
+```http
+GET /auth/facebook
+```
+
+Redirects to Facebook OAuth consent screen.
+
+#### Facebook OAuth Callback
+
+```http
+GET /auth/facebook/callback?code=<oauth-code>
+```
+
+Handled automatically by OAuth flow.
+
 ### Users
 
 #### Get My Profile
@@ -135,11 +178,22 @@ GET /products?page=1&limit=10&search=shirt&categoryId=1&minPrice=100000&maxPrice
 - `sortBy` (string): Sort field (createdAt, price, name)
 - `sortOrder` (string): 'asc' or 'desc'
 
-#### Get Product by ID
+#### Get Product by Slug
 
 ```http
-GET /products/:id
+GET /products/:slug
 ```
+
+Returns product details by slug (URL-friendly identifier).
+
+#### Get My Products
+
+```http
+GET /products/me?page=1&limit=10
+Authorization: Bearer <token>
+```
+
+Get all products created by the authenticated user.
 
 #### Create Product
 
@@ -359,6 +413,24 @@ Authorization: Bearer <token>
 GET /orders/:id
 Authorization: Bearer <token>
 ```
+
+#### Get Seller Orders
+
+```http
+GET /orders/seller/all
+Authorization: Bearer <token>
+```
+
+Get all orders for products sold by the authenticated seller.
+
+#### Get Seller Order by ID
+
+```http
+GET /orders/seller/:id
+Authorization: Bearer <token>
+```
+
+Get specific order details for seller.
 
 ### Reviews
 
@@ -859,6 +931,57 @@ Content-Type: application/json
   ]
 }
 ```
+
+#### Check Rates by Coordinates
+
+```http
+POST /shipping-rates/check-by-coords
+Content-Type: application/json
+
+{
+  "origin_latitude": -6.2088,
+  "origin_longitude": 106.8456,
+  "destination_latitude": -6.2297,
+  "destination_longitude": 106.8203,
+  "items": [
+    {
+      "name": "T-Shirt",
+      "value": 150000,
+      "length": 20,
+      "width": 15,
+      "height": 5,
+      "weight": 200,
+      "quantity": 1
+    }
+  ]
+}
+```
+
+### Maps & Geocoding
+
+#### Search Areas (Biteship)
+
+```http
+GET /maps/search-areas?input=Jakarta
+```
+
+Search for areas using Biteship API. Returns area suggestions with area IDs.
+
+#### Search OpenStreetMap
+
+```http
+GET /maps/search-osm?q=Jakarta Selatan
+```
+
+Search for locations using OpenStreetMap Nominatim API.
+
+#### Reverse Geocoding
+
+```http
+GET /geocode/reverse?lat=-6.2088&lon=106.8456
+```
+
+Convert coordinates (latitude, longitude) to address information.
 
 ## 📤 Response Format
 

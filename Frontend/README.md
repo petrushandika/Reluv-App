@@ -117,9 +117,11 @@ Frontend/
 │   │   │   ├── register/
 │   │   │   ├── forgot/
 │   │   │   ├── reset/
-│   │   │   └── confirm/
+│   │   │   ├── confirm/
+│   │   │   ├── verification/
+│   │   │   └── callback/
 │   │   ├── product/            # Product detail pages
-│   │   │   └── [id]/
+│   │   │   └── [slug]/
 │   │   ├── women/              # Women category pages
 │   │   ├── men/                # Men category pages
 │   │   ├── kids/               # Kids category pages
@@ -131,8 +133,22 @@ Frontend/
 │   │   ├── profile/            # User profile pages
 │   │   │   ├── me/
 │   │   │   ├── orders/
-│   │   │   └── address/
+│   │   │   │   └── seller/      # Seller orders page
+│   │   │   ├── address/
+│   │   │   │   ├── add/
+│   │   │   │   └── edit/
+│   │   │   └── products/        # User's products
+│   │   │       └── edit/
 │   │   ├── dashboard/          # Admin dashboard
+│   │   │   ├── orders/
+│   │   │   ├── products/
+│   │   │   ├── reviews/
+│   │   │   ├── users/
+│   │   │   ├── wishlists/
+│   │   │   └── settings/
+│   │   ├── main/               # Main pages
+│   │   │   ├── cart/
+│   │   │   └── wishlist/
 │   │   ├── layout.tsx          # Root layout
 │   │   ├── page.tsx            # Home page
 │   │   └── globals.css         # Global styles
@@ -149,7 +165,10 @@ Frontend/
 │   │   ├── reviews/            # Reviews feature
 │   │   ├── sell/               # Sell product feature
 │   │   ├── categories/         # Categories feature
-│   │   └── user/               # User feature
+│   │   ├── user/               # User feature
+│   │   ├── address/            # Address management
+│   │   ├── checkout/           # Checkout feature
+│   │   └── orders/             # Orders feature
 │   ├── shared/                 # Shared utilities
 │   │   ├── components/          # Reusable components
 │   │   │   ├── atoms/          # Basic components
@@ -198,8 +217,9 @@ Atoms → Molecules → Organisms → Templates → Pages
 - User registration dengan email verification
 - Login dengan email/password
 - Social login (Google, Facebook)
-- Password reset
-- Protected routes
+- Email verification & resend verification
+- Password reset & forgot password
+- Protected routes dengan route guards
 
 ### Product Management
 - Product listing dengan filters

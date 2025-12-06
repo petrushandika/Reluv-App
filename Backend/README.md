@@ -237,19 +237,23 @@ http://localhost:8000/api/v1
 - `GET /auth/confirm` - Confirm email
 - `POST /auth/forgot` - Request password reset
 - `POST /auth/reset` - Reset password
+- `POST /auth/verification` - Resend verification email
 - `GET /auth/google` - Google OAuth
+- `GET /auth/google/callback` - Google OAuth callback
 - `GET /auth/facebook` - Facebook OAuth
+- `GET /auth/facebook/callback` - Facebook OAuth callback
 
 #### Products
 
 - `GET /products` - Get all products (with filters)
-- `GET /products/:id` - Get product by ID
+- `GET /products/:slug` - Get product by slug
+- `GET /products/me` - Get my products (Auth required)
 - `POST /products` - Create product (Auth required)
 - `PATCH /products/:id` - Update product (Auth required)
 - `DELETE /products/:id` - Delete product (Auth required)
-- `POST /products/:productId/variants` - Add variant
-- `PATCH /products/:productId/variants/:variantId` - Update variant
-- `DELETE /products/:productId/variants/:variantId` - Delete variant
+- `POST /products/:productId/variants` - Add variant (Auth required)
+- `PATCH /products/:productId/variants/:variantId` - Update variant (Auth required)
+- `DELETE /products/:productId/variants/:variantId` - Delete variant (Auth required)
 
 #### Categories
 
@@ -271,6 +275,8 @@ http://localhost:8000/api/v1
 - `POST /orders` - Create order (Auth required)
 - `GET /orders` - Get user orders (Auth required)
 - `GET /orders/:id` - Get order by ID (Auth required)
+- `GET /orders/seller/all` - Get all seller orders (Auth required)
+- `GET /orders/seller/:id` - Get seller order by ID (Auth required)
 
 #### Reviews
 
@@ -292,12 +298,13 @@ http://localhost:8000/api/v1
 
 #### Store
 
-- `GET /store` - Get all stores (public)
+- `GET /store` - Get all stores (public, with pagination and search)
 - `GET /store/:slug` - Get store by slug (public)
 - `POST /store` - Create store (Auth required)
 - `GET /store/me/my-store` - Get my store (Auth required)
 - `PATCH /store/me/my-store` - Update my store (Auth required)
 - `PATCH /store/me/my-store/profile` - Update store profile (Auth required)
+- `POST /store/admin/create-for-user` - Create store for user (Auth required, Admin only)
 
 #### Locations
 
@@ -309,11 +316,11 @@ http://localhost:8000/api/v1
 
 #### Vouchers
 
-- `GET /vouchers` - Get active vouchers (public)
+- `GET /vouchers` - Get active vouchers (public, optional storeId query)
 - `POST /vouchers/apply` - Apply voucher (Auth required)
-- `POST /vouchers/admin` - Create voucher (Admin)
-- `PATCH /vouchers/admin/:id` - Update voucher (Admin)
-- `DELETE /vouchers/admin/:id` - Delete voucher (Admin)
+- `POST /vouchers` - Create voucher (Auth required, Store Owner)
+- `PATCH /vouchers/:id` - Update voucher (Auth required, Store Owner)
+- `DELETE /vouchers/:id` - Delete voucher (Auth required, Store Owner)
 
 #### Upload
 
@@ -321,14 +328,14 @@ http://localhost:8000/api/v1
 
 #### Shipping Rates
 
-- `POST /shipping-rates/check-by-area` - Check rates by area
-- `POST /shipping-rates/check-by-coords` - Check rates by coordinates
+- `POST /shipping-rates/check-by-area` - Check rates by area (Biteship area ID)
+- `POST /shipping-rates/check-by-coords` - Check rates by coordinates (lat/lon)
 
 #### Maps & Geocoding
 
-- `GET /maps/search-areas` - Search areas (Biteship)
-- `GET /maps/search-osm` - Search OpenStreetMap
-- `GET /geocode/reverse` - Reverse geocoding
+- `GET /maps/search-areas` - Search areas (Biteship, query: input)
+- `GET /maps/search-osm` - Search OpenStreetMap (query: q)
+- `GET /geocode/reverse` - Reverse geocoding (query: lat, lon)
 
 #### Notifications
 
@@ -336,7 +343,31 @@ http://localhost:8000/api/v1
 - `PATCH /notifications/:id/read` - Mark as read (Auth required)
 - `POST /notifications/read-all` - Mark all as read (Auth required)
 
-Untuk dokumentasi lengkap dengan contoh request/response, lihat file `RELUV-API.postman_collection.json` atau gunakan Postman untuk import collection.
+#### Discounts
+
+- `GET /discounts` - Get all discounts (public, with filters)
+- `GET /discounts/:id` - Get discount by ID (public)
+- `POST /discounts` - Create discount (Auth required, Store Owner/Admin)
+- `PATCH /discounts/:id` - Update discount (Auth required, Store Owner/Admin)
+- `DELETE /discounts/:id` - Delete discount (Auth required, Store Owner/Admin)
+
+#### Promotions
+
+- `GET /promotions` - Get all promotions (public, with filters)
+- `GET /promotions/:id` - Get promotion by ID (public)
+- `POST /promotions` - Create promotion (Auth required, Store Owner)
+- `PATCH /promotions/:id` - Update promotion (Auth required, Store Owner)
+- `DELETE /promotions/:id` - Delete promotion (Auth required, Store Owner)
+
+#### Badges
+
+- `GET /badges` - Get all badges (public, with filters)
+- `GET /badges/:id` - Get badge by ID (public)
+- `POST /badges` - Create badge (Auth required, Store Owner)
+- `PATCH /badges/:id` - Update badge (Auth required, Store Owner)
+- `DELETE /badges/:id` - Delete badge (Auth required, Store Owner)
+
+Untuk dokumentasi lengkap dengan contoh request/response, lihat file `docs/RELUV-API.postman_collection.json` atau gunakan Postman untuk import collection.
 
 ## 🔐 Authentication
 

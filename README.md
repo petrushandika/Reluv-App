@@ -45,13 +45,12 @@ npm run dev
 ```
 
 Frontend akan berjalan di `http://localhost:3099`
-# Frontend akan berjalan di `http://localhost:3099`
 
 ## 📚 Documentation
 
 - [Backend Documentation](./Backend/README.md) - Complete backend API documentation
 - [Frontend Documentation](./Frontend/README.md) - Complete frontend documentation
-- [API Collection](./RELUV-API.postman_collection.json) - Postman collection untuk testing API
+- [API Collection](./Backend/docs/RELUV-API.postman_collection.json) - Postman collection untuk testing API
 
 ## 🛠 Tech Stack
 
@@ -87,11 +86,16 @@ Frontend akan berjalan di `http://localhost:3099`
 - ✅ Shipping Integration (Biteship)
 - ✅ Product Reviews & Ratings
 - ✅ Voucher System
+- ✅ Discount System (Global, Category, Product, Store scopes)
+- ✅ Promotion System (Flash Sale, BOGO, Bundle, etc.)
+- ✅ Badge System (Verified, Premium, Featured, etc.)
 - ✅ Address Management
 - ✅ Store Management
 - ✅ Image Upload (Cloudinary)
 - ✅ Email Notifications
 - ✅ Real-time Notifications
+- ✅ Maps Integration (Biteship, OpenStreetMap)
+- ✅ Geocoding Services
 
 ### User Features
 - Browse products by category
@@ -140,6 +144,9 @@ Reluv-App/
 │   │   ├── maps/              # Maps integration
 │   │   ├── geocode/           # Geocoding
 │   │   ├── shipping-rates/   # Shipping rates
+│   │   ├── discounts/        # Discount management
+│   │   ├── promotions/       # Promotion management
+│   │   ├── badges/           # Badge management
 │   │   └── common/            # Shared utilities
 │   └── prisma/                # Database schema & migrations
 │
