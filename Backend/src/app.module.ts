@@ -89,7 +89,8 @@ export class AppModule implements NestModule {
         { path: 'categories', method: RequestMethod.GET },
         { path: 'categories/:id', method: RequestMethod.GET },
         { path: 'products/:productId/reviews', method: RequestMethod.GET },
-        { path: 'shipping-rates/check', method: RequestMethod.POST },
+        { path: 'shipping-rates/check-by-area', method: RequestMethod.POST },
+        { path: 'shipping-rates/check-by-coords', method: RequestMethod.POST },
         { path: 'geocode/reverse', method: RequestMethod.GET },
         { path: 'maps/search-areas', method: RequestMethod.GET },
 

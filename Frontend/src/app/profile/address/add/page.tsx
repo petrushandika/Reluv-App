@@ -629,7 +629,7 @@ const AddAddressPage = () => {
 
   return (
     <PrivateRoute>
-      <div className="min-h-screen bg-white dark:bg-gray-900 pb-24 lg:pb-0">
+      <div className="min-h-screen bg-white dark:bg-gray-900 pb-24 lg:pb-0 overflow-y-auto">
         <div className="container mx-auto px-4 sm:px-6 md:px-10 xl:px-20 2xl:px-40 py-10 sm:py-12 md:py-14">
           <div className="flex flex-col lg:flex-row lg:gap-8">
             <div className="lg:hidden">

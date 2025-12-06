@@ -573,20 +573,22 @@ const Checkout = () => {
         const product = item.variant.product;
         const variant = item.variant;
         
-        const weight = "weight" in variant ? variant.weight : 500;
-        const length = "length" in variant ? variant.length : 20;
-        const width = "width" in variant ? variant.width : 15;
-        const height = "height" in variant ? variant.height : 10;
-        const productDescription = "description" in product ? product.description : product.name;
+        const weight = "weight" in variant && typeof variant.weight === 'number' ? variant.weight : 500;
+        const length = "length" in variant && typeof variant.length === 'number' ? variant.length : 20;
+        const width = "width" in variant && typeof variant.width === 'number' ? variant.width : 15;
+        const height = "height" in variant && typeof variant.height === 'number' ? variant.height : 10;
+        const productDescription = "description" in product && typeof product.description === 'string' 
+          ? product.description 
+          : product.name;
 
         return {
           name: product.name,
           description: productDescription || product.name,
-          value: item.variant.price,
-          length,
-          width,
-          height,
-          weight,
+          value: Math.round(item.variant.price),
+          length: Math.round(length),
+          width: Math.round(width),
+          height: Math.round(height),
+          weight: Math.round(weight),
           quantity: item.quantity,
         };
       });
@@ -600,12 +602,24 @@ const Checkout = () => {
         items,
       });
 
-      setShippingRates(rates);
+      if (rates && rates.length > 0) {
+        setShippingRates(rates);
+      } else {
+        toast.warning("No Shipping Rates Available", {
+          description: "No shipping options found for this destination. You can still proceed with manual shipping selection.",
+        });
+        setShippingRates([]);
+      }
     } catch (error) {
       console.error("Failed to load shipping rates:", error);
-      toast.error("Failed to Load Shipping Rates", {
-        description: "Please try again or select a different address.",
+      const errorMessage = error instanceof Error 
+        ? error.message 
+        : "Failed to load shipping rates. You can still proceed with manual shipping selection.";
+      
+      toast.warning("Shipping Rates Unavailable", {
+        description: errorMessage,
       });
+      setShippingRates([]);
     } finally {
       setIsLoadingShippingRates(false);
     }
@@ -1808,49 +1822,97 @@ const Checkout = () => {
                                 rate.courier?.code?.toLowerCase() ===
                                 selectedCourier.toLowerCase()
                             )
-                            .map((rate) => (
-                              <label
-                                key={`${rate.courier.code}-${rate.courier_service_code}`}
-                                htmlFor={`${rate.courier.code}-${rate.courier_service_code}`}
-                                className={`flex items-center p-4 border rounded-lg cursor-pointer transition-all bg-white dark:bg-gray-800 ${
-                                  selectedService?.id ===
-                                  `${rate.courier.code}-${rate.courier_service_code}`
-                                    ? "border-sky-500 dark:border-sky-400 ring-2 ring-sky-500 dark:ring-sky-400"
-                                    : "border-gray-300 dark:border-gray-600"
-                                }`}
-                              >
-                                <input
-                                  type="radio"
-                                  name="shippingService"
-                                  id={`${rate.courier.code}-${rate.courier_service_code}`}
-                                  checked={
+                            .map((rate) => {
+                              if (!rate.courier || !rate.courier.code) {
+                                return null;
+                              }
+                              return (
+                                <label
+                                  key={`${rate.courier.code}-${rate.courier_service_code}`}
+                                  htmlFor={`${rate.courier.code}-${rate.courier_service_code}`}
+                                  className={`flex items-center p-4 border rounded-lg cursor-pointer transition-all bg-white dark:bg-gray-800 ${
                                     selectedService?.id ===
                                     `${rate.courier.code}-${rate.courier_service_code}`
-                                  }
-                                  onChange={() => handleServiceChange(rate)}
-                                  className="h-4 w-4 accent-sky-600 dark:accent-sky-400 text-sky-600 dark:text-sky-400 focus:ring-sky-500 dark:focus:ring-sky-400 border-gray-300 dark:border-gray-600 cursor-pointer"
-                                />
-                                <div className="ml-4 flex-grow grid grid-cols-2 sm:grid-cols-3 items-center">
-                                  <div className="col-span-2 sm:col-span-1">
-                                    <span className="font-semibold text-sm text-black dark:text-white">
-                                      {rate.courier_service_name}
-                                    </span>
-                                    <span className="block text-xs text-gray-500 dark:text-gray-400">
-                                      {rate.duration || rate.description || "2-3 Days"}
+                                      ? "border-sky-500 dark:border-sky-400 ring-2 ring-sky-500 dark:ring-sky-400"
+                                      : "border-gray-300 dark:border-gray-600"
+                                  }`}
+                                >
+                                  <input
+                                    type="radio"
+                                    name="shippingService"
+                                    id={`${rate.courier.code}-${rate.courier_service_code}`}
+                                    checked={
+                                      selectedService?.id ===
+                                      `${rate.courier.code}-${rate.courier_service_code}`
+                                    }
+                                    onChange={() => handleServiceChange(rate)}
+                                    className="h-4 w-4 accent-sky-600 dark:accent-sky-400 text-sky-600 dark:text-sky-400 focus:ring-sky-500 dark:focus:ring-sky-400 border-gray-300 dark:border-gray-600 cursor-pointer"
+                                  />
+                                  <div className="ml-4 flex-grow grid grid-cols-2 sm:grid-cols-3 items-center">
+                                    <div className="col-span-2 sm:col-span-1">
+                                      <span className="font-semibold text-sm text-black dark:text-white">
+                                        {rate.courier_service_name}
+                                      </span>
+                                      <span className="block text-xs text-gray-500 dark:text-gray-400">
+                                        {rate.duration || rate.description || "2-3 Days"}
+                                      </span>
+                                    </div>
+                                    <span className="text-sm font-semibold text-black dark:text-white sm:text-right">
+                                      {formatPrice(rate.price)}
                                     </span>
                                   </div>
-                                  <span className="text-sm font-semibold text-black dark:text-white sm:text-right">
-                                    {formatPrice(rate.price)}
-                                  </span>
-                                </div>
-                              </label>
-                            ))}
+                                </label>
+                              );
+                            })
+                            .filter(Boolean)}
                         </div>
                       ) : (
-                        <div className="p-4 text-center text-gray-500 dark:text-gray-400">
-                          <p className="text-sm">
-                            No shipping rates available. Please check your address or try again.
-                          </p>
+                        <div className="space-y-3">
+                          <div className="p-4 text-center text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-gray-700 rounded-lg">
+                            <p className="text-sm mb-2">
+                              Shipping rates are currently unavailable.
+                            </p>
+                            <p className="text-xs text-gray-400 dark:text-gray-500">
+                              You can still proceed with checkout. Shipping cost will be calculated manually.
+                            </p>
+                          </div>
+                          {shippingData[selectedCourier as keyof typeof shippingData] && (
+                            <div className="space-y-3">
+                              {shippingData[selectedCourier as keyof typeof shippingData].services.map((service) => (
+                                <label
+                                  key={service.id}
+                                  htmlFor={service.id}
+                                  className={`flex items-center p-4 border rounded-lg cursor-pointer transition-all bg-white dark:bg-gray-800 ${
+                                    selectedService?.id === service.id
+                                      ? "border-sky-500 dark:border-sky-400 ring-2 ring-sky-500 dark:ring-sky-400"
+                                      : "border-gray-300 dark:border-gray-600"
+                                  }`}
+                                >
+                                  <input
+                                    type="radio"
+                                    name="shippingService"
+                                    id={service.id}
+                                    checked={selectedService?.id === service.id}
+                                    onChange={() => handleServiceChange(service)}
+                                    className="h-4 w-4 accent-sky-600 dark:accent-sky-400 text-sky-600 dark:text-sky-400 focus:ring-sky-500 dark:focus:ring-sky-400 border-gray-300 dark:border-gray-600 cursor-pointer"
+                                  />
+                                  <div className="ml-4 flex-grow grid grid-cols-2 sm:grid-cols-3 items-center">
+                                    <div className="col-span-2 sm:col-span-1">
+                                      <span className="font-semibold text-sm text-black dark:text-white">
+                                        {service.name}
+                                      </span>
+                                      <span className="block text-xs text-gray-500 dark:text-gray-400">
+                                        {service.estimation}
+                                      </span>
+                                    </div>
+                                    <span className="text-sm font-semibold text-black dark:text-white sm:text-right">
+                                      {formatPrice(service.price)}
+                                    </span>
+                                  </div>
+                                </label>
+                              ))}
+                            </div>
+                          )}
                         </div>
                       )}
                     </div>

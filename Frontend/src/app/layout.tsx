@@ -26,7 +26,7 @@ export default function RootLayout({
   const isDashboardPage = pathname.startsWith('/dashboard');
 
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning style={{ overflowY: 'auto', height: 'auto', minHeight: '100vh' }}>
       <head>
         <script
           dangerouslySetInnerHTML={{
@@ -66,6 +66,9 @@ export default function RootLayout({
         style={{
           backgroundColor: 'var(--bg-primary)',
           color: 'var(--text-primary)',
+          overflowY: 'auto',
+          height: 'auto',
+          minHeight: '100vh',
         }}
         suppressHydrationWarning
       >
@@ -95,6 +98,7 @@ export default function RootLayout({
                 className={`flex-1 ${
                   isAuthPage || isDashboardPage ? '' : 'pt-20 md:pt-24 lg:pt-36'
                 }`}
+                style={{ overflowY: 'auto' }}
               >
                 {children}
               </main>

@@ -453,7 +453,7 @@ const EditProductPageContent = () => {
 
   return (
     <PrivateRoute>
-      <div className="min-h-screen bg-white dark:bg-gray-900 w-full flex items-center justify-center p-3 sm:p-4">
+      <div className="min-h-screen bg-white dark:bg-gray-900 w-full flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
         <div className="container mx-auto px-4 sm:px-6 md:px-10 xl:px-20 2xl:px-40 py-4 sm:py-5">
           <div className="mb-4 sm:mb-6">
             <button

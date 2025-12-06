@@ -252,9 +252,9 @@ const ProfilePage = () => {
 
   return (
     <PrivateRoute>
-      <div className="min-h-screen bg-white dark:bg-gray-900">
+      <div className="min-h-screen bg-white dark:bg-gray-900 overflow-y-auto">
         {isEditPersonalInfoOpen ? (
-          <div className="lg:hidden min-h-screen bg-white dark:bg-gray-900">
+          <div className="lg:hidden min-h-screen bg-white dark:bg-gray-900 overflow-y-auto">
             <div className="container mx-auto px-4 sm:px-6 md:px-10 xl:px-20 2xl:px-40 py-10 sm:py-12 md:py-14">
               <div className="mb-4">
                 <button
