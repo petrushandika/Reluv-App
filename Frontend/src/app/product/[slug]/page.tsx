@@ -247,6 +247,7 @@ const ProductDetail = () => {
       variantSize: selectedVariant.size || undefined,
       variantColor: selectedVariant.color || undefined,
       quantity: quantity,
+      storeId: product.storeId || null,
     };
 
     setBuyItem(buyItemData);
@@ -440,42 +441,116 @@ const ProductDetail = () => {
                   {product.name}
                 </h2>
               </div>
-              <div className="space-y-2">
-                <div className="flex items-baseline flex-wrap gap-2 sm:gap-3">
-                  {selectedVariant.compareAtPrice ? (
-                    <>
-                      <span className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white glossy-text-title">
+              <div className="space-y-3 sm:space-y-4">
+                <div className="flex items-center justify-between gap-3">
+                  <div className="flex items-baseline gap-2 sm:gap-3">
+                    {selectedVariant.compareAtPrice ? (
+                      <>
+                        <span className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
+                          {formatPrice(selectedVariant.price)}
+                        </span>
+                        <span className="text-base sm:text-lg text-gray-400 dark:text-gray-500 line-through">
+                          {formatPrice(selectedVariant.compareAtPrice)}
+                        </span>
+                      </>
+                    ) : (
+                      <span className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
                         {formatPrice(selectedVariant.price)}
                       </span>
-                      <span className="text-base sm:text-lg text-gray-400 dark:text-gray-500 line-through">
-                        {formatPrice(selectedVariant.compareAtPrice)}
-                      </span>
-                    </>
-                  ) : (
-                    <span className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
-                      {formatPrice(selectedVariant.price)}
-                    </span>
-                  )}
-                </div>
-                <div className="flex items-center flex-wrap gap-2 text-xs sm:text-sm">
-                  <div className="w-3 h-3 sm:w-4 sm:h-4 bg-sky-600 dark:bg-sky-500 rounded-sm flex items-center justify-center shrink-0">
-                    <span className="text-[10px] sm:text-xs text-white font-bold">
-                      ✓
-                    </span>
+                    )}
                   </div>
-                  <span className="text-gray-700 dark:text-gray-300">
-                    <span className="font-medium">Installment</span> from
-                    {formatPrice(installmentPrice)}/month
-                  </span>
-                  <button 
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      handleWishlistToggle();
+                    }}
+                    disabled={isOwnProduct}
+                    className={`p-2 sm:p-2.5 rounded-full transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100 dark:hover:bg-gray-800 active:scale-95 ${
+                      isWishlisted
+                        ? "text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20"
+                        : "text-gray-400 dark:text-gray-500"
+                    }`}
+                    aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
+                  >
+                    <Heart
+                      className={`w-5 h-5 sm:w-6 sm:h-6 transition-all ${
+                        isWishlisted ? "fill-current scale-110" : ""
+                      }`}
+                    />
+                  </button>
+                </div>
+                
+                <div className="space-y-2">
+                  <button
+                    onClick={() => {
+                      const cashback = Math.floor(selectedVariant.price * 0.005);
+                      toast.info("Cashback", {
+                        description: `Earn ${formatPrice(cashback)} Points with this purchase.`,
+                      });
+                    }}
+                    className="w-full flex items-center justify-between p-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 active:bg-gray-100 dark:active:bg-gray-600 transition-colors cursor-pointer"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="w-9 h-9 bg-sky-600 dark:bg-sky-500 rounded-full flex items-center justify-center shrink-0">
+                        <span className="text-xs text-white font-bold">P</span>
+                      </div>
+                      <div className="text-left">
+                        <p className="text-sm text-gray-900 dark:text-white">
+                          Earn cashback{" "}
+                          <span className="text-sky-600 dark:text-sky-400 font-medium">
+                            {formatPrice(Math.floor(selectedVariant.price * 0.005))} Points
+                          </span>
+                        </p>
+                      </div>
+                    </div>
+                    <ChevronRight className="w-4 h-4 text-gray-400 dark:text-gray-500 shrink-0" />
+                  </button>
+
+                  <button
                     onClick={() => {
                       toast.info("Installment Details", {
                         description: `Pay ${formatPrice(installmentPrice)} per month for 12 months. Total: ${formatPrice(selectedVariant.price)}`,
                       });
                     }}
-                    className="text-sky-600 dark:text-sky-400 font-medium hover:underline cursor-pointer"
+                    className="w-full flex items-center justify-between p-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 active:bg-gray-100 dark:active:bg-gray-600 transition-colors cursor-pointer"
                   >
-                    See Detail
+                    <div className="flex items-center gap-3">
+                      <div className="w-9 h-9 bg-sky-600 dark:bg-sky-500 rounded-lg flex items-center justify-center shrink-0">
+                        <span className="text-xs text-white">💳</span>
+                      </div>
+                      <div className="text-left">
+                        <p className="text-sm text-gray-900 dark:text-white">
+                          Installment from{" "}
+                          <span className="text-gray-600 dark:text-gray-400">
+                            {formatPrice(installmentPrice)}/month
+                          </span>
+                        </p>
+                      </div>
+                    </div>
+                    <ChevronRight className="w-4 h-4 text-gray-400 dark:text-gray-500 shrink-0" />
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      toast.info("Add-on Options", {
+                        description: "Add gift box, wrapping paper, or other accessories during checkout.",
+                      });
+                    }}
+                    className="w-full flex items-center justify-between p-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 active:bg-gray-100 dark:active:bg-gray-600 transition-colors cursor-pointer"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="w-9 h-9 bg-sky-600 dark:bg-sky-500 rounded-lg flex items-center justify-center shrink-0">
+                        <Plus className="w-4 h-4 text-white" />
+                      </div>
+                      <div className="text-left">
+                        <p className="text-sm text-gray-900 dark:text-white">
+                          Add-on and Box Options
+                        </p>
+                      </div>
+                    </div>
+                    <ChevronRight className="w-4 h-4 text-gray-400 dark:text-gray-500 shrink-0" />
                   </button>
                 </div>
               </div>
@@ -489,11 +564,10 @@ const ProductDetail = () => {
                       Variant:
                     </span>
                     <span className="text-gray-600 dark:text-gray-300">
-                      {selectedVariant.size || ""} {selectedVariant.color || ""}{" "}
-                      -
+                      {selectedVariant.size || ""} {selectedVariant.color || ""}
                     </span>
                     <span className="text-red-600 dark:text-red-400 font-medium">
-                      {selectedVariant.stock > 0
+                      - {selectedVariant.stock > 0
                         ? `${selectedVariant.stock} left`
                         : "Out of Stock"}
                     </span>
@@ -503,10 +577,10 @@ const ProductDetail = () => {
                       <button
                         key={variant.id}
                         onClick={() => setSelectedVariantIndex(index)}
-                        className={`relative w-12 h-12 sm:w-16 sm:h-16 rounded-lg overflow-hidden transition-all duration-200 cursor-pointer ${
+                        className={`relative w-12 h-12 sm:w-16 sm:h-16 rounded-lg overflow-hidden transition-all duration-200 cursor-pointer hover:ring-2 hover:ring-sky-400 dark:hover:ring-sky-500 ${
                           index === selectedVariantIndex
-                            ? "ring-2 ring-sky-600 dark:ring-sky-400"
-                            : ""
+                            ? "ring-2 ring-sky-600 dark:ring-sky-400 shadow-md"
+                            : "ring-1 ring-gray-200 dark:ring-gray-700"
                         }`}
                       >
                         <div className="relative w-full h-full">
@@ -533,10 +607,10 @@ const ProductDetail = () => {
                   </div>
                 </div>
               </div>
-              <div className="flex items-center space-x-3 p-4 bg-gray-100 dark:bg-gray-800 rounded-lg">
-                <Smartphone className="w-5 h-5 text-sky-600 dark:text-sky-400" />
-                <div className="flex-1">
-                  <p className="text-sm text-gray-700 dark:text-gray-300">
+              <div className="flex items-center space-x-3 p-3 sm:p-4 bg-gray-100 dark:bg-gray-800 rounded-lg">
+                <Smartphone className="w-5 h-5 text-sky-600 dark:text-sky-400 shrink-0" />
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs sm:text-sm text-gray-700 dark:text-gray-300">
                     Try virtual try-on and see size on the app to see how the
                     product fits you.{" "}
                     <button 
@@ -559,7 +633,8 @@ const ProductDetail = () => {
                 <div className="flex items-center border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-800">
                   <button
                     onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-                    className="px-3 sm:px-4 py-2.5 sm:py-3 text-sky-600 dark:text-sky-400 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-l-lg transition-colors touch-manipulation cursor-pointer"
+                    disabled={quantity <= 1}
+                    className="px-3 sm:px-4 py-2.5 sm:py-3 text-sky-600 dark:text-sky-400 hover:bg-gray-200 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed rounded-l-lg transition-colors touch-manipulation cursor-pointer"
                     aria-label="Decrease quantity"
                   >
                     <Minus className="w-4 h-4" />
@@ -571,7 +646,8 @@ const ProductDetail = () => {
                     onClick={() =>
                       setQuantity((q) => Math.min(selectedVariant.stock, q + 1))
                     }
-                    className="px-3 sm:px-4 py-2.5 sm:py-3 text-sky-600 dark:text-sky-400 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-r-lg transition-colors touch-manipulation cursor-pointer"
+                    disabled={quantity >= selectedVariant.stock}
+                    className="px-3 sm:px-4 py-2.5 sm:py-3 text-sky-600 dark:text-sky-400 hover:bg-gray-200 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed rounded-r-lg transition-colors touch-manipulation cursor-pointer"
                     aria-label="Increase quantity"
                   >
                     <Plus className="w-4 h-4" />
@@ -585,78 +661,36 @@ const ProductDetail = () => {
                   </p>
                 </div>
               ) : (
-                <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 pt-2">
+                <>
                   <button
                     onClick={handleAddToCart}
-                    disabled={isAdding || isOwnProduct}
-                    className="w-full sm:w-auto flex-1 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm border-2 border-sky-600/50 dark:border-sky-400/50 text-sky-600 dark:text-sky-400 font-semibold py-3 sm:py-3 px-4 sm:px-6 rounded-lg transition-colors hover:bg-sky-50/90 dark:hover:bg-sky-900/30 text-sm sm:text-base cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation shadow-md glossy-text-strong"
+                    disabled={isAdding || isOwnProduct || selectedVariant.stock === 0}
+                    className="w-full bg-sky-600 dark:bg-sky-500 hover:bg-sky-700 dark:hover:bg-sky-600 text-white font-semibold py-3 sm:py-4 px-4 sm:px-6 rounded-lg transition-all active:scale-[0.98] text-sm sm:text-base cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
                   >
-                    {isAdding ? "Adding..." : "Add To Cart"}
+                    {isAdding ? "Adding..." : "Add to Cart"}
                   </button>
-                  <button
-                    onClick={handleBuyNow}
-                    disabled={isOwnProduct}
-                    className="w-full sm:w-auto flex-1 bg-sky-600/90 dark:bg-sky-500/90 backdrop-blur-sm hover:bg-sky-700/90 dark:hover:bg-sky-600/90 text-white font-semibold py-3 sm:py-3 px-4 sm:px-6 rounded-lg transition-transform text-sm sm:text-base cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation shadow-md glossy-text-strong"
-                  >
-                    Buy Now
-                  </button>
-                </div>
+                  <div className="flex gap-2 sm:gap-3">
+                    <button 
+                      onClick={() => {
+                        toast.info("Customer Service", {
+                          description: "Chat feature is coming soon. Please contact us via email for assistance.",
+                        });
+                      }}
+                      className="flex items-center justify-center flex-1 border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 font-medium py-2.5 px-3 rounded-lg transition-colors text-sm cursor-pointer"
+                    >
+                      <MessageCircle className="w-4 h-4 mr-2" />
+                      <span className="truncate">Chat CS</span>
+                    </button>
+                    <button
+                      onClick={() => setIsShareModalOpen(true)}
+                      className="flex items-center justify-center flex-1 border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 font-medium py-2.5 px-3 rounded-lg transition-colors text-sm cursor-pointer"
+                    >
+                      <Share className="w-4 h-4 mr-2" />
+                      <span>Share</span>
+                    </button>
+                  </div>
+                </>
               )}
-              <div className="flex flex-col gap-2 sm:gap-3 md:flex-row">
-                <button
-                  type="button"
-                  onClick={handleWishlistToggle}
-                  disabled={isOwnProduct}
-                  className={`flex items-center justify-center w-full md:w-1/3 border font-medium py-2.5 sm:py-3 px-3 sm:px-4 rounded-lg transition-all duration-200 text-sm sm:text-base touch-manipulation ${
-                    isOwnProduct
-                      ? "border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-500 cursor-not-allowed opacity-50"
-                      : isWishlisted
-                      ? "border-red-300 dark:border-red-600 bg-red-50 dark:bg-red-900/20 text-red-500 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/30 cursor-pointer"
-                      : "border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer"
-                  }`}
-                >
-                  <Heart
-                    className={`w-4 h-4 sm:w-5 sm:h-5 mr-2 transition-all duration-200 ${
-                      isOwnProduct
-                        ? "text-gray-400 dark:text-gray-500"
-                        : isWishlisted
-                        ? "text-red-500 dark:text-red-400 fill-red-500 dark:fill-red-400"
-                        : "text-gray-700 dark:text-gray-300"
-                    }`}
-                  />
-                  <span
-                    className={
-                      isOwnProduct
-                        ? "text-gray-400 dark:text-gray-500"
-                        : isWishlisted
-                        ? "text-red-500 dark:text-red-400"
-                        : "text-inherit"
-                    }
-                  >
-                    Wishlist
-                  </span>
-                </button>
-                <div className="flex gap-2 sm:gap-3 w-full md:w-2/3">
-                  <button 
-                    onClick={() => {
-                      toast.info("Customer Service", {
-                        description: "Chat feature is coming soon. Please contact us via email for assistance.",
-                      });
-                    }}
-                    className="flex items-center justify-center w-1/2 border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 font-medium py-2.5 sm:py-3 px-3 sm:px-4 rounded-lg transition-colors duration-200 cursor-pointer text-sm sm:text-base touch-manipulation"
-                  >
-                    <MessageCircle className="w-4 h-4 sm:w-5 sm:h-5 mr-1.5 sm:mr-2" />
-                    <span className="truncate">Chat CS</span>
-                  </button>
-                  <button
-                    onClick={() => setIsShareModalOpen(true)}
-                    className="flex items-center justify-center w-1/2 border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 font-medium py-2.5 sm:py-3 px-3 sm:px-4 rounded-lg transition-colors duration-200 cursor-pointer text-sm sm:text-base touch-manipulation"
-                  >
-                    <Share className="w-4 h-4 sm:w-5 sm:h-5 mr-1.5 sm:mr-2" />
-                    <span>Share</span>
-                  </button>
-                </div>
-              </div>
               <div className="space-y-3 sm:space-y-4 pt-4 sm:pt-6 border-t border-gray-200 dark:border-gray-700">
                 <h3 className="text-base sm:text-lg font-semibold text-gray-800 dark:text-white">
                   Delivery & Returns

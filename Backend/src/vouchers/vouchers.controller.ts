@@ -11,6 +11,7 @@ import {
   ValidationPipe,
   HttpCode,
   HttpStatus,
+  Query,
 } from '@nestjs/common';
 import { VouchersService } from './vouchers.service';
 import { CreateVoucherDto } from './dto/create-voucher.dto';
@@ -26,8 +27,9 @@ export class VouchersController {
 
   @Get()
   @HttpCode(HttpStatus.OK)
-  findAllActive() {
-    return this.vouchersService.findAllActive();
+  findAllActive(@Query('storeId') storeId?: string) {
+    const parsedStoreId = storeId ? parseInt(storeId, 10) : undefined;
+    return this.vouchersService.findAllActive(parsedStoreId);
   }
 
   @UseGuards(JwtAuthGuard)

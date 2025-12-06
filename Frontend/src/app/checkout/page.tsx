@@ -356,10 +356,22 @@ const Checkout = () => {
       }
     };
 
+    fetchAddresses();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
     const fetchVouchers = async () => {
       setIsLoadingVouchers(true);
       try {
-        const data = await getVouchers();
+        let storeId: number | null | undefined = undefined;
+        
+        if (buyItem) {
+          storeId = buyItem.storeId;
+        } else if (cart?.items && cart.items.length > 0) {
+          storeId = cart.items[0].variant.product.storeId;
+        }
+        
+        const data = await getVouchers(storeId);
         setVouchers(data);
       } catch {
         setVouchers([]);
@@ -368,9 +380,10 @@ const Checkout = () => {
       }
     };
 
-    fetchAddresses();
-    fetchVouchers();
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+    if (hasCheckedCart && !isFetchingCart) {
+      fetchVouchers();
+    }
+  }, [buyItem, cart?.items, hasCheckedCart, isFetchingCart]);
 
   useEffect(() => {
     if (addressMode === "select" && addresses.length > 0 && !hasShownAddressToast && !isLoadingAddresses) {

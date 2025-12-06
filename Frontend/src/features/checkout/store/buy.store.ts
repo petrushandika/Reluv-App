@@ -9,6 +9,7 @@ interface BuyItem {
   variantSize?: string;
   variantColor?: string;
   quantity: number;
+  storeId: number | null;
 }
 
 interface BuyState {

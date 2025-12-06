@@ -138,9 +138,10 @@ export interface Voucher {
   updatedAt: string;
 }
 
-export const getVouchers = async (): Promise<Voucher[]> => {
+export const getVouchers = async (storeId?: number | null): Promise<Voucher[]> => {
   try {
-    const response = await api.get<Voucher[]>("/vouchers");
+    const params = storeId !== undefined && storeId !== null ? { storeId: storeId.toString() } : {};
+    const response = await api.get<Voucher[]>("/vouchers", { params });
     return response.data;
   } catch (error) {
     throw error;

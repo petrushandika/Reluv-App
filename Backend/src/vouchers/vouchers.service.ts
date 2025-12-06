@@ -114,11 +114,19 @@ export class VouchersService {
     };
   }
 
-  findAllActive() {
+  findAllActive(storeId?: number) {
     return this.prisma.voucher.findMany({
       where: {
         isActive: true,
         expiry: { gt: new Date() },
+        ...(storeId !== undefined
+          ? {
+              OR: [
+                { storeId: storeId },
+                { storeId: null },
+              ],
+            }
+          : {}),
       },
     });
   }
