@@ -908,13 +908,14 @@ const Navbar = () => {
       </div>
 
       <div
-        className={`absolute top-full left-0 w-full z-10 lg:hidden bg-white/95 dark:bg-gray-900/95 backdrop-blur-md text-gray-800 dark:text-white border-t border-gray-200/50 dark:border-gray-700/50 overflow-y-auto shadow-lg transition-all duration-500 ease-in-out ${
+        className={`absolute top-full left-0 w-full z-10 lg:hidden bg-white/95 dark:bg-gray-900/95 backdrop-blur-md text-gray-800 dark:text-white border-t border-gray-200/50 dark:border-gray-700/50 overflow-y-auto shadow-lg ${
           isMobileMenuOpen
             ? "opacity-100 max-h-[calc(100vh-4.5rem)]"
             : "opacity-0 pointer-events-none max-h-0"
         }`}
         style={{
           transform: isMobileMenuOpen ? 'translateY(0)' : 'translateY(-20px)',
+          transition: 'max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), transform 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
         }}
       >
         <style jsx>{`
@@ -988,22 +989,26 @@ const Navbar = () => {
                     className="ml-2 p-1 hover:text-sky-600 dark:hover:text-sky-400 transition-colors duration-300"
                   >
                     <ChevronDown
-                      className={`w-5 h-5 transition-all duration-300 ease-in-out ${
-                        mobileActiveMainMenu === menu ? "rotate-180" : ""
+                      className={`w-5 h-5 transition-transform duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] ${
+                        mobileActiveMainMenu === menu ? "rotate-180" : "rotate-0"
                       }`}
                     />
                   </button>
                 )}
               </div>
-              {mobileActiveMainMenu === menu && (
-                <div 
-                  className="pl-4 pb-2 overflow-hidden transition-all duration-500 ease-in-out"
-                  style={{
-                    maxHeight: mobileActiveMainMenu === menu ? '2000px' : '0',
-                    opacity: mobileActiveMainMenu === menu ? 1 : 0,
-                    transform: mobileActiveMainMenu === menu ? 'translateY(0)' : 'translateY(-10px)',
-                  }}
-                >
+              <div 
+                className="overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]"
+                style={{
+                  maxHeight: mobileActiveMainMenu === menu ? '2000px' : '0',
+                  opacity: mobileActiveMainMenu === menu ? 1 : 0,
+                  transform: mobileActiveMainMenu === menu ? 'translateY(0)' : 'translateY(-10px)',
+                  paddingLeft: mobileActiveMainMenu === menu ? '1rem' : '0',
+                  paddingBottom: mobileActiveMainMenu === menu ? '0.5rem' : '0',
+                  transition: 'max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), padding-left 0.4s cubic-bezier(0.4, 0, 0.2, 1), padding-bottom 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+                }}
+              >
+                {mobileActiveMainMenu === menu && (
+                  <div className="pl-4 pb-2">
                   {dropdownData[menu].categories.map((category) => {
                     const categorySlug = categoryToSlug(category);
                     const categoryRoute = `${getMainMenuRoute(
@@ -1028,10 +1033,10 @@ const Navbar = () => {
                               {category}
                             </span>
                             <ChevronDown
-                              className={`w-5 h-5 transition-all duration-300 ease-in-out ${
+                              className={`w-5 h-5 transition-transform duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] ${
                                 mobileActiveSubMenu === category
                                   ? "rotate-180"
-                                  : ""
+                                  : "rotate-0"
                               }`}
                             />
                           </button>
@@ -1051,7 +1056,7 @@ const Navbar = () => {
                         )}
                         {hasSubMenu && (
                           <div 
-                            className="pl-4 space-y-3 bg-gray-50 dark:bg-gray-800 rounded-md overflow-hidden transition-all duration-500 ease-in-out"
+                            className="pl-4 space-y-3 bg-gray-50 dark:bg-gray-800 rounded-md overflow-hidden"
                             style={{
                               maxHeight: mobileActiveSubMenu === category ? '2000px' : '0',
                               opacity: mobileActiveSubMenu === category ? 1 : 0,
@@ -1060,6 +1065,7 @@ const Navbar = () => {
                               paddingBottom: mobileActiveSubMenu === category ? '0.5rem' : '0',
                               marginTop: mobileActiveSubMenu === category ? '0.5rem' : '0',
                               marginBottom: mobileActiveSubMenu === category ? '0.5rem' : '0',
+                              transition: 'max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), padding-top 0.4s cubic-bezier(0.4, 0, 0.2, 1), padding-bottom 0.4s cubic-bezier(0.4, 0, 0.2, 1), margin-top 0.4s cubic-bezier(0.4, 0, 0.2, 1), margin-bottom 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
                             }}
                           >
                             {mobileActiveSubMenu === category && dropdownData[menu].subMenus[category]?.map(
@@ -1092,8 +1098,9 @@ const Navbar = () => {
                       </div>
                     );
                   })}
-                </div>
-              )}
+                  </div>
+                )}
+              </div>
             </div>
           ))}
           {isAuthenticated ? (
