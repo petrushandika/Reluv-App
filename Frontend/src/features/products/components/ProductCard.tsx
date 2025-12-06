@@ -26,7 +26,7 @@ interface ProductCardProps {
 
 const ProductCard = ({ product, containerClassName }: ProductCardProps) => {
   const { addItem, removeItem, isInWishlist } = useWishlist();
-  const { user } = useAuthStore();
+  const { user, isAuthenticated } = useAuthStore();
   const isWishlisted = isInWishlist({ productId: product.id });
   const isOwnProduct = Boolean(user && product && Number(user.id) === Number(product.sellerId));
 
@@ -48,13 +48,15 @@ const ProductCard = ({ product, containerClassName }: ProductCardProps) => {
   const handleWishlistToggle = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    if (!user || !product) return;
-    if (Number(user.id) === Number(product.sellerId)) {
+    if (!product) return;
+    
+    if (isAuthenticated() && user && Number(user.id) === Number(product.sellerId)) {
       toast.error("Cannot Add to Wishlist", {
         description: "You cannot add your own product to the wishlist.",
       });
       return;
     }
+    
     if (isWishlisted) {
       removeItem({ productId: product.id });
     } else {

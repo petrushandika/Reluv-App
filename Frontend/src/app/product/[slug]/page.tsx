@@ -42,7 +42,7 @@ const ProductDetail = () => {
   const { addItem: addItemToWishlist, removeItem: removeItemFromWishlist } =
     useWishlist();
   const { setBuyItem } = useBuyStore();
-  const { user } = useAuthStore();
+  const { user, isAuthenticated } = useAuthStore();
 
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [selectedVariantIndex, setSelectedVariantIndex] = useState(0);
@@ -206,27 +206,35 @@ const ProductDetail = () => {
   };
 
   const handleAddToCart = () => {
-    if (!user || !product) return;
-    if (Number(user.id) === Number(product.sellerId)) {
+    if (!product || !selectedVariant) return;
+    
+    if (isAuthenticated() && user && Number(user.id) === Number(product.sellerId)) {
       toast.error("Cannot Add to Cart", {
         description: "You cannot add your own product to the cart.",
       });
       return;
     }
-    if (selectedVariant) {
-      addItemToCart({ variantId: selectedVariant.id, quantity });
-    }
+    
+    addItemToCart({ variantId: selectedVariant.id, quantity });
   };
 
   const handleBuyNow = () => {
-    if (!user || !product) return;
-    if (Number(user.id) === Number(product.sellerId)) {
+    if (!product || !selectedVariant) {
+      return;
+    }
+
+    if (!isAuthenticated()) {
+      toast.error("Sign In Required", {
+        description: "You must sign in to purchase items.",
+      });
+      router.push("/auth/login");
+      return;
+    }
+
+    if (user && Number(user.id) === Number(product.sellerId)) {
       toast.error("Cannot Buy Now", {
         description: "You cannot purchase your own product.",
       });
-      return;
-    }
-    if (!selectedVariant || !product) {
       return;
     }
 
@@ -246,13 +254,15 @@ const ProductDetail = () => {
   };
 
   const handleWishlistToggle = async () => {
-    if (!user || !product) return;
-    if (Number(user.id) === Number(product.sellerId)) {
+    if (!product) return;
+    
+    if (isAuthenticated() && user && Number(user.id) === Number(product.sellerId)) {
       toast.error("Cannot Add to Wishlist", {
         description: "You cannot add your own product to the wishlist.",
       });
       return;
     }
+    
     if (isWishlisted) {
       await removeItemFromWishlist({ productId: product.id });
     } else {
@@ -405,9 +415,16 @@ const ProductDetail = () => {
                   <p className="text-sm text-gray-600 dark:text-gray-300">
                     Dedicated to providing genuine luxury products that uphold
                     the highest standards of quality.{" "}
-                    <span className="text-sky-600 dark:text-sky-400 font-medium cursor-pointer hover:underline">
+                    <button 
+                      onClick={() => {
+                        toast.info("Authenticity Guarantee", {
+                          description: "All products are verified for authenticity. We ensure 100% genuine luxury products.",
+                        });
+                      }}
+                      className="text-sky-600 dark:text-sky-400 font-medium hover:underline cursor-pointer"
+                    >
                       Learn more
-                    </span>
+                    </button>
                   </p>
                 </div>
               </div>
@@ -448,7 +465,14 @@ const ProductDetail = () => {
                     <span className="font-medium">Installment</span> from
                     {formatPrice(installmentPrice)}/month
                   </span>
-                  <button className="text-sky-600 dark:text-sky-400 font-medium hover:underline cursor-pointer">
+                  <button 
+                    onClick={() => {
+                      toast.info("Installment Details", {
+                        description: `Pay ${formatPrice(installmentPrice)} per month for 12 months. Total: ${formatPrice(selectedVariant.price)}`,
+                      });
+                    }}
+                    className="text-sky-600 dark:text-sky-400 font-medium hover:underline cursor-pointer"
+                  >
                     See Detail
                   </button>
                 </div>
@@ -513,7 +537,14 @@ const ProductDetail = () => {
                   <p className="text-sm text-gray-700 dark:text-gray-300">
                     Try virtual try-on and see size on the app to see how the
                     product fits you.{" "}
-                    <button className="text-sky-600 dark:text-sky-400 font-medium hover:underline cursor-pointer">
+                    <button 
+                      onClick={() => {
+                        toast.info("Virtual Try-On", {
+                          description: "Download our mobile app to try on products virtually and see how they fit.",
+                        });
+                      }}
+                      className="text-sky-600 dark:text-sky-400 font-medium hover:underline cursor-pointer"
+                    >
                       Learn more
                     </button>
                   </p>
@@ -604,7 +635,14 @@ const ProductDetail = () => {
                   </span>
                 </button>
                 <div className="flex gap-2 sm:gap-3 w-full md:w-2/3">
-                  <button className="flex items-center justify-center w-1/2 border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 font-medium py-2.5 sm:py-3 px-3 sm:px-4 rounded-lg transition-colors duration-200 cursor-pointer text-sm sm:text-base touch-manipulation">
+                  <button 
+                    onClick={() => {
+                      toast.info("Customer Service", {
+                        description: "Chat feature is coming soon. Please contact us via email for assistance.",
+                      });
+                    }}
+                    className="flex items-center justify-center w-1/2 border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 font-medium py-2.5 sm:py-3 px-3 sm:px-4 rounded-lg transition-colors duration-200 cursor-pointer text-sm sm:text-base touch-manipulation"
+                  >
                     <MessageCircle className="w-4 h-4 sm:w-5 sm:h-5 mr-1.5 sm:mr-2" />
                     <span className="truncate">Chat CS</span>
                   </button>
@@ -629,9 +667,16 @@ const ProductDetail = () => {
                   <div className="mt-2 inline-block bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-200 text-[10px] sm:text-xs font-semibold px-2 sm:px-3 py-1 rounded-full">
                     ⚡ Instant delivery available in selected cities
                   </div>
-                  <p className="mt-2 text-sky-600 dark:text-sky-400 font-medium cursor-pointer hover:underline">
+                  <button 
+                    onClick={() => {
+                      toast.info("Shipping Options", {
+                        description: "Shipping options and costs will be calculated during checkout based on your delivery address.",
+                      });
+                    }}
+                    className="mt-2 text-sky-600 dark:text-sky-400 font-medium cursor-pointer hover:underline"
+                  >
                     See Shipping Options
-                  </p>
+                  </button>
                 </div>
               </div>
               <div className="space-y-3 sm:space-y-4 border-t pt-4 sm:pt-6 border-gray-200 dark:border-gray-700">
@@ -663,7 +708,14 @@ const ProductDetail = () => {
                     {selectedVariant.height} cm
                   </p>
                 </div>
-                <button className="text-sky-600 dark:text-sky-400 font-medium text-xs sm:text-sm mt-2 hover:underline cursor-pointer">
+                <button 
+                  onClick={() => {
+                    toast.info("Product Details", {
+                      description: product.description || "No additional details available.",
+                    });
+                  }}
+                  className="text-sky-600 dark:text-sky-400 font-medium text-xs sm:text-sm mt-2 hover:underline cursor-pointer"
+                >
                   Read More
                 </button>
                 <div className="mt-4 sm:mt-6 p-3 sm:p-4 border border-gray-200/50 dark:border-gray-700/50 rounded-lg bg-white/90 dark:bg-gray-800/90 backdrop-blur-md shadow-sm">
@@ -682,7 +734,18 @@ const ProductDetail = () => {
                       </p>
                     </div>
                   </div>
-                  <button className="mt-3 w-full bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm text-sky-600 dark:text-sky-400 border border-sky-600/50 dark:border-sky-400/50 font-semibold py-2.5 sm:py-2 px-4 rounded-lg hover:bg-gray-50/90 dark:hover:bg-gray-700/90 transition-colors text-xs sm:text-sm cursor-pointer touch-manipulation shadow-sm glossy-text-strong">
+                  <button 
+                    onClick={() => {
+                      if (product?.store?.slug) {
+                        router.push(`/store/${product.store.slug}`);
+                      } else {
+                        toast.error("Store not found", {
+                          description: "Unable to navigate to store page.",
+                        });
+                      }
+                    }}
+                    className="mt-3 w-full bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm text-sky-600 dark:text-sky-400 border border-sky-600/50 dark:border-sky-400/50 font-semibold py-2.5 sm:py-2 px-4 rounded-lg hover:bg-gray-50/90 dark:hover:bg-gray-700/90 transition-colors text-xs sm:text-sm cursor-pointer touch-manipulation shadow-sm glossy-text-strong"
+                  >
                     See All Products
                   </button>
                 </div>
