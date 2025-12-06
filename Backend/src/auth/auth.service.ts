@@ -108,7 +108,10 @@ export class AuthService {
   async forgot(email: string) {
     const user = await this.prisma.user.findUnique({ where: { email } });
     if (!user) {
-      throw new BadRequestException('Email not found');
+      return {
+        message:
+          'If a user with that email exists, a password reset link has been sent.',
+      };
     }
 
     const tokenDetails = this._createVerificationToken();
@@ -124,7 +127,8 @@ export class AuthService {
     await this.emailService.sendPasswordReset(user, tokenDetails.token);
 
     return {
-      message: 'Password reset link has been sent to your email.',
+      message:
+        'If a user with that email exists, a password reset link has been sent.',
     };
   }
 

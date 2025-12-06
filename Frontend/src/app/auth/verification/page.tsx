@@ -42,15 +42,6 @@ const VerificationContent = () => {
 
   const handleSubmit = async () => {
     setError(null);
-    
-    if (checkRateLimit()) {
-      const msg = `Please wait ${remainingSeconds} seconds before making another request.`;
-      setError(msg);
-      toast.error("Rate Limit", {
-        description: msg,
-      });
-      return;
-    }
 
     const validationResult = emailSchema.safeParse(email);
 
@@ -63,12 +54,21 @@ const VerificationContent = () => {
       return;
     }
 
+    if (checkRateLimit()) {
+      const msg = `Please wait ${remainingSeconds} seconds before making another request.`;
+      setError(msg);
+      toast.error("Rate Limit", {
+        description: msg,
+      });
+      return;
+    }
+
     setLoading(true);
     try {
       await verification(email);
       recordRequest();
       toast.success("Email Sent", {
-        description: "Verification email has been sent to your email.",
+        description: "If a user with that email exists, a verification email has been sent.",
       });
       setIsSubmitted(true);
     } catch (err: unknown) {

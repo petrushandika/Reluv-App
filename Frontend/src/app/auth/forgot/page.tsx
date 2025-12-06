@@ -35,15 +35,6 @@ const Forgot = () => {
 
   const handleSubmit = async () => {
     setError(null);
-    
-    if (checkRateLimit()) {
-      const msg = `Please wait ${remainingSeconds} seconds before making another request.`;
-      setError(msg);
-      toast.error("Rate Limit", {
-        description: msg,
-      });
-      return;
-    }
 
     const validationResult = emailSchema.safeParse(email);
 
@@ -56,12 +47,21 @@ const Forgot = () => {
       return;
     }
 
+    if (checkRateLimit()) {
+      const msg = `Please wait ${remainingSeconds} seconds before making another request.`;
+      setError(msg);
+      toast.error("Rate Limit", {
+        description: msg,
+      });
+      return;
+    }
+
     setLoading(true);
     try {
       await forgotPassword({ email });
       recordRequest();
       toast.success("Email Sent", {
-        description: "Password reset instructions have been sent to your email.",
+        description: "If a user with that email exists, a password reset link has been sent.",
       });
       setIsSubmitted(true);
     } catch (err: unknown) {
