@@ -249,7 +249,7 @@ const ProfilePage = () => {
 
   return (
     <PrivateRoute>
-      <div className="min-h-screen bg-white dark:bg-gray-900 overflow-y-auto">
+      <div className="min-h-screen bg-white dark:bg-gray-900">
         {isEditPersonalInfoOpen ? (
           <div className="lg:hidden min-h-screen bg-white dark:bg-gray-900 overflow-y-auto">
             <div className="container mx-auto px-4 sm:px-6 md:px-10 xl:px-20 2xl:px-40 py-10 sm:py-12 md:py-14">
@@ -417,7 +417,7 @@ const ProfilePage = () => {
                     disabled={
                       isSubmitting || !formData.firstName || !formData.lastName
                     }
-                    className={`w-full py-3 rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer ${
+                    className={`w-full py-2 text-sm rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer ${
                       formData.firstName && formData.lastName && !isSubmitting
                         ? "bg-sky-600 dark:bg-sky-500 text-white hover:bg-sky-700 dark:hover:bg-sky-600"
                         : "bg-sky-600 dark:bg-sky-500 text-white hover:bg-sky-700 dark:hover:bg-sky-600"
@@ -435,7 +435,7 @@ const ProfilePage = () => {
             isEditPersonalInfoOpen ? "hidden lg:block" : ""
           }`}
         >
-          <div className="flex flex-col lg:flex-row lg:gap-8">
+          <div className="flex flex-col lg:flex-row lg:items-start lg:gap-8">
             <div className="lg:hidden">
               <button
                 onClick={() => router.back()}
@@ -451,7 +451,7 @@ const ProfilePage = () => {
             <ProfileSidebar user={user} />
 
             <main className="flex-1 min-w-0">
-              <div className="hidden lg:block mb-6">
+              <div className="hidden lg:block mb-6 lg:pt-6">
                 <div className="flex items-center gap-3 mb-2">
                   <User className="w-6 h-6 text-sky-600 dark:text-sky-400" />
                   <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 dark:text-white">

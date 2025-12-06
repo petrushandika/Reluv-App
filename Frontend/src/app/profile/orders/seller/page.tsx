@@ -408,9 +408,9 @@ const SellerOrdersPage = () => {
 
   return (
     <PrivateRoute>
-      <div className="min-h-screen bg-white dark:bg-gray-900 overflow-y-auto">
+      <div className="min-h-screen bg-white dark:bg-gray-900">
         <div className="container mx-auto px-4 sm:px-6 md:px-10 xl:px-20 2xl:px-40 py-10 sm:py-12 md:py-14">
-          <div className="flex flex-col lg:flex-row lg:gap-8">
+          <div className="flex flex-col lg:flex-row lg:items-start lg:gap-8">
             <div className="lg:hidden">
               <button
                 onClick={() => router.back()}
@@ -424,7 +424,7 @@ const SellerOrdersPage = () => {
             <ProfileSidebar user={user} />
 
             <main className="flex-1 min-w-0">
-              <div className="hidden lg:block mb-6">
+              <div className="hidden lg:block mb-6 lg:pt-6">
                 <div className="flex items-center gap-3 mb-2">
                   <ShoppingBag className="w-6 h-6 text-sky-600 dark:text-sky-400" />
                   <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 dark:text-white">

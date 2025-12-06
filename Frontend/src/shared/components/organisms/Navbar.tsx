@@ -11,10 +11,7 @@ import {
   X,
   ChevronDown,
   LogOut,
-  ScrollText,
   Bell,
-  MapPin,
-  Package,
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
@@ -1091,7 +1088,7 @@ const Navbar = () => {
           {isAuthenticated ? (
             <div className="">
               <Link
-                href="/profile/me"
+                href="/profile"
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="flex items-center py-3 text-sm text-gray-700 dark:text-gray-300 font-semibold hover:text-sky-600 dark:hover:text-sky-400 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md transition-all duration-300 hover:pl-2"
               >
@@ -1113,36 +1110,12 @@ const Navbar = () => {
                 My Profile
               </Link>
               <Link
-                href="/profile/address"
-                className="flex items-center py-3 text-sm text-gray-700 dark:text-gray-300 font-semibold hover:text-sky-600 dark:hover:text-sky-400 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md transition-all duration-300 hover:pl-2"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                <MapPin className="w-5 h-5 mr-3 text-gray-500 dark:text-gray-400 transition-colors duration-300" />
-                My Address
-              </Link>
-              <Link
                 href="/profile/orders"
                 className="flex items-center py-3 text-sm text-gray-700 dark:text-gray-300 font-semibold hover:text-sky-600 dark:hover:text-sky-400 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md transition-all duration-300 hover:pl-2"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 <ShoppingBag className="w-5 h-5 mr-3 text-gray-500 dark:text-gray-400 transition-colors duration-300" />
                 Order History
-              </Link>
-              <Link
-                href="/profile/products"
-                className="flex items-center py-3 text-sm text-gray-700 dark:text-gray-300 font-semibold hover:text-sky-600 dark:hover:text-sky-400 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md transition-all duration-300 hover:pl-2"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                <Package className="w-5 h-5 mr-3 text-gray-500 dark:text-gray-400 transition-colors duration-300" />
-                My Product
-              </Link>
-              <Link
-                href="/profile/orders/seller"
-                className="flex items-center py-3 text-sm text-gray-700 dark:text-gray-300 font-semibold hover:text-sky-600 dark:hover:text-sky-400 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md transition-all duration-300 hover:pl-2"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                <ScrollText className="w-5 h-5 mr-3 text-gray-500 dark:text-gray-400 transition-colors duration-300" />
-                Order List
               </Link>
               <div className="">
                 <button
@@ -1153,7 +1126,7 @@ const Navbar = () => {
                   className="w-full text-left flex items-center py-3 text-sm text-red-600 dark:text-red-400 font-semibold hover:bg-red-50 dark:hover:bg-red-900/20 rounded-md transition-all duration-300 hover:pl-2"
                 >
                   <LogOut className="w-5 h-5 mr-3 text-red-600 dark:text-red-400 transition-colors duration-300" />
-                  Logout
+                  Sign Out
                 </button>
               </div>
             </div>

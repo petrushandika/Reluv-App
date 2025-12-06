@@ -99,9 +99,9 @@ const AddressPage = () => {
 
   return (
     <PrivateRoute>
-      <div className="min-h-screen bg-white dark:bg-gray-900 overflow-y-auto">
+      <div className="min-h-screen bg-white dark:bg-gray-900">
         <div className="container mx-auto px-4 sm:px-6 md:px-10 xl:px-20 2xl:px-40 py-10 sm:py-12 md:py-14">
-          <div className="flex flex-col lg:flex-row lg:gap-8">
+          <div className="flex flex-col lg:flex-row lg:items-start lg:gap-8">
             <div className="lg:hidden mb-4">
               <div className="flex items-center gap-3 mb-2">
                 <button
@@ -116,7 +116,7 @@ const AddressPage = () => {
                 {addresses.length > 0 && (
                   <button
                     onClick={() => router.push("/profile/address/add")}
-                    className="ml-auto px-4 py-2 bg-sky-600 dark:bg-sky-500 text-white font-semibold rounded-lg hover:bg-sky-700 dark:hover:bg-sky-600 transition-colors cursor-pointer"
+                    className="ml-auto px-3 py-1.5 text-sm bg-sky-600 dark:bg-sky-500 text-white font-medium rounded-lg hover:bg-sky-700 dark:hover:bg-sky-600 transition-colors cursor-pointer"
                   >
                     Add Address
                   </button>
@@ -127,7 +127,7 @@ const AddressPage = () => {
             <ProfileSidebar user={user} />
 
             <main className="flex-1 min-w-0">
-              <div className="hidden lg:block mb-6">
+              <div className="hidden lg:block mb-6 lg:pt-6">
                 <div className="flex items-center gap-3 mb-2">
                   <MapPin className="w-6 h-6 text-sky-600 dark:text-sky-400" />
                   <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 dark:text-white">
@@ -136,7 +136,7 @@ const AddressPage = () => {
                   {addresses.length > 0 && (
                     <button
                       onClick={() => router.push("/profile/address/add")}
-                      className="ml-auto px-4 py-2 bg-sky-600 dark:bg-sky-500 text-white font-semibold rounded-lg hover:bg-sky-700 dark:hover:bg-sky-600 transition-colors cursor-pointer"
+                      className="ml-auto px-3 py-1.5 text-sm bg-sky-600 dark:bg-sky-500 text-white font-medium rounded-lg hover:bg-sky-700 dark:hover:bg-sky-600 transition-colors cursor-pointer"
                     >
                       Add Address
                     </button>
@@ -160,61 +160,60 @@ const AddressPage = () => {
 
                   <button
                     onClick={() => router.push("/profile/address/add")}
-                    className="px-6 py-3 bg-sky-600 dark:bg-sky-500 text-white font-semibold rounded-lg hover:bg-sky-700 dark:hover:bg-sky-600 transition-colors cursor-pointer"
+                    className="px-4 py-2 text-sm bg-sky-600 dark:bg-sky-500 text-white font-medium rounded-lg hover:bg-sky-700 dark:hover:bg-sky-600 transition-colors cursor-pointer"
                   >
                     Add Address
                   </button>
                 </div>
               ) : (
-                <div className="space-y-6">
-                  <div className="space-y-4">
-                    {addresses.map((address) => (
-                      <div
-                        key={address.id}
-                        className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-6 shadow-sm"
-                      >
-                        <div className="flex items-start justify-between mb-4">
-                          <div className="flex items-center gap-3">
-                            {address.isDefault && (
-                              <span className="px-3 py-1 bg-sky-600 dark:bg-sky-500 text-white text-xs font-semibold rounded">
-                                Main Address
-                              </span>
-                            )}
-                            <span className="text-gray-600 dark:text-gray-400 font-medium">
-                              {address.label}
+                <div className="space-y-4">
+                  {addresses.map((address) => (
+                    <div
+                      key={address.id}
+                      className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 sm:p-5 shadow-sm"
+                    >
+                      <div className="flex items-start justify-between mb-3 sm:mb-4">
+                        <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
+                          {address.isDefault && (
+                            <span className="px-2 py-0.5 sm:px-2.5 sm:py-1 bg-sky-600 dark:bg-sky-500 text-white text-xs font-medium rounded">
+                              Main Address
                             </span>
-                          </div>
-                          <div className="flex items-center gap-3">
-                            <button
-                              onClick={() =>
-                                router.push(
-                                  `/profile/address/edit?id=${address.id}`
-                                )
-                              }
-                              className="flex items-center gap-2 text-sky-600 dark:text-sky-400 hover:bg-sky-50 dark:hover:bg-sky-900/20 px-3 py-2 rounded-lg transition-colors cursor-pointer"
-                            >
-                              <Pencil className="w-4 h-4" />
-                              <span className="text-sm font-medium">Edit</span>
-                            </button>
-                            <button
-                              onClick={() => handleDelete(address.id)}
-                              disabled={addresses.length <= 1}
-                              className="flex items-center gap-2 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 px-3 py-2 rounded-lg transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-                            >
-                              <Trash2 className="w-4 h-4" />
-                              <span className="text-sm font-medium">
-                                Delete
-                              </span>
-                            </button>
-                          </div>
+                          )}
+                          <span className="text-sm sm:text-base text-gray-600 dark:text-gray-400 font-medium">
+                            {address.label}
+                          </span>
                         </div>
+                        <div className="flex items-center gap-2">
+                          <button
+                            onClick={() =>
+                              router.push(
+                                `/profile/address/edit?id=${address.id}`
+                              )
+                            }
+                            className="flex items-center gap-1.5 text-sky-600 dark:text-sky-400 hover:bg-sky-50 dark:hover:bg-sky-900/20 px-2 py-1.5 sm:px-2.5 sm:py-2 rounded-lg transition-colors cursor-pointer"
+                          >
+                            <Pencil className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                            <span className="text-xs sm:text-sm font-medium">Edit</span>
+                          </button>
+                          <button
+                            onClick={() => handleDelete(address.id)}
+                            disabled={addresses.length <= 1}
+                            className="flex items-center gap-1.5 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 px-2 py-1.5 sm:px-2.5 sm:py-2 rounded-lg transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                          >
+                            <Trash2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                            <span className="text-xs sm:text-sm font-medium">
+                              Delete
+                            </span>
+                          </button>
+                        </div>
+                      </div>
 
                         <div className="space-y-1 text-gray-700 dark:text-gray-300">
-                          <p className="font-semibold text-gray-900 dark:text-white">
+                          <p className="text-sm sm:text-base font-semibold text-gray-900 dark:text-white">
                             {address.recipient}
                           </p>
-                          <p className="text-sm">{address.phone}</p>
-                          <p className="text-sm">
+                          <p className="text-xs sm:text-sm">{address.phone}</p>
+                          <p className="text-xs sm:text-sm">
                             {address.address}
                             {address.address &&
                               (address.city || address.province) &&
@@ -227,7 +226,6 @@ const AddressPage = () => {
                         </div>
                       </div>
                     ))}
-                  </div>
                 </div>
               )}
             </main>
