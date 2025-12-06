@@ -40,7 +40,6 @@ export const useCartStore = create<CartState>((set, get) => ({
         set({ isLoading: false, cart: null, itemCount: 0 });
       }
     } catch (error) {
-      console.error("Failed to fetch cart data:", error);
       set({ isLoading: false, cart: null, itemCount: 0 });
     }
   },
@@ -54,7 +53,6 @@ export const useCartStore = create<CartState>((set, get) => ({
       await get().fetchCart();
     } catch (error) {
       await get().fetchCart();
-      console.error("Failed to add item to cart:", error);
       throw error;
     }
   },
@@ -77,7 +75,6 @@ export const useCartStore = create<CartState>((set, get) => ({
       await get().fetchCart();
     } catch (error) {
       await get().fetchCart();
-      console.error("Failed to update cart item:", error);
       throw error;
     }
   },
@@ -97,7 +94,6 @@ export const useCartStore = create<CartState>((set, get) => ({
       await get().fetchCart();
     } catch (error) {
       await get().fetchCart();
-      console.error("Failed to remove item from cart:", error);
       throw error;
     }
   },

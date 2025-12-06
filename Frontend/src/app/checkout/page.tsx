@@ -374,8 +374,7 @@ const Checkout = () => {
         } else {
           setAddressMode("new");
         }
-      } catch (error) {
-        console.error("Failed to fetch addresses:", error);
+      } catch {
         setAddressMode("new");
       } finally {
         setIsLoadingAddresses(false);
@@ -393,8 +392,7 @@ const Checkout = () => {
         );
         const data: Province[] = await response.json();
         setProvinces(data);
-      } catch (error) {
-        console.error("Failed to fetch provinces:", error);
+      } catch {
       } finally {
         setIsLoadingProvinces(false);
       }
@@ -412,8 +410,7 @@ const Checkout = () => {
           );
           const data: Regency[] = await response.json();
           setRegencies(data);
-        } catch (error) {
-          console.error("Failed to fetch regencies:", error);
+        } catch {
           setRegencies([]);
         } finally {
           setIsLoadingRegencies(false);
@@ -450,8 +447,7 @@ const Checkout = () => {
           );
           const data: District[] = await response.json();
           setDistricts(data);
-        } catch (error) {
-          console.error("Failed to fetch districts:", error);
+        } catch {
           setDistricts([]);
         } finally {
           setIsLoadingDistricts(false);
@@ -474,8 +470,7 @@ const Checkout = () => {
           );
           const data: SubDistrict[] = await response.json();
           setSubDistricts(data);
-        } catch (error) {
-          console.error("Failed to fetch sub-districts:", error);
+        } catch {
           setSubDistricts([]);
         } finally {
           setIsLoadingSubDistricts(false);
@@ -594,7 +589,13 @@ const Checkout = () => {
       });
 
       const originAreaId = "ID-JK";
-      const destinationAreaId = destinationCity;
+      
+      let destinationAreaId: string;
+      if (addressMode === "select" && selectedAddress?.biteship_area_id) {
+        destinationAreaId = selectedAddress.biteship_area_id;
+      } else {
+        destinationAreaId = destinationCity;
+      }
 
       const rates = await checkShippingRates({
         origin_area_id: originAreaId,
@@ -605,20 +606,26 @@ const Checkout = () => {
       if (rates && rates.length > 0) {
         setShippingRates(rates);
       } else {
-        toast.warning("No Shipping Rates Available", {
-          description: "No shipping options found for this destination. You can still proceed with manual shipping selection.",
-        });
         setShippingRates([]);
       }
     } catch (error) {
-      console.error("Failed to load shipping rates:", error);
       const errorMessage = error instanceof Error 
         ? error.message 
         : "Failed to load shipping rates. You can still proceed with manual shipping selection.";
       
-      toast.warning("Shipping Rates Unavailable", {
-        description: errorMessage,
-      });
+      if (errorMessage.includes("Could not find area ID") || errorMessage.includes("not found for destination")) {
+        toast.info("Shipping Rates Unavailable", {
+          description: "Could not find shipping rates for this location. You can still proceed with manual shipping selection.",
+        });
+      } else if (errorMessage.includes("temporarily unavailable") || errorMessage.includes("502") || errorMessage.includes("503")) {
+        toast.warning("Shipping Service Unavailable", {
+          description: "Shipping service is temporarily unavailable. You can still proceed with manual shipping selection.",
+        });
+      } else {
+        toast.warning("Shipping Rates Unavailable", {
+          description: errorMessage,
+        });
+      }
       setShippingRates([]);
     } finally {
       setIsLoadingShippingRates(false);
@@ -694,8 +701,7 @@ const Checkout = () => {
             }
           }
         }
-      } catch (error) {
-        console.error("Failed to fetch location data:", error);
+      } catch {
       }
     }
 
@@ -745,9 +751,7 @@ const Checkout = () => {
     }
   };
 
-  const handleFormSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
+  const validateCheckout = (): boolean => {
     setValidationError(null);
     setFieldErrors({});
     setOrderNotesError(null);
@@ -756,7 +760,10 @@ const Checkout = () => {
       const notesValidation = orderNotesSchema.safeParse(orderNotes);
       if (!notesValidation.success) {
         setOrderNotesError(notesValidation.error.errors[0]?.message || "Invalid order notes");
-        return;
+        toast.error("Invalid Order Notes", {
+          description: notesValidation.error.errors[0]?.message || "Order notes must be at most 1000 characters",
+        });
+        return false;
       }
     }
 
@@ -764,12 +771,18 @@ const Checkout = () => {
       toast.error("Shipping Required", {
         description: "Please select a shipping method.",
       });
-      return;
+      return false;
     }
 
-    if (addressMode === "new") {
+    if (addressMode === "select") {
+      if (!selectedAddressId) {
+        toast.error("Address Required", {
+          description: "Please select an address.",
+        });
+        return false;
+      }
+    } else {
       const formValidation = checkoutFormSchema.safeParse(formData);
-
       if (!formValidation.success) {
         const errors: Record<string, string> = {};
         formValidation.error.errors.forEach((err) => {
@@ -787,8 +800,21 @@ const Checkout = () => {
         toast.error("Validation Failed", {
           description: "Please fix the errors in the form before submitting.",
         });
-        return;
+        return false;
       }
+    }
+
+    return true;
+  };
+
+  const handleFormSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!validateCheckout()) {
+      return;
+    }
+
+    if (addressMode === "new") {
 
       try {
         const selectedProvince = provinces.find((p) => p.id === formData.province);
@@ -835,7 +861,6 @@ const Checkout = () => {
 
         await processOrder(newAddress.id);
       } catch (error: unknown) {
-        console.error("Failed to save address:", error);
         const errorMessage =
           error instanceof Error ? error.message : "Failed to save address";
         toast.error("Failed to Save Address", {
@@ -866,26 +891,53 @@ const Checkout = () => {
 
       const response = await createOrder(orderData);
 
-      toast.success("Order Created", {
-        description: "Redirecting to payment...",
-      });
-
       if (response.payment?.redirect_url) {
-        window.location.href = response.payment.redirect_url;
+        toast.success("Order Created", {
+          description: "Redirecting to payment...",
+        });
+        setTimeout(() => {
+          window.location.href = response.payment.redirect_url!;
+        }, 500);
       } else if (response.payment?.token) {
-        router.push(`/payment?token=${response.payment.token}`);
+        toast.success("Order Created", {
+          description: "Redirecting to payment...",
+        });
+        setTimeout(() => {
+          router.push(`/payment?token=${response.payment.token}`);
+        }, 500);
       } else {
-        router.push(`/orders/${response.order.id}`);
+        toast.warning("Order Created", {
+          description: "Payment redirect not available. Please check your order.",
+        });
+        setTimeout(() => {
+          router.push(`/orders/${response.order.id}`);
+        }, 500);
       }
     } catch (error: unknown) {
-      console.error("Failed to create order:", error);
-      const errorMessage =
-        error instanceof Error
+      if (error && typeof error === 'object' && 'response' in error) {
+        const axiosError = error as { 
+          response?: { 
+            status?: number;
+            data?: { message?: string; error?: string };
+            statusText?: string;
+          };
+          message?: string;
+        };
+        const errorMessage = axiosError.response?.data?.message 
+          || axiosError.response?.data?.error 
+          || axiosError.message 
+          || "Failed to create order. Please try again.";
+        toast.error("Order Failed", {
+          description: errorMessage,
+        });
+      } else {
+        const errorMessage = error instanceof Error
           ? error.message
           : "Failed to create order. Please try again.";
-      toast.error("Order Failed", {
-        description: errorMessage,
-      });
+        toast.error("Order Failed", {
+          description: errorMessage,
+        });
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -1797,11 +1849,31 @@ const Checkout = () => {
                     placeholder="Select Courier"
                     value={selectedCourier}
                     onSelect={handleCourierChange}
-                    options={Object.keys(shippingData).map((key) => ({
-                      value: key,
-                      label:
-                        shippingData[key as keyof typeof shippingData].name,
-                    }))}
+                    options={(() => {
+                      const courierSet = new Set<string>();
+                      shippingRates.forEach((rate) => {
+                        if (rate.courier?.code) {
+                          courierSet.add(rate.courier.code.toLowerCase());
+                        }
+                      });
+                      const courierOptions = Array.from(courierSet).map((code) => {
+                        const rate = shippingRates.find(
+                          (r) => r.courier?.code?.toLowerCase() === code
+                        );
+                        return {
+                          value: code,
+                          label: rate?.courier?.name || code.toUpperCase(),
+                        };
+                      });
+                      if (courierOptions.length === 0) {
+                        return Object.keys(shippingData).map((key) => ({
+                          value: key,
+                          label:
+                            shippingData[key as keyof typeof shippingData].name,
+                        }));
+                      }
+                      return courierOptions;
+                    })()}
                     isOpen={isCourierOpen}
                     setIsOpen={setIsCourierOpen}
                   />
@@ -2079,8 +2151,28 @@ const Checkout = () => {
                 </div>
 
                 <button
-                  type="submit"
-                  disabled={isSubmitting || !selectedService}
+                  type="button"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    const fakeEvent = {
+                      preventDefault: () => {},
+                    } as React.FormEvent<HTMLFormElement>;
+                    handleFormSubmit(fakeEvent);
+                  }}
+                  disabled={(() => {
+                    if (isSubmitting) return true;
+                    if (!selectedService) return true;
+                    if (addressMode === "select" && !selectedAddressId) return true;
+                    if (orderNotes) {
+                      const notesValidation = orderNotesSchema.safeParse(orderNotes);
+                      if (!notesValidation.success) return true;
+                    }
+                    if (addressMode === "new") {
+                      const formValidation = checkoutFormSchema.safeParse(formData);
+                      if (!formValidation.success) return true;
+                    }
+                    return false;
+                  })()}
                   className="mt-4 sm:mt-5 block w-full bg-sky-500 dark:bg-sky-600 text-white text-center py-3 px-4 rounded-md font-medium hover:bg-sky-600 dark:hover:bg-sky-700 transition-colors text-sm sm:text-base cursor-pointer touch-manipulation disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isSubmitting ? "Processing..." : "Pay Now"}

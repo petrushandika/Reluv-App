@@ -104,6 +104,6 @@ export class AppModule implements NestModule {
         { path: 'badges/:id', method: RequestMethod.GET },
         { path: 'vouchers', method: RequestMethod.GET },
       )
-      .forRoutes({ path: '*', method: RequestMethod.ALL });
+      .forRoutes('*');
   }
 }

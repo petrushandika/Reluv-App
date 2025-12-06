@@ -34,7 +34,6 @@ const CategorySelector = ({
         setError(null);
       } catch (err) {
         setError("Failed to load categories.");
-        console.error(err);
       } finally {
         setIsLoading(false);
       }

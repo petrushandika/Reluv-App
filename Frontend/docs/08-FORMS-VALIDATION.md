@@ -32,7 +32,6 @@ export default function MyForm() {
   });
 
   const onSubmit = (data: FormData) => {
-    console.log(data);
   };
 
   return (

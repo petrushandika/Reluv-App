@@ -26,7 +26,6 @@ export const useProductDetail = (slug: string | null) => {
         }
         setProduct(productData);
       } catch (err: any) {
-        console.error("Failed to fetch product:", slug, err);
         const errorMessage = err?.message || "Product not found or failed to load.";
         setError(errorMessage);
         setProduct(null);

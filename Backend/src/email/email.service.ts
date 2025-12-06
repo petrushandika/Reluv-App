@@ -23,8 +23,6 @@ export class EmailService {
     backendUrl = backendUrl.replace(/\/$/, '');
     const url = `${backendUrl}/api/v1/auth/confirm?token=${token}`;
 
-    console.log('Sending confirmation email with URL:', url);
-
     await this.mailerService.sendMail({
       to: user.email,
       subject: 'Welcome! Please Confirm Your Email',

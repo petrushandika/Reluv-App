@@ -24,7 +24,6 @@ export class ShippingRatesController {
       if (error instanceof HttpException) {
         throw error;
       }
-      console.error('Unexpected error in checkRatesByArea:', error);
       throw new HttpException(
         'Failed to check shipping rates. Please try again later.',
         HttpStatus.INTERNAL_SERVER_ERROR,
@@ -43,7 +42,6 @@ export class ShippingRatesController {
       if (error instanceof HttpException) {
         throw error;
       }
-      console.error('Unexpected error in checkRatesByCoords:', error);
       throw new HttpException(
         'Failed to check shipping rates. Please try again later.',
         HttpStatus.INTERNAL_SERVER_ERROR,

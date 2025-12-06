@@ -72,7 +72,6 @@ export const useAuthStore = create<AuthState>()(
         } catch (error) {
           delete api.defaults.headers.common['Authorization'];
           set({ status: 'error' });
-          console.error('Login failed:', error);
           throw error;
         }
       },
@@ -87,7 +86,6 @@ export const useAuthStore = create<AuthState>()(
         } catch (error) {
           delete api.defaults.headers.common['Authorization'];
           set({ status: 'error', token: null, loginTimestamp: null });
-          console.error('Failed to set token:', error);
           throw error;
         }
       },
@@ -101,8 +99,7 @@ export const useAuthStore = create<AuthState>()(
         try {
           const freshUser = await getMe();
           set({ user: freshUser });
-        } catch (error) {
-          console.error('Session expired or invalid. Logging out.', error);
+        } catch {
           get().logout();
         }
       },
@@ -129,9 +126,7 @@ export const useAuthStore = create<AuthState>()(
                 'Authorization'
               ] = `Bearer ${state.token}`;
               if (!state.user || !state.user.firstName) {
-                state.fetchAndSetUser().catch((error) => {
-                  console.error('Failed to fetch user after rehydrate:', error);
-                });
+                state.fetchAndSetUser().catch(() => {});
               }
             }
           }

@@ -32,7 +32,6 @@ const AddressPage = () => {
         const userData = await getMe();
         setUser(userData);
       } catch (error) {
-        console.error("Failed to fetch user data:", error);
         setUser(null);
       } finally {
         setIsLoading(false);
@@ -55,7 +54,6 @@ const AddressPage = () => {
         const addressList = await getAddresses();
         setAddresses(addressList);
       } catch (error) {
-        console.error("Failed to fetch addresses:", error);
         setAddresses([]);
       } finally {
         setIsLoadingAddresses(false);
@@ -86,7 +84,6 @@ const AddressPage = () => {
         description: "The address has been deleted successfully.",
       });
     } catch (error: any) {
-      console.error("Failed to delete address:", error);
       toast.error("Failed to Delete Address", {
         description:
           error?.response?.data?.message ||

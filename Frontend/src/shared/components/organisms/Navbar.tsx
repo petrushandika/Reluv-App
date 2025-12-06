@@ -532,13 +532,9 @@ const Navbar = () => {
   useEffect(() => {
     if (token) {
       if (!user || !user.firstName) {
-        fetchAndSetUser().catch((error) => {
-          console.error("Failed to fetch user in Navbar:", error);
-        });
+        fetchAndSetUser().catch(() => {});
       } else if (user && !user.profile) {
-        fetchAndSetUser().catch((error) => {
-          console.error("Failed to fetch user profile in Navbar:", error);
-        });
+        fetchAndSetUser().catch(() => {});
       }
     }
     setAvatarError(false);

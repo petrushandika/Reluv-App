@@ -54,15 +54,13 @@ export const checkShippingRates = async (
   data: CheckShippingRatesDto
 ): Promise<ShippingRate[]> => {
   try {
-    console.log("Requesting shipping rates with data:", data);
     const response = await api.post<{ pricing: ShippingRate[] }>(
       "/shipping-rates/check-by-area",
       data
     );
-    console.log("Shipping rates response:", response.data);
-    return response.data?.pricing || response.data || [];
+    const pricing = response.data?.pricing || response.data || [];
+    return pricing;
   } catch (error) {
-    console.error("Failed to check shipping rates:", error);
     if (error && typeof error === 'object' && 'response' in error) {
       const axiosError = error as { 
         response?: { 
@@ -76,23 +74,17 @@ export const checkShippingRates = async (
         message?: string;
       };
       
-      const status = axiosError.response?.status;
-      const errorData = axiosError.response?.data;
-      const errorMessage = errorData?.message || errorData?.error || axiosError.message || "Failed to retrieve shipping rates.";
-      
-      console.error("Shipping rates error details:", {
-        status,
-        errorData,
-        errorMessage,
-      });
-      
-      if (status === 502) {
-        throw new Error("Shipping service is temporarily unavailable. Please try again later or use manual shipping selection.");
-      }
+      const errorMessage = axiosError.response?.data?.message 
+        || axiosError.response?.data?.error 
+        || axiosError.message 
+        || "Failed to retrieve shipping rates.";
       
       throw new Error(errorMessage);
     }
-    throw error instanceof Error ? error : new Error("Failed to retrieve shipping rates.");
+    const errorMessage = error instanceof Error 
+      ? error.message 
+      : "Failed to retrieve shipping rates.";
+    throw new Error(errorMessage);
   }
 };
 
@@ -119,7 +111,6 @@ export const checkShippingRatesByCoords = async (data: {
     );
     return response.data.pricing || [];
   } catch (error) {
-    console.error("Failed to check shipping rates by coordinates:", error);
     throw error;
   }
 };
@@ -131,7 +122,6 @@ export const createOrder = async (
     const response = await api.post<CreateOrderResponse>("/orders", data);
     return response.data;
   } catch (error) {
-    console.error("Failed to create order:", error);
     throw error;
   }
 };

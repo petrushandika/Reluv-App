@@ -19,7 +19,6 @@ export const uploadImage = async (file: File): Promise<string> => {
     );
     return response.data.url;
   } catch (error) {
-    console.error("Gagal mengunggah gambar:", error);
     throw new Error("Gagal mengunggah gambar.");
   }
 };
@@ -29,7 +28,6 @@ export const createProduct = async (data: CreateProductPayload) => {
     const response = await api.post("/products", data);
     return response.data;
   } catch (error) {
-    console.error("Gagal membuat produk:", error);
     throw error;
   }
 };

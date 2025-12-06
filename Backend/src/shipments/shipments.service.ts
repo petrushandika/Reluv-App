@@ -113,10 +113,6 @@ export class ShipmentsService {
       });
     } catch (error) {
       if (error instanceof Error) {
-        console.error(
-          'Biteship API Error:',
-          error['response']?.data || error.message,
-        );
       }
       throw new InternalServerErrorException(
         'Failed to create shipment order with Biteship.',
@@ -132,7 +128,6 @@ export class ShipmentsService {
     });
 
     if (!shipment) {
-      console.warn(`Shipment with Biteship order ID ${id} not found.`);
       return;
     }
 

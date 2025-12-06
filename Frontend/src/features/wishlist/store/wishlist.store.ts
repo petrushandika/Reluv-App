@@ -29,7 +29,6 @@ export const useWishlistStore = create<WishlistState>((set, get) => ({
         set({ isLoading: false, items: [] });
       }
     } catch (error) {
-      console.error("Failed to fetch wishlist data:", error);
       set({ isLoading: false, items: [] });
     }
   },
@@ -63,7 +62,6 @@ export const useWishlistStore = create<WishlistState>((set, get) => ({
     try {
       await addToWishlist(data);
     } catch (error) {
-      console.error("Failed to add item to wishlist:", error);
       set({ items: currentItems });
       throw error;
     }
@@ -88,7 +86,6 @@ export const useWishlistStore = create<WishlistState>((set, get) => ({
     try {
       await removeFromWishlist(data.productId);
     } catch (error) {
-      console.error("Failed to remove item from wishlist:", error);
       set({ items: currentItems });
       throw error;
     }

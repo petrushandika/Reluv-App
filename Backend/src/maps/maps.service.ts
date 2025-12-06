@@ -50,10 +50,6 @@ export class MapsService {
       return response.data.areas;
     } catch (error) {
       if (error instanceof AxiosError) {
-        console.error(
-          'Biteship Area Search Error:',
-          error.response?.data || error.message,
-        );
       }
       throw new BadGatewayException(
         'Failed to search for areas from the provider.',
@@ -78,10 +74,6 @@ export class MapsService {
       return response.data;
     } catch (error) {
       if (error instanceof AxiosError) {
-        console.error(
-          'OpenStreetMap API Error:',
-          error.response?.data || error.message,
-        );
       }
       throw new BadGatewayException(
         'Failed to retrieve location data from provider.',

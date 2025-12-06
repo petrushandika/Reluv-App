@@ -151,7 +151,6 @@ const EditAddressPageContent = () => {
         const userData = await getMe();
         setUser(userData);
       } catch (error) {
-        console.error("Failed to fetch user data:", error);
         setUser(null);
       } finally {
         setIsLoading(false);
@@ -245,7 +244,6 @@ const EditAddressPageContent = () => {
           }
         }
       } catch (error) {
-        console.error("Failed to fetch address:", error);
         toast.error("Failed to Load Address", {
           description: "Could not load address data.",
         });
@@ -268,7 +266,6 @@ const EditAddressPageContent = () => {
         const data: Province[] = await response.json();
         setProvinces(data);
       } catch (error) {
-        console.error("Failed to fetch provinces:", error);
       } finally {
         setIsLoadingProvinces(false);
       }
@@ -287,7 +284,6 @@ const EditAddressPageContent = () => {
           const data: Regency[] = await response.json();
           setRegencies(data);
         } catch (error) {
-          console.error("Failed to fetch regencies:", error);
           setRegencies([]);
         } finally {
           setIsLoadingRegencies(false);
@@ -330,7 +326,6 @@ const EditAddressPageContent = () => {
             }
           }
         } catch (error) {
-          console.error("Failed to fetch districts:", error);
           setDistricts([]);
         } finally {
           setIsLoadingDistricts(false);
@@ -371,7 +366,6 @@ const EditAddressPageContent = () => {
             }
           }
         } catch (error) {
-          console.error("Failed to fetch sub-districts:", error);
           setSubDistricts([]);
         } finally {
           setIsLoadingSubDistricts(false);
@@ -509,7 +503,6 @@ const EditAddressPageContent = () => {
       });
       router.push("/profile/address");
     } catch (error: unknown) {
-      console.error("Failed to update address:", error);
       const errorMessage =
         (
           error as {

@@ -28,7 +28,6 @@ export const useProductStore = create<ProductState>((set) => ({
       const products = await getProducts(query);
       set({ trendingProducts: Array.isArray(products) ? products : [] });
     } catch (error) {
-      console.error("Failed to fetch trending products:", error);
       set({ trendingProducts: [] });
     } finally {
       set({ isLoadingTrending: false });
@@ -41,7 +40,6 @@ export const useProductStore = create<ProductState>((set) => ({
       const products = await getProducts(query);
       set({ slashedPriceProducts: Array.isArray(products) ? products : [] });
     } catch (error) {
-      console.error("Failed to fetch discounted products:", error);
       set({ slashedPriceProducts: [] });
     } finally {
       set({ isLoadingSlashed: false });
@@ -54,7 +52,6 @@ export const useProductStore = create<ProductState>((set) => ({
       const products = await getProducts(query);
       set({ recommendedProducts: Array.isArray(products) ? products : [] });
     } catch (error) {
-      console.error("Failed to fetch recommended products:", error);
       set({ recommendedProducts: [] });
     } finally {
       set({ isLoadingRecommended: false });

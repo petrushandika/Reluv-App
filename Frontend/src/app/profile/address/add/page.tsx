@@ -150,7 +150,6 @@ const AddAddressPage = () => {
         const userData = await getMe();
         setUser(userData);
       } catch (error) {
-        console.error("Failed to fetch user data:", error);
         setUser(null);
       } finally {
         setIsLoading(false);
@@ -172,7 +171,6 @@ const AddAddressPage = () => {
         const addresses = await getAddresses();
         setHasExistingAddresses(addresses.length > 0);
       } catch (error) {
-        console.error("Failed to check existing addresses:", error);
         setHasExistingAddresses(false);
       }
     };
@@ -192,7 +190,6 @@ const AddAddressPage = () => {
         const data: Province[] = await response.json();
         setProvinces(data);
       } catch (error) {
-        console.error("Failed to fetch provinces:", error);
       } finally {
         setIsLoadingProvinces(false);
       }
@@ -211,7 +208,6 @@ const AddAddressPage = () => {
           const data: Regency[] = await response.json();
           setRegencies(data);
         } catch (error) {
-          console.error("Failed to fetch regencies:", error);
           setRegencies([]);
         } finally {
           setIsLoadingRegencies(false);
@@ -240,7 +236,6 @@ const AddAddressPage = () => {
           const data: District[] = await response.json();
           setDistricts(data);
         } catch (error) {
-          console.error("Failed to fetch districts:", error);
           setDistricts([]);
         } finally {
           setIsLoadingDistricts(false);
@@ -264,7 +259,6 @@ const AddAddressPage = () => {
           const data: SubDistrict[] = await response.json();
           setSubDistricts(data);
         } catch (error) {
-          console.error("Failed to fetch sub-districts:", error);
           setSubDistricts([]);
         } finally {
           setIsLoadingSubDistricts(false);
@@ -400,7 +394,6 @@ const AddAddressPage = () => {
       });
       router.push("/profile/address");
     } catch (error: unknown) {
-      console.error("Failed to save address:", error);
       const errorMessage =
         (
           error as {

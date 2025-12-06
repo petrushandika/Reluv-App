@@ -11,7 +11,6 @@ export const getProducts = async (query?: ProductQuery): Promise<Product[]> => {
     });
 
     if (!response || !response.data) {
-      console.warn("No data in response");
       return [];
     }
 
@@ -19,10 +18,8 @@ export const getProducts = async (query?: ProductQuery): Promise<Product[]> => {
       return response.data;
     }
 
-    console.warn("Response data is not an array:", response.data);
     return [];
-  } catch (error) {
-    console.error("Failed to fetch products:", error);
+  } catch {
     return [];
   }
 };
@@ -36,7 +33,6 @@ export const getProductBySlug = async (slug: string): Promise<Product> => {
     }
     return response.data;
   } catch (error) {
-    console.error("Failed to fetch product by slug:", slug, error);
     const apiError = error as AxiosError<{ message?: string; error?: string }> | Error;
     if ("response" in apiError && apiError.response?.status === 404) {
       throw new Error("Product not found");
@@ -55,7 +51,6 @@ export const getProductById = async (id: number): Promise<Product> => {
     }
     return response.data;
   } catch (error) {
-    console.error("Failed to fetch product:", error);
     const apiError = error as AxiosError<{ message?: string; error?: string }> | Error;
     if ("response" in apiError && apiError.response?.status === 404) {
       throw new Error("Product not found");
@@ -73,7 +68,6 @@ export const getMyProducts = async (query?: ProductQuery): Promise<Product[]> =>
     });
 
     if (!response || !response.data) {
-      console.warn("No data in response");
       return [];
     }
 
@@ -83,10 +77,8 @@ export const getMyProducts = async (query?: ProductQuery): Promise<Product[]> =>
       return products;
     }
 
-    console.warn("Response data is not an array:", products);
     return [];
-  } catch (error) {
-    console.error("Failed to fetch my products:", error);
+  } catch {
     return [];
   }
 };
@@ -114,7 +106,6 @@ export const updateProduct = async (
     }
     return response.data;
   } catch (error) {
-    console.error("Failed to update product:", error);
     const apiError = error as AxiosError<{ message?: string; error?: string }> | Error;
     throw new Error(
       (apiError as Error).message || "Unable to update product."
@@ -126,7 +117,6 @@ export const deleteProduct = async (id: number): Promise<void> => {
   try {
     await api.delete(`/products/${id}`);
   } catch (error) {
-    console.error("Failed to delete product:", error);
     const apiError = error as AxiosError<{ message?: string; error?: string }> | Error;
     throw new Error(
       (apiError as Error).message || "Unable to delete product."
@@ -156,7 +146,6 @@ export const updateProductVariant = async (
   try {
     await api.patch(`/products/${productId}/variants/${variantId}`, payload);
   } catch (error) {
-    console.error("Failed to update variant:", error);
     const apiError = error as AxiosError<{ message?: string; error?: string }> | Error;
     throw new Error(
       (apiError as Error).message || "Unable to update variant."
@@ -171,7 +160,6 @@ export const deleteProductVariant = async (
   try {
     await api.delete(`/products/${productId}/variants/${variantId}`);
   } catch (error) {
-    console.error("Failed to delete variant:", error);
     const apiError = error as AxiosError<{ message?: string; error?: string }> | Error;
     throw new Error(
       (apiError as Error).message || "Unable to delete variant."
@@ -187,7 +175,6 @@ export const updateProductPrice = async (
   try {
     await api.patch(`/products/${productId}/variants/${variantId}`, { price });
   } catch (error) {
-    console.error("Failed to update product price:", error);
     const apiError = error as AxiosError<{ message?: string; error?: string }> | Error;
     throw new Error(
       (apiError as Error).message || "Unable to update product price."
@@ -203,7 +190,6 @@ export const updateProductStock = async (
   try {
     await api.patch(`/products/${productId}/variants/${variantId}`, { stock });
   } catch (error) {
-    console.error("Failed to update product stock:", error);
     const apiError = error as AxiosError<{ message?: string; error?: string }> | Error;
     throw new Error(
       (apiError as Error).message || "Unable to update product stock."
@@ -224,7 +210,6 @@ export const toggleProductStatus = async (
     }
     return response.data;
   } catch (error) {
-    console.error("Failed to toggle product status:", error);
     const apiError = error as AxiosError<{ message?: string; error?: string }> | Error;
     throw new Error(
       (apiError as Error).message || "Unable to update product status."

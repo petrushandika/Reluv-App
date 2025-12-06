@@ -91,7 +91,6 @@ const ShareModal = ({ isOpen, onClose, product }: ShareModalProps) => {
         toast.error("Copy Failed", {
           description: "Unable to copy link to clipboard. Please try again.",
         });
-        console.error("Could not copy text: ", err);
       }
     );
   };

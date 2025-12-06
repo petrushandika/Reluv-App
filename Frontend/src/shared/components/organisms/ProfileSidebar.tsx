@@ -102,7 +102,6 @@ const ProfileSidebar: React.FC<ProfileSidebarProps> = ({ user }) => {
           const userData = await getMe();
           setLocalUser(userData);
         } catch (error) {
-          console.error("Failed to fetch user data in ProfileSidebar:", error);
         }
       }
     };
@@ -194,7 +193,6 @@ const ProfileSidebar: React.FC<ProfileSidebarProps> = ({ user }) => {
         description: "Your profile avatar has been updated successfully",
       });
     } catch (error: unknown) {
-      console.error("Failed to update avatar:", error);
       const errorMessage = error instanceof Error ? error.message : "Failed to update avatar. Please try again.";
       toast.error("Upload Failed", {
         description: errorMessage,

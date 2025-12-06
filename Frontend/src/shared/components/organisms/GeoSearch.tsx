@@ -104,7 +104,6 @@ const GeoSearch = ({ onLocationSelect }: GeoSearchProps) => {
               }
             }
           } catch {
-            console.log('Backend search failed, using OpenStreetMap provider');
           }
 
           const search_results = await provider.search({ query: trimmedQuery });
@@ -123,7 +122,6 @@ const GeoSearch = ({ onLocationSelect }: GeoSearchProps) => {
           }
         } catch (error) {
           if (!abortController.signal.aborted) {
-            console.error('GeoSearch error:', error);
             setResults([]);
             setIsLoading(false);
           }

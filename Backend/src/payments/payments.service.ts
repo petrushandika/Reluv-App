@@ -79,7 +79,6 @@ export class PaymentsService {
       return transaction;
     } catch (error) {
       if (error instanceof Error) {
-        console.error('Midtrans API Error:', error.message);
         throw new InternalServerErrorException(
           `Failed to create payment transaction: ${error.message}`,
         );
@@ -99,7 +98,6 @@ export class PaymentsService {
       .digest('hex');
 
     if (hash !== notification.signature_key) {
-      console.warn('Invalid Midtrans notification signature received.');
       return;
     }
 
@@ -109,7 +107,6 @@ export class PaymentsService {
     });
 
     if (!payment) {
-      console.warn(`Payment with order_id ${notification.order_id} not found.`);
       return;
     }
 
@@ -159,10 +156,6 @@ export class PaymentsService {
         try {
           await this.shipmentsService.createShipment(updatedOrder.id);
         } catch (error) {
-          console.error(
-            `Failed to create shipment for paid order ${updatedOrder.id}:`,
-            error,
-          );
         }
       }
     }

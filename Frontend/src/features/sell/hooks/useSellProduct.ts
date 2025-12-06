@@ -245,7 +245,6 @@ export const useSellProduct = () => {
     } catch (error: unknown) {
       let errorMessage = "An unexpected error occurred.";
       if (axios.isAxiosError(error)) {
-        console.error("Backend validation error:", error.response?.data);
         errorMessage =
           error.response?.data?.message || "Failed to create listing.";
         if (Array.isArray(errorMessage)) {
@@ -255,7 +254,6 @@ export const useSellProduct = () => {
         errorMessage = error.message;
       }
 
-      console.error("Failed to create listing:", error);
       toast.error("Failed to Create Listing", {
         description: errorMessage,
       });

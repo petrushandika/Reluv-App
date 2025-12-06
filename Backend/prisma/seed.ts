@@ -190,14 +190,11 @@ async function cleanup() {
 }
 
 async function main() {
-  console.log(`🚀 Starting to seed...`);
   try {
     await cleanup();
-    console.log('✅ Database cleaned.');
 
     const hashPassword = (pw: string) => bcrypt.hash(pw, 10);
 
-    console.log('Creating users from users.json...');
     const createdUsers: User[] = [];
     for (const userData of usersData) {
       const user = await prisma.user.create({
@@ -236,10 +233,6 @@ async function main() {
         await prisma.location.createMany({
           data: locationsToCreate,
         });
-
-        console.log(
-          `📍 Created ${userLocations.length} locations for ${user.email}`,
-        );
       }
 
       createdUsers.push(user);
@@ -261,10 +254,7 @@ async function main() {
         },
       });
       sellerUsers.push(newUser);
-      console.log(`👤 Created additional seller user: ${newUser.email}`);
     }
-
-    console.log('Creating categories from categories.json...');
 
     async function createCategoryRecursive(
       categoryData: CategorySeed,
@@ -307,7 +297,6 @@ async function main() {
     if (!mensCategory || !womensCategory)
       throw new Error('Could not find Men or Women categories.');
 
-    console.log('Creating stores from stores.json...');
     const createdStores: Array<{
       id: number;
       name: string;
@@ -351,10 +340,7 @@ async function main() {
         },
       });
       createdStores.push(store);
-      console.log(`🏪 Created store: ${store.name} (${store.slug})`);
     }
-
-    console.log('Creating products and variants from JSON files...');
     const usedSlugs = new Set<string>();
     for (let i = 0; i < productSeedData.length; i++) {
       const product = productSeedData[i];
@@ -375,9 +361,6 @@ async function main() {
         (v) => v.key === product.variantsKey,
       )?.variants;
       if (!variantsToCreate) {
-        console.warn(
-          `Variants for key '${product.variantsKey}' not found. Skipping product "${productName}".`,
-        );
         continue;
       }
 
@@ -399,9 +382,6 @@ async function main() {
             },
           },
         });
-        console.log(
-          `📦 Created product: "${productName}" in ${store.name} with ${variantsToCreate.length} variants.`,
-        );
       } catch (error: any) {
         if (error.code === 'P2002' && error.meta?.target?.includes('slug')) {
           const randomStr = Math.random().toString(36).substring(2, 8);
@@ -424,16 +404,12 @@ async function main() {
               },
             },
           });
-          console.log(
-            `📦 Created product: "${productName}" in ${store.name} with ${variantsToCreate.length} variants (slug: ${newSlug}).`,
-          );
         } else {
           throw error;
         }
       }
     }
 
-    console.log('Creating vouchers from vouchers.json...');
     const vouchersPerStore = 3;
     for (let i = 0; i < createdStores.length; i++) {
       const store = createdStores[i];
@@ -463,12 +439,7 @@ async function main() {
           },
         });
       }
-      console.log(
-        `🎫 Created ${storeVouchers.length} vouchers for ${store.name}`,
-      );
     }
-
-    console.log('Creating badges from badges.json...');
     for (const badgeData of badgesData) {
       const store = createdStores[badgeData.storeIndex];
       if (!store) continue;
@@ -483,10 +454,7 @@ async function main() {
           store: { connect: { id: store.id } },
         },
       });
-      console.log(`🏅 Created badge for ${store.name}`);
     }
-
-    console.log('Creating promotions from promotions.json...');
     for (const promotionData of promotionsData) {
       const store = createdStores[promotionData.storeIndex];
       if (!store) continue;
@@ -515,10 +483,7 @@ async function main() {
           },
         },
       });
-      console.log(`🎉 Created promotion for ${store.name}`);
     }
-
-    console.log('Creating discounts from discounts.json...');
     const allProducts = await prisma.product.findMany({ take: 10 });
 
     for (const discountData of discountsData) {
@@ -574,15 +539,10 @@ async function main() {
       }
 
       await prisma.discount.create({ data: discountCreateData });
-      console.log(`💰 Created discount: ${discountData.name}`);
     }
-
-    console.log('\nSeeding finished successfully. ✅');
   } catch (e) {
     if (e instanceof Error) {
-      console.error('An error occurred during seeding:', e.message);
     } else {
-      console.error('An unknown error occurred during seeding:', e);
     }
     process.exit(1);
   } finally {

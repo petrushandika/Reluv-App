@@ -26,8 +26,7 @@ const CallbackContent = () => {
           localStorage.removeItem('previousPage');
           router.push(previousPage);
         })
-        .catch((error) => {
-          console.error('Failed to authenticate:', error);
+        .catch(() => {
           router.push('/auth/login?error=authentication_failed');
         });
     } else {

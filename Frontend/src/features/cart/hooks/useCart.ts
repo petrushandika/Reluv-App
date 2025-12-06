@@ -61,7 +61,6 @@ export const useCart = () => {
         id: toastId,
       });
     } catch (error) {
-      console.error("Failed to add item:", error);
       toast.error("Failed to Add Item", {
         description: "Unable to add item to cart. Please try again.",
         id: toastId,
@@ -86,7 +85,6 @@ export const useCart = () => {
         id: toastId,
       });
     } catch (error) {
-      console.error("Failed to update quantity:", error);
       toast.error("Failed to Update Quantity", {
         description: "Unable to update quantity. Please try again.",
         id: toastId,
@@ -108,7 +106,6 @@ export const useCart = () => {
         id: toastId,
       });
     } catch (error) {
-      console.error("Failed to remove item:", error);
       toast.error("Failed to Remove Item", {
         description: "Unable to remove item. Please try again.",
         id: toastId,

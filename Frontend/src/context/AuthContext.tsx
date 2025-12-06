@@ -43,7 +43,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           }
         }
       } catch (error) {
-        console.error('Error checking auth:', error);
         if (typeof window !== 'undefined') {
           localStorage.removeItem('user');
           localStorage.removeItem('token');
@@ -83,7 +82,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
       return false;
     } catch (error) {
-      console.error('Login error:', error);
       return false;
     } finally {
       setIsLoading(false);

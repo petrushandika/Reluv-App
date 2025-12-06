@@ -52,7 +52,6 @@ export const useWishlist = () => {
         id: toastId,
       });
     } catch (error) {
-      console.error("Failed to add item to wishlist:", error);
       toast.error("Failed to Add Item", {
         description: "Unable to add item to wishlist. Please try again.",
         id: toastId,
@@ -71,7 +70,6 @@ export const useWishlist = () => {
         id: toastId,
       });
     } catch (error) {
-      console.error("Failed to remove item from wishlist:", error);
       toast.error("Failed to Remove Item", {
         description: "Unable to remove item from wishlist. Please try again.",
         id: toastId,

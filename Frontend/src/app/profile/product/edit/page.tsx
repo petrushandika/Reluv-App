@@ -185,7 +185,6 @@ const EditProductPageContent = () => {
         setVariants(productData.variants || []);
         setNewImageFiles(new Array(productData.images?.length || 0).fill(null));
       } catch (error) {
-        console.error("Failed to fetch product:", error);
         const errorMessage =
           error instanceof Error ? error.message : "Unable to load product.";
         toast.error("Failed to Load Product", {

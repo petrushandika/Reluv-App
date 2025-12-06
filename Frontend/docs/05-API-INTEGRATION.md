@@ -111,7 +111,6 @@ export default function ProductList() {
         const data = await getProducts();
         setProducts(data);
       } catch (error) {
-        console.error('Failed to fetch products:', error);
       } finally {
         setIsLoading(false);
       }

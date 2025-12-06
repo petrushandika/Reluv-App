@@ -84,7 +84,6 @@ const DraggableMarkerWithPopup = ({
         setAddress('Location selected');
       }
     } catch (error) {
-      console.error('Reverse geocoding error:', error);
       setAddress('Location selected');
     } finally {
       setIsFetchingAddress(false);

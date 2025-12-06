@@ -538,7 +538,6 @@ const ProductPage = () => {
         const userData = await getMe();
         setUser(userData);
       } catch (error) {
-        console.error("Failed to fetch user data:", error);
         setUser(null);
       } finally {
         setIsLoading(false);
@@ -561,7 +560,6 @@ const ProductPage = () => {
         const productList = await getMyProducts();
         setProducts(productList);
       } catch (error) {
-        console.error("Failed to fetch products:", error);
         setProducts([]);
       } finally {
         setIsLoadingProducts(false);

@@ -32,7 +32,6 @@ const Wishlist = () => {
     try {
       await removeItem({ productId });
     } catch (error) {
-      console.error("Failed to remove item:", error);
     } finally {
       setRemovingId(null);
     }

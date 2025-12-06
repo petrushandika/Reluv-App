@@ -24,12 +24,11 @@ const AppInitializer = ({ children }: { children: React.ReactNode }) => {
       const initializeData = async () => {
         try {
           Promise.all([
-            fetchAndSetUser().catch(console.error),
-            fetchCart().catch(console.error),
-            fetchWishlist().catch(console.error),
+            fetchAndSetUser().catch(() => {}),
+            fetchCart().catch(() => {}),
+            fetchWishlist().catch(() => {}),
           ]);
         } catch (error) {
-          console.error('Failed to initialize user data:', error);
         }
       };
       const timer = setTimeout(initializeData, 0);

@@ -87,12 +87,7 @@ export class GeocodeService {
             'Access forbidden by geocoding service.',
           );
         }
-        console.error('Nominatim API request failed:', {
-          status: error.response?.status,
-          message: error.message,
-        });
       } else {
-        console.error('Geocoding error:', error);
       }
       throw new BadGatewayException('Failed to fetch address data.');
     }

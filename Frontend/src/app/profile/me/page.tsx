@@ -81,7 +81,6 @@ const ProfilePage = () => {
         const userData = await getMe();
         setUser(userData);
       } catch (error) {
-        console.error("Failed to fetch user data:", error);
         setUser(null);
       } finally {
         setIsLoading(false);
@@ -168,7 +167,6 @@ const ProfilePage = () => {
         description: "Your personal information has been updated successfully.",
       });
     } catch (error) {
-      console.error("Failed to update personal info:", error);
       toast.error("Update Failed", {
         description: "Unable to update personal information. Please try again.",
       });
@@ -225,7 +223,6 @@ const ProfilePage = () => {
         description: "Your phone number has been updated successfully.",
       });
     } catch (error) {
-      console.error("Failed to update phone number:", error);
       toast.error("Update Failed", {
         description: "Unable to update phone number. Please try again.",
       });

@@ -42,7 +42,6 @@ const OrdersPage = () => {
         setUser(userData);
         setOrders(ordersData);
       } catch (error) {
-        console.error('Failed to fetch data:', error);
         setUser(null);
         setOrders([]);
       } finally {
