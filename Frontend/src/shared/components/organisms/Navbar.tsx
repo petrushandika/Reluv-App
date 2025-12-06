@@ -13,6 +13,8 @@ import {
   LogOut,
   ScrollText,
   Bell,
+  MapPin,
+  Package,
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
@@ -414,7 +416,7 @@ const Navbar = () => {
       }, 3000);
       return () => clearInterval(timer);
     }
-  }, [activeMainMenu]);
+  }, [activeMainMenu, giftCardData.length]);
 
   useEffect(() => {
     let ticking = false;
@@ -548,12 +550,6 @@ const Navbar = () => {
   const toggleMobileSubMenu = (subMenu: string) => {
     setMobileActiveSubMenu((prev) => (prev === subMenu ? null : subMenu));
   };
-  const handleMobileMainMenuClick = (e: React.MouseEvent, menu: string) => {
-    e.stopPropagation();
-    const route = getMainMenuRoute(menu);
-    router.prefetch(route);
-    window.location.href = route;
-  };
 
   const handleLogoutClick = () => {
     setIsLogoutModalOpen(true);
@@ -615,10 +611,13 @@ const Navbar = () => {
             <div className="text-xl lg:text-2xl font-bold text-sky-700 dark:text-sky-400 hidden lg:block transition-colors duration-300 glossy-text-title">
               reluv
             </div>
-            <img
+            <Image
               src="https://res.cloudinary.com/dqcyabvc2/image/upload/v1752299960/logo_gqfygx.png"
               alt="Reluv Logo"
+              width={120}
+              height={32}
               className="block lg:hidden h-8 w-auto transition-opacity duration-300 hover:opacity-80"
+              unoptimized
             />
           </Link>
           <nav className="hidden lg:flex items-center space-x-8">
@@ -761,6 +760,20 @@ const Navbar = () => {
                             <span className="font-medium">My Profile</span>
                           </Link>
                           <Link
+                            href="/profile/addresses"
+                            className="flex items-center px-6 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300 hover:pl-8 cursor-pointer"
+                          >
+                            <MapPin className="w-5 h-5 mr-3 text-gray-600 dark:text-gray-400 transition-colors duration-300" />
+                            <span className="font-medium">My Address</span>
+                          </Link>
+                          <Link
+                            href="/profile/products"
+                            className="flex items-center px-6 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300 hover:pl-8 cursor-pointer"
+                          >
+                            <Package className="w-5 h-5 mr-3 text-gray-600 dark:text-gray-400 transition-colors duration-300" />
+                            <span className="font-medium">My Product</span>
+                          </Link>
+                          <Link
                             href="/profile/orders"
                             className="flex items-center px-6 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300 hover:pl-8 cursor-pointer"
                           >
@@ -895,11 +908,14 @@ const Navbar = () => {
       </div>
 
       <div
-        className={`absolute top-full left-0 w-full z-10 lg:hidden bg-white/95 dark:bg-gray-900/95 backdrop-blur-md text-gray-800 dark:text-white border-t border-gray-200/50 dark:border-gray-700/50 max-h-[calc(100vh-4.5rem)] overflow-y-auto shadow-lg transition-all duration-300 ease-in-out ${
+        className={`absolute top-full left-0 w-full z-10 lg:hidden bg-white/95 dark:bg-gray-900/95 backdrop-blur-md text-gray-800 dark:text-white border-t border-gray-200/50 dark:border-gray-700/50 overflow-y-auto shadow-lg transition-all duration-500 ease-in-out ${
           isMobileMenuOpen
-            ? "opacity-100 translate-y-0"
-            : "opacity-0 -translate-y-4 pointer-events-none"
+            ? "opacity-100 max-h-[calc(100vh-4.5rem)]"
+            : "opacity-0 pointer-events-none max-h-0"
         }`}
+        style={{
+          transform: isMobileMenuOpen ? 'translateY(0)' : 'translateY(-20px)',
+        }}
       >
         <style jsx>{`
           @keyframes slideDown {
@@ -947,57 +963,106 @@ const Navbar = () => {
               key={menu}
               className="border-b border-gray-200 dark:border-gray-700 last:border-b-0"
             >
-              <div
-                onClick={() => toggleMobileMainMenu(menu)}
-                className="w-full flex justify-between items-center py-3 text-left font-semibold cursor-pointer"
-              >
-                <span
-                  onClick={(e) => handleMobileMainMenuClick(e, menu)}
-                  className="hover:text-sky-600 dark:hover:text-sky-400 transition-colors duration-300"
+              <div className="w-full flex justify-between items-center py-3 text-left font-semibold">
+                <Link
+                  href={getMainMenuRoute(menu)}
+                  onClick={(e) => {
+                    if (dropdownData[menu].categories.length > 0) {
+                      e.preventDefault();
+                      toggleMobileMainMenu(menu);
+                    } else {
+                      setIsMobileMenuOpen(false);
+                    }
+                  }}
+                  className="flex-1 hover:text-sky-600 dark:hover:text-sky-400 transition-colors duration-300 cursor-pointer"
                 >
                   {menu}
-                </span>
-                <ChevronDown
-                  className={`w-5 h-5 transition-all duration-300 ease-in-out ${
-                    mobileActiveMainMenu === menu ? "rotate-180" : ""
-                  }`}
-                />
+                </Link>
+                {dropdownData[menu].categories.length > 0 && (
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      toggleMobileMainMenu(menu);
+                    }}
+                    className="ml-2 p-1 hover:text-sky-600 dark:hover:text-sky-400 transition-colors duration-300"
+                  >
+                    <ChevronDown
+                      className={`w-5 h-5 transition-all duration-300 ease-in-out ${
+                        mobileActiveMainMenu === menu ? "rotate-180" : ""
+                      }`}
+                    />
+                  </button>
+                )}
               </div>
               {mobileActiveMainMenu === menu && (
-                <div className="pl-4 pb-2">
+                <div 
+                  className="pl-4 pb-2 overflow-hidden transition-all duration-500 ease-in-out"
+                  style={{
+                    maxHeight: mobileActiveMainMenu === menu ? '2000px' : '0',
+                    opacity: mobileActiveMainMenu === menu ? 1 : 0,
+                    transform: mobileActiveMainMenu === menu ? 'translateY(0)' : 'translateY(-10px)',
+                  }}
+                >
                   {dropdownData[menu].categories.map((category) => {
                     const categorySlug = categoryToSlug(category);
                     const categoryRoute = `${getMainMenuRoute(
                       menu
                     )}/${categorySlug}`;
+                    const hasSubMenu = dropdownData[menu].subMenus[category] && dropdownData[menu].subMenus[category].length > 0;
                     return (
                       <div
                         key={category}
                         className="border-b border-gray-200 dark:border-gray-700 last:border-b-0"
                       >
-                        <Link
-                          href={categoryRoute}
-                          prefetch={true}
-                          className="w-full flex justify-between items-center py-3 text-left text-sm text-gray-700 dark:text-gray-300 cursor-pointer hover:text-sky-600 dark:hover:text-sky-400 transition-all duration-300"
-                          onClick={() => {
-                            toggleMobileSubMenu(category);
-                            setIsMobileMenuOpen(false);
-                          }}
-                        >
-                          <span className="transition-colors duration-300">
-                            {category}
-                          </span>
-                          <ChevronDown
-                            className={`w-5 h-5 transition-all duration-300 ease-in-out ${
-                              mobileActiveSubMenu === category
-                                ? "rotate-180"
-                                : ""
-                            }`}
-                          />
-                        </Link>
-                        {mobileActiveSubMenu === category && (
-                          <div className="pl-4 py-2 space-y-3 bg-gray-50 dark:bg-gray-800 rounded-md my-2 animate-in slide-in-from-top-2 duration-300">
-                            {dropdownData[menu].subMenus[category]?.map(
+                        {hasSubMenu ? (
+                          <button
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              toggleMobileSubMenu(category);
+                            }}
+                            className="w-full flex justify-between items-center py-3 text-left text-sm text-gray-700 dark:text-gray-300 cursor-pointer hover:text-sky-600 dark:hover:text-sky-400 transition-all duration-300"
+                          >
+                            <span className="transition-colors duration-300">
+                              {category}
+                            </span>
+                            <ChevronDown
+                              className={`w-5 h-5 transition-all duration-300 ease-in-out ${
+                                mobileActiveSubMenu === category
+                                  ? "rotate-180"
+                                  : ""
+                              }`}
+                            />
+                          </button>
+                        ) : (
+                          <Link
+                            href={categoryRoute}
+                            prefetch={true}
+                            className="w-full flex justify-between items-center py-3 text-left text-sm text-gray-700 dark:text-gray-300 cursor-pointer hover:text-sky-600 dark:hover:text-sky-400 transition-all duration-300"
+                            onClick={() => {
+                              setIsMobileMenuOpen(false);
+                            }}
+                          >
+                            <span className="transition-colors duration-300">
+                              {category}
+                            </span>
+                          </Link>
+                        )}
+                        {hasSubMenu && (
+                          <div 
+                            className="pl-4 space-y-3 bg-gray-50 dark:bg-gray-800 rounded-md overflow-hidden transition-all duration-500 ease-in-out"
+                            style={{
+                              maxHeight: mobileActiveSubMenu === category ? '2000px' : '0',
+                              opacity: mobileActiveSubMenu === category ? 1 : 0,
+                              transform: mobileActiveSubMenu === category ? 'translateY(0)' : 'translateY(-10px)',
+                              paddingTop: mobileActiveSubMenu === category ? '0.5rem' : '0',
+                              paddingBottom: mobileActiveSubMenu === category ? '0.5rem' : '0',
+                              marginTop: mobileActiveSubMenu === category ? '0.5rem' : '0',
+                              marginBottom: mobileActiveSubMenu === category ? '0.5rem' : '0',
+                            }}
+                          >
+                            {mobileActiveSubMenu === category && dropdownData[menu].subMenus[category]?.map(
                               (section) => (
                                 <div key={section.title}>
                                   <h4 className="font-bold text-sky-700 dark:text-sky-400 text-xs uppercase tracking-wider mb-2">
@@ -1009,6 +1074,10 @@ const Navbar = () => {
                                         <a
                                           href="#"
                                           className="block text-xs text-gray-600 dark:text-gray-300 hover:text-sky-600 dark:hover:text-sky-400 transition-all duration-300 hover:pl-2"
+                                          onClick={(e) => {
+                                            e.preventDefault();
+                                            setIsMobileMenuOpen(false);
+                                          }}
                                         >
                                           {item}
                                         </a>
@@ -1032,7 +1101,7 @@ const Navbar = () => {
               <Link
                 href="/profile/me"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="flex items-center py-3 text-sm text-gray-700 font-semibold hover:text-sky-600 hover:bg-gray-50 rounded-md transition-all duration-300 hover:pl-2"
+                className="flex items-center py-3 text-sm text-gray-700 dark:text-gray-300 font-semibold hover:text-sky-600 dark:hover:text-sky-400 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md transition-all duration-300 hover:pl-2"
               >
                 {user?.profile?.avatar && !mobileAvatarError ? (
                   <Image
@@ -1052,11 +1121,27 @@ const Navbar = () => {
                 My Profile
               </Link>
               <Link
+                href="/profile/addresses"
+                className="flex items-center py-3 text-sm text-gray-700 dark:text-gray-300 font-semibold hover:text-sky-600 dark:hover:text-sky-400 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md transition-all duration-300 hover:pl-2"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                <MapPin className="w-5 h-5 mr-3 text-gray-500 dark:text-gray-400 transition-colors duration-300" />
+                My Address
+              </Link>
+              <Link
+                href="/profile/products"
+                className="flex items-center py-3 text-sm text-gray-700 dark:text-gray-300 font-semibold hover:text-sky-600 dark:hover:text-sky-400 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md transition-all duration-300 hover:pl-2"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                <Package className="w-5 h-5 mr-3 text-gray-500 dark:text-gray-400 transition-colors duration-300" />
+                My Product
+              </Link>
+              <Link
                 href="/profile/orders"
                 className="flex items-center py-3 text-sm text-gray-700 dark:text-gray-300 font-semibold hover:text-sky-600 dark:hover:text-sky-400 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md transition-all duration-300 hover:pl-2"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
-                <ScrollText className="w-5 h-5 mr-3 text-gray-500 dark:text-gray-400 transition-colors duration-300" />{" "}
+                <ScrollText className="w-5 h-5 mr-3 text-gray-500 dark:text-gray-400 transition-colors duration-300" />
                 Order History
               </Link>
               <div className="">
@@ -1067,7 +1152,7 @@ const Navbar = () => {
                   }}
                   className="w-full text-left flex items-center py-3 text-sm text-red-600 dark:text-red-400 font-semibold hover:bg-red-50 dark:hover:bg-red-900/20 rounded-md transition-all duration-300 hover:pl-2"
                 >
-                  <LogOut className="w-5 h-5 mr-3 text-red-600 dark:text-red-400 transition-colors duration-300" />{" "}
+                  <LogOut className="w-5 h-5 mr-3 text-red-600 dark:text-red-400 transition-colors duration-300" />
                   Logout
                 </button>
               </div>
