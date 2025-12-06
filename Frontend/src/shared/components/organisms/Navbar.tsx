@@ -603,7 +603,7 @@ const Navbar = () => {
     >
       <PromoMarquee />
       <div className="w-full text-gray-800 dark:text-white relative">
-        <div className="container mx-auto flex items-center justify-between px-6 md:px-10 xl:px-20 2xl:px-40 py-2.5">
+        <div className="container mx-auto flex items-center justify-between px-6 md:px-10 xl:px-20 2xl:px-40 py-3 lg:py-2.5">
           <Link
             href="/"
             className="transition-opacity duration-300 hover:opacity-80"

@@ -212,7 +212,7 @@ const ProfileSidebar: React.FC<ProfileSidebarProps> = ({ user }) => {
   };
 
   return (
-    <aside className="hidden lg:block w-full lg:w-80 shrink-0 lg:sticky lg:top-28 lg:self-start">
+    <aside className="hidden lg:block w-full lg:w-80 shrink-0 lg:sticky lg:self-start">
       <div className="bg-gradient-to-br from-sky-500 to-sky-700 dark:from-sky-600 dark:to-sky-800 rounded-lg p-4 sm:p-6 mb-6 relative overflow-hidden">
         <div
           className="absolute inset-0 opacity-10"
