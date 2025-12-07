@@ -211,7 +211,6 @@ export class StoreService {
             },
           },
           orderBy: { createdAt: 'desc' },
-          take: 20,
         },
       },
     });

@@ -9,6 +9,7 @@ import {
   PromotionType,
   BadgeType,
   VoucherType,
+  OrderStatus,
 } from '@prisma/client';
 import { Pool } from 'pg';
 import { PrismaPg } from '@prisma/adapter-pg';
@@ -579,7 +580,7 @@ async function main() {
         },
       });
     }
-    const allProducts = await prisma.product.findMany({ take: 10 });
+    const allProducts = await prisma.product.findMany();
 
     for (const discountData of discountsData) {
       const startDate = new Date();
@@ -635,6 +636,7 @@ async function main() {
 
       await prisma.discount.create({ data: discountCreateData });
     }
+
   } catch (e) {
     if (e instanceof Error) {
     } else {
@@ -644,5 +646,6 @@ async function main() {
     await prisma.$disconnect();
   }
 }
+
 
 main();

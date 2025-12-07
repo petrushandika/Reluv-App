@@ -28,7 +28,8 @@ model User {
   notifications           Notification[]
   orders                  Order[]
   products                Product[]
-  reviews                 Review[]
+  reviews                 Review[]       @relation("ReviewAuthor")
+  reviewReplies           Review[]       @relation("ReviewReplyAuthor")
   store                   Store?
   profile                 UserProfile?
   voucherUsages           VoucherUsage[]
@@ -286,22 +287,29 @@ model VoucherUsage {
 }
 
 model Review {
-  id           Int      @id @default(autoincrement())
-  rating       Int      @db.SmallInt
-  comment      String?
-  images       String[]
-  productId    Int
-  authorId     Int
-  createdAt    DateTime @default(now())
-  helpfulCount Int      @default(0)
-  isVerified   Boolean  @default(false)
-  updatedAt    DateTime @updatedAt
-  author       User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  product      Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  id            Int      @id @default(autoincrement())
+  rating        Int      @db.SmallInt
+  comment       String?
+  images        String[]
+  productId     Int
+  authorId      Int
+  orderId       Int?
+  reply         String?
+  replyAuthorId Int?
+  editCount     Int      @default(0)
+  createdAt     DateTime @default(now())
+  helpfulCount  Int      @default(0)
+  isVerified    Boolean  @default(false)
+  updatedAt     DateTime @updatedAt
+  author        User     @relation("ReviewAuthor", fields: [authorId], references: [id], onDelete: Cascade)
+  product       Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  order         Order?   @relation(fields: [orderId], references: [id], onDelete: SetNull)
+  replyAuthor   User?    @relation("ReviewReplyAuthor", fields: [replyAuthorId], references: [id], onDelete: SetNull)
 
   @@unique([productId, authorId])
   @@index([productId, rating])
   @@index([authorId])
+  @@index([orderId])
   @@map("reviews")
 }
 
@@ -330,6 +338,7 @@ model Order {
   voucherUsage   VoucherUsage? @relation("OrderVoucherUsage", fields: [voucherUsageId], references: [id])
   payment        Payment?
   shipment       Shipment?
+  reviews        Review[]
 
   @@index([buyerId, status])
   @@index([status])

@@ -529,6 +529,34 @@ body {
   background-color: rgba(156, 163, 175, 0.5);
 }
 
+.review-scroll-container {
+  scrollbar-width: thin;
+  scrollbar-color: #0ea5e9 transparent;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: y mandatory;
+}
+
+.review-scroll-container > div > div {
+  scroll-snap-align: start;
+}
+
+.review-scroll-container::-webkit-scrollbar {
+  width: 4px;
+}
+
+.review-scroll-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.review-scroll-container::-webkit-scrollbar-thumb {
+  background-color: #0ea5e9;
+  border-radius: 2px;
+}
+
+.review-scroll-container::-webkit-scrollbar-thumb:hover {
+  background-color: #0284c7;
+}
+
 @keyframes shimmer {
   0% {
     background-position: -200% 0;

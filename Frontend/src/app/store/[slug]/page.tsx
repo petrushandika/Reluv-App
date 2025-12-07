@@ -232,6 +232,8 @@ const StoreDetail = () => {
     sellerId: store.user.id,
   }));
 
+  const actualProductCount = storeProducts.length;
+
   const renderStars = (rating: number) => {
     return Array.from({ length: 5 }).map((_, index) => (
       <Star
@@ -343,7 +345,7 @@ const StoreDetail = () => {
                     </div>
                     <div className="flex items-center gap-1 text-sm text-gray-600 dark:text-gray-400">
                       <Package className="w-4 h-4" />
-                      <span>{store.totalProducts} Products</span>
+                      <span>{actualProductCount} Products</span>
                     </div>
                     <div className="flex items-center gap-1 text-sm text-gray-600 dark:text-gray-400">
                       <ShoppingBag className="w-4 h-4" />
@@ -409,7 +411,7 @@ const StoreDetail = () => {
                 >
                   <div className="flex items-center justify-center gap-2">
                     <Package className="w-4 h-4 sm:w-5 sm:h-5" />
-                    <span>Products ({store.totalProducts})</span>
+                    <span>Products ({actualProductCount})</span>
                   </div>
                 </button>
                 <button
@@ -451,85 +453,158 @@ const StoreDetail = () => {
               ) : (
                 <div>
                   {reviews.length > 0 ? (
-                    <div className="space-y-4">
-                      {reviews.map((review) => (
-                        <div
-                          key={review.id}
-                          className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 sm:p-6"
-                        >
-                          <div className="flex items-start gap-4">
-                            <div className="relative w-10 h-10 sm:w-12 sm:h-12 rounded-full overflow-hidden shrink-0">
-                              {review.user.profile?.avatar ? (
-                                <Image
-                                  src={review.user.profile.avatar}
-                                  alt={`${review.user.firstName} ${review.user.lastName}`}
-                                  fill
-                                  className="object-cover"
-                                  unoptimized
-                                />
-                              ) : (
-                                <div className="w-full h-full bg-sky-100 dark:bg-sky-900/30 flex items-center justify-center">
-                                  <span className="text-sky-600 dark:text-sky-400 font-semibold text-sm">
-                                    {review.user.firstName[0]}
-                                    {review.user.lastName[0]}
-                                  </span>
-                                </div>
-                              )}
-                            </div>
+                    <div className="space-y-4 sm:space-y-6">
+                      {reviews.map((review) => {
+                        const authorName =
+                          review.user?.firstName || review.user?.lastName
+                            ? `${review.user?.firstName || ""} ${review.user?.lastName || ""}`.trim()
+                            : "Anonymous";
+                        const authorAvatar = review.user?.profile?.avatar || "https://classroomclipart.com/image/static7/preview2/smartphone-user-3d-clay-icon-transparent-png-66678.jpg";
+                        const formatDistanceToNow = (date: Date) => {
+                          const now = new Date();
+                          const diff = now.getTime() - date.getTime();
+                          const seconds = Math.floor(diff / 1000);
+                          const minutes = Math.floor(seconds / 60);
+                          const hours = Math.floor(minutes / 60);
+                          const days = Math.floor(hours / 24);
+                          const weeks = Math.floor(days / 7);
+                          const months = Math.floor(days / 30);
+                          const years = Math.floor(days / 365);
 
-                            <div className="flex-1 min-w-0">
-                              <div className="flex items-start justify-between gap-4 mb-2">
-                                <div>
-                                  <p className="font-semibold text-gray-900 dark:text-white text-sm sm:text-base">
-                                    {review.user.firstName} {review.user.lastName}
-                                  </p>
-                                  <div className="flex items-center gap-2 mt-1">
-                                    <div className="flex items-center">
-                                      {renderStars(review.rating)}
+                          if (seconds < 60) return "just now";
+                          if (minutes < 60) return `${minutes} minute${minutes > 1 ? "s" : ""} ago`;
+                          if (hours < 24) return `${hours} hour${hours > 1 ? "s" : ""} ago`;
+                          if (days < 7) return `${days} day${days > 1 ? "s" : ""} ago`;
+                          if (weeks < 4) return `${weeks} week${weeks > 1 ? "s" : ""} ago`;
+                          if (months < 12) return `${months} month${months > 1 ? "s" : ""} ago`;
+                          return `${years} year${years > 1 ? "s" : ""} ago`;
+                        };
+
+                        return (
+                          <div
+                            key={review.id}
+                            className="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 border border-gray-200 dark:border-gray-700 space-y-4"
+                          >
+                            <div className="flex items-start justify-between">
+                              <div className="flex items-start gap-3 flex-1">
+                                <div className="relative w-10 h-10 sm:w-12 sm:h-12 rounded-full overflow-hidden shrink-0">
+                                  <Image
+                                    src={authorAvatar}
+                                    alt={authorName}
+                                    fill
+                                    className="object-cover"
+                                    onError={(e) => {
+                                      e.currentTarget.src = "https://classroomclipart.com/image/static7/preview2/smartphone-user-3d-clay-icon-transparent-png-66678.jpg";
+                                    }}
+                                    unoptimized
+                                  />
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                  <div className="flex items-center gap-2 mb-1 flex-wrap">
+                                    <h4 className="font-semibold text-gray-900 dark:text-white text-sm sm:text-base">
+                                      {authorName}
+                                    </h4>
+                                    {(review.editCount ?? 0) > 0 && (
+                                      <span className="text-xs text-gray-500 dark:text-gray-400 italic">
+                                        (Edited)
+                                      </span>
+                                    )}
+                                  </div>
+                                  <div className="flex items-center gap-2 mb-2">
+                                    <div className="flex items-center gap-0.5">
+                                      {[1, 2, 3, 4, 5].map((star) => (
+                                        <Star
+                                          key={star}
+                                          className={`w-4 h-4 ${
+                                            star <= (review.rating || 0)
+                                              ? "text-yellow-400 fill-yellow-400"
+                                              : "text-gray-300 dark:text-gray-600"
+                                          }`}
+                                        />
+                                      ))}
                                     </div>
                                     <span className="text-xs text-gray-500 dark:text-gray-400">
-                                      {new Date(review.createdAt).toLocaleDateString()}
+                                      {review.createdAt
+                                        ? formatDistanceToNow(new Date(review.createdAt))
+                                        : "Recently"}
                                     </span>
                                   </div>
                                 </div>
                               </div>
-
-                              {review.product && (
-                                <Link
-                                  href={`/product/${review.product.slug}`}
-                                  className="inline-flex items-center gap-2 text-sm text-sky-600 dark:text-sky-400 hover:text-sky-700 dark:hover:text-sky-300 mb-2"
-                                >
-                                  <Package className="w-4 h-4" />
-                                  <span className="truncate">{review.product.name}</span>
-                                </Link>
-                              )}
-
-                              <p className="text-sm sm:text-base text-gray-700 dark:text-gray-300 leading-relaxed">
-                                {review.comment}
-                              </p>
-
-                              {review.images && review.images.length > 0 && (
-                                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mt-3">
-                                  {review.images.map((img, idx) => (
-                                    <div
-                                      key={idx}
-                                      className="relative aspect-square rounded-lg overflow-hidden"
-                                    >
-                                      <Image
-                                        src={img}
-                                        alt={`Review image ${idx + 1}`}
-                                        fill
-                                        className="object-cover"
-                                        unoptimized
-                                      />
-                                    </div>
-                                  ))}
-                                </div>
-                              )}
                             </div>
+
+                            {review.product && (
+                              <Link
+                                href={`/product/${review.product.slug}`}
+                                className="inline-flex items-center gap-2 text-sm text-sky-600 dark:text-sky-400 hover:text-sky-700 dark:hover:text-sky-300 mb-2 group"
+                              >
+                                <Package className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                                <span className="truncate font-medium">{review.product.name}</span>
+                              </Link>
+                            )}
+
+                            {review.comment && review.comment.trim() && (
+                              <div className="text-gray-700 dark:text-gray-300 text-sm sm:text-base">
+                                <p className="whitespace-pre-wrap leading-relaxed">{review.comment}</p>
+                              </div>
+                            )}
+
+                            {review.images && Array.isArray(review.images) && review.images.length > 0 && (
+                              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
+                                {review.images.map((imageUrl, index) => (
+                                  <div
+                                    key={index}
+                                    className="relative w-full h-32 sm:h-40 rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700 cursor-pointer hover:opacity-90 transition-opacity"
+                                    onClick={() => window.open(imageUrl, "_blank")}
+                                  >
+                                    <Image
+                                      src={imageUrl}
+                                      alt={`Review image ${index + 1}`}
+                                      fill
+                                      className="object-cover"
+                                      onError={(e) => {
+                                        e.currentTarget.src = "/placeholder-image.png";
+                                      }}
+                                      unoptimized
+                                    />
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+
+                            {review.reply && review.reply.trim() && (
+                              <div className="ml-4 sm:ml-8 pl-4 sm:pl-6 border-l-2 border-sky-200 dark:border-sky-800 bg-sky-50 dark:bg-sky-900/20 rounded-r-lg p-3 sm:p-4 space-y-2">
+                                <div className="flex items-center gap-2">
+                                  <div className="relative w-8 h-8 sm:w-10 sm:h-10 rounded-full overflow-hidden shrink-0">
+                                    <Image
+                                      src={store.profile?.avatar || "https://classroomclipart.com/image/static7/preview2/smartphone-user-3d-clay-icon-transparent-png-66678.jpg"}
+                                      alt={store.name}
+                                      fill
+                                      className="object-cover"
+                                      onError={(e) => {
+                                        e.currentTarget.src = "/default-avatar.png";
+                                      }}
+                                      unoptimized
+                                    />
+                                  </div>
+                                  <div className="flex items-center gap-2">
+                                    <h5 className="font-semibold text-gray-900 dark:text-white text-sm sm:text-base">
+                                      {store.name}
+                                    </h5>
+                                    <CheckCircle2 className="w-4 h-4 text-sky-600 dark:text-sky-400" />
+                                    <span className="text-xs text-gray-500 dark:text-gray-400">
+                                      Store Owner
+                                    </span>
+                                  </div>
+                                </div>
+                                <div className="text-gray-700 dark:text-gray-300 text-sm sm:text-base">
+                                  <p className="whitespace-pre-wrap">{review.reply}</p>
+                                </div>
+                              </div>
+                            )}
                           </div>
-                        </div>
-                      ))}
+                        );
+                      })}
                     </div>
                   ) : (
                     <div className="text-center py-12">

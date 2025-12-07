@@ -3,9 +3,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import type { EmblaCarouselType } from "embla-carousel";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import ReviewCard from "./ReviewCard";
-import { reviews } from "../data/review";
+import { ChevronLeft, ChevronRight, MessageSquare } from "lucide-react";
 
 const PrevButton = (props: { onClick: () => void; enabled: boolean }) => (
   <button
@@ -81,15 +79,12 @@ const ReviewList = () => {
         </div>
 
         <div className="relative">
-          <div className="overflow-hidden" ref={emblaRef}>
-            <div className="flex -ml-4">
-              {reviews.map((review) => (
-                <ReviewCard key={review.id} review={review} />
-              ))}
-            </div>
+          <div className="text-center py-12">
+            <MessageSquare className="w-16 h-16 text-gray-300 dark:text-gray-600 mx-auto mb-4" />
+            <p className="text-gray-500 dark:text-gray-400">
+              No reviews available yet.
+            </p>
           </div>
-          <PrevButton onClick={scrollPrev} enabled={prevBtnEnabled} />
-          <NextButton onClick={scrollNext} enabled={nextBtnEnabled} />
         </div>
 
         <div className="text-center mt-12">

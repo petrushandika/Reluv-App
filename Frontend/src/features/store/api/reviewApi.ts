@@ -24,6 +24,8 @@ export interface StoreReview {
   comment: string;
   images: string[];
   createdAt: string;
+  editCount?: number;
+  reply?: string | null;
   user: ReviewUser;
   product: ReviewProduct;
 }
@@ -71,17 +73,19 @@ export const getStoreReviews = async (
       const product = products.find((p) => p.id === productId);
       
       if (product) {
-        const storeReviews: StoreReview[] = reviews.map((review) => ({
+        const storeReviews: StoreReview[] = reviews.map((review: any) => ({
           id: review.id,
-          rating: review.rating,
-          comment: review.comment,
-          images: review.images,
-          createdAt: review.createdAt,
+          rating: review.rating || 0,
+          comment: review.comment || "",
+          images: Array.isArray(review.images) ? review.images : [],
+          createdAt: review.createdAt || new Date().toISOString(),
+          editCount: review.editCount || 0,
+          reply: review.reply || null,
           user: {
-            id: review.author.id,
-            firstName: review.author.firstName,
-            lastName: review.author.lastName,
-            profile: review.author.profile,
+            id: review.author?.id || 0,
+            firstName: review.author?.firstName || "",
+            lastName: review.author?.lastName || "",
+            profile: review.author?.profile || null,
           },
           product: {
             id: product.id,

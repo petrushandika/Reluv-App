@@ -84,7 +84,7 @@ export const getStoreBySlug = async (slug: string): Promise<Store> => {
 
 export const getSellerByUserId = async (userId: number): Promise<Store> => {
   try {
-    const productsResponse = await api.get(`/products?sellerId=${userId}&limit=100`);
+    const productsResponse = await api.get(`/products?sellerId=${userId}&limit=1000`);
     
     let products: any[] = [];
     if (productsResponse && productsResponse.data) {

@@ -24,6 +24,7 @@ import { useBuyStore } from "@/features/checkout/store/buy.store";
 import { useAuthStore } from "@/features/auth/store/auth.store";
 import ShareModal from "@/shared/components/molecules/ShareModal";
 import ProductDetailSkeleton from "@/shared/components/molecules/ProductDetailSkeleton";
+import ReviewSection from "@/features/reviews/components/ReviewSection";
 import { formatPrice } from "@/shared/utils/format";
 import { toast } from "sonner";
 
@@ -431,6 +432,16 @@ const ProductDetail = () => {
                   </p>
                 </div>
               </div>
+              {product && (
+                <div className="mt-6 sm:mt-8">
+                  <ReviewSection
+                    productId={product.id}
+                    productSlug={product.slug}
+                    productSellerId={product.sellerId}
+                    productStoreId={product.storeId || undefined}
+                  />
+                </div>
+              )}
             </div>
             <div className="space-y-4 sm:space-y-6">
               <div>

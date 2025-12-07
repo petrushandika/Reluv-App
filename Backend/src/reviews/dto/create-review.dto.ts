@@ -28,4 +28,8 @@ export class CreateReviewDto {
   @IsOptional()
   @ArrayMaxSize(5, { message: 'Maximum 5 images allowed' })
   images?: string[];
+
+  @IsInt()
+  @IsOptional()
+  orderId?: number;
 }

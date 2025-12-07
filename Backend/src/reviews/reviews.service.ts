@@ -3,9 +3,12 @@ import {
   NotFoundException,
   ConflictException,
   ForbiddenException,
+  BadRequestException,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateReviewDto } from './dto/create-review.dto';
+import { UpdateReviewDto } from './dto/update-review.dto';
+import { ReplyReviewDto } from './dto/reply-review.dto';
 import { OrderStatus, Prisma } from '@prisma/client';
 
 @Injectable()
@@ -20,22 +23,39 @@ export class ReviewsService {
     const [product, validOrder] = await Promise.all([
       this.prisma.product.findUnique({
         where: { id: productId },
-        select: { id: true },
+        select: { id: true, sellerId: true },
       }),
-      this.prisma.order.findFirst({
-        where: {
-          buyerId: authorId,
-          status: { in: [OrderStatus.DELIVERED, OrderStatus.COMPLETED] },
-          items: {
-            some: {
-              variant: {
-                productId: productId,
+      createReviewDto.orderId
+        ? this.prisma.order.findFirst({
+            where: {
+              id: createReviewDto.orderId,
+              buyerId: authorId,
+              status: { in: [OrderStatus.DELIVERED, OrderStatus.COMPLETED] },
+              items: {
+                some: {
+                  variant: {
+                    productId: productId,
+                  },
+                },
               },
             },
-          },
-        },
-        select: { id: true },
-      }),
+            select: { id: true },
+          })
+        : this.prisma.order.findFirst({
+            where: {
+              buyerId: authorId,
+              status: { in: [OrderStatus.DELIVERED, OrderStatus.COMPLETED] },
+              items: {
+                some: {
+                  variant: {
+                    productId: productId,
+                  },
+                },
+              },
+            },
+            select: { id: true },
+            orderBy: { createdAt: 'desc' },
+          }),
     ]);
 
     if (!product) {
@@ -48,12 +68,42 @@ export class ReviewsService {
       );
     }
 
+    const existingReview = await this.prisma.review.findUnique({
+      where: {
+        productId_authorId: {
+          productId,
+          authorId,
+        },
+      },
+    });
+
+    if (existingReview) {
+      throw new ConflictException('You have already reviewed this product.');
+    }
+
     try {
       return await this.prisma.review.create({
         data: {
-          ...createReviewDto,
-          author: { connect: { id: authorId } },
-          product: { connect: { id: productId } },
+          rating: createReviewDto.rating,
+          comment: createReviewDto.comment,
+          images: createReviewDto.images || [],
+          authorId: authorId,
+          productId: productId,
+          orderId: validOrder.id,
+        },
+        include: {
+          author: {
+            select: {
+              id: true,
+              firstName: true,
+              lastName: true,
+              profile: {
+                select: {
+                  avatar: true,
+                },
+              },
+            },
+          },
         },
       });
     } catch (error) {
@@ -75,8 +125,23 @@ export class ReviewsService {
         rating: true,
         comment: true,
         images: true,
+        reply: true,
+        editCount: true,
         createdAt: true,
+        updatedAt: true,
         author: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            profile: {
+              select: {
+                avatar: true,
+              },
+            },
+          },
+        },
+        replyAuthor: {
           select: {
             id: true,
             firstName: true,
@@ -93,5 +158,189 @@ export class ReviewsService {
         createdAt: 'desc',
       },
     });
+  }
+
+  async update(
+    authorId: number,
+    reviewId: number,
+    updateReviewDto: UpdateReviewDto,
+  ) {
+    const review = await this.prisma.review.findUnique({
+      where: { id: reviewId },
+      select: {
+        id: true,
+        authorId: true,
+        editCount: true,
+        productId: true,
+      },
+    });
+
+    if (!review) {
+      throw new NotFoundException(`Review with ID ${reviewId} not found.`);
+    }
+
+    if (review.authorId !== authorId) {
+      throw new ForbiddenException(
+        'You can only edit your own reviews.',
+      );
+    }
+
+    if (review.editCount >= 3) {
+      throw new BadRequestException(
+        'You have reached the maximum number of edits (3 times).',
+      );
+    }
+
+    return await this.prisma.review.update({
+      where: { id: reviewId },
+      data: {
+        rating: updateReviewDto.rating,
+        comment: updateReviewDto.comment,
+        images: updateReviewDto.images,
+        editCount: { increment: 1 },
+      },
+      include: {
+        author: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            profile: {
+              select: {
+                avatar: true,
+              },
+            },
+          },
+        },
+        replyAuthor: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            profile: {
+              select: {
+                avatar: true,
+              },
+            },
+          },
+        },
+      },
+    });
+  }
+
+  async reply(
+    userId: number,
+    reviewId: number,
+    replyReviewDto: ReplyReviewDto,
+  ) {
+    const [review, userStore] = await Promise.all([
+      this.prisma.review.findUnique({
+        where: { id: reviewId },
+        include: {
+          product: {
+            select: {
+              sellerId: true,
+              storeId: true,
+            },
+          },
+        },
+      }),
+      this.prisma.store.findUnique({
+        where: { userId },
+        select: { id: true },
+      }),
+    ]);
+
+    if (!review) {
+      throw new NotFoundException(`Review with ID ${reviewId} not found.`);
+    }
+
+    if (!userStore) {
+      throw new ForbiddenException(
+        'Only store owners can reply to reviews.',
+      );
+    }
+
+    if (review.product.storeId !== userStore.id) {
+      throw new ForbiddenException(
+        'You can only reply to reviews on products from your store.',
+      );
+    }
+
+    if (review.reply) {
+      throw new ConflictException('You have already replied to this review.');
+    }
+
+    return await this.prisma.review.update({
+      where: { id: reviewId },
+      data: {
+        reply: replyReviewDto.reply,
+        replyAuthor: { connect: { id: userId } },
+      },
+      include: {
+        author: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            profile: {
+              select: {
+                avatar: true,
+              },
+            },
+          },
+        },
+        replyAuthor: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            profile: {
+              select: {
+                avatar: true,
+              },
+            },
+          },
+        },
+      },
+    });
+  }
+
+  async findOne(reviewId: number) {
+    const review = await this.prisma.review.findUnique({
+      where: { id: reviewId },
+      include: {
+        author: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            profile: {
+              select: {
+                avatar: true,
+              },
+            },
+          },
+        },
+        replyAuthor: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            profile: {
+              select: {
+                avatar: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    if (!review) {
+      throw new NotFoundException(`Review with ID ${reviewId} not found.`);
+    }
+
+    return review;
   }
 }
