@@ -783,6 +783,8 @@ const ProductDetail = () => {
                     onClick={() => {
                       if (product?.store?.slug) {
                         router.push(`/store/${product.store.slug}`);
+                      } else if (product?.sellerId) {
+                        router.push(`/store/seller-${product.sellerId}`);
                       } else {
                         toast.error("Store not found", {
                           description: "Unable to navigate to store page.",

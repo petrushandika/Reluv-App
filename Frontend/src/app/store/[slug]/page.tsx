@@ -45,13 +45,42 @@ const StoreDetail = () => {
 
       setIsLoading(true);
       try {
-        const storeData = await getStoreBySlug(storeSlug);
+        let storeData: Store;
+        
+        if (storeSlug.startsWith("seller-")) {
+          const userId = parseInt(storeSlug.replace("seller-", ""));
+          if (isNaN(userId)) {
+            throw new Error("Invalid seller ID");
+          }
+          const { getSellerByUserId } = await import("@/features/store/api/storeApi");
+          try {
+            storeData = await getSellerByUserId(userId);
+          } catch (sellerError: any) {
+            const errorMsg = sellerError?.message || "Unable to load seller";
+            if (errorMsg.includes("not found") || errorMsg.includes("no products")) {
+              toast.error("Seller Not Found", {
+                description: "This seller doesn't have any products yet.",
+              });
+              router.push("/");
+              return;
+            }
+            throw sellerError;
+          }
+        } else {
+          storeData = await getStoreBySlug(storeSlug);
+        }
+        
         setStore(storeData);
-      } catch (error) {
-        toast.error("Store Not Found", {
-          description: "The store you're looking for doesn't exist.",
-        });
-        router.push("/");
+      } catch (error: any) {
+        const errorMsg = error?.message || "Unable to load store";
+        if (!errorMsg.includes("not found") && !errorMsg.includes("no products")) {
+          toast.error("Store Not Found", {
+            description: errorMsg || "The store you're looking for doesn't exist.",
+          });
+        }
+        if (errorMsg.includes("not found") || errorMsg.includes("no products")) {
+          router.push("/");
+        }
       } finally {
         setIsLoading(false);
       }
