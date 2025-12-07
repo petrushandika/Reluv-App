@@ -663,13 +663,13 @@ const ProductDetail = () => {
               ) : (
                 <>
                   <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
-                    <button
-                      onClick={handleAddToCart}
-                      disabled={isAdding || isOwnProduct || selectedVariant.stock === 0}
+                  <button
+                    onClick={handleAddToCart}
+                    disabled={isAdding || isOwnProduct || selectedVariant.stock === 0}
                       className="flex-1 bg-transparent border-2 border-sky-600 dark:border-sky-500 hover:bg-sky-50 dark:hover:bg-sky-900/20 text-sky-600 dark:text-sky-400 font-semibold py-3 sm:py-4 px-4 sm:px-6 rounded-lg transition-all active:scale-[0.98] text-sm sm:text-base cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
-                    >
-                      {isAdding ? "Adding..." : "Add to Cart"}
-                    </button>
+                  >
+                    {isAdding ? "Adding..." : "Add to Cart"}
+                  </button>
                     <button
                       onClick={handleBuyNow}
                       disabled={isOwnProduct || selectedVariant.stock === 0}

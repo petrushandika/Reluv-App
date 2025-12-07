@@ -80,6 +80,9 @@ interface ProductSeed {
   isForMen: boolean;
   images: string[];
   variantsKey: string;
+  categorySlug?: string;
+  parentCategorySlug?: string;
+  childCategorySlug?: string;
 }
 
 interface StoreSeedData {
@@ -294,8 +297,17 @@ async function main() {
     const womensCategory = await prisma.category.findUnique({
       where: { slug: 'women' },
     });
-    if (!mensCategory || !womensCategory)
-      throw new Error('Could not find Men or Women categories.');
+    const kidsCategory = await prisma.category.findUnique({
+      where: { slug: 'kids' },
+    });
+    if (!mensCategory || !womensCategory || !kidsCategory)
+      throw new Error('Could not find Men, Women, or Kids categories.');
+
+    const allCategories = await prisma.category.findMany();
+    const categoryMap = new Map<string, Category>();
+    allCategories.forEach(cat => {
+      categoryMap.set(cat.slug, cat);
+    });
 
     const createdStores: Array<{
       id: number;
@@ -344,7 +356,36 @@ async function main() {
     const usedSlugs = new Set<string>();
     for (let i = 0; i < productSeedData.length; i++) {
       const product = productSeedData[i];
-      const categoryId = product.isForMen ? mensCategory.id : womensCategory.id;
+      
+      let categoryId: number;
+      let parentCategoryId: number | undefined;
+      let childCategoryId: number | undefined;
+      
+      if (product.categorySlug) {
+        const category = categoryMap.get(product.categorySlug);
+        if (category) {
+          categoryId = category.id;
+        } else {
+          categoryId = product.isForMen ? mensCategory.id : womensCategory.id;
+        }
+      } else {
+        categoryId = product.isForMen ? mensCategory.id : womensCategory.id;
+      }
+      
+      if (product.parentCategorySlug) {
+        const parentCategory = categoryMap.get(product.parentCategorySlug);
+        if (parentCategory) {
+          parentCategoryId = parentCategory.id;
+        }
+      }
+      
+      if (product.childCategorySlug) {
+        const childCategory = categoryMap.get(product.childCategorySlug);
+        if (childCategory) {
+          childCategoryId = childCategory.id;
+        }
+      }
+      
       const storeIndex = i % createdStores.length;
       const store = createdStores[storeIndex];
       const seller = sellerUsers[storeIndex];
@@ -384,6 +425,8 @@ async function main() {
             viewCount,
             seller: { connect: { id: seller.id } },
             category: { connect: { id: categoryId } },
+            ...(parentCategoryId && { parentCategory: { connect: { id: parentCategoryId } } }),
+            ...(childCategoryId && { childCategory: { connect: { id: childCategoryId } } }),
             store: { connect: { id: store.id } },
             variants: {
               create: variantsToCreate.map((v, variantIndex) => {
@@ -431,6 +474,8 @@ async function main() {
               viewCount: viewCountRetry,
               seller: { connect: { id: seller.id } },
               category: { connect: { id: categoryId } },
+              ...(parentCategoryId && { parentCategory: { connect: { id: parentCategoryId } } }),
+              ...(childCategoryId && { childCategory: { connect: { id: childCategoryId } } }),
               store: { connect: { id: store.id } },
               variants: {
                 create: variantsToCreate.map((v, variantIndex) => {

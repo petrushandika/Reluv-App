@@ -1,18 +1,21 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import ProductList from "@/features/products/components/ProductList";
+import ProductGrid from "@/features/products/components/ProductGrid";
 import CategoryHero from "@/shared/components/organisms/CategoryHero";
-import { useProduct } from "@/features/products/hooks/useProduct";
 import { useParams } from "next/navigation";
 import { getCategoryBySlug } from "@/features/categories/api/categoryApi";
 import { Category } from "@/features/categories/api/categoryApi";
+import { getProducts } from "@/features/products/api/productsApi";
+import { Product } from "@/features/products/types";
 
 export default function WomenCategory() {
   const params = useParams();
   const categorySlug = params?.category as string;
   const [category, setCategory] = useState<Category | null>(null);
+  const [products, setProducts] = useState<Product[]>([]);
   const [isLoadingCategory, setIsLoadingCategory] = useState(true);
+  const [isLoadingProducts, setIsLoadingProducts] = useState(true);
 
   useEffect(() => {
     const fetchCategory = async () => {
@@ -35,14 +38,25 @@ export default function WomenCategory() {
     fetchCategory();
   }, [categorySlug]);
 
-  const {
-    trendingProducts,
-    slashedPriceProducts,
-    recommendedProducts,
-    isLoadingTrending,
-    isLoadingSlashed,
-    isLoadingRecommended,
-  } = useProduct({ childCategoryId: category?.id || undefined, parentCategoryId: category?.parentId || undefined });
+  useEffect(() => {
+    const fetchProducts = async () => {
+      if (!category?.id) return;
+      setIsLoadingProducts(true);
+      try {
+        const categoryProducts = await getProducts({
+          childCategoryId: category.id,
+          parentCategoryId: category.parentId || undefined,
+          limit: 100,
+        });
+        setProducts(categoryProducts);
+      } catch (error) {
+        setProducts([]);
+      } finally {
+        setIsLoadingProducts(false);
+      }
+    };
+    fetchProducts();
+  }, [category?.id, category?.parentId]);
 
   const categoryTitle = category?.name || categorySlug
     ? categorySlug
@@ -62,20 +76,11 @@ export default function WomenCategory() {
           />
         )}
         
-        <ProductList
-          title="Trending Now"
-          products={trendingProducts}
-          isLoading={isLoadingTrending}
-        />
-        <ProductList
-          title="Slashed Prices"
-          products={slashedPriceProducts}
-          isLoading={isLoadingSlashed}
-        />
-        <ProductList
-          title="Recommended"
-          products={recommendedProducts}
-          isLoading={isLoadingRecommended}
+        <ProductGrid
+          products={products}
+          isLoading={isLoadingProducts}
+          initialLimit={20}
+          showSeeMore={true}
         />
       </div>
     </div>

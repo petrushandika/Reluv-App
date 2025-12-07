@@ -12,7 +12,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post1_img6.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post1_img7.webp"
     ],
-    "variantsKey": "clothing-sizes-l-xl-xxl"
+    "variantsKey": "clothing-sizes-l-xl-xxl",
+    "categorySlug": "men",
+    "parentCategorySlug": "men",
+    "childCategorySlug": "men-clothing"
   },
   {
     "name": "Elegant Evening Dress",
@@ -24,7 +27,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post2_img2.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post2_img4.webp"
     ],
-    "variantsKey": "clothing-sizes-sml-xl"
+    "variantsKey": "clothing-sizes-sml-xl",
+    "categorySlug": "women",
+    "parentCategorySlug": "women",
+    "childCategorySlug": "women-clothing"
   },
   {
     "name": "Premium Leather Boots",
@@ -39,7 +45,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post3_img6.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post3_img7.webp"
     ],
-    "variantsKey": "shoes-sizes-40-43"
+    "variantsKey": "shoes-sizes-40-43",
+    "categorySlug": "men",
+    "parentCategorySlug": "men",
+    "childCategorySlug": "men-shoes"
   },
   {
     "name": "Designer Leather Handbag",
@@ -52,7 +61,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post4_img4.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post4_img5.webp"
     ],
-    "variantsKey": "bags-one-size"
+    "variantsKey": "bags-one-size",
+    "categorySlug": "women",
+    "parentCategorySlug": "women",
+    "childCategorySlug": "women-bags"
   },
   {
     "name": "Casual Summer Shirt",
@@ -67,7 +79,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post5_img6.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post5_img7.webp"
     ],
-    "variantsKey": "clothing-sizes-sml-xl"
+    "variantsKey": "clothing-sizes-sml-xl",
+    "categorySlug": "men",
+    "parentCategorySlug": "men",
+    "childCategorySlug": "men-clothing"
   },
   {
     "name": "Floral Summer Dress",
@@ -85,7 +100,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post6_img9.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post6_img10.webp"
     ],
-    "variantsKey": "clothing-sizes-sml-xl"
+    "variantsKey": "clothing-sizes-sml-xl",
+    "categorySlug": "women",
+    "parentCategorySlug": "women",
+    "childCategorySlug": "women-clothing"
   },
   {
     "name": "Sporty Running Sneakers",
@@ -100,7 +118,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post7_img6.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post7_img7.webp"
     ],
-    "variantsKey": "shoes-sizes-40-43"
+    "variantsKey": "shoes-sizes-40-43",
+    "categorySlug": "men",
+    "parentCategorySlug": "men",
+    "childCategorySlug": "men-shoes"
   },
   {
     "name": "High Heel Sandals",
@@ -115,7 +136,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post8_img6.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post8_img7.webp"
     ],
-    "variantsKey": "shoes-sizes-40-43"
+    "variantsKey": "shoes-sizes-40-43",
+    "categorySlug": "women",
+    "parentCategorySlug": "women",
+    "childCategorySlug": "women-shoes"
   },
   {
     "name": "Vintage Graphic Tee",
@@ -132,7 +156,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post9_img8.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post9_img9.webp"
     ],
-    "variantsKey": "clothing-sizes-sml-xl"
+    "variantsKey": "clothing-sizes-sml-xl",
+    "categorySlug": "men",
+    "parentCategorySlug": "men",
+    "childCategorySlug": "men-clothing"
   },
   {
     "name": "Silk Scarf",
@@ -146,7 +173,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post10_img5.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post10_img6.webp"
     ],
-    "variantsKey": "one-size-accessories"
+    "variantsKey": "one-size-accessories",
+    "categorySlug": "women",
+    "parentCategorySlug": "women",
+    "childCategorySlug": "women-accessories"
   },
   {
     "name": "Designer Leather Watch",
@@ -159,7 +189,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post11_img4.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post11_img5.webp"
     ],
-    "variantsKey": "one-size-accessories"
+    "variantsKey": "one-size-accessories",
+    "categorySlug": "men",
+    "parentCategorySlug": "men",
+    "childCategorySlug": "men-accessories"
   },
   {
     "name": "Pearl Necklace",
@@ -174,7 +207,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post12_img6.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post12_img7.webp"
     ],
-    "variantsKey": "one-size-accessories"
+    "variantsKey": "one-size-accessories",
+    "categorySlug": "women",
+    "parentCategorySlug": "women",
+    "childCategorySlug": "women-accessories"
   },
   {
     "name": "Slim Fit Chinos",
@@ -189,7 +225,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post13_img7.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post13_img8.webp"
     ],
-    "variantsKey": "clothing-sizes-sml-xl"
+    "variantsKey": "clothing-sizes-sml-xl",
+    "categorySlug": "men",
+    "parentCategorySlug": "men",
+    "childCategorySlug": "men-clothing"
   },
   {
     "name": "Leather Ankle Boots",
@@ -203,7 +242,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post14_img5.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post14_img6.webp"
     ],
-    "variantsKey": "shoes-sizes-40-43"
+    "variantsKey": "shoes-sizes-40-43",
+    "categorySlug": "women",
+    "parentCategorySlug": "women",
+    "childCategorySlug": "women-shoes"
   },
   {
     "name": "Cotton Polo Shirt",
@@ -218,7 +260,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post15_img6.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post15_img7.webp"
     ],
-    "variantsKey": "clothing-sizes-sml-xl"
+    "variantsKey": "clothing-sizes-sml-xl",
+    "categorySlug": "men",
+    "parentCategorySlug": "men",
+    "childCategorySlug": "men-clothing"
   },
   {
     "name": "Knit Cardigan",
@@ -233,7 +278,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post16_img6.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post16_img7.webp"
     ],
-    "variantsKey": "clothing-sizes-sml-xl"
+    "variantsKey": "clothing-sizes-sml-xl",
+    "categorySlug": "women",
+    "parentCategorySlug": "women",
+    "childCategorySlug": "women-clothing"
   },
   {
     "name": "Canvas Backpack",
@@ -248,7 +296,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post17_img6.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post17_img7.webp"
     ],
-    "variantsKey": "bags-one-size"
+    "variantsKey": "bags-one-size",
+    "categorySlug": "men",
+    "parentCategorySlug": "men",
+    "childCategorySlug": "men-bags"
   },
   {
     "name": "Maxi Skirt",
@@ -261,7 +312,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post18_img4.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post18_img5.webp"
     ],
-    "variantsKey": "clothing-sizes-sml-xl"
+    "variantsKey": "clothing-sizes-sml-xl",
+    "categorySlug": "women",
+    "parentCategorySlug": "women",
+    "childCategorySlug": "women-clothing"
   },
   {
     "name": "Wool Winter Coat",
@@ -275,7 +329,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post19_img5.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post19_img6.webp"
     ],
-    "variantsKey": "clothing-sizes-l-xl-xxl"
+    "variantsKey": "clothing-sizes-l-xl-xxl",
+    "categorySlug": "men",
+    "parentCategorySlug": "men",
+    "childCategorySlug": "men-clothing"
   },
   {
     "name": "Blouse Top",
@@ -288,7 +345,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post20_img4.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post20_img5.webp"
     ],
-    "variantsKey": "clothing-sizes-sml-xl"
+    "variantsKey": "clothing-sizes-sml-xl",
+    "categorySlug": "women",
+    "parentCategorySlug": "women",
+    "childCategorySlug": "women-clothing"
   },
   {
     "name": "Leather Dress Shoes",
@@ -301,7 +361,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post21_img4.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post21_img5.webp"
     ],
-    "variantsKey": "shoes-sizes-40-43"
+    "variantsKey": "shoes-sizes-40-43",
+    "categorySlug": "men",
+    "parentCategorySlug": "men",
+    "childCategorySlug": "men-shoes"
   },
   {
     "name": "Denim Jacket",
@@ -318,7 +381,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post22_img8.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post22_img9.webp"
     ],
-    "variantsKey": "clothing-sizes-l-xl-xxl"
+    "variantsKey": "clothing-sizes-l-xl-xxl",
+    "categorySlug": "women",
+    "parentCategorySlug": "women",
+    "childCategorySlug": "women-clothing"
   },
   {
     "name": "Athletic Shorts",
@@ -337,7 +403,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post23_img10.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post23_img11.webp"
     ],
-    "variantsKey": "clothing-sizes-sml-xl"
+    "variantsKey": "clothing-sizes-sml-xl",
+    "categorySlug": "men",
+    "parentCategorySlug": "men",
+    "childCategorySlug": "men-clothing"
   },
   {
     "name": "Fashion Sneakers",
@@ -350,7 +419,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post24_img4.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post24_img5.webp"
     ],
-    "variantsKey": "shoes-sizes-40-43"
+    "variantsKey": "shoes-sizes-40-43",
+    "categorySlug": "women",
+    "parentCategorySlug": "women",
+    "childCategorySlug": "women-shoes"
   },
   {
     "name": "Denim Jeans",
@@ -363,7 +435,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post25_img4.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post25_img5.webp"
     ],
-    "variantsKey": "clothing-sizes-sml-xl"
+    "variantsKey": "clothing-sizes-sml-xl",
+    "categorySlug": "men",
+    "parentCategorySlug": "men",
+    "childCategorySlug": "men-clothing"
   },
   {
     "name": "Crossbody Bag",
@@ -376,7 +451,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post26_img4.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post26_img5.webp"
     ],
-    "variantsKey": "bags-one-size"
+    "variantsKey": "bags-one-size",
+    "categorySlug": "women",
+    "parentCategorySlug": "women",
+    "childCategorySlug": "women-bags"
   },
   {
     "name": "Hooded Sweatshirt",
@@ -391,7 +469,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post27_img6.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post27_img7.webp"
     ],
-    "variantsKey": "clothing-sizes-sml-xl"
+    "variantsKey": "clothing-sizes-sml-xl",
+    "categorySlug": "men",
+    "parentCategorySlug": "men",
+    "childCategorySlug": "men-clothing"
   },
   {
     "name": "Statement Earrings",
@@ -404,7 +485,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post28_img4.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post28_img5.webp"
     ],
-    "variantsKey": "one-size-accessories"
+    "variantsKey": "one-size-accessories",
+    "categorySlug": "women",
+    "parentCategorySlug": "women",
+    "childCategorySlug": "women-accessories"
   },
   {
     "name": "Baseball Cap",
@@ -421,7 +505,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post29_img8.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post29_img9.webp"
     ],
-    "variantsKey": "clothing-sizes-sml-xl"
+    "variantsKey": "clothing-sizes-sml-xl",
+    "categorySlug": "men",
+    "parentCategorySlug": "men",
+    "childCategorySlug": "men-clothing"
   },
   {
     "name": "Wide Leg Pants",
@@ -434,7 +521,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post30_img4.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post30_img5.webp"
     ],
-    "variantsKey": "clothing-sizes-sml-xl"
+    "variantsKey": "clothing-sizes-sml-xl",
+    "categorySlug": "women",
+    "parentCategorySlug": "women",
+    "childCategorySlug": "women-clothing"
   },
   {
     "name": "Leather Belt",
@@ -447,7 +537,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post31_img4.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post31_img5.webp"
     ],
-    "variantsKey": "one-size-accessories"
+    "variantsKey": "one-size-accessories",
+    "categorySlug": "men",
+    "parentCategorySlug": "men",
+    "childCategorySlug": "men-accessories"
   },
   {
     "name": "Midi Dress",
@@ -463,7 +556,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post32_img7.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post32_img8.webp"
     ],
-    "variantsKey": "clothing-sizes-sml-xl"
+    "variantsKey": "clothing-sizes-sml-xl",
+    "categorySlug": "women",
+    "parentCategorySlug": "women",
+    "childCategorySlug": "women-clothing"
   },
   {
     "name": "Cotton Socks Pack",
@@ -478,7 +574,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post33_img6.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post33_img7.webp"
     ],
-    "variantsKey": "clothing-sizes-sml-xl"
+    "variantsKey": "clothing-sizes-sml-xl",
+    "categorySlug": "men",
+    "parentCategorySlug": "men",
+    "childCategorySlug": "men-clothing"
   },
   {
     "name": "Platform Heels",
@@ -493,7 +592,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post34_img6.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post34_img7.webp"
     ],
-    "variantsKey": "shoes-sizes-40-43"
+    "variantsKey": "shoes-sizes-40-43",
+    "categorySlug": "women",
+    "parentCategorySlug": "women",
+    "childCategorySlug": "women-shoes"
   },
   {
     "name": "Swim Trunks",
@@ -508,7 +610,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post35_img6.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post35_img7.webp"
     ],
-    "variantsKey": "clothing-sizes-sml-xl"
+    "variantsKey": "clothing-sizes-sml-xl",
+    "categorySlug": "men",
+    "parentCategorySlug": "men",
+    "childCategorySlug": "men-clothing"
   },
   {
     "name": "Tote Bag",
@@ -520,7 +625,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post36_img2.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post36_img4.webp"
     ],
-    "variantsKey": "bags-one-size"
+    "variantsKey": "bags-one-size",
+    "categorySlug": "women",
+    "parentCategorySlug": "women",
+    "childCategorySlug": "women-bags"
   },
   {
     "name": "Formal Dress Shirt",
@@ -535,7 +643,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post37_img6.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post37_img7.webp"
     ],
-    "variantsKey": "clothing-sizes-sml-xl"
+    "variantsKey": "clothing-sizes-sml-xl",
+    "categorySlug": "men",
+    "parentCategorySlug": "men",
+    "childCategorySlug": "men-clothing"
   },
   {
     "name": "Trench Coat",
@@ -551,7 +662,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post38_img7.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post38_img8.webp"
     ],
-    "variantsKey": "clothing-sizes-l-xl-xxl"
+    "variantsKey": "clothing-sizes-l-xl-xxl",
+    "categorySlug": "women",
+    "parentCategorySlug": "women",
+    "childCategorySlug": "women-clothing"
   },
   {
     "name": "Cargo Pants",
@@ -565,7 +679,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post39_img5.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post39_img6.webp"
     ],
-    "variantsKey": "clothing-sizes-sml-xl"
+    "variantsKey": "clothing-sizes-sml-xl",
+    "categorySlug": "men",
+    "parentCategorySlug": "men",
+    "childCategorySlug": "men-clothing"
   },
   {
     "name": "Blazer",
@@ -584,7 +701,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post40_img10.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post40_img11.webp"
     ],
-    "variantsKey": "clothing-sizes-l-xl-xxl"
+    "variantsKey": "clothing-sizes-l-xl-xxl",
+    "categorySlug": "women",
+    "parentCategorySlug": "women",
+    "childCategorySlug": "women-clothing"
   },
   {
     "name": "Windbreaker Jacket",
@@ -597,7 +717,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post41_img4.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post41_img5.webp"
     ],
-    "variantsKey": "clothing-sizes-l-xl-xxl"
+    "variantsKey": "clothing-sizes-l-xl-xxl",
+    "categorySlug": "men",
+    "parentCategorySlug": "men",
+    "childCategorySlug": "men-clothing"
   },
   {
     "name": "Skinny Jeans",
@@ -609,7 +732,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post42_img2.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post42_img4.webp"
     ],
-    "variantsKey": "clothing-sizes-sml-xl"
+    "variantsKey": "clothing-sizes-sml-xl",
+    "categorySlug": "women",
+    "parentCategorySlug": "women",
+    "childCategorySlug": "women-clothing"
   },
   {
     "name": "Running Shorts",
@@ -622,7 +748,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post43_img4.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post43_img5.webp"
     ],
-    "variantsKey": "clothing-sizes-sml-xl"
+    "variantsKey": "clothing-sizes-sml-xl",
+    "categorySlug": "men",
+    "parentCategorySlug": "men",
+    "childCategorySlug": "men-clothing"
   },
   {
     "name": "V-Neck T-Shirt",
@@ -637,7 +766,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post44_img6.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post44_img7.webp"
     ],
-    "variantsKey": "clothing-sizes-sml-xl"
+    "variantsKey": "clothing-sizes-sml-xl",
+    "categorySlug": "women",
+    "parentCategorySlug": "women",
+    "childCategorySlug": "women-clothing"
   },
   {
     "name": "Leather Wallet",
@@ -652,7 +784,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post45_img6.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post45_img7.webp"
     ],
-    "variantsKey": "clothing-sizes-sml-xl"
+    "variantsKey": "clothing-sizes-sml-xl",
+    "categorySlug": "men",
+    "parentCategorySlug": "men",
+    "childCategorySlug": "men-clothing"
   },
   {
     "name": "Cable Knit Sweater",
@@ -666,7 +801,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post46_img5.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post46_img6.webp"
     ],
-    "variantsKey": "clothing-sizes-sml-xl"
+    "variantsKey": "clothing-sizes-sml-xl",
+    "categorySlug": "women",
+    "parentCategorySlug": "women",
+    "childCategorySlug": "women-clothing"
   },
   {
     "name": "Sunglasses",
@@ -679,7 +817,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post47_img4.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post47_img5.webp"
     ],
-    "variantsKey": "one-size-accessories"
+    "variantsKey": "one-size-accessories",
+    "categorySlug": "men",
+    "parentCategorySlug": "men",
+    "childCategorySlug": "men-accessories"
   },
   {
     "name": "Yoga Leggings",
@@ -694,7 +835,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post48_img6.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post48_img7.webp"
     ],
-    "variantsKey": "clothing-sizes-sml-xl"
+    "variantsKey": "clothing-sizes-sml-xl",
+    "categorySlug": "women",
+    "parentCategorySlug": "women",
+    "childCategorySlug": "women-clothing"
   },
   {
     "name": "Winter Beanie",
@@ -706,7 +850,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post49_img2.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post49_img4.webp"
     ],
-    "variantsKey": "one-size-accessories"
+    "variantsKey": "one-size-accessories",
+    "categorySlug": "men",
+    "parentCategorySlug": "men",
+    "childCategorySlug": "men-accessories"
   },
   {
     "name": "Jumpsuit",
@@ -721,7 +868,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post50_img6.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post50_img7.webp"
     ],
-    "variantsKey": "clothing-sizes-sml-xl"
+    "variantsKey": "clothing-sizes-sml-xl",
+    "categorySlug": "women",
+    "parentCategorySlug": "women",
+    "childCategorySlug": "women-clothing"
   },
   {
     "name": "Gym Bag",
@@ -734,7 +884,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post51_img4.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post51_img5.webp"
     ],
-    "variantsKey": "bags-one-size"
+    "variantsKey": "bags-one-size",
+    "categorySlug": "men",
+    "parentCategorySlug": "men",
+    "childCategorySlug": "men-bags"
   },
   {
     "name": "Romper",
@@ -748,7 +901,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post52_img5.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post52_img6.webp"
     ],
-    "variantsKey": "clothing-sizes-sml-xl"
+    "variantsKey": "clothing-sizes-sml-xl",
+    "categorySlug": "women",
+    "parentCategorySlug": "women",
+    "childCategorySlug": "women-clothing"
   },
   {
     "name": "Flip Flops",
@@ -765,7 +921,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post53_img8.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post53_img9.webp"
     ],
-    "variantsKey": "clothing-sizes-sml-xl"
+    "variantsKey": "clothing-sizes-sml-xl",
+    "categorySlug": "men",
+    "parentCategorySlug": "men",
+    "childCategorySlug": "men-shoes"
   },
   {
     "name": "High Waist Shorts",
@@ -783,7 +942,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post54_img9.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post54_img10.webp"
     ],
-    "variantsKey": "clothing-sizes-sml-xl"
+    "variantsKey": "clothing-sizes-sml-xl",
+    "categorySlug": "women",
+    "parentCategorySlug": "women",
+    "childCategorySlug": "women-clothing"
   },
   {
     "name": "Tank Top",
@@ -797,7 +959,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post55_img5.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post55_img6.webp"
     ],
-    "variantsKey": "clothing-sizes-sml-xl"
+    "variantsKey": "clothing-sizes-sml-xl",
+    "categorySlug": "men",
+    "parentCategorySlug": "men",
+    "childCategorySlug": "men-clothing"
   },
   {
     "name": "Pleated Skirt",
@@ -813,7 +978,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post56_img7.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post56_img8.webp"
     ],
-    "variantsKey": "clothing-sizes-sml-xl"
+    "variantsKey": "clothing-sizes-sml-xl",
+    "categorySlug": "women",
+    "parentCategorySlug": "women",
+    "childCategorySlug": "women-clothing"
   },
   {
     "name": "Long Sleeve Tee",
@@ -828,7 +996,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post57_img6.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post57_img7.webp"
     ],
-    "variantsKey": "clothing-sizes-sml-xl"
+    "variantsKey": "clothing-sizes-sml-xl",
+    "categorySlug": "men",
+    "parentCategorySlug": "men",
+    "childCategorySlug": "men-clothing"
   },
   {
     "name": "Crop Top",
@@ -843,7 +1014,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post58_img6.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post58_img7.webp"
     ],
-    "variantsKey": "clothing-sizes-sml-xl"
+    "variantsKey": "clothing-sizes-sml-xl",
+    "categorySlug": "women",
+    "parentCategorySlug": "women",
+    "childCategorySlug": "women-clothing"
   },
   {
     "name": "Cargo Shorts",
@@ -857,7 +1031,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post59_img5.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post59_img6.webp"
     ],
-    "variantsKey": "clothing-sizes-sml-xl"
+    "variantsKey": "clothing-sizes-sml-xl",
+    "categorySlug": "men",
+    "parentCategorySlug": "men",
+    "childCategorySlug": "men-clothing"
   },
   {
     "name": "Ruffle Blouse",
@@ -871,7 +1048,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post60_img5.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post60_img6.webp"
     ],
-    "variantsKey": "clothing-sizes-sml-xl"
+    "variantsKey": "clothing-sizes-sml-xl",
+    "categorySlug": "women",
+    "parentCategorySlug": "women",
+    "childCategorySlug": "women-clothing"
   },
   {
     "name": "Hiking Boots",
@@ -887,7 +1067,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post61_img7.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post61_img8.webp"
     ],
-    "variantsKey": "shoes-sizes-40-43"
+    "variantsKey": "shoes-sizes-40-43",
+    "categorySlug": "men",
+    "parentCategorySlug": "men",
+    "childCategorySlug": "men-shoes"
   },
   {
     "name": "Bomber Jacket",
@@ -902,7 +1085,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post62_img6.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post62_img7.webp"
     ],
-    "variantsKey": "clothing-sizes-l-xl-xxl"
+    "variantsKey": "clothing-sizes-l-xl-xxl",
+    "categorySlug": "women",
+    "parentCategorySlug": "women",
+    "childCategorySlug": "women-clothing"
   },
   {
     "name": "Trench Coat",
@@ -916,7 +1102,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post63_img5.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post63_img6.webp"
     ],
-    "variantsKey": "clothing-sizes-l-xl-xxl"
+    "variantsKey": "clothing-sizes-l-xl-xxl",
+    "categorySlug": "men",
+    "parentCategorySlug": "men",
+    "childCategorySlug": "men-clothing"
   },
   {
     "name": "Wool Coat",
@@ -929,7 +1118,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post64_img4.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post64_img5.webp"
     ],
-    "variantsKey": "clothing-sizes-l-xl-xxl"
+    "variantsKey": "clothing-sizes-l-xl-xxl",
+    "categorySlug": "women",
+    "parentCategorySlug": "women",
+    "childCategorySlug": "women-clothing"
   },
   {
     "name": "Blazer Jacket",
@@ -939,7 +1131,10 @@
     "images": [
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post65_img1.webp"
     ],
-    "variantsKey": "clothing-sizes-l-xl-xxl"
+    "variantsKey": "clothing-sizes-l-xl-xxl",
+    "categorySlug": "men",
+    "parentCategorySlug": "men",
+    "childCategorySlug": "men-clothing"
   },
   {
     "name": "Ankle Boots",
@@ -953,7 +1148,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post66_img5.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post66_img6.webp"
     ],
-    "variantsKey": "shoes-sizes-40-43"
+    "variantsKey": "shoes-sizes-40-43",
+    "categorySlug": "women",
+    "parentCategorySlug": "women",
+    "childCategorySlug": "women-shoes"
   },
   {
     "name": "Track Pants",
@@ -968,7 +1166,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post67_img6.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post67_img7.webp"
     ],
-    "variantsKey": "clothing-sizes-sml-xl"
+    "variantsKey": "clothing-sizes-sml-xl",
+    "categorySlug": "men",
+    "parentCategorySlug": "men",
+    "childCategorySlug": "men-clothing"
   },
   {
     "name": "Ballet Flats",
@@ -984,7 +1185,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post68_img7.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post68_img8.webp"
     ],
-    "variantsKey": "shoes-sizes-40-43"
+    "variantsKey": "shoes-sizes-40-43",
+    "categorySlug": "women",
+    "parentCategorySlug": "women",
+    "childCategorySlug": "women-shoes"
   },
   {
     "name": "Sandals",
@@ -998,7 +1202,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post69_img5.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post69_img6.webp"
     ],
-    "variantsKey": "shoes-sizes-40-43"
+    "variantsKey": "shoes-sizes-40-43",
+    "categorySlug": "men",
+    "parentCategorySlug": "men",
+    "childCategorySlug": "men-shoes"
   },
   {
     "name": "Stiletto Heels",
@@ -1013,7 +1220,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post70_img6.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post70_img7.webp"
     ],
-    "variantsKey": "shoes-sizes-40-43"
+    "variantsKey": "shoes-sizes-40-43",
+    "categorySlug": "women",
+    "parentCategorySlug": "women",
+    "childCategorySlug": "women-shoes"
   },
   {
     "name": "Briefcase",
@@ -1028,7 +1238,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post71_img6.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post71_img7.webp"
     ],
-    "variantsKey": "bags-one-size"
+    "variantsKey": "bags-one-size",
+    "categorySlug": "men",
+    "parentCategorySlug": "men",
+    "childCategorySlug": "men-bags"
   },
   {
     "name": "Wedge Sandals",
@@ -1043,7 +1256,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post72_img6.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post72_img7.webp"
     ],
-    "variantsKey": "shoes-sizes-40-43"
+    "variantsKey": "shoes-sizes-40-43",
+    "categorySlug": "women",
+    "parentCategorySlug": "women",
+    "childCategorySlug": "women-shoes"
   },
   {
     "name": "Tie Set",
@@ -1058,7 +1274,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post73_img6.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post73_img7.webp"
     ],
-    "variantsKey": "one-size-accessories"
+    "variantsKey": "one-size-accessories",
+    "categorySlug": "men",
+    "parentCategorySlug": "men",
+    "childCategorySlug": "men-accessories"
   },
   {
     "name": "Peep Toe Pumps",
@@ -1073,7 +1292,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post74_img6.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post74_img7.webp"
     ],
-    "variantsKey": "shoes-sizes-40-43"
+    "variantsKey": "shoes-sizes-40-43",
+    "categorySlug": "women",
+    "parentCategorySlug": "women",
+    "childCategorySlug": "women-shoes"
   },
   {
     "name": "Suspenders",
@@ -1087,7 +1309,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post75_img5.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post75_img6.webp"
     ],
-    "variantsKey": "one-size-accessories"
+    "variantsKey": "one-size-accessories",
+    "categorySlug": "men",
+    "parentCategorySlug": "men",
+    "childCategorySlug": "men-accessories"
   },
   {
     "name": "Evening Clutch",
@@ -1100,7 +1325,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post76_img4.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post76_img5.webp"
     ],
-    "variantsKey": "bags-one-size"
+    "variantsKey": "bags-one-size",
+    "categorySlug": "women",
+    "parentCategorySlug": "women",
+    "childCategorySlug": "women-bags"
   },
   {
     "name": "Bow Tie",
@@ -1115,7 +1343,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post77_img6.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post77_img7.webp"
     ],
-    "variantsKey": "one-size-accessories"
+    "variantsKey": "one-size-accessories",
+    "categorySlug": "men",
+    "parentCategorySlug": "men",
+    "childCategorySlug": "men-accessories"
   },
   {
     "name": "Backpack Purse",
@@ -1131,7 +1362,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post78_img7.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post78_img8.webp"
     ],
-    "variantsKey": "bags-one-size"
+    "variantsKey": "bags-one-size",
+    "categorySlug": "women",
+    "parentCategorySlug": "women",
+    "childCategorySlug": "women-bags"
   },
   {
     "name": "Cufflinks Set",
@@ -1144,7 +1378,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post79_img4.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post79_img5.webp"
     ],
-    "variantsKey": "one-size-accessories"
+    "variantsKey": "one-size-accessories",
+    "categorySlug": "men",
+    "parentCategorySlug": "men",
+    "childCategorySlug": "men-accessories"
   },
   {
     "name": "Shoulder Bag",
@@ -1155,7 +1392,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post80_img1.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post80_img2.webp"
     ],
-    "variantsKey": "bags-one-size"
+    "variantsKey": "bags-one-size",
+    "categorySlug": "women",
+    "parentCategorySlug": "women",
+    "childCategorySlug": "women-bags"
   },
   {
     "name": "Pocket Square",
@@ -1170,7 +1410,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post81_img6.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post81_img7.webp"
     ],
-    "variantsKey": "one-size-accessories"
+    "variantsKey": "one-size-accessories",
+    "categorySlug": "men",
+    "parentCategorySlug": "men",
+    "childCategorySlug": "men-accessories"
   },
   {
     "name": "Chain Belt",
@@ -1188,7 +1431,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post82_img9.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post82_img10.webp"
     ],
-    "variantsKey": "one-size-accessories"
+    "variantsKey": "one-size-accessories",
+    "categorySlug": "women",
+    "parentCategorySlug": "women",
+    "childCategorySlug": "women-accessories"
   },
   {
     "name": "Belt Buckle",
@@ -1203,7 +1449,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post83_img6.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post83_img7.webp"
     ],
-    "variantsKey": "one-size-accessories"
+    "variantsKey": "one-size-accessories",
+    "categorySlug": "men",
+    "parentCategorySlug": "men",
+    "childCategorySlug": "men-accessories"
   },
   {
     "name": "Fedora Hat",
@@ -1215,7 +1464,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post84_img2.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post84_img4.webp"
     ],
-    "variantsKey": "one-size-accessories"
+    "variantsKey": "one-size-accessories",
+    "categorySlug": "women",
+    "parentCategorySlug": "women",
+    "childCategorySlug": "women-accessories"
   },
   {
     "name": "Wallet Chain",
@@ -1230,7 +1482,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post85_img6.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post85_img7.webp"
     ],
-    "variantsKey": "one-size-accessories"
+    "variantsKey": "one-size-accessories",
+    "categorySlug": "men",
+    "parentCategorySlug": "men",
+    "childCategorySlug": "men-accessories"
   },
   {
     "name": "Infinity Scarf",
@@ -1244,7 +1499,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post86_img5.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post86_img6.webp"
     ],
-    "variantsKey": "one-size-accessories"
+    "variantsKey": "one-size-accessories",
+    "categorySlug": "women",
+    "parentCategorySlug": "women",
+    "childCategorySlug": "women-accessories"
   },
   {
     "name": "Keychain",
@@ -1259,7 +1517,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post87_img6.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post87_img7.webp"
     ],
-    "variantsKey": "one-size-accessories"
+    "variantsKey": "one-size-accessories",
+    "categorySlug": "men",
+    "parentCategorySlug": "men",
+    "childCategorySlug": "men-accessories"
   },
   {
     "name": "Leather Gloves",
@@ -1274,7 +1535,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post88_img6.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post88_img7.webp"
     ],
-    "variantsKey": "one-size-accessories"
+    "variantsKey": "one-size-accessories",
+    "categorySlug": "women",
+    "parentCategorySlug": "women",
+    "childCategorySlug": "women-accessories"
   },
   {
     "name": "Phone Case",
@@ -1289,7 +1553,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post89_img6.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post89_img7.webp"
     ],
-    "variantsKey": "one-size-accessories"
+    "variantsKey": "one-size-accessories",
+    "categorySlug": "men",
+    "parentCategorySlug": "men",
+    "childCategorySlug": "men-accessories"
   },
   {
     "name": "Cat Eye Sunglasses",
@@ -1303,7 +1570,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post90_img5.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post90_img6.webp"
     ],
-    "variantsKey": "one-size-accessories"
+    "variantsKey": "one-size-accessories",
+    "categorySlug": "women",
+    "parentCategorySlug": "women",
+    "childCategorySlug": "women-accessories"
   },
   {
     "name": "Laptop Bag",
@@ -1318,7 +1588,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post91_img6.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post91_img7.webp"
     ],
-    "variantsKey": "bags-one-size"
+    "variantsKey": "bags-one-size",
+    "categorySlug": "men",
+    "parentCategorySlug": "men",
+    "childCategorySlug": "men-bags"
   },
   {
     "name": "Rose Gold Watch",
@@ -1333,7 +1606,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post92_img6.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post92_img7.webp"
     ],
-    "variantsKey": "one-size-accessories"
+    "variantsKey": "one-size-accessories",
+    "categorySlug": "women",
+    "parentCategorySlug": "women",
+    "childCategorySlug": "women-accessories"
   },
   {
     "name": "Travel Bag",
@@ -1346,7 +1622,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post93_img4.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post93_img5.webp"
     ],
-    "variantsKey": "bags-one-size"
+    "variantsKey": "bags-one-size",
+    "categorySlug": "men",
+    "parentCategorySlug": "men",
+    "childCategorySlug": "men-bags"
   },
   {
     "name": "Bangle Bracelet",
@@ -1360,7 +1639,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post94_img5.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post94_img6.webp"
     ],
-    "variantsKey": "one-size-accessories"
+    "variantsKey": "one-size-accessories",
+    "categorySlug": "women",
+    "parentCategorySlug": "women",
+    "childCategorySlug": "women-accessories"
   },
   {
     "name": "Duffel Bag",
@@ -1373,7 +1655,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post95_img6.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post95_img7.webp"
     ],
-    "variantsKey": "bags-one-size"
+    "variantsKey": "bags-one-size",
+    "categorySlug": "men",
+    "parentCategorySlug": "men",
+    "childCategorySlug": "men-bags"
   },
   {
     "name": "Diamond Ring",
@@ -1391,7 +1676,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post96_img9.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post96_img10.webp"
     ],
-    "variantsKey": "one-size-accessories"
+    "variantsKey": "one-size-accessories",
+    "categorySlug": "women",
+    "parentCategorySlug": "women",
+    "childCategorySlug": "women-accessories"
   },
   {
     "name": "Anklet",
@@ -1406,7 +1694,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post98_img6.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post98_img7.webp"
     ],
-    "variantsKey": "one-size-accessories"
+    "variantsKey": "one-size-accessories",
+    "categorySlug": "women",
+    "parentCategorySlug": "women",
+    "childCategorySlug": "women-accessories"
   },
   {
     "name": "Messenger Bag",
@@ -1419,7 +1710,10 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post103_img4.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post103_img5.webp"
     ],
-    "variantsKey": "bags-one-size"
+    "variantsKey": "bags-one-size",
+    "categorySlug": "men",
+    "parentCategorySlug": "men",
+    "childCategorySlug": "men-bags"
   },
   {
     "name": "Workout Gloves",
@@ -1434,6 +1728,9 @@
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post105_img6.webp",
       "https://res.cloudinary.com/dqcyabvc2/image/upload/products/post105_img7.webp"
     ],
-    "variantsKey": "one-size-accessories"
+    "variantsKey": "one-size-accessories",
+    "categorySlug": "men",
+    "parentCategorySlug": "men",
+    "childCategorySlug": "men-accessories"
   }
 ]
