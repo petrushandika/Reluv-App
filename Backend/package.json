@@ -34,10 +34,7 @@
     "db:seed": "dotenv -e .env -- ts-node prisma/seed.ts",
     "db:reset:seed": "npm run db:reset && npm run db:seed",
     "db:setup": "npm run db:generate && npm run db:migrate && npm run db:seed",
-    "db:refresh": "npm run db:reset:seed",
-    "db:deploy": "prisma generate && prisma migrate deploy && ts-node prisma/seed.ts",
-    "vercel-build:seed": "prisma generate && prisma migrate reset --force && prisma migrate deploy && ts-node prisma/seed.ts && npm run build",
-    "vercel-build:reset": "prisma generate && prisma migrate reset --force && prisma migrate deploy && ts-node prisma/seed.ts && npm run build"
+    "db:refresh": "npm run db:reset:seed"
   },
   "prisma": {
     "seed": "ts-node prisma/seed.ts"
