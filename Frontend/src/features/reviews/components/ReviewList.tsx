@@ -3,7 +3,9 @@
 import React, { useCallback, useEffect, useState } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import type { EmblaCarouselType } from "embla-carousel";
-import { ChevronLeft, ChevronRight, MessageSquare } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import ReviewCard from "./ReviewCard";
+import { reviews } from "../data/review";
 
 const PrevButton = (props: { onClick: () => void; enabled: boolean }) => (
   <button
@@ -79,12 +81,19 @@ const ReviewList = () => {
         </div>
 
         <div className="relative">
-          <div className="text-center py-12">
-            <MessageSquare className="w-16 h-16 text-gray-300 dark:text-gray-600 mx-auto mb-4" />
-            <p className="text-gray-500 dark:text-gray-400">
-              No reviews available yet.
-            </p>
+          <div className="overflow-hidden" ref={emblaRef}>
+            <div className="flex -ml-4">
+              {reviews.map((review) => (
+                <div key={review.id} className="pl-4 flex-[0_0_100%] sm:flex-[0_0_50%] lg:flex-[0_0_33.333%]">
+                  <div className="h-full min-h-[200px] sm:min-h-[220px]">
+                    <ReviewCard review={review} fixedHeight={true} />
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
+          <PrevButton onClick={scrollPrev} enabled={prevBtnEnabled} />
+          <NextButton onClick={scrollNext} enabled={nextBtnEnabled} />
         </div>
 
         <div className="text-center mt-12">

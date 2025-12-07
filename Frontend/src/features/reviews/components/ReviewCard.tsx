@@ -51,6 +51,7 @@ interface ReviewCardProps {
   onReply?: (reviewId: number) => void;
   isStoreOwner?: boolean;
   productStoreId?: number;
+  fixedHeight?: boolean;
 }
 
 const ReviewCard = ({
@@ -59,6 +60,7 @@ const ReviewCard = ({
   onReply,
   isStoreOwner = false,
   productStoreId,
+  fixedHeight = false,
 }: ReviewCardProps) => {
   const { user } = useAuthStore();
   const [showFullComment, setShowFullComment] = useState(false);
@@ -99,7 +101,7 @@ const ReviewCard = ({
     : review.reply;
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 border border-gray-200 dark:border-gray-700 space-y-4">
+    <div className={`bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 border border-gray-200 dark:border-gray-700 space-y-4 ${fixedHeight ? 'h-full flex flex-col' : ''}`}>
       <div className="flex items-start justify-between">
         <div className="flex items-start gap-3 flex-1">
           <div className="relative w-10 h-10 sm:w-12 sm:h-12 rounded-full overflow-hidden flex-shrink-0">
@@ -127,16 +129,16 @@ const ReviewCard = ({
             <div className="flex items-center gap-2 mb-2">
               <div className="flex items-center gap-0.5">
                 {[1, 2, 3, 4, 5].map((star) => (
-                  <Star
+                <Star
                     key={star}
                     className={`w-4 h-4 ${
                       star <= (review.rating || 0)
                         ? "text-yellow-400 fill-yellow-400"
                         : "text-gray-300 dark:text-gray-600"
                     }`}
-                  />
-                ))}
-              </div>
+                />
+              ))}
+            </div>
               <span className="text-xs text-gray-500 dark:text-gray-400">
                 {review.createdAt
                   ? formatDistanceToNow(new Date(review.createdAt), {
@@ -159,14 +161,14 @@ const ReviewCard = ({
       </div>
 
       {review.comment && review.comment.trim() && (
-        <div className="text-gray-700 dark:text-gray-300 text-sm sm:text-base">
-          <p className="whitespace-pre-wrap">{displayComment}</p>
+        <div className={`text-gray-700 dark:text-gray-300 text-sm sm:text-base ${fixedHeight && !showFullComment ? 'flex-1 flex flex-col' : ''}`}>
+          <p className={`${fixedHeight && !showFullComment ? 'line-clamp-3 overflow-hidden' : 'whitespace-pre-wrap'}`}>{displayComment}</p>
           {shouldTruncateComment && (
             <button
               onClick={() => setShowFullComment(!showFullComment)}
               className="text-sky-600 hover:text-sky-700 dark:text-sky-400 dark:hover:text-sky-300 mt-1 text-sm font-medium"
             >
-              {showFullComment ? "Show less" : "Show more"}
+              {showFullComment ? "Show less" : "Read More"}
             </button>
           )}
         </div>
@@ -227,7 +229,7 @@ const ReviewCard = ({
                 onError={(e) => {
                   e.currentTarget.src = "https://classroomclipart.com/image/static7/preview2/smartphone-user-3d-clay-icon-transparent-png-66678.jpg";
                 }}
-              />
+          />
             </div>
             <div className="flex items-center gap-2">
               <h5 className="font-semibold text-gray-900 dark:text-white text-sm sm:text-base">
@@ -237,8 +239,8 @@ const ReviewCard = ({
               <span className="text-xs text-gray-500 dark:text-gray-400">
                 Store Owner
               </span>
-            </div>
           </div>
+        </div>
           <div className="text-gray-700 dark:text-gray-300 text-sm sm:text-base">
             <p className="whitespace-pre-wrap">{displayReply}</p>
             {shouldTruncateReply && (
@@ -249,7 +251,7 @@ const ReviewCard = ({
                 {showFullReply ? "Show less" : "Show more"}
               </button>
             )}
-          </div>
+      </div>
         </div>
       )}
 

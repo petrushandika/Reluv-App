@@ -442,9 +442,9 @@ async function main() {
                 }
                 
                 return {
-                  ...v,
+                ...v,
                   price: finalPrice,
-                  condition: v.condition as Condition,
+                condition: v.condition as Condition,
                   compareAtPrice: compareAtPrice as number | null,
                 };
               }),
@@ -491,9 +491,9 @@ async function main() {
                   }
                   
                   return {
-                    ...v,
+                  ...v,
                     price: finalPrice,
-                    condition: v.condition as Condition,
+                  condition: v.condition as Condition,
                     compareAtPrice: compareAtPrice as number | null,
                   };
                 }),
