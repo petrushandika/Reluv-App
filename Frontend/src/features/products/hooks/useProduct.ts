@@ -28,16 +28,22 @@ export const useProduct = (query?: ProductQuery) => {
   );
 
   useEffect(() => {
-    const finalQuery = { limit: 10, ...query };
+    const fetchProductsSequentially = async () => {
+      const finalQuery = { limit: 10, ...query };
+      
+      await fetchTrendingProducts(finalQuery);
+      await fetchSlashedPriceProducts(finalQuery);
+      await fetchRecommendedProducts(finalQuery);
+    };
 
-    fetchTrendingProducts(finalQuery);
-    fetchSlashedPriceProducts(finalQuery);
-    fetchRecommendedProducts(finalQuery);
+    fetchProductsSequentially();
   }, [
     fetchTrendingProducts,
     fetchSlashedPriceProducts,
     fetchRecommendedProducts,
     query?.categoryId,
+    query?.parentCategoryId,
+    query?.childCategoryId,
   ]);
 
   return {

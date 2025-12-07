@@ -136,26 +136,71 @@ export class ProductsService {
   }
 
   async findAll(queryDto: QueryProductDto) {
-    const { page = 1, limit = 10, categoryId, sellerId, search } = queryDto;
+    const { page = 1, limit = 10, categoryId, parentCategoryId, childCategoryId, sellerId, search, sortBy, excludeIds } = queryDto;
     const skip = (page - 1) * limit;
+    
+    let parsedExcludeIds: number[] = [];
+    if (excludeIds) {
+      if (Array.isArray(excludeIds)) {
+        parsedExcludeIds = excludeIds;
+      } else if (typeof excludeIds === 'string') {
+        parsedExcludeIds = excludeIds.split(',').map(id => parseInt(id.trim(), 10)).filter(id => !isNaN(id));
+      }
+    }
+    
     const where: Prisma.ProductWhereInput = {
       isActive: true,
       isPublished: true,
-      categoryId,
-      sellerId,
+      ...(categoryId && { categoryId }),
+      ...(parentCategoryId && { parentCategoryId }),
+      ...(childCategoryId && { childCategoryId }),
+      ...(sellerId && { sellerId }),
+      ...(parsedExcludeIds.length > 0 && {
+        id: { notIn: parsedExcludeIds },
+      }),
       ...(search && {
         OR: [
           { name: { contains: search, mode: 'insensitive' } },
           { description: { contains: search, mode: 'insensitive' } },
         ],
       }),
+      ...(sortBy === 'trending' && {
+        OR: [
+          { isTrending: true },
+          { viewCount: { gt: 0 } },
+        ],
+      }),
+      ...(sortBy === 'slashed' && {
+        variants: {
+          some: {
+            compareAtPrice: { not: null, gt: 0 },
+            isActive: true,
+          },
+        },
+      }),
+      ...(sortBy === 'recommended' && {
+        isRecommended: true,
+      }),
     };
+
+    let orderBy: Prisma.ProductOrderByWithRelationInput = { createdAt: 'desc' };
+    const needsPriceSort = sortBy === 'price_asc' || sortBy === 'price_desc';
+    
+    if (sortBy === 'trending') {
+      orderBy = { viewCount: 'desc' } as any;
+    } else if (sortBy === 'slashed') {
+      orderBy = { createdAt: 'desc' };
+    } else if (sortBy === 'recommended') {
+      orderBy = { createdAt: 'desc' } as any;
+    } else if (sortBy === 'newest') {
+      orderBy = { createdAt: 'desc' };
+    }
 
     const [products, total] = await this.prisma.$transaction([
       this.prisma.product.findMany({
         where,
-        skip,
-        take: limit,
+        skip: needsPriceSort ? 0 : skip,
+        take: needsPriceSort ? undefined : limit * 2,
         select: {
           id: true,
           name: true,
@@ -164,7 +209,13 @@ export class ProductsService {
           images: true,
           isPreloved: true,
           viewCount: true,
+          isTrending: true,
+          isRecommended: true,
           createdAt: true,
+          sellerId: true,
+          categoryId: true,
+          parentCategoryId: true,
+          childCategoryId: true,
           variants: {
             where: { isActive: true },
             orderBy: { price: 'asc' },
@@ -194,13 +245,69 @@ export class ProductsService {
             },
           },
         },
-        orderBy: { createdAt: 'desc' },
+        orderBy,
       }),
       this.prisma.product.count({ where }),
     ]);
 
+    let sortedProducts = products;
+
+    if (sortBy === 'trending') {
+      sortedProducts = products
+        .filter((product) => {
+          return product.isTrending || product.viewCount > 0;
+        })
+        .sort((a, b) => {
+          if (a.isTrending !== b.isTrending) {
+            return a.isTrending ? -1 : 1;
+          }
+          return b.viewCount - a.viewCount;
+        })
+        .slice(0, limit);
+    } else if (sortBy === 'slashed') {
+      sortedProducts = products
+        .filter((product) => {
+          return product.variants && product.variants.length > 0 && 
+                 product.variants.some((v) => v.compareAtPrice && v.compareAtPrice > 0 && v.compareAtPrice > v.price);
+        })
+        .sort((a, b) => {
+          const aDiscount = a.variants && a.variants.length > 0 && a.variants[0].compareAtPrice && a.variants[0].compareAtPrice > a.variants[0].price
+            ? ((a.variants[0].compareAtPrice - a.variants[0].price) / a.variants[0].compareAtPrice) * 100
+            : 0;
+          const bDiscount = b.variants && b.variants.length > 0 && b.variants[0].compareAtPrice && b.variants[0].compareAtPrice > b.variants[0].price
+            ? ((b.variants[0].compareAtPrice - b.variants[0].price) / b.variants[0].compareAtPrice) * 100
+            : 0;
+          return bDiscount - aDiscount;
+        })
+        .slice(0, limit);
+    } else if (sortBy === 'recommended') {
+      sortedProducts = products
+        .filter((product) => {
+          return product.isRecommended;
+        })
+        .sort((a, b) => {
+          return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+        })
+        .slice(0, limit);
+    } else if (needsPriceSort) {
+      sortedProducts = products.sort((a, b) => {
+        const aPrice = a.variants && a.variants.length > 0 ? a.variants[0].price : Infinity;
+        const bPrice = b.variants && b.variants.length > 0 ? b.variants[0].price : Infinity;
+        
+        if (sortBy === 'price_asc') {
+          return aPrice - bPrice;
+        } else {
+          return bPrice - aPrice;
+        }
+      });
+
+      sortedProducts = sortedProducts.slice(skip, skip + limit);
+    } else {
+      sortedProducts = products.slice(0, limit);
+    }
+
     return {
-      data: products,
+      data: sortedProducts,
       meta: {
         total,
         page,

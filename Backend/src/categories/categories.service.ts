@@ -92,6 +92,38 @@ export class CategoriesService {
     );
   }
 
+  async findBySlug(slug: string) {
+    const category = await this.prisma.category.findUnique({
+      where: { slug },
+      select: {
+        id: true,
+        name: true,
+        slug: true,
+        parentId: true,
+        parentCategory: {
+          select: {
+            id: true,
+            name: true,
+            slug: true,
+          },
+        },
+        childCategories: {
+          select: {
+            id: true,
+            name: true,
+            slug: true,
+          },
+        },
+      },
+    });
+
+    if (!category) {
+      throw new NotFoundException(`Category with slug '${slug}' not found`);
+    }
+
+    return category;
+  }
+
   async findOne(id: number) {
     const buildCategoryTree = async (categoryId: number): Promise<any> => {
       const category = await this.prisma.category.findUnique({

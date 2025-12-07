@@ -364,6 +364,14 @@ async function main() {
         continue;
       }
 
+      const isTrending = i % 4 === 0 || (i % 7 === 0 && i % 3 !== 0);
+      const isRecommended = i % 3 === 0 || (i % 5 === 0 && i % 4 !== 0);
+      const viewCount = isTrending 
+        ? Math.floor(Math.random() * 600) + 150 
+        : isRecommended 
+        ? Math.floor(Math.random() * 200) + 50 
+        : Math.floor(Math.random() * 30);
+
       try {
         await prisma.product.create({
           data: {
@@ -371,14 +379,31 @@ async function main() {
             slug: newSlug,
             description: product.description,
             images: product.images,
+            isTrending,
+            isRecommended,
+            viewCount,
             seller: { connect: { id: seller.id } },
             category: { connect: { id: categoryId } },
             store: { connect: { id: store.id } },
             variants: {
-              create: variantsToCreate.map((v) => ({
-                ...v,
-                condition: v.condition as Condition,
-              })),
+              create: variantsToCreate.map((v, variantIndex) => {
+                const shouldHaveDiscount = (i % 3 === 0 && i % 4 !== 0) || (i % 5 === 0 && i % 7 !== 0);
+                let finalPrice = v.price;
+                let compareAtPrice: number | null = null;
+                
+                if (shouldHaveDiscount && variantIndex === 0) {
+                  const discountPercentage = Math.floor(Math.random() * 25) + 5;
+                  compareAtPrice = v.price;
+                  finalPrice = Math.floor(v.price * (1 - discountPercentage / 100));
+                }
+                
+                return {
+                  ...v,
+                  price: finalPrice,
+                  condition: v.condition as Condition,
+                  compareAtPrice: compareAtPrice as number | null,
+                };
+              }),
             },
           },
         });
@@ -387,20 +412,45 @@ async function main() {
           const randomStr = Math.random().toString(36).substring(2, 8);
           newSlug = `${product.slug}-${randomStr}`;
           usedSlugs.add(newSlug);
+          const isTrendingRetry = i % 4 === 0 || (i % 7 === 0 && i % 3 !== 0);
+          const isRecommendedRetry = i % 3 === 0 || (i % 5 === 0 && i % 4 !== 0);
+          const viewCountRetry = isTrendingRetry 
+            ? Math.floor(Math.random() * 600) + 150 
+            : isRecommendedRetry 
+            ? Math.floor(Math.random() * 200) + 50 
+            : Math.floor(Math.random() * 30);
+          
           await prisma.product.create({
             data: {
               name: productName,
               slug: newSlug,
               description: product.description,
               images: product.images,
+              isTrending: isTrendingRetry,
+              isRecommended: isRecommendedRetry,
+              viewCount: viewCountRetry,
               seller: { connect: { id: seller.id } },
               category: { connect: { id: categoryId } },
               store: { connect: { id: store.id } },
               variants: {
-                create: variantsToCreate.map((v) => ({
-                  ...v,
-                  condition: v.condition as Condition,
-                })),
+                create: variantsToCreate.map((v, variantIndex) => {
+                  const shouldHaveDiscount = (i % 3 === 0 && i % 4 !== 0) || (i % 5 === 0 && i % 7 !== 0);
+                  let finalPrice = v.price;
+                  let compareAtPrice: number | null = null;
+                  
+                  if (shouldHaveDiscount && variantIndex === 0) {
+                    const discountPercentage = Math.floor(Math.random() * 25) + 5;
+                    compareAtPrice = v.price;
+                    finalPrice = Math.floor(v.price * (1 - discountPercentage / 100));
+                  }
+                  
+                  return {
+                    ...v,
+                    price: finalPrice,
+                    condition: v.condition as Condition,
+                    compareAtPrice: compareAtPrice as number | null,
+                  };
+                }),
               },
             },
           });

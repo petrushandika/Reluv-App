@@ -25,7 +25,7 @@ export const useProductStore = create<ProductState>((set) => ({
   fetchTrendingProducts: async (query) => {
     set({ isLoadingTrending: true });
     try {
-      const products = await getProducts(query);
+      const products = await getProducts({ ...query, sortBy: 'trending', limit: query?.limit || 10 });
       set({ trendingProducts: Array.isArray(products) ? products : [] });
     } catch (error) {
       set({ trendingProducts: [] });
@@ -37,7 +37,14 @@ export const useProductStore = create<ProductState>((set) => ({
   fetchSlashedPriceProducts: async (query) => {
     set({ isLoadingSlashed: true });
     try {
-      const products = await getProducts(query);
+      const state = useProductStore.getState();
+      const trendingIds = state.trendingProducts.map((p) => p.id);
+      const products = await getProducts({ 
+        ...query, 
+        sortBy: 'slashed', 
+        limit: query?.limit || 10,
+        excludeIds: trendingIds.length > 0 ? trendingIds : undefined,
+      });
       set({ slashedPriceProducts: Array.isArray(products) ? products : [] });
     } catch (error) {
       set({ slashedPriceProducts: [] });
@@ -49,7 +56,16 @@ export const useProductStore = create<ProductState>((set) => ({
   fetchRecommendedProducts: async (query) => {
     set({ isLoadingRecommended: true });
     try {
-      const products = await getProducts(query);
+      const state = useProductStore.getState();
+      const trendingIds = state.trendingProducts.map((p) => p.id);
+      const slashedIds = state.slashedPriceProducts.map((p) => p.id);
+      const excludeIds = [...trendingIds, ...slashedIds];
+      const products = await getProducts({ 
+        ...query, 
+        sortBy: 'recommended', 
+        limit: query?.limit || 10,
+        excludeIds: excludeIds.length > 0 ? excludeIds : undefined,
+      });
       set({ recommendedProducts: Array.isArray(products) ? products : [] });
     } catch (error) {
       set({ recommendedProducts: [] });

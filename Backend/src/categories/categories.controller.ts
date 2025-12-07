@@ -35,6 +35,12 @@ export class CategoriesController {
     return this.categoriesService.findAll();
   }
 
+  @Get('slug/:slug')
+  @HttpCode(HttpStatus.OK)
+  findBySlug(@Param('slug') slug: string) {
+    return this.categoriesService.findBySlug(slug);
+  }
+
   @Get(':id')
   @HttpCode(HttpStatus.OK)
   findOne(@Param('id', ParseIntPipe) id: number) {

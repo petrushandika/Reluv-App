@@ -69,6 +69,10 @@ export interface ProductQuery {
   page?: number;
   limit?: number;
   categoryId?: number;
+  parentCategoryId?: number;
+  childCategoryId?: number;
   sellerId?: number;
   search?: string;
+  sortBy?: 'trending' | 'slashed' | 'recommended' | 'newest' | 'price_asc' | 'price_desc';
+  excludeIds?: number[];
 }

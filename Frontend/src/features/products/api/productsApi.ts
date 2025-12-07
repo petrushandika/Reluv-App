@@ -6,8 +6,14 @@ import { AxiosError } from "axios";
 
 export const getProducts = async (query?: ProductQuery): Promise<Product[]> => {
   try {
-    const response = await api.get<Product[]>("/products", {
-      params: query,
+    const params: any = { ...query };
+    
+    if (query?.excludeIds && Array.isArray(query.excludeIds) && query.excludeIds.length > 0) {
+      params.excludeIds = query.excludeIds.join(',');
+    }
+
+    const response = await api.get<{ data: Product[]; meta?: any } | Product[]>("/products", {
+      params,
     });
 
     if (!response || !response.data) {
@@ -16,6 +22,10 @@ export const getProducts = async (query?: ProductQuery): Promise<Product[]> => {
 
     if (Array.isArray(response.data)) {
       return response.data;
+    }
+
+    if (response.data.data && Array.isArray(response.data.data)) {
+      return response.data.data;
     }
 
     return [];

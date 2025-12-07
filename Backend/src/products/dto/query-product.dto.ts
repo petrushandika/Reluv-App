@@ -24,6 +24,18 @@ export class QueryProductDto {
   @IsOptional()
   @IsInt()
   @Type(() => Number)
+  @Min(1, { message: 'Parent Category ID must be a positive integer' })
+  parentCategoryId?: number;
+
+  @IsOptional()
+  @IsInt()
+  @Type(() => Number)
+  @Min(1, { message: 'Child Category ID must be a positive integer' })
+  childCategoryId?: number;
+
+  @IsOptional()
+  @IsInt()
+  @Type(() => Number)
   @Min(1, { message: 'Seller ID must be a positive integer' })
   sellerId?: number;
 
@@ -31,4 +43,11 @@ export class QueryProductDto {
   @IsString()
   @Length(0, 255, { message: 'Search query must be at most 255 characters' })
   search?: string;
+
+  @IsOptional()
+  @IsString()
+  sortBy?: 'trending' | 'slashed' | 'recommended' | 'newest' | 'price_asc' | 'price_desc';
+
+  @IsOptional()
+  excludeIds?: number[] | string;
 }
