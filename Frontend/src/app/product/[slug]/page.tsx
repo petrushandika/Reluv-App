@@ -102,20 +102,20 @@ const ProductDetail = () => {
     return (
       <div className="min-h-screen flex items-center justify-center bg-white dark:bg-gray-900">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-800 dark:text-white mb-4">
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-800 dark:text-white mb-4">
             Product Not Found
           </h1>
-          <p className="text-gray-600 dark:text-gray-300 mb-4">
+          <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 mb-4">
             The product you`re looking for doesn`t exist or could not be loaded.
           </p>
           {error && (
-            <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
+            <p className="text-xs text-gray-500 dark:text-gray-400 mb-4">
               Error: {error}
             </p>
           )}
           <button
             onClick={() => router.push("/")}
-            className="px-4 py-2 bg-sky-600 text-white rounded-lg hover:bg-sky-700 transition-colors cursor-pointer"
+            className="px-3 sm:px-4 py-2 text-xs sm:text-sm bg-sky-600 text-white rounded-lg hover:bg-sky-700 transition-colors cursor-pointer"
           >
             Go to Home
           </button>
@@ -128,10 +128,10 @@ const ProductDetail = () => {
     return (
       <div className="min-h-screen flex items-center justify-center bg-white dark:bg-gray-900">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-800 dark:text-white mb-4">
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-800 dark:text-white mb-4">
             Product Not Available
           </h1>
-          <p className="text-gray-600 dark:text-gray-300">
+          <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300">
             This product is currently not available.
           </p>
         </div>
@@ -413,10 +413,10 @@ const ProductDetail = () => {
                   </div>
                 </div>
                 <div className="flex-1">
-                  <h3 className="font-semibold text-gray-800 dark:text-white">
+                  <h3 className="text-sm sm:text-base font-semibold text-gray-800 dark:text-white">
                     100% Authentic
                   </h3>
-                  <p className="text-sm text-gray-600 dark:text-gray-300">
+                  <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300">
                     Dedicated to providing genuine luxury products that uphold
                     the highest standards of quality.{" "}
                     <button 
@@ -566,11 +566,11 @@ const ProductDetail = () => {
                 </div>
               </div>
               <div className="space-y-3 sm:space-y-4">
-                <h3 className="text-base sm:text-lg font-semibold text-gray-800 dark:text-white">
+                <h3 className="text-sm sm:text-base md:text-lg font-semibold text-gray-800 dark:text-white">
                   Options Available
                 </h3>
                 <div className="space-y-2 sm:space-y-3">
-                  <div className="flex items-center flex-wrap gap-2 text-sm sm:text-base">
+                  <div className="flex items-center flex-wrap gap-2 text-xs sm:text-sm md:text-base">
                     <span className="font-medium text-gray-700 dark:text-gray-300">
                       Variant:
                     </span>
@@ -630,7 +630,7 @@ const ProductDetail = () => {
                           description: "Download our mobile app to try on products virtually and see how they fit.",
                         });
                       }}
-                      className="text-sky-600 dark:text-sky-400 font-medium hover:underline cursor-pointer"
+                      className="text-sky-600 dark:text-sky-400 font-medium hover:underline cursor-pointer text-xs sm:text-sm"
                     >
                       Learn more
                     </button>
@@ -638,7 +638,7 @@ const ProductDetail = () => {
                 </div>
               </div>
               <div className="flex items-center space-x-3 sm:space-x-4 pt-3 sm:pt-4">
-                <div className="font-medium text-sm sm:text-base text-gray-700 dark:text-gray-300">
+                <div className="font-medium text-xs sm:text-sm md:text-base text-gray-700 dark:text-gray-300">
                   Quantity:
                 </div>
                 <div className="flex items-center border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-800">
@@ -666,8 +666,8 @@ const ProductDetail = () => {
                 </div>
               </div>
               {isOwnProduct ? (
-                <div className="pt-2 p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg">
-                  <p className="text-sm text-yellow-800 dark:text-yellow-200 text-center">
+                <div className="pt-2 p-3 sm:p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg">
+                  <p className="text-xs sm:text-sm text-yellow-800 dark:text-yellow-200 text-center">
                     You cannot add or purchase your own product.
                   </p>
                 </div>
@@ -677,14 +677,14 @@ const ProductDetail = () => {
                   <button
                     onClick={handleAddToCart}
                     disabled={isAdding || isOwnProduct || selectedVariant.stock === 0}
-                      className="flex-1 bg-transparent border-2 border-sky-600 dark:border-sky-500 hover:bg-sky-50 dark:hover:bg-sky-900/20 text-sky-600 dark:text-sky-400 font-semibold py-3 sm:py-4 px-4 sm:px-6 rounded-lg transition-all active:scale-[0.98] text-sm sm:text-base cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
+                      className="flex-1 bg-transparent border-2 border-sky-600 dark:border-sky-500 hover:bg-sky-50 dark:hover:bg-sky-900/20 text-sky-600 dark:text-sky-400 font-semibold py-2.5 sm:py-3 md:py-4 px-3 sm:px-4 md:px-6 rounded-lg transition-all active:scale-[0.98] text-xs sm:text-sm md:text-base cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
                   >
                     {isAdding ? "Adding..." : "Add to Cart"}
                   </button>
                     <button
                       onClick={handleBuyNow}
                       disabled={isOwnProduct || selectedVariant.stock === 0}
-                      className="flex-1 bg-sky-600 dark:bg-sky-500 hover:bg-sky-700 dark:hover:bg-sky-600 text-white font-semibold py-3 sm:py-4 px-4 sm:px-6 rounded-lg transition-all active:scale-[0.98] text-sm sm:text-base cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
+                      className="flex-1 bg-sky-600 dark:bg-sky-500 hover:bg-sky-700 dark:hover:bg-sky-600 text-white font-semibold py-2.5 sm:py-3 md:py-4 px-3 sm:px-4 md:px-6 rounded-lg transition-all active:scale-[0.98] text-xs sm:text-sm md:text-base cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
                     >
                       Buy Now
                     </button>
@@ -696,23 +696,23 @@ const ProductDetail = () => {
                           description: "Chat feature is coming soon. Please contact us via email for assistance.",
                         });
                       }}
-                      className="flex items-center justify-center flex-1 border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 font-medium py-2.5 px-3 rounded-lg transition-colors text-sm cursor-pointer"
+                      className="flex items-center justify-center flex-1 border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 font-medium py-2 sm:py-2.5 px-2.5 sm:px-3 rounded-lg transition-colors text-xs sm:text-sm cursor-pointer"
                     >
-                      <MessageCircle className="w-4 h-4 mr-2" />
+                      <MessageCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1.5 sm:mr-2" />
                       <span className="truncate">Chat CS</span>
                     </button>
                     <button
                       onClick={() => setIsShareModalOpen(true)}
-                      className="flex items-center justify-center flex-1 border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 font-medium py-2.5 px-3 rounded-lg transition-colors text-sm cursor-pointer"
+                      className="flex items-center justify-center flex-1 border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 font-medium py-2 sm:py-2.5 px-2.5 sm:px-3 rounded-lg transition-colors text-xs sm:text-sm cursor-pointer"
                     >
-                      <Share className="w-4 h-4 mr-2" />
+                      <Share className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1.5 sm:mr-2" />
                       <span>Share</span>
                     </button>
                   </div>
                 </>
               )}
               <div className="space-y-3 sm:space-y-4 pt-4 sm:pt-6 border-t border-gray-200 dark:border-gray-700">
-                <h3 className="text-base sm:text-lg font-semibold text-gray-800 dark:text-white">
+                <h3 className="text-sm sm:text-base md:text-lg font-semibold text-gray-800 dark:text-white">
                   Delivery & Returns
                 </h3>
                 <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-300">
@@ -736,7 +736,7 @@ const ProductDetail = () => {
                 </div>
               </div>
               <div className="space-y-3 sm:space-y-4 border-t pt-4 sm:pt-6 border-gray-200 dark:border-gray-700">
-                <h3 className="text-base sm:text-lg font-semibold text-gray-800 dark:text-white">
+                <h3 className="text-sm sm:text-base md:text-lg font-semibold text-gray-800 dark:text-white">
                   About The Product
                 </h3>
                 <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 space-y-2">
@@ -748,7 +748,7 @@ const ProductDetail = () => {
                   </p>
                 </div>
                 <div>
-                  <h4 className="font-medium text-sm sm:text-base text-gray-800 dark:text-white mb-2">
+                  <h4 className="text-xs sm:text-sm md:text-base font-medium text-gray-800 dark:text-white mb-2">
                     Highlights
                   </h4>
                   <p className="text-xs sm:text-sm text-gray-700 dark:text-gray-300 whitespace-pre-wrap">
@@ -756,7 +756,7 @@ const ProductDetail = () => {
                   </p>
                 </div>
                 <div>
-                  <h4 className="font-medium text-sm sm:text-base text-gray-800 dark:text-white mt-3 sm:mt-4 mb-2">
+                  <h4 className="text-xs sm:text-sm md:text-base font-medium text-gray-800 dark:text-white mt-3 sm:mt-4 mb-2">
                     Dimensions
                   </h4>
                   <p className="text-xs sm:text-sm text-gray-700 dark:text-gray-300">

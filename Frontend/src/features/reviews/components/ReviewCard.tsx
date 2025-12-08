@@ -161,12 +161,12 @@ const ReviewCard = ({
       </div>
 
       {review.comment && review.comment.trim() && (
-        <div className={`text-gray-700 dark:text-gray-300 text-sm sm:text-base ${fixedHeight && !showFullComment ? 'flex-1 flex flex-col' : ''}`}>
+        <div className={`text-gray-700 dark:text-gray-300 text-xs sm:text-sm md:text-base ${fixedHeight && !showFullComment ? 'flex-1 flex flex-col' : ''}`}>
           <p className={`${fixedHeight && !showFullComment ? 'line-clamp-3 overflow-hidden' : 'whitespace-pre-wrap'}`}>{displayComment}</p>
           {shouldTruncateComment && (
             <button
               onClick={() => setShowFullComment(!showFullComment)}
-              className="text-sky-600 hover:text-sky-700 dark:text-sky-400 dark:hover:text-sky-300 mt-1 text-sm font-medium"
+              className="text-sky-600 hover:text-sky-700 dark:text-sky-400 dark:hover:text-sky-300 mt-1 text-xs sm:text-sm font-medium"
             >
               {showFullComment ? "Show less" : "Read More"}
             </button>
@@ -241,12 +241,12 @@ const ReviewCard = ({
               </span>
           </div>
         </div>
-          <div className="text-gray-700 dark:text-gray-300 text-sm sm:text-base">
+          <div className="text-gray-700 dark:text-gray-300 text-xs sm:text-sm md:text-base">
             <p className="whitespace-pre-wrap">{displayReply}</p>
             {shouldTruncateReply && (
               <button
                 onClick={() => setShowFullReply(!showFullReply)}
-                className="text-sky-600 hover:text-sky-700 dark:text-sky-400 dark:hover:text-sky-300 mt-1 text-sm font-medium"
+                className="text-sky-600 hover:text-sky-700 dark:text-sky-400 dark:hover:text-sky-300 mt-1 text-xs sm:text-sm font-medium"
               >
                 {showFullReply ? "Show less" : "Show more"}
               </button>

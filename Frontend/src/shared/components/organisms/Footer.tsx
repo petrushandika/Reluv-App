@@ -72,33 +72,33 @@ const Footer = () => {
         <div className="container mx-auto px-6 md:px-10 xl:px-20 2xl:px-40 py-12 md:py-12 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
           <div className="flex flex-col items-center space-y-2">
             <ShieldCheck className="w-8 h-8 text-sky-600 dark:text-sky-400" />
-            <h4 className="font-semibold text-gray-800 dark:text-white glossy-text-strong">
+            <h4 className="text-xs sm:text-sm md:text-base font-semibold text-gray-800 dark:text-white glossy-text-strong">
               Authenticity Guaranteed
             </h4>
-            <p className="text-xs text-gray-500 dark:text-gray-400 glossy-text">
+            <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 glossy-text">
               Every item is 100% verified by our experts.
             </p>
           </div>
           <div className="flex flex-col items-center space-y-2">
             <Truck className="w-8 h-8 text-sky-600 dark:text-sky-400" />
-            <h4 className="font-semibold text-gray-800 dark:text-white glossy-text-strong">
+            <h4 className="text-xs sm:text-sm md:text-base font-semibold text-gray-800 dark:text-white glossy-text-strong">
               Fast & Free Shipping
             </h4>
-            <p className="text-xs text-gray-500 dark:text-gray-400 glossy-text">
+            <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 glossy-text">
               On all domestic orders above IDR 1,000,000.
             </p>
           </div>
           <div className="flex flex-col items-center space-y-2">
             <Lock className="w-8 h-8 text-sky-600 dark:text-sky-400" />
-            <h4 className="font-semibold text-gray-800 dark:text-white glossy-text-strong">Secure Payments</h4>
-            <p className="text-xs text-gray-500 dark:text-gray-400 glossy-text">
+            <h4 className="text-xs sm:text-sm md:text-base font-semibold text-gray-800 dark:text-white glossy-text-strong">Secure Payments</h4>
+            <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 glossy-text">
               Your information is protected with us.
             </p>
           </div>
           <div className="flex flex-col items-center space-y-2">
             <Mail className="w-8 h-8 text-sky-600 dark:text-sky-400" />
-            <h4 className="font-semibold text-gray-800 dark:text-white glossy-text-strong">24/7 Support</h4>
-            <p className="text-xs text-gray-500 dark:text-gray-400 glossy-text">
+            <h4 className="text-xs sm:text-sm md:text-base font-semibold text-gray-800 dark:text-white glossy-text-strong">24/7 Support</h4>
+            <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 glossy-text">
               We are here to help you anytime.
             </p>
           </div>
@@ -108,8 +108,8 @@ const Footer = () => {
       <div className="container mx-auto px-6 md:px-10 xl:px-20 2xl:px-40 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
           <div className="space-y-4">
-            <h3 className="text-2xl font-bold text-sky-700 dark:text-sky-400 glossy-text-title">reluv</h3>
-            <p className="text-sm text-gray-600 dark:text-gray-300 glossy-text">
+            <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-sky-700 dark:text-sky-400 glossy-text-title">reluv</h3>
+            <p className="text-xs sm:text-sm md:text-base text-gray-600 dark:text-gray-300 glossy-text">
               Your premier destination for authentic, pre-loved luxury fashion.
             </p>
             <div className="flex space-x-3 pt-2">
@@ -135,10 +135,10 @@ const Footer = () => {
           </div>
 
           <div className="space-y-4">
-            <h4 className="font-bold text-gray-800 dark:text-white uppercase tracking-wider glossy-text-strong">
+            <h4 className="text-xs sm:text-sm md:text-base font-bold text-gray-800 dark:text-white uppercase tracking-wider glossy-text-strong">
               Customer Service
             </h4>
-            <ul className="space-y-3 text-sm">
+            <ul className="space-y-3 text-xs sm:text-sm md:text-base">
               <li>
                 <Link href="#" className={navLinkClass}>
                   FAQ
@@ -166,7 +166,7 @@ const Footer = () => {
             <h4 className="font-bold text-gray-800 dark:text-white uppercase tracking-wider glossy-text-strong">
               About Us
             </h4>
-            <ul className="space-y-3 text-sm">
+            <ul className="space-y-3 text-xs sm:text-sm md:text-base">
               <li>
                 <Link href="#" className={navLinkClass}>
                   Our Story
@@ -194,7 +194,7 @@ const Footer = () => {
             <h4 className="font-bold text-gray-800 dark:text-white uppercase tracking-wider glossy-text-strong">
               Stay in the Loop
             </h4>
-            <p className="text-sm text-gray-600 dark:text-gray-300">
+            <p className="text-xs sm:text-sm md:text-base text-gray-600 dark:text-gray-300">
               Subscribe for the latest arrivals and exclusive offers.
             </p>
             <form className="w-full">
@@ -217,8 +217,8 @@ const Footer = () => {
       </div>
 
       <div className="bg-white dark:bg-gray-900 border-t border-gray-100 dark:border-gray-800">
-        <div className="container mx-auto px-6 md:px-10 xl:px-20 2xl:px-40 py-6 flex flex-col sm:flex-row justify-between items-center text-sm">
-          <p className="text-gray-500 dark:text-gray-400 mb-4 sm:mb-0">
+        <div className="container mx-auto px-6 md:px-10 xl:px-20 2xl:px-40 py-6 flex flex-col sm:flex-row justify-between items-center">
+          <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mb-4 sm:mb-0">
             &copy; {new Date().getFullYear()} reluv. All Rights Reserved.
           </p>
           <div className="flex items-center space-x-4">

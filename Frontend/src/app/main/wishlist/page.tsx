@@ -55,7 +55,7 @@ const Wishlist = () => {
               Your Wishlist is Empty
             </h2>
             <p className="text-gray-500 dark:text-gray-400 mb-6">
-              Save your favorite items here to shop for them later.
+              You haven't added any items to your wishlist yet. Start exploring and save your favorite products!
             </p>
             <Link
               href="/"

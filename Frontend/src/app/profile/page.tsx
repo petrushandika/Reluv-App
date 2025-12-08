@@ -184,13 +184,13 @@ const ProfilePage = () => {
                 <div className="hidden lg:block mb-6">
                   <div className="flex items-center gap-3 mb-2">
                     <User className="w-6 h-6 text-sky-600 dark:text-sky-400" />
-                    <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 dark:text-white">
+                    <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">
                       Profile
                     </h1>
                   </div>
                 </div>
                 <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
-                  <p className="text-gray-600 dark:text-gray-400">
+                  <p className="text-xs sm:text-sm md:text-base text-gray-600 dark:text-gray-400">
                     Welcome to your profile page. Select an option from the sidebar to get started.
                   </p>
                 </div>
@@ -263,11 +263,11 @@ const ProfilePage = () => {
                   />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h2 className="text-xl font-bold text-white mb-1 truncate">
+                  <h2 className="text-lg sm:text-xl font-bold text-white mb-1 truncate">
                     {displayName}
                   </h2>
-                  <p className="text-white/90 text-sm truncate mb-1">{displayEmail}</p>
-                  <p className="text-white/80 text-sm">0 Point</p>
+                  <p className="text-white/90 text-xs sm:text-sm truncate mb-1">{displayEmail}</p>
+                  <p className="text-white/80 text-xs sm:text-sm">0 Point</p>
                 </div>
               </div>
 
@@ -285,7 +285,7 @@ const ProfilePage = () => {
             {["My Details", "My Purchases", "My Sales", "Customer Services", "Account Management"].map(
               (category) => (
                 <div key={category}>
-                  <h3 className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3 px-2">
+                  <h3 className="text-xs sm:text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3 px-2">
                     {category}
                   </h3>
                   <div className="space-y-1">
@@ -301,12 +301,12 @@ const ProfilePage = () => {
                               className="flex items-center justify-between px-4 py-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors cursor-pointer"
                             >
                               <div className="flex items-center gap-3">
-                                <Icon className="w-5 h-5 text-gray-600 dark:text-gray-400" />
-                                <span className="font-medium text-gray-900 dark:text-white">
+                                <Icon className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600 dark:text-gray-400" />
+                                <span className="text-xs sm:text-sm md:text-base font-medium text-gray-900 dark:text-white">
                                   {item.title}
                                 </span>
                               </div>
-                              <ChevronRight className="w-5 h-5 text-gray-400 dark:text-gray-500" />
+                              <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400 dark:text-gray-500" />
                             </Link>
                           );
                         })}
@@ -322,12 +322,12 @@ const ProfilePage = () => {
                               className="flex items-center justify-between px-4 py-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors cursor-pointer"
                             >
                               <div className="flex items-center gap-3">
-                                <Icon className="w-5 h-5 text-gray-600 dark:text-gray-400" />
-                                <span className="font-medium text-gray-900 dark:text-white">
+                                <Icon className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600 dark:text-gray-400" />
+                                <span className="text-xs sm:text-sm md:text-base font-medium text-gray-900 dark:text-white">
                                   {item.title}
                                 </span>
                               </div>
-                              <ChevronRight className="w-5 h-5 text-gray-400 dark:text-gray-500" />
+                              <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400 dark:text-gray-500" />
                             </Link>
                           );
                         })}
@@ -343,12 +343,12 @@ const ProfilePage = () => {
                               className="flex items-center justify-between px-4 py-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors cursor-pointer"
                             >
                               <div className="flex items-center gap-3">
-                                <Icon className="w-5 h-5 text-gray-600 dark:text-gray-400" />
-                                <span className="font-medium text-gray-900 dark:text-white">
+                                <Icon className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600 dark:text-gray-400" />
+                                <span className="text-xs sm:text-sm md:text-base font-medium text-gray-900 dark:text-white">
                                   {item.title}
                                 </span>
                               </div>
-                              <ChevronRight className="w-5 h-5 text-gray-400 dark:text-gray-500" />
+                              <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400 dark:text-gray-500" />
                             </Link>
                           );
                         })}
@@ -364,12 +364,12 @@ const ProfilePage = () => {
                               className="flex items-center justify-between px-4 py-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors cursor-pointer"
                             >
                               <div className="flex items-center gap-3">
-                                <Icon className="w-5 h-5 text-gray-600 dark:text-gray-400" />
-                                <span className="font-medium text-gray-900 dark:text-white">
+                                <Icon className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600 dark:text-gray-400" />
+                                <span className="text-xs sm:text-sm md:text-base font-medium text-gray-900 dark:text-white">
                                   {item.title}
                                 </span>
                               </div>
-                              <ChevronRight className="w-5 h-5 text-gray-400 dark:text-gray-500" />
+                              <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400 dark:text-gray-500" />
                             </Link>
                           );
                         })}
@@ -387,12 +387,12 @@ const ProfilePage = () => {
                         className="w-full flex items-center justify-between px-4 py-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors cursor-pointer"
                       >
                         <div className="flex items-center gap-3">
-                          <LogOut className="w-5 h-5 text-red-600 dark:text-red-400" />
-                          <span className="font-medium text-red-600 dark:text-red-400">
+                          <LogOut className="w-4 h-4 sm:w-5 sm:h-5 text-red-600 dark:text-red-400" />
+                          <span className="text-xs sm:text-sm md:text-base font-medium text-red-600 dark:text-red-400">
                             Sign Out
                           </span>
                         </div>
-                        <ChevronRight className="w-5 h-5 text-red-400 dark:text-red-500" />
+                        <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 text-red-400 dark:text-red-500" />
                       </button>
                     )}
                   </div>
@@ -412,7 +412,7 @@ const ProfilePage = () => {
               onClick={(e) => e.stopPropagation()}
             >
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-bold text-gray-900 dark:text-white">
+                <h2 className="text-base sm:text-lg md:text-xl font-bold text-gray-900 dark:text-white">
                   Member QR Code
                 </h2>
                 <button
@@ -428,7 +428,7 @@ const ProfilePage = () => {
                     <QrCode className="w-32 h-32 text-gray-400" />
                   </div>
                 </div>
-                <p className="text-sm text-gray-600 dark:text-gray-400 text-center">
+                <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 text-center">
                   Show this QR code to earn points and access member benefits
                 </p>
               </div>

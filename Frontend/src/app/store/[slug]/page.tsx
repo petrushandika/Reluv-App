@@ -164,15 +164,15 @@ const StoreDetail = () => {
       <PublicRoute>
         <div className="min-h-screen flex items-center justify-center bg-white dark:bg-gray-900">
           <div className="text-center">
-            <h1 className="text-2xl font-bold text-gray-800 dark:text-white mb-4">
+            <h1 className="text-xl sm:text-2xl font-bold text-gray-800 dark:text-white mb-4">
               Store Not Found
             </h1>
-            <p className="text-gray-600 dark:text-gray-300 mb-4">
+            <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 mb-4">
               The store you're looking for doesn't exist.
             </p>
             <button
               onClick={() => router.push("/")}
-              className="px-4 py-2 bg-sky-600 text-white rounded-lg hover:bg-sky-700 transition-colors cursor-pointer"
+              className="px-3 sm:px-4 py-2 text-xs sm:text-sm bg-sky-600 text-white rounded-lg hover:bg-sky-700 transition-colors cursor-pointer"
             >
               Go to Home
             </button>
@@ -327,9 +327,9 @@ const StoreDetail = () => {
                     )}
                   </div>
 
-                  <div className="flex flex-wrap items-center gap-3 sm:gap-4 mb-3">
-                    <div className="flex items-center gap-1 text-sm text-gray-600 dark:text-gray-400">
-                      <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
+                  <div className="flex flex-wrap items-center gap-2 sm:gap-3 md:gap-4 mb-3">
+                    <div className="flex items-center gap-1 text-xs sm:text-sm text-gray-600 dark:text-gray-400">
+                      <Star className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-yellow-500 fill-yellow-500" />
                       <span className="font-semibold text-gray-700 dark:text-gray-300">
                         {calculatedRating !== null && calculatedRating > 0
                           ? calculatedRating.toFixed(1)
@@ -343,25 +343,25 @@ const StoreDetail = () => {
                         </span>
                       )}
                     </div>
-                    <div className="flex items-center gap-1 text-sm text-gray-600 dark:text-gray-400">
-                      <Package className="w-4 h-4" />
+                    <div className="flex items-center gap-1 text-xs sm:text-sm text-gray-600 dark:text-gray-400">
+                      <Package className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                       <span>{actualProductCount} Products</span>
                     </div>
-                    <div className="flex items-center gap-1 text-sm text-gray-600 dark:text-gray-400">
-                      <ShoppingBag className="w-4 h-4" />
+                    <div className="flex items-center gap-1 text-xs sm:text-sm text-gray-600 dark:text-gray-400">
+                      <ShoppingBag className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                       <span>{store.totalSales} Sales</span>
                     </div>
                     {store.isVerified && (
-                      <div className="flex items-center gap-1 text-sm text-sky-600 dark:text-sky-400">
-                        <Shield className="w-4 h-4" />
+                      <div className="flex items-center gap-1 text-xs sm:text-sm text-sky-600 dark:text-sky-400">
+                        <Shield className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                         <span>Verified Store</span>
                       </div>
                     )}
                   </div>
 
                   {store.location && (
-                    <div className="flex items-center gap-1 text-sm text-gray-600 dark:text-gray-400 mb-2">
-                      <MapPin className="w-4 h-4" />
+                    <div className="flex items-center gap-1 text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-2">
+                      <MapPin className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                       <span>
                         {[
                           store.location.city,
@@ -374,13 +374,13 @@ const StoreDetail = () => {
                   )}
 
                   {store.profile?.operational && (
-                    <div className="flex items-center gap-1 text-sm text-gray-600 dark:text-gray-400">
-                      <Clock className="w-4 h-4" />
+                    <div className="flex items-center gap-1 text-xs sm:text-sm text-gray-600 dark:text-gray-400">
+                      <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                       <span>{store.profile.operational}</span>
                     </div>
                   )}
                   
-                  <div className="flex items-center gap-1 text-sm text-gray-600 dark:text-gray-400 mt-2">
+                  <div className="flex items-center gap-1 text-xs sm:text-sm text-gray-600 dark:text-gray-400 mt-2">
                     <span className="text-xs font-medium text-gray-500 dark:text-gray-500">
                       Store Owner: {store.user.firstName} {store.user.lastName}
                     </span>
@@ -390,7 +390,7 @@ const StoreDetail = () => {
 
               {store.profile?.bio && (
                 <div className="mt-4 sm:mt-6 pt-4 sm:pt-6 border-t border-gray-200 dark:border-gray-700">
-                  <p className="text-sm sm:text-base text-gray-700 dark:text-gray-300 leading-relaxed">
+                  <p className="text-xs sm:text-sm md:text-base text-gray-700 dark:text-gray-300 leading-relaxed">
                     {store.profile.bio}
                   </p>
                 </div>
@@ -403,27 +403,27 @@ const StoreDetail = () => {
               <div className="flex">
                 <button
                   onClick={() => setActiveTab("products")}
-                  className={`flex-1 px-4 sm:px-6 py-3 sm:py-4 text-sm sm:text-base font-semibold transition-colors border-b-2 ${
+                  className={`flex-1 px-3 sm:px-4 md:px-6 py-2.5 sm:py-3 md:py-4 text-xs sm:text-sm md:text-base font-semibold transition-colors border-b-2 ${
                     activeTab === "products"
                       ? "border-sky-600 dark:border-sky-400 text-sky-600 dark:text-sky-400 bg-sky-50 dark:bg-sky-900/20"
                       : "border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
                   }`}
                 >
-                  <div className="flex items-center justify-center gap-2">
-                    <Package className="w-4 h-4 sm:w-5 sm:h-5" />
+                  <div className="flex items-center justify-center gap-1.5 sm:gap-2">
+                    <Package className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5" />
                     <span>Products ({actualProductCount})</span>
                   </div>
                 </button>
                 <button
                   onClick={() => setActiveTab("reviews")}
-                  className={`flex-1 px-4 sm:px-6 py-3 sm:py-4 text-sm sm:text-base font-semibold transition-colors border-b-2 ${
+                  className={`flex-1 px-3 sm:px-4 md:px-6 py-2.5 sm:py-3 md:py-4 text-xs sm:text-sm md:text-base font-semibold transition-colors border-b-2 ${
                     activeTab === "reviews"
                       ? "border-sky-600 dark:border-sky-400 text-sky-600 dark:text-sky-400 bg-sky-50 dark:bg-sky-900/20"
                       : "border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
                   }`}
                 >
-                  <div className="flex items-center justify-center gap-2">
-                    <Star className="w-4 h-4 sm:w-5 sm:h-5" />
+                  <div className="flex items-center justify-center gap-1.5 sm:gap-2">
+                    <Star className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5" />
                     <span>Reviews ({totalReviews})</span>
                   </div>
                 </button>

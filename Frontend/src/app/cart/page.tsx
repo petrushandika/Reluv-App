@@ -141,8 +141,8 @@ const Cart = () => {
           <div className="lg:col-span-2">
             <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-md rounded-lg shadow-sm border border-gray-200/50 dark:border-gray-700/50">
               <div className="p-4 md:p-6 border-b border-gray-200 dark:border-gray-700">
-                <h2 className="text-base sm:text-lg md:text-xl font-semibold text-sky-600 dark:text-sky-400 flex items-center gap-2 sm:gap-3 glossy-text-strong">
-                  <ShoppingBag className="w-5 h-5 sm:w-6 sm:h-6" /> Cart Items (
+                <h2 className="text-sm sm:text-base md:text-lg lg:text-xl font-semibold text-sky-600 dark:text-sky-400 flex items-center gap-2 sm:gap-3 glossy-text-strong">
+                  <ShoppingBag className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" /> Cart Items (
                   {cart.items.length})
                 </h2>
               </div>
