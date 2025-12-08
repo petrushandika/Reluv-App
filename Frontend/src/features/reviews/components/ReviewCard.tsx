@@ -104,7 +104,7 @@ const ReviewCard = ({
     <div className={`bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 border border-gray-200 dark:border-gray-700 space-y-4 ${fixedHeight ? 'h-full flex flex-col' : ''}`}>
       <div className="flex items-start justify-between">
         <div className="flex items-start gap-3 flex-1">
-          <div className="relative w-10 h-10 sm:w-12 sm:h-12 rounded-full overflow-hidden flex-shrink-0">
+          <div className="relative w-10 h-10 sm:w-12 sm:h-12 rounded-full overflow-hidden shrink-0">
             <Image
               src={authorAvatar}
               alt={authorName}
@@ -220,7 +220,7 @@ const ReviewCard = ({
       {review.reply && review.reply.trim() && (
         <div className="ml-4 sm:ml-8 pl-4 sm:pl-6 border-l-2 border-sky-200 dark:border-sky-800 bg-sky-50 dark:bg-sky-900/20 rounded-r-lg p-3 sm:p-4 space-y-2">
           <div className="flex items-center gap-2">
-            <div className="relative w-8 h-8 sm:w-10 sm:h-10 rounded-full overflow-hidden flex-shrink-0">
+            <div className="relative w-8 h-8 sm:w-10 sm:h-10 rounded-full overflow-hidden shrink-0">
               <Image
                 src={replyAuthorAvatar}
                 alt={replyAuthorName || "Store Owner"}

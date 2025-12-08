@@ -27,6 +27,7 @@ import { toast } from "sonner";
 import Spinner from "@/shared/components/atoms/Spinner";
 import Image from "next/image";
 import ProfileSidebar from "@/shared/components/organisms/ProfileSidebar";
+import QRCode from "react-qr-code";
 
 interface ProfileMenuItem {
   title: string;
@@ -422,15 +423,36 @@ const ProfilePage = () => {
                   <X className="w-6 h-6" />
                 </button>
               </div>
-              <div className="flex flex-col items-center justify-center py-8">
-                <div className="bg-white p-4 rounded-lg shadow-lg mb-4">
-                  <div className="w-48 h-48 bg-gray-100 dark:bg-gray-700 flex items-center justify-center rounded">
-                    <QrCode className="w-32 h-32 text-gray-400" />
-                  </div>
+              <div className="flex flex-col items-center justify-center py-4 sm:py-8">
+                <div className="bg-white p-3 sm:p-4 rounded-lg shadow-lg mb-3 sm:mb-4">
+                  {user?.id ? (
+                    <div className="w-48 h-48 sm:w-56 sm:h-56 flex items-center justify-center rounded overflow-hidden bg-white p-2">
+                      <QRCode
+                        value={`reluv://member/${user.id}`}
+                        size={200}
+                        level="H"
+                        fgColor="#000000"
+                        bgColor="#FFFFFF"
+                        style={{ height: "auto", maxWidth: "100%", width: "100%" }}
+                      />
+                    </div>
+                  ) : (
+                    <div className="w-48 h-48 sm:w-56 sm:h-56 bg-gray-100 dark:bg-gray-700 flex items-center justify-center rounded">
+                      <Loader2 className="w-12 h-12 sm:w-16 sm:h-16 text-gray-400 animate-spin" />
+                    </div>
+                  )}
                 </div>
-                <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 text-center">
-                  Show this QR code to earn points and access member benefits
-                </p>
+                <div className="text-center space-y-2">
+                  <p className="text-xs sm:text-sm font-medium text-gray-900 dark:text-white">
+                    {displayName}
+                  </p>
+                  <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
+                    Show this QR code to earn points and access member benefits
+                  </p>
+                  <p className="text-xs text-gray-500 dark:text-gray-500">
+                    Member ID: {user?.id}
+                  </p>
+                </div>
               </div>
             </div>
           </div>

@@ -99,7 +99,6 @@ const ReviewSection = ({
       setIsLoading(false);
       setReviews([]);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [productId]);
 
   const fetchReviews = async () => {
@@ -183,7 +182,7 @@ const ReviewSection = ({
   return (
     <div className="bg-white dark:bg-gray-900">
       <div className="mb-6 sm:mb-8">
-        <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-4">
+        <h2 className="text-base sm:text-lg md:text-xl font-bold text-gray-900 dark:text-white mb-4">
           Reviews
         </h2>
 
