@@ -164,7 +164,7 @@ const StoreDetail = () => {
       <PublicRoute>
         <div className="min-h-screen flex items-center justify-center bg-white dark:bg-gray-900">
           <div className="text-center">
-            <h1 className="text-xl sm:text-2xl font-bold text-gray-800 dark:text-white mb-4">
+            <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-4">
               Store Not Found
             </h1>
             <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 mb-4">
@@ -298,7 +298,7 @@ const StoreDetail = () => {
 
                 <div className="flex-1 min-w-0 mt-4 sm:mt-0">
                   <div className="flex flex-wrap items-center gap-2 mb-2">
-                    <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">
+                    <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white">
                       {store.name}
                     </h1>
                     {store.isVerified && (

@@ -1175,29 +1175,28 @@ const EditAddressPageContent = () => {
                     </div>
                   </div>
                 </div>
-              </form>
 
-              <div className="hidden lg:block mt-6">
-                <button
-                  type="submit"
-                  form="address-form"
-                  className="w-full lg:w-auto px-6 py-3 bg-sky-600 dark:bg-sky-500 text-white font-semibold rounded-lg hover:bg-sky-700 dark:hover:bg-sky-600 transition-colors cursor-pointer"
-                >
-                  Save Address
-                </button>
-              </div>
+                <div className="mt-6 space-y-4">
+                  <div className="lg:hidden">
+                    <button
+                      type="submit"
+                      className="w-full px-6 py-3 bg-sky-600 dark:bg-sky-500 text-white font-semibold rounded-lg hover:bg-sky-700 dark:hover:bg-sky-600 transition-colors cursor-pointer text-xs sm:text-sm md:text-base"
+                    >
+                      Save Address
+                    </button>
+                  </div>
+                  <div className="hidden lg:block">
+                    <button
+                      type="submit"
+                      className="w-full lg:w-auto px-6 py-3 bg-sky-600 dark:bg-sky-500 text-white font-semibold rounded-lg hover:bg-sky-700 dark:hover:bg-sky-600 transition-colors cursor-pointer text-xs sm:text-sm md:text-base"
+                    >
+                      Save Address
+                    </button>
+                  </div>
+                </div>
+              </form>
             </main>
           </div>
-        </div>
-
-        <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 p-4 z-50 shadow-lg">
-          <button
-            type="submit"
-            form="address-form"
-            className="w-full px-6 py-3 bg-sky-600 dark:bg-sky-500 text-white font-semibold rounded-lg hover:bg-sky-700 dark:hover:bg-sky-600 transition-colors cursor-pointer"
-          >
-            Save Address
-          </button>
         </div>
 
         {showPinpointModal && (

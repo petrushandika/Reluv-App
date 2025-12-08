@@ -175,7 +175,7 @@ const HelpPage = () => {
           <div className="text-center mb-8 sm:mb-10 md:mb-12">
             <div className="flex items-center justify-center gap-3 mb-4">
               <HelpCircle className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 text-sky-600 dark:text-sky-400" />
-              <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">
+              <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white">
                 Help Center
               </h1>
             </div>
@@ -277,7 +277,7 @@ const HelpPage = () => {
                         {faq.question}
                       </span>
                       <ChevronRight
-                        className={`w-4 h-4 sm:w-5 sm:h-5 text-gray-400 dark:text-gray-500 flex-shrink-0 transition-transform ${
+                        className={`w-4 h-4 sm:w-5 sm:h-5 text-gray-400 dark:text-gray-500 shrink-0 transition-transform ${
                           expandedFAQ === faq.id ? "rotate-90" : ""
                         }`}
                       />

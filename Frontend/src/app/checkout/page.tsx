@@ -1333,7 +1333,7 @@ const Checkout = () => {
           onFocus={() => setIsOpen(true)}
           onBlur={() => setIsOpen(false)}
           onMouseDown={() => setIsOpen(!isOpen)}
-          className="block w-full pl-4 pr-12 py-3 border border-gray-300/50 dark:border-gray-600/50 rounded-lg bg-white/80 dark:bg-gray-800/80 text-gray-900 dark:text-white placeholder:text-base placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200 disabled:bg-gray-50/80 dark:disabled:bg-gray-700/80 disabled:cursor-not-allowed appearance-none cursor-pointer glossy-text"
+          className="block w-full pl-4 pr-12 py-3 border border-gray-300/50 dark:border-gray-600/50 rounded-lg bg-white/80 dark:bg-gray-800/80 text-gray-900 dark:text-white placeholder:text-base placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-sky-500 dark:focus:border-sky-400 transition-colors duration-200 disabled:bg-gray-50/80 dark:disabled:bg-gray-700/80 disabled:cursor-not-allowed appearance-none cursor-pointer"
         >
           <option value="" disabled>
             {placeholder || `Select ${label}`}
@@ -1364,7 +1364,7 @@ const Checkout = () => {
       )}
       <div className="bg-white dark:bg-gray-900 min-h-screen">
         <div className="container mx-auto px-4 sm:px-6 md:px-10 xl:px-20 2xl:px-40 py-10 sm:py-12 md:py-14">
-          <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-black dark:text-white mb-4 sm:mb-6 md:mb-8">
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-4 sm:mb-6 md:mb-8">
             Shipping Details
           </h1>
           <div className="flex flex-col lg:grid lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
@@ -1932,14 +1932,14 @@ const Checkout = () => {
                                   />
                                   <div className="ml-4 flex-grow grid grid-cols-2 sm:grid-cols-3 items-center">
                                     <div className="col-span-2 sm:col-span-1">
-                                      <span className="font-semibold text-sm text-black dark:text-white">
+                                      <span className="font-semibold text-sm text-gray-900 dark:text-white">
                                         {rate.courier_service_name}
                                       </span>
                                       <span className="block text-xs text-gray-500 dark:text-gray-400">
                                         {rate.duration || rate.description || "2-3 Days"}
                                       </span>
                                     </div>
-                                    <span className="text-sm font-semibold text-black dark:text-white sm:text-right">
+                                    <span className="text-sm font-semibold text-gray-900 dark:text-white sm:text-right">
                                       {formatPrice(rate.price)}
                                     </span>
                                   </div>
@@ -1980,14 +1980,14 @@ const Checkout = () => {
                                   />
                                   <div className="ml-4 flex-grow grid grid-cols-2 sm:grid-cols-3 items-center">
                                     <div className="col-span-2 sm:col-span-1">
-                                      <span className="font-semibold text-sm text-black dark:text-white">
+                                      <span className="font-semibold text-sm text-gray-900 dark:text-white">
                                         {service.name}
                                       </span>
                                       <span className="block text-xs text-gray-500 dark:text-gray-400">
                                         {service.estimation}
                                       </span>
                                     </div>
-                                    <span className="text-sm font-semibold text-black dark:text-white sm:text-right">
+                                    <span className="text-sm font-semibold text-gray-900 dark:text-white sm:text-right">
                                       {formatPrice(service.price)}
                                     </span>
                                   </div>
@@ -2005,7 +2005,7 @@ const Checkout = () => {
 
             <div className="lg:col-span-1">
               <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-4 sm:p-5 md:p-6 lg:sticky lg:top-4 border border-gray-200 dark:border-gray-700">
-                <h2 className="text-base sm:text-lg font-semibold text-black dark:text-white mb-4 sm:mb-6">
+                <h2 className="text-base sm:text-lg md:text-xl font-semibold text-gray-900 dark:text-white mb-4 sm:mb-6">
                   Order Summary
                 </h2>
                 <div className="space-y-3 sm:space-y-4">
@@ -2027,7 +2027,7 @@ const Checkout = () => {
                         </span>
                       </div>
                       <div className="flex-grow min-w-0">
-                        <p className="font-semibold text-black dark:text-white text-xs sm:text-sm truncate">
+                        <p className="font-semibold text-gray-900 dark:text-white text-xs sm:text-sm truncate">
                           {item.variant.product.name}
                         </p>
                         <div className="flex flex-wrap gap-x-1.5 sm:gap-x-2 text-gray-500 dark:text-gray-400 text-[10px] sm:text-xs">
@@ -2039,7 +2039,7 @@ const Checkout = () => {
                           )}
                         </div>
                       </div>
-                      <p className="font-semibold text-black dark:text-white text-xs sm:text-sm flex-shrink-0">
+                      <p className="font-semibold text-gray-900 dark:text-white text-xs sm:text-sm shrink-0">
                         {formatPrice(item.variant.price * item.quantity)}
                       </p>
                     </div>
@@ -2113,7 +2113,7 @@ const Checkout = () => {
                     <span className="text-gray-600 dark:text-gray-400">
                       Subtotal
                     </span>
-                    <span className="font-medium text-black dark:text-white">
+                    <span className="font-medium text-gray-900 dark:text-white">
                       {formatPrice(checkoutSubtotal)}
                     </span>
                   </div>
@@ -2121,7 +2121,7 @@ const Checkout = () => {
                     <span className="text-gray-600 dark:text-gray-400">
                       Shipping
                     </span>
-                    <span className="font-medium text-black dark:text-white">
+                    <span className="font-medium text-gray-900 dark:text-white">
                       {formatPrice(shippingCost)}
                     </span>
                   </div>
@@ -2129,7 +2129,7 @@ const Checkout = () => {
                     <span className="text-gray-600 dark:text-gray-400">
                       Tax (VAT 11%)
                     </span>
-                    <span className="font-medium text-black dark:text-white">
+                    <span className="font-medium text-gray-900 dark:text-white">
                       {formatPrice(tax)}
                     </span>
                   </div>
@@ -2153,7 +2153,7 @@ const Checkout = () => {
 
                 <div className="border-t border-gray-200 dark:border-gray-700 pt-3 sm:pt-4">
                   <div className="flex justify-between text-base sm:text-lg font-bold">
-                    <span className="text-black dark:text-white">Total</span>
+                    <span className="text-gray-900 dark:text-white">Total</span>
                     <span className="text-sky-600 dark:text-sky-400">
                       {formatPrice(total)}
                     </span>

@@ -102,7 +102,7 @@ const ProductDetail = () => {
     return (
       <div className="min-h-screen flex items-center justify-center bg-white dark:bg-gray-900">
         <div className="text-center">
-          <h1 className="text-xl sm:text-2xl font-bold text-gray-800 dark:text-white mb-4">
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-4">
             Product Not Found
           </h1>
           <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 mb-4">
@@ -128,7 +128,7 @@ const ProductDetail = () => {
     return (
       <div className="min-h-screen flex items-center justify-center bg-white dark:bg-gray-900">
         <div className="text-center">
-          <h1 className="text-xl sm:text-2xl font-bold text-gray-800 dark:text-white mb-4">
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-4">
             Product Not Available
           </h1>
           <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300">
@@ -445,10 +445,10 @@ const ProductDetail = () => {
             </div>
             <div className="space-y-4 sm:space-y-6">
               <div>
-                <h1 className="text-base sm:text-lg md:text-xl font-bold text-gray-800 dark:text-white mb-1 sm:mb-2 glossy-text-title">
+                <h1 className="text-sm sm:text-base md:text-lg font-semibold text-gray-700 dark:text-gray-300 mb-1 sm:mb-2">
                   {product.store?.name || "Reluv"}
                 </h1>
-                <h2 className="text-xl sm:text-2xl lg:text-3xl font-light text-gray-800 dark:text-white leading-tight glossy-text-strong">
+                <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 dark:text-white leading-tight">
                   {product.name}
                 </h2>
               </div>
@@ -802,7 +802,7 @@ const ProductDetail = () => {
                         });
                       }
                     }}
-                    className="mt-3 w-full bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm text-sky-600 dark:text-sky-400 border border-sky-600/50 dark:border-sky-400/50 font-semibold py-2.5 sm:py-2 px-4 rounded-lg hover:bg-gray-50/90 dark:hover:bg-gray-700/90 transition-colors text-xs sm:text-sm cursor-pointer touch-manipulation shadow-sm glossy-text-strong"
+                    className="mt-3 w-full bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm text-sky-600 dark:text-sky-400 border border-sky-600/50 dark:border-sky-400/50 font-semibold py-2.5 sm:py-2 px-4 rounded-lg hover:bg-gray-50/90 dark:hover:bg-gray-700/90 transition-colors text-xs sm:text-sm cursor-pointer touch-manipulation shadow-sm"
                   >
                     See All Products
                   </button>

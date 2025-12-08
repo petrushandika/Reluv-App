@@ -29,23 +29,23 @@ const ConfirmationModal = ({
         className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-lg rounded-xl shadow-xl w-full max-w-sm sm:max-w-md p-6 border border-gray-200/50 dark:border-gray-700/50"
         onClick={(e) => e.stopPropagation()}
       >
-        <h2 className="text-lg font-bold text-black dark:text-white mb-4 glossy-text-title">
+        <h2 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white mb-4">
           Confirm Removal
         </h2>
-        <p className="text-gray-600 dark:text-gray-300 mb-8 glossy-text">
+        <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-8">
           Are you sure you want to remove &ldquo;{itemName}&rdquo; from your
           cart?
         </p>
         <div className="flex justify-end items-center space-x-3">
           <button
             onClick={onClose}
-            className="px-5 py-2.5 rounded-md text-sm font-medium text-black dark:text-white border border-gray-300/50 dark:border-gray-600/50 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm hover:bg-gray-50/90 dark:hover:bg-gray-700/90 transition-colors shadow-sm glossy-text-strong cursor-pointer"
+            className="px-5 py-2.5 rounded-md text-xs sm:text-sm font-medium text-gray-900 dark:text-white border border-gray-300/50 dark:border-gray-600/50 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm hover:bg-gray-50/90 dark:hover:bg-gray-700/90 transition-colors shadow-sm cursor-pointer"
           >
             Cancel
           </button>
           <button
             onClick={onConfirm}
-            className="px-5 py-2.5 rounded-md bg-red-600/90 dark:bg-red-500/90 backdrop-blur-sm text-sm font-medium text-white hover:bg-red-700/90 dark:hover:bg-red-600/90 transition-colors shadow-md glossy-text-strong cursor-pointer"
+            className="px-5 py-2.5 rounded-md bg-red-600/90 dark:bg-red-500/90 backdrop-blur-sm text-xs sm:text-sm font-medium text-white hover:bg-red-700/90 dark:hover:bg-red-600/90 transition-colors shadow-md cursor-pointer"
           >
             Remove
           </button>
@@ -89,20 +89,20 @@ const Cart = () => {
     return (
       <div className="min-h-screen bg-white dark:bg-gray-900">
         <div className="container mx-auto px-4 sm:px-6 md:px-10 xl:px-20 2xl:px-40 py-10 sm:py-12 md:py-14">
-          <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-black dark:text-white mb-4 sm:mb-6 md:mb-8 glossy-text-title">
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-4 sm:mb-6 md:mb-8">
             Shopping Cart
           </h1>
           <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-md rounded-lg shadow-sm p-6 sm:p-8 md:p-12 text-center border border-gray-200/50 dark:border-gray-700/50">
             <ShoppingBag className="w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 text-gray-300 dark:text-gray-600 mx-auto mb-3 sm:mb-4" />
-            <h2 className="text-base sm:text-lg md:text-xl font-semibold text-black dark:text-white mb-2 glossy-text-strong">
+            <h2 className="text-base sm:text-lg md:text-xl font-semibold text-gray-900 dark:text-white mb-2">
               Your cart is empty
             </h2>
-            <p className="text-sm sm:text-base text-gray-500 dark:text-gray-400 mb-4 sm:mb-6 glossy-text">
+            <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-4 sm:mb-6">
               Add some products to get started
             </p>
             <Link
               href="/"
-              className="bg-sky-500/90 dark:bg-sky-600/90 backdrop-blur-sm text-white px-5 sm:px-6 py-2.5 sm:py-3 rounded-md hover:bg-sky-600/90 dark:hover:bg-sky-700/90 transition-colors w-full sm:w-auto inline-block text-center cursor-pointer text-sm sm:text-base touch-manipulation shadow-md glossy-text-strong"
+              className="bg-sky-500/90 dark:bg-sky-600/90 backdrop-blur-sm text-white px-5 sm:px-6 py-2.5 sm:py-3 rounded-md hover:bg-sky-600/90 dark:hover:bg-sky-700/90 transition-colors w-full sm:w-auto inline-block text-center cursor-pointer text-xs sm:text-sm md:text-base touch-manipulation shadow-md font-semibold"
             >
               Continue Shopping
             </Link>
@@ -133,15 +133,15 @@ const Cart = () => {
       />
 
       <div className="container mx-auto px-4 sm:px-6 md:px-10 xl:px-20 2xl:px-40 py-10 sm:py-12 md:py-14">
-        <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-black dark:text-white mb-4 sm:mb-6 md:mb-8 glossy-text-title">
-          Shopping Cart
-        </h1>
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-4 sm:mb-6 md:mb-8">
+            Shopping Cart
+          </h1>
 
         <div className="flex flex-col lg:grid lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
           <div className="lg:col-span-2">
             <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-md rounded-lg shadow-sm border border-gray-200/50 dark:border-gray-700/50">
               <div className="p-4 md:p-6 border-b border-gray-200 dark:border-gray-700">
-                <h2 className="text-sm sm:text-base md:text-lg lg:text-xl font-semibold text-sky-600 dark:text-sky-400 flex items-center gap-2 sm:gap-3 glossy-text-strong">
+                <h2 className="text-base sm:text-lg md:text-xl font-semibold text-sky-600 dark:text-sky-400 flex items-center gap-2 sm:gap-3">
                   <ShoppingBag className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" /> Cart Items (
                   {cart.items.length})
                 </h2>
@@ -165,10 +165,10 @@ const Cart = () => {
                       <div className="flex-grow w-full min-w-0">
                         <div className="flex items-start space-x-3">
                           <div className="flex-grow min-w-0">
-                            <p className="text-xs sm:text-sm font-medium text-sky-600 dark:text-sky-400 glossy-text-strong">
+                            <p className="text-xs sm:text-sm font-medium text-sky-600 dark:text-sky-400">
                               {item.variant.product.store?.name || "Reluv"}
                             </p>
-                            <h3 className="text-sm sm:text-base font-semibold text-black dark:text-white mt-1 line-clamp-2 glossy-text-strong">
+                            <h3 className="text-sm sm:text-base font-semibold text-gray-900 dark:text-white mt-1 line-clamp-2">
                               {item.variant.product.name}
                             </h3>
                             <div className="flex flex-wrap items-center gap-x-3 sm:gap-x-4 mt-1.5 sm:mt-2 text-xs sm:text-sm text-gray-500 dark:text-gray-400">
@@ -197,7 +197,7 @@ const Cart = () => {
                                 {formatPrice(item.variant.compareAtPrice)}
                               </span>
                             )}
-                            <span className="text-sm sm:text-base md:text-lg font-bold text-black dark:text-white glossy-text-title">
+                            <span className="text-sm sm:text-base md:text-lg font-bold text-gray-900 dark:text-white">
                               {formatPrice(item.variant.price)}
                             </span>
                           </div>
@@ -223,7 +223,7 @@ const Cart = () => {
                                 <Minus className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-700 dark:text-gray-300" />
                               </button>
 
-                              <span className="text-sm sm:text-base md:text-lg font-semibold min-w-[2rem] text-center text-black dark:text-white">
+                              <span className="text-sm sm:text-base md:text-lg font-semibold min-w-[2rem] text-center text-gray-900 dark:text-white">
                                 {item.quantity}
                               </span>
 
@@ -251,7 +251,7 @@ const Cart = () => {
 
           <div className="lg:col-span-1">
             <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-md rounded-lg shadow-sm p-4 sm:p-5 md:p-6 lg:sticky lg:top-4 border border-gray-200/50 dark:border-gray-700/50">
-              <h2 className="text-base sm:text-lg font-semibold text-black dark:text-white mb-3 sm:mb-4">
+              <h2 className="text-base sm:text-lg md:text-xl font-semibold text-gray-900 dark:text-white mb-3 sm:mb-4">
                 Order Summary
               </h2>
 
@@ -260,7 +260,7 @@ const Cart = () => {
                   <span className="text-gray-600 dark:text-gray-400">
                     Subtotal
                   </span>
-                  <span className="font-medium text-black dark:text-white">
+                  <span className="font-medium text-gray-900 dark:text-white">
                     {formatPrice(subtotal)}
                   </span>
                 </div>
@@ -269,7 +269,7 @@ const Cart = () => {
                   <span className="text-gray-600 dark:text-gray-400">
                     Shipping
                   </span>
-                  <span className="font-medium text-black dark:text-white">
+                  <span className="font-medium text-gray-900 dark:text-white">
                     {formatPrice(SHIPPING_COST)}
                   </span>
                 </div>
@@ -278,7 +278,7 @@ const Cart = () => {
                   <span className="text-gray-600 dark:text-gray-400">
                     Tax (PPN 11%)
                   </span>
-                  <span className="font-medium text-black dark:text-white">
+                  <span className="font-medium text-gray-900 dark:text-white">
                     {formatPrice(tax)}
                   </span>
                 </div>
@@ -297,10 +297,10 @@ const Cart = () => {
 
               <div className="border-t border-gray-200 dark:border-gray-700 pt-3 sm:pt-3.5 md:pt-4 mb-3 sm:mb-4 md:mb-6">
                 <div className="flex justify-between">
-                  <span className="text-sm sm:text-base md:text-lg font-semibold text-black dark:text-white">
+                  <span className="text-sm sm:text-base md:text-lg font-semibold text-gray-900 dark:text-white">
                     Total
                   </span>
-                  <span className="text-sm sm:text-base md:text-lg font-bold text-black dark:text-white">
+                  <span className="text-sm sm:text-base md:text-lg font-bold text-gray-900 dark:text-white">
                     {formatPrice(total)}
                   </span>
                 </div>
@@ -317,7 +317,7 @@ const Cart = () => {
 
                 <Link
                   href="/"
-                  className="block w-full text-black dark:text-white text-center border border-gray-300 dark:border-gray-600 py-3 sm:py-3 px-4 rounded-md font-medium hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-sm sm:text-base cursor-pointer touch-manipulation"
+                  className="block w-full text-gray-900 dark:text-white text-center border border-gray-300 dark:border-gray-600 py-3 sm:py-3 px-4 rounded-md font-medium hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-xs sm:text-sm md:text-base cursor-pointer touch-manipulation"
                 >
                   Continue Shopping
                 </Link>

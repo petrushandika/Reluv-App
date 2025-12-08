@@ -185,7 +185,7 @@ const ProfilePage = () => {
                 <div className="hidden lg:block mb-6">
                   <div className="flex items-center gap-3 mb-2">
                     <User className="w-6 h-6 text-sky-600 dark:text-sky-400" />
-                    <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">
+                    <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white">
                       Profile
                     </h1>
                   </div>
