@@ -16,9 +16,9 @@ import {
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useAuthStore } from "@/features/auth/store/auth.store";
-import { useCartStore } from "@/features/cart/store/cart.store";
-import { useWishlistStore } from "@/features/wishlist/store/wishlist.store";
+import { useAuthStore } from "@/features/(auth)/store/auth.store";
+import { useCartStore } from "@/features/(main)/cart/store/cart.store";
+import { useWishlistStore } from "@/features/(main)/wishlist/store/wishlist.store";
 import ThemeToggle from "./ThemeToggle";
 import PromoMarquee from "@/shared/components/molecules/PromoMarquee";
 

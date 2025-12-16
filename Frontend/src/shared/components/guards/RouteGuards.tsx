@@ -2,8 +2,8 @@
 
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
-import { useAuthStore } from '@/features/auth/store/auth.store';
-import Spinner from '@/shared/components/atoms/Spinner';
+import { useAuthStore } from '@/features/(auth)/store/auth.store';
+import Spinner from '@/shared/components/common/Spinner';
 
 interface RouteGuardProps {
   children: React.ReactNode;
@@ -16,7 +16,7 @@ export function PrivateRoute({ children }: RouteGuardProps) {
 
   useEffect(() => {
     if (isHydrated && !isAuthenticated) {
-      router.replace('/auth/login');
+      router.replace('/login');
     }
   }, [isAuthenticated, isHydrated, router]);
 

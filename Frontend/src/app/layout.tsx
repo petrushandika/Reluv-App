@@ -1,15 +1,11 @@
 'use client';
 
 import { Inter } from 'next/font/google';
-import { usePathname } from 'next/navigation';
 import { Toaster } from 'sonner';
 import './globals.css';
 import 'leaflet/dist/leaflet.css';
 import { AuthProvider } from '@/context/AuthContext';
-import Navbar from '@/shared/components/organisms/Navbar';
-import Footer from '@/shared/components/organisms/Footer';
-import AppInitializer from '@/shared/components/organisms/AppInitializer';
-import BackToTop from '@/shared/components/organisms/BackToTop';
+import AppInitializer from '@/shared/components/layout/AppInitializer';
 
 const inter = Inter({
   variable: '--font-sans',
@@ -21,10 +17,6 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const pathname = usePathname();
-  const isAuthPage = pathname.startsWith('/auth');
-  const isDashboardPage = pathname.startsWith('/dashboard');
-
   return (
     <html lang="en" suppressHydrationWarning style={{ overflowY: 'auto', height: 'auto', minHeight: '100vh' }}>
       <head>
@@ -92,19 +84,7 @@ export default function RootLayout({
                 },
               }}
             />
-            <div className="relative flex min-h-screen flex-col">
-              {!isAuthPage && !isDashboardPage && <Navbar />}
-              <main
-                className={`flex-1 ${
-                  isAuthPage || isDashboardPage ? '' : 'pt-20 md:pt-24 lg:pt-36'
-                }`}
-                style={{ overflowY: 'auto' }}
-              >
-                {children}
-              </main>
-              {!isAuthPage && !isDashboardPage && <Footer />}
-              {!isAuthPage && !isDashboardPage && <BackToTop />}
-            </div>
+            {children}
           </AppInitializer>
         </AuthProvider>
       </body>

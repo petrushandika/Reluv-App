@@ -1,0 +1,78 @@
+"use client";
+
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { cn } from "../../lib/utils";
+import {
+  ShoppingCart,
+  Package,
+  MessageSquare,
+  Settings,
+  Users,
+} from "lucide-react";
+
+const sidebarItems = [
+  {
+    title: "Orders",
+    href: "/orders",
+    icon: ShoppingCart,
+  },
+  {
+    title: "Products",
+    href: "/products",
+    icon: Package,
+  },
+  {
+    title: "Reviews",
+    href: "/reviews",
+    icon: MessageSquare,
+  },
+  {
+    title: "Users",
+    href: "/users",
+    icon: Users,
+  },
+  {
+    title: "Settings",
+    href: "/settings",
+    icon: Settings,
+  },
+];
+
+export default function Sidebar() {
+  const pathname = usePathname();
+
+  return (
+    <div className="w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 flex flex-col">
+      <div className="p-6 border-b border-gray-200 dark:border-gray-700">
+        <Link href="/" className="flex items-center space-x-2">
+          <img src="/logo.png" alt="reluv" className="h-8 w-8" />
+          <span className="font-bold text-xl text-gray-900 dark:text-white">reluv</span>
+        </Link>
+      </div>
+
+      <nav className="flex-1 p-4 space-y-2">
+        {sidebarItems.map((item) => {
+          const Icon = item.icon;
+          const isActive = pathname === item.href;
+
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={cn(
+                "flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors",
+                isActive
+                  ? "bg-primary text-primary-foreground"
+                  : "text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white"
+              )}
+            >
+              <Icon className="h-5 w-5" />
+              <span>{item.title}</span>
+            </Link>
+          );
+        })}
+      </nav>
+    </div>
+  );
+}
