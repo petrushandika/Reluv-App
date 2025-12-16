@@ -23,7 +23,7 @@ Backend/
 │   ├── store/             # Store Management
 │   ├── locations/         # Address Management
 │   ├── notifications/     # Notification System
-│   ├── upload/            # File Upload
+│   ├── uploads/            # File Upload (Cloudinary)
 │   ├── maps/              # Maps Integration
 │   ├── geocode/           # Geocoding Services
 │   ├── shipping-rates/    # Shipping Rate Calculation

@@ -16,6 +16,7 @@ Selamat datang di dokumentasi Backend Reluv API. Dokumentasi ini mencakup semua 
 8. [Deployment](./08-DEPLOYMENT.md) - Panduan deployment ke production
 9. [Testing](./09-TESTING.md) - Panduan testing
 10. [Troubleshooting](./10-TROUBLESHOOTING.md) - Common issues dan solutions
+11. [Structure Guide](./STRUCTURE-GUIDE.md) - ⭐ Complete structure overview
 
 ### 🚀 Quick Links
 

@@ -194,7 +194,7 @@ Backend/
 │   ├── store/             # Store management
 │   ├── locations/         # Address management
 │   ├── notifications/     # Notification system
-│   ├── upload/            # File upload (Cloudinary)
+│   ├── uploads/           # File upload (Cloudinary)
 │   ├── maps/              # Maps integration
 │   ├── geocode/           # Geocoding services
 │   ├── shipping-rates/    # Shipping rate calculation

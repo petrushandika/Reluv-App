@@ -23,7 +23,7 @@ import { ShippingRatesModule } from './shipping-rates/shipping-rates.module';
 import { AuthMiddleware } from './common/middlewares/auth.middleware';
 import { WishlistModule } from './wishlist/wishlist.module';
 import { LocationsModule } from './locations/locations.module';
-import { UploadModule } from './upload/upload.module';
+import { UploadModule } from './uploads/upload.module';
 import { StoreModule } from './store/store.module';
 import { MapsModule } from './maps/maps.module';
 import { EmailModule } from './email/email.module';
