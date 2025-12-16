@@ -1,506 +1,319 @@
-# Reluv Frontend Documentation
+# Reluv App - Frontend
 
-## 📋 Table of Contents
+Modern e-commerce platform for buying and selling luxury fashion items, built with Next.js 14+ App Router.
 
-- [Overview](#overview)
-- [Tech Stack](#tech-stack)
-- [Prerequisites](#prerequisites)
-- [Installation](#installation)
-- [Configuration](#configuration)
-- [Running the Application](#running-the-application)
-- [Project Structure](#project-structure)
-- [Architecture](#architecture)
-- [Features](#features)
-- [State Management](#state-management)
-- [API Integration](#api-integration)
-- [Components](#components)
-- [Routing](#routing)
-- [Styling](#styling)
-- [Deployment](#deployment)
+## 🚀 Quick Start
 
-## 🎯 Overview
-
-Reluv Frontend adalah aplikasi e-commerce preloved fashion yang dibangun dengan Next.js 16, React 19, dan TypeScript. Aplikasi ini menyediakan interface yang modern dan responsif untuk browsing produk, manajemen cart, checkout, dan berbagai fitur lainnya.
-
-## 🛠 Tech Stack
-
-- **Framework**: Next.js 16.x (App Router)
-- **Language**: TypeScript
-- **UI Library**: React 19
-- **Styling**: Tailwind CSS 4.x
-- **State Management**: Zustand
-- **Form Handling**: React Hook Form + Zod
-- **HTTP Client**: Axios
-- **Icons**: Lucide React
-- **Animations**: Framer Motion
-- **Carousel**: Embla Carousel
-- **Maps**: Leaflet, React Leaflet
-- **Notifications**: Sonner
-- **UI Components**: Radix UI
-
-## 📦 Prerequisites
-
-- Node.js (v18 atau lebih tinggi)
-- npm atau yarn
-- Backend API running (lihat Backend README)
-
-## 🚀 Installation
-
-1. **Clone repository**
 ```bash
-git clone <repository-url>
-cd Reluv-App/Frontend
-```
-
-2. **Install dependencies**
-```bash
+# Install dependencies
 npm install
-```
 
-3. **Setup environment variables**
-```bash
-cp .env.example .env
-```
-
-4. **Configure environment variables** (lihat [Configuration](#configuration))
-
-5. **Run the application**
-```bash
+# Run development server
 npm run dev
-```
 
-Aplikasi akan berjalan di `http://localhost:3099`
-# Aplikasi akan berjalan di `http://localhost:3099`
-
-## ⚙️ Configuration
-
-Buat file `.env` di root directory Frontend:
-
-```env
-# API
-NEXT_PUBLIC_API_URL=http://localhost:8000/api/v1
-
-# NextAuth (jika digunakan)
-NEXTAUTH_URL=http://localhost:3099
-NEXTAUTH_SECRET=your-secret-key
-
-# Cloudinary (jika diperlukan di frontend)
-NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=your-cloud-name
-```
-
-## ▶️ Running the Application
-
-### Development
-```bash
-npm run dev
-```
-
-### Production Build
-```bash
+# Build for production
 npm run build
-npm run start
+
+# Start production server
+npm start
 ```
 
-### Linting
-```bash
-npm run lint
-```
+Visit `http://localhost:3099`
 
 ## 📁 Project Structure
 
 ```
-Frontend/
-├── src/
-│   ├── app/                    # Next.js App Router pages
-│   │   ├── auth/               # Authentication pages
-│   │   │   ├── login/
-│   │   │   ├── register/
-│   │   │   ├── forgot/
-│   │   │   ├── reset/
-│   │   │   ├── confirm/
-│   │   │   ├── verification/
-│   │   │   └── callback/
-│   │   ├── product/            # Product detail pages
-│   │   │   └── [slug]/
-│   │   ├── women/              # Women category pages
-│   │   ├── men/                # Men category pages
-│   │   ├── kids/               # Kids category pages
-│   │   ├── brands/             # Brands page
-│   │   ├── cart/               # Cart page
-│   │   ├── checkout/           # Checkout page
-│   │   ├── sell/               # Sell product page
-│   │   ├── wishlist/           # Wishlist page
-│   │   ├── profile/            # User profile pages
-│   │   │   ├── me/
-│   │   │   ├── orders/
-│   │   │   │   └── seller/      # Seller orders page
-│   │   │   ├── address/
-│   │   │   │   ├── add/
-│   │   │   │   └── edit/
-│   │   │   └── products/        # User's products
-│   │   │       └── edit/
-│   │   ├── dashboard/          # Admin dashboard
-│   │   │   ├── orders/
-│   │   │   ├── products/
-│   │   │   ├── reviews/
-│   │   │   ├── users/
-│   │   │   ├── wishlists/
-│   │   │   └── settings/
-│   │   ├── main/               # Main pages
-│   │   │   ├── cart/
-│   │   │   └── wishlist/
-│   │   ├── layout.tsx          # Root layout
-│   │   ├── page.tsx            # Home page
-│   │   └── globals.css         # Global styles
-│   ├── features/               # Feature-based modules
-│   │   ├── auth/               # Authentication feature
-│   │   │   ├── api/            # API calls
-│   │   │   ├── components/     # Auth components
-│   │   │   ├── hooks/          # Custom hooks
-│   │   │   ├── store/          # Zustand store
-│   │   │   └── types/          # TypeScript types
-│   │   ├── products/           # Products feature
-│   │   ├── cart/               # Cart feature
-│   │   ├── wishlist/           # Wishlist feature
-│   │   ├── reviews/            # Reviews feature
-│   │   ├── sell/               # Sell product feature
-│   │   ├── categories/         # Categories feature
-│   │   ├── user/               # User feature
+Frontend/src/
+├── app/                         # Next.js App Router (Pages & Layouts ONLY)
+│   ├── (main)/                  # Public pages with Navbar + Footer
+│   │   ├── layout.tsx          # Main layout (Navbar, Footer, BackToTop)
+│   │   ├── page.tsx            # Redirects to /home
+│   │   ├── home/               # Homepage
+│   │   ├── men/, women/, kids/ # Category pages
+│   │   ├── product/[slug]/     # Product detail
+│   │   ├── cart/, checkout/    # Shopping flow
+│   │   ├── wishlist/           # Wishlist
+│   │   ├── profile/            # User profile
+│   │   └── sell/               # Sell product
+│   │
+│   ├── (auth)/                  # Auth pages (NO Navbar/Footer)
+│   │   ├── layout.tsx          # Minimal auth layout
+│   │   ├── login/, register/   # Authentication
+│   │   └── forgot/, reset/     # Password recovery
+│   │
+│   ├── (admin)/                 # Admin pages
+│   │   ├── layout.tsx          # Admin layout
+│   │   └── store/              # Store dashboard
+│   │
+│   ├── layout.tsx              # Root layout
+│   └── globals.css             # Global styles
+│
+├── features/                    # Business Logic (NO Pages!)
+│   ├── (main)/                  # Public features
+│   │   ├── products/           # Product browsing
+│   │   ├── cart/               # Shopping cart
+│   │   ├── wishlist/           # Wishlist
+│   │   ├── checkout/           # Checkout
+│   │   ├── orders/             # Order tracking
+│   │   ├── reviews/            # Product reviews
+│   │   ├── categories/         # Categories
+│   │   ├── user/               # User profile
 │   │   ├── address/            # Address management
-│   │   ├── checkout/           # Checkout feature
-│   │   └── orders/             # Orders feature
-│   ├── shared/                 # Shared utilities
-│   │   ├── components/          # Reusable components
-│   │   │   ├── atoms/          # Basic components
-│   │   │   ├── molecules/      # Composite components
-│   │   │   ├── organisms/      # Complex components
-│   │   │   ├── templates/      # Page templates
-│   │   │   └── ui/             # UI primitives
-│   │   ├── hooks/              # Shared hooks
-│   │   ├── lib/                # Utilities
-│   │   ├── store/              # Shared stores
-│   │   └── types/              # Shared types
-│   ├── context/                # React contexts
-│   └── public/                 # Static assets
-├── .env                        # Environment variables
-├── next.config.js              # Next.js configuration
-├── tailwind.config.ts          # Tailwind configuration
-└── package.json
+│   │   └── sell/               # Sell product
+│   │
+│   ├── (auth)/                  # Authentication
+│   │   ├── api/                # Auth API
+│   │   ├── components/         # Auth components
+│   │   ├── hooks/              # Auth hooks
+│   │   ├── store/              # Auth state
+│   │   └── types/              # Auth types
+│   │
+│   └── (admin)/                 # Admin features
+│       └── store/              # Store management
+│           ├── api/            # Store API
+│           ├── components/     # Store components
+│           ├── guards/         # Store guards
+│           └── types/          # Store types
+│
+├── shared/                      # Shared Resources
+│   ├── components/
+│   │   ├── layout/             # Layout components (Navbar, Footer)
+│   │   ├── organisms/          # Page-specific components (Banner, Categories)
+│   │   ├── common/             # Reusable components (Spinner, Modal)
+│   │   ├── ui/                 # UI primitives
+│   │   └── guards/             # Route guards
+│   ├── hooks/                  # Shared hooks
+│   ├── lib/                    # Utilities (axios, utils)
+│   ├── types/                  # Shared types
+│   └── constants/              # Constants
+│
+└── context/                     # React contexts
+    └── AuthContext.tsx
 ```
 
-## 🏗 Architecture
+## 🎯 Architecture Principles
 
-### Feature-Based Structure
+### 1. **Separation of Concerns**
 
-Aplikasi menggunakan struktur feature-based dimana setiap fitur memiliki:
-- **api/**: API integration layer
-- **components/**: Feature-specific components
-- **hooks/**: Custom React hooks
-- **store/**: Zustand state management
-- **types/**: TypeScript type definitions
+- **app/**: ONLY pages and layouts
+- **features/**: Business logic, components, API calls
+- **shared/**: Reusable components and utilities
 
-### Component Hierarchy
+### 2. **Route Groups**
+
+- **(main)**: Public pages with Navbar + Footer
+- **(auth)**: Authentication pages (minimal layout)
+- **(admin)**: Admin/seller pages
+
+### 3. **Feature Organization**
+
+Each feature follows this structure:
 
 ```
-Atoms → Molecules → Organisms → Templates → Pages
+feature-name/
+├── api/            # API calls
+├── components/     # Feature components
+├── hooks/          # Feature hooks
+├── store/          # State management (Zustand)
+└── types/          # TypeScript types
 ```
 
-- **Atoms**: Basic building blocks (Button, Input, Spinner)
-- **Molecules**: Simple combinations (Form, Card, Modal)
-- **Organisms**: Complex components (Navbar, Footer, ProductList)
-- **Templates**: Page layouts (AuthTemplate)
-- **Pages**: Full page components
+## 📝 Import Patterns
 
-## ✨ Features
+### From App Pages
+
+```typescript
+// Import from features
+import { ProductCard } from "@/features/(main)/products/components/ProductCard";
+import { useCart } from "@/features/(main)/cart/hooks/useCart";
+import { useAuthStore } from "@/features/(auth)/store/auth.store";
+
+// Import from shared
+import Navbar from "@/shared/components/layout/Navbar";
+import Banner from "@/shared/components/organisms/Banner";
+import Spinner from "@/shared/components/common/Spinner";
+```
+
+### From Features
+
+```typescript
+// Features can import from other features and shared
+import { useAuthStore } from "@/features/(auth)/store/auth.store";
+import { api } from "@/shared/lib/axios";
+```
+
+### From Shared
+
+```typescript
+// Shared should NOT import from features or app
+import { cn } from "@/shared/lib/utils";
+```
+
+## 🛠️ Tech Stack
+
+- **Framework**: Next.js 14+ (App Router)
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS
+- **State Management**: Zustand
+- **HTTP Client**: Axios
+- **Form Validation**: Zod
+- **Icons**: Lucide React
+- **Notifications**: Sonner
+
+## 🔑 Key Features
+
+### Public Features
+
+- Product browsing & search
+- Shopping cart & wishlist
+- Checkout & payment
+- Order tracking
+- Product reviews
+- Category browsing
 
 ### Authentication
-- User registration dengan email verification
-- Login dengan email/password
+
+- Login & Registration
+- Password recovery
+- Email verification
 - Social login (Google, Facebook)
-- Email verification & resend verification
-- Password reset & forgot password
-- Protected routes dengan route guards
 
-### Product Management
-- Product listing dengan filters
-- Product detail page
-- Category browsing (Women, Men, Kids, Brands)
-- Search functionality
-- Product variants (size, color)
+### User Features
 
-### Shopping Cart
-- Add/remove items
-- Update quantities
-- Cart persistence
-- Cart summary
-
-### Checkout
-- Address management
-- Shipping rate calculation
-- Payment integration (Midtrans)
-- Order confirmation
-
-### User Profile
 - Profile management
-- Order history
 - Address management
-- Wishlist management
+- Order history
+- Sell products
 
-### Sell Product
-- Product listing form
-- Image upload (Cloudinary)
-- Category selection
-- Variant management
+### Store Management
 
-### Reviews & Ratings
-- Product reviews
-- Rating system
-- Review images
-
-## 🔄 State Management
-
-Aplikasi menggunakan **Zustand** untuk state management.
-
-### Stores
-
-#### Auth Store (`features/auth/store/auth.store.ts`)
-```typescript
-- user: User | null
-- token: string | null
-- isAuthenticated: boolean
-- login()
-- logout()
-- register()
-```
-
-#### Cart Store (`features/cart/store/cart.store.ts`)
-```typescript
-- items: CartItem[]
-- itemCount: number
-- total: number
-- addItem()
-- removeItem()
-- updateQuantity()
-- clearCart()
-```
-
-#### Wishlist Store (`features/wishlist/store/wishlist.store.ts`)
-```typescript
-- items: WishlistItem[]
-- addToWishlist()
-- removeFromWishlist()
-- isInWishlist()
-```
-
-### Usage Example
-
-```typescript
-import { useAuthStore } from '@/features/auth/store/auth.store';
-
-function MyComponent() {
-  const { user, isAuthenticated, logout } = useAuthStore();
-  
-  return (
-    <div>
-      {isAuthenticated ? (
-        <p>Welcome, {user?.firstName}!</p>
-      ) : (
-        <p>Please login</p>
-      )}
-    </div>
-  );
-}
-```
-
-## 🌐 API Integration
-
-### Axios Configuration
-
-API client dikonfigurasi di `shared/lib/axios.ts`:
-
-```typescript
-import { api } from '@/shared/lib/axios';
-
-// GET request
-const products = await api.get('/products');
-
-// POST request
-const newProduct = await api.post('/products', data);
-
-// With authentication (token di-inject otomatis)
-```
-
-### API Structure
-
-Setiap feature memiliki API layer di `features/{feature}/api/`:
-
-```typescript
-// features/products/api/productsApi.ts
-export const getProducts = async (params?: QueryParams) => {
-  const response = await api.get('/products', { params });
-  return response.data;
-};
-```
-
-### Error Handling
-
-Error handling dilakukan di axios interceptor:
-
-```typescript
-// Auto-redirect ke login jika 401
-// Show toast notification untuk errors
-// Log errors untuk debugging
-```
-
-## 🧩 Components
-
-### Shared Components
-
-#### Atoms
-- `Spinner` - Loading spinner
-- `Skeleton` - Loading skeleton
-
-#### Molecules
-- `CategorySelector` - Category dropdown dengan nested categories
-- `CustomSelect` - Custom dropdown untuk size/color
-- `ProductCardSkeleton` - Product card loading state
-- `AuthForm` - Reusable auth form wrapper
-
-#### Organisms
-- `Navbar` - Main navigation dengan dropdown menus
-- `Footer` - Footer dengan links
-- `ProductList` - Product listing dengan carousel
-- `Banner` - Hero banner
-- `Categories` - Category showcase
-
-### Feature Components
-
-#### Products
-- `ProductCard` - Product card component
-- `ProductList` - Product list dengan Embla carousel
-
-#### Cart
-- `CartItem` - Cart item component
-- `CartSummary` - Cart summary dengan totals
-
-#### Reviews
-- `ReviewCard` - Review card component
-- `ReviewList` - Review list
-- `ReviewForm` - Review form
-
-## 🛣 Routing
-
-Aplikasi menggunakan Next.js App Router:
-
-### Public Routes
-- `/` - Home page
-- `/women`, `/men`, `/kids` - Category pages
-- `/product/[id]` - Product detail
-- `/brands` - Brands page
-
-### Protected Routes
-- `/cart` - Shopping cart
-- `/checkout` - Checkout
-- `/sell` - Sell product
-- `/wishlist` - Wishlist
-- `/profile/*` - User profile
-
-### Auth Routes
-- `/auth/login` - Login
-- `/auth/register` - Register
-- `/auth/forgot` - Forgot password
-- `/auth/reset` - Reset password
-
-### Route Guards
-
-Route protection dilakukan di `shared/components/guards/RouteGuards.tsx`:
-
-```typescript
-<RouteGuard>
-  <ProtectedPage />
-</RouteGuard>
-```
+- Store dashboard
+- Product management
+- Order management
+- Analytics
 
 ## 🎨 Styling
 
-### Tailwind CSS
+- **Dark Mode**: Fully supported
+- **Responsive**: Mobile-first design
+- **Animations**: Smooth transitions
+- **Theme**: Sky blue primary color
 
-Aplikasi menggunakan Tailwind CSS 4.x untuk styling.
+## 📱 Routes
 
-### Theme
+### Public Routes (with Navbar + Footer)
 
-- **Light Mode**: Default theme
-- **Dark Mode**: Dark theme dengan toggle
-- **Responsive**: Mobile-first approach
+- `/` → redirects to `/home`
+- `/home` - Homepage
+- `/men`, `/women`, `/kids` - Categories
+- `/product/[slug]` - Product detail
+- `/cart` - Shopping cart
+- `/checkout` - Checkout
+- `/wishlist` - Wishlist
+- `/profile/*` - User profile
 
-### Custom Classes
+### Auth Routes (minimal layout)
 
-Custom utility classes di `globals.css`:
+- `/login` - Login
+- `/register` - Register
+- `/forgot` - Forgot password
+- `/reset` - Reset password
 
-```css
-/* Custom animations */
-/* Custom utilities */
-/* Theme variables */
+### Admin Routes
+
+- `/store` - Store dashboard
+- `/store/create` - Create store
+
+## 🔐 Environment Variables
+
+Create a `.env` file:
+
+```env
+NEXT_PUBLIC_API_URL=http://localhost:3000/api
+NEXT_PUBLIC_APP_URL=http://localhost:3099
 ```
 
-### Component Styling
+## 📚 Documentation
 
-Components menggunakan:
-- Tailwind utility classes
-- Conditional classes dengan `clsx` dan `tailwind-merge`
-- CSS modules untuk complex styling (jika diperlukan)
+Detailed documentation available in `/docs`:
 
-## 🚢 Deployment
+1. [Getting Started](./docs/01-GETTING-STARTED.md)
+2. [Architecture](./docs/02-ARCHITECTURE.md)
+3. [Components](./docs/03-COMPONENTS.md)
+4. [State Management](./docs/04-STATE-MANAGEMENT.md)
+5. [API Integration](./docs/05-API-INTEGRATION.md)
+6. [Routing](./docs/06-ROUTING.md)
+7. [Styling](./docs/07-STYLING.md)
+8. [Forms & Validation](./docs/08-FORMS-VALIDATION.md)
+9. [Deployment](./docs/09-DEPLOYMENT.md)
+10. [Troubleshooting](./docs/10-TROUBLESHOOTING.md)
 
-### Build for Production
+## 🧪 Development
+
+### Adding a New Feature
+
+1. Create feature folder in appropriate route group:
 
 ```bash
+mkdir src/features/(main)/new-feature
+mkdir src/features/(main)/new-feature/{api,components,hooks,store,types}
+```
+
+2. Create page in app:
+
+```bash
+mkdir src/app/(main)/new-feature
+touch src/app/(main)/new-feature/page.tsx
+```
+
+3. Import from features:
+
+```typescript
+import { Component } from "@/features/(main)/new-feature/components/Component";
+```
+
+### Adding a Shared Component
+
+```bash
+# Layout component
+touch src/shared/components/layout/NewLayout.tsx
+
+# Common component
+touch src/shared/components/common/NewComponent.tsx
+```
+
+## 🚀 Build & Deploy
+
+```bash
+# Type check
+npx tsc --noEmit
+
+# Build
 npm run build
+
+# Start production
+npm start
 ```
 
-### Environment Variables
+## 📊 Build Statistics
 
-Pastikan semua environment variables di-set di production:
-- `NEXT_PUBLIC_API_URL`
-- Other required variables
+- **Total Routes**: 34
+- **Static Pages**: 30
+- **Dynamic Pages**: 4
+- **Build Time**: ~17s
 
-### Deployment Options
+## 🤝 Contributing
 
-- **Vercel** (Recommended untuk Next.js)
-- **Netlify**
-- **AWS Amplify**
-- **Self-hosted** dengan Node.js
-
-## 📝 Best Practices
-
-### Code Organization
-- Feature-based structure
-- Separation of concerns
-- Reusable components
-- Type safety dengan TypeScript
-
-### Performance
-- Image optimization dengan Next.js Image
-- Code splitting otomatis
-- Lazy loading untuk components
-- API response caching
-
-### Accessibility
-- Semantic HTML
-- ARIA labels
-- Keyboard navigation
-- Screen reader support
-
-## 🧪 Testing
-
-```bash
-# Run tests (jika ada)
-npm run test
-
-# Linting
-npm run lint
-```
+1. Follow the established folder structure
+2. Use TypeScript for type safety
+3. Follow import patterns
+4. Write clean, maintainable code
+5. Test thoroughly before committing
 
 ## 📄 License
 
-Private - All rights reserved
+MIT
+
+---
+
+**Built with ❤️ using Next.js**

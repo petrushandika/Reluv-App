@@ -1,160 +1,135 @@
 # Routing
 
-## 🛣 Overview
+## Overview
 
-Reluv Frontend menggunakan Next.js 16 App Router untuk routing. App Router menyediakan file-system based routing dengan support untuk layouts, loading states, dan error handling.
+Reluv App uses Next.js 14+ App Router with **route groups** for clean organization and layout management.
 
-## 📁 File-System Routing
+## Route Groups
 
-### Basic Routes
+Route groups organize routes without affecting the URL structure:
 
-Routes dibuat berdasarkan struktur folder di `app/`:
+### (main) - Public Routes
+
+**Layout**: Navbar + Footer + BackToTop
 
 ```
-app/
-├── page.tsx              → /
-├── about/
-│   └── page.tsx          → /about
-├── products/
-│   └── page.tsx          → /products
-└── product/
-    └── [id]/
-        └── page.tsx      → /product/:id
+app/(main)/
+├── layout.tsx              # Main layout
+├── page.tsx                # Redirects to /home
+├── home/page.tsx           # Homepage
+├── men/page.tsx            # Men category
+├── women/page.tsx          # Women category
+├── kids/page.tsx           # Kids category
+├── brands/page.tsx         # Brands
+├── product/[slug]/         # Product detail
+│   ├── page.tsx
+│   └── reviews/page.tsx
+├── cart/page.tsx           # Shopping cart
+├── checkout/page.tsx       # Checkout
+├── wishlist/page.tsx       # Wishlist
+├── profile/                # User profile
+│   ├── page.tsx
+│   ├── me/page.tsx
+│   ├── address/page.tsx
+│   ├── orders/page.tsx
+│   └── products/page.tsx
+└── sell/page.tsx           # Sell product
 ```
 
-### Dynamic Routes
+**URLs**:
 
-#### Single Dynamic Segment
+- `/` → redirects to `/home`
+- `/home` - Homepage
+- `/men` - Men category
+- `/product/nike-air-max` - Product detail
+- `/cart` - Shopping cart
+
+### (auth) - Authentication Routes
+
+**Layout**: Minimal (NO Navbar/Footer)
+
+```
+app/(auth)/
+├── layout.tsx              # Minimal layout
+├── login/page.tsx          # Login
+├── register/page.tsx       # Register
+├── forgot/page.tsx         # Forgot password
+├── reset/page.tsx          # Reset password
+├── confirm/page.tsx        # Email confirmation
+├── verification/page.tsx   # Email verification
+└── callback/page.tsx       # OAuth callback
+```
+
+**URLs**:
+
+- `/login` - Login page
+- `/register` - Register page
+- `/forgot` - Forgot password
+
+### (admin) - Admin Routes
+
+**Layout**: Admin sidebar
+
+```
+app/(admin)/
+├── layout.tsx              # Admin layout
+└── store/                  # Store management
+    ├── layout.tsx          # Store dashboard layout
+    ├── page.tsx            # Dashboard
+    ├── products/page.tsx   # Products
+    ├── orders/page.tsx     # Orders
+    ├── reviews/page.tsx    # Reviews
+    └── settings/page.tsx   # Settings
+```
+
+**URLs**:
+
+- `/store` - Store dashboard
+- `/store/products` - Manage products
+- `/store/orders` - Manage orders
+
+## Dynamic Routes
+
+### Product Detail
 
 ```typescript
-// app/product/[id]/page.tsx
-export default function ProductPage({ params }: { params: { id: string } }) {
-  return <div>Product ID: {params.id}</div>;
-}
-```
-
-#### Multiple Dynamic Segments
-
-```typescript
-// app/category/[category]/[subcategory]/page.tsx
-export default function CategoryPage({
+// app/(main)/product/[slug]/page.tsx
+export default function ProductDetail({
   params,
 }: {
-  params: { category: string; subcategory: string };
+  params: { slug: string };
 }) {
-  return (
-    <div>
-      Category: {params.category}, Subcategory: {params.subcategory}
-    </div>
-  );
+  const { slug } = params;
+  // slug = "nike-air-max"
 }
 ```
 
-### Catch-All Routes
+**URL**: `/product/nike-air-max`
+
+### Category Pages
 
 ```typescript
-// app/shop/[...slug]/page.tsx
-export default function ShopPage({ params }: { params: { slug: string[] } }) {
-  return <div>Shop: {params.slug.join("/")}</div>;
-}
-```
-
-## 🎯 Route Structure
-
-### Public Routes
-
-```
-/                    → Home page
-/women               → Women category
-/men                 → Men category
-/kids                → Kids category
-/brands              → Brands page
-/product/[id]        → Product detail
-```
-
-### Protected Routes
-
-```
-/cart                → Shopping cart (Auth required)
-/checkout            → Checkout (Auth required)
-/sell                → Sell product (Auth required)
-/wishlist            → Wishlist (Auth required)
-/profile/*           → User profile (Auth required)
-```
-
-### Auth Routes
-
-```
-/auth/login          → Login page
-/auth/register       → Register page
-/auth/forgot         → Forgot password
-/auth/reset           → Reset password
-/auth/confirm         → Email confirmation
-```
-
-## 🔒 Route Protection
-
-### Using Route Guards
-
-**Location:** `shared/components/guards/RouteGuards.tsx`
-
-```typescript
-"use client";
-
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { useAuthStore } from "@/features/auth/store/auth.store";
-
-export default function RouteGuard({
-  children,
+// app/(main)/men/[category]/page.tsx
+export default function MenCategory({
+  params,
 }: {
-  children: React.ReactNode;
+  params: { category: string };
 }) {
-  const router = useRouter();
-  const { isAuthenticated, isHydrated } = useAuthStore();
-
-  useEffect(() => {
-    if (isHydrated && !isAuthenticated) {
-      router.push("/auth/login");
-    }
-  }, [isAuthenticated, isHydrated, router]);
-
-  if (!isHydrated) {
-    return <div>Loading...</div>;
-  }
-
-  if (!isAuthenticated) {
-    return null;
-  }
-
-  return <>{children}</>;
+  const { category } = params;
+  // category = "shoes"
 }
 ```
 
-### Usage in Pages
+**URL**: `/men/shoes`
+
+## Navigation
+
+### Using Link Component
 
 ```typescript
-// app/cart/page.tsx
-import RouteGuard from "@/shared/components/guards/RouteGuards";
+import Link from "next/link";
 
-export default function CartPage() {
-  return (
-    <RouteGuard>
-      <div>Cart Content</div>
-    </RouteGuard>
-  );
-}
-```
-
-## 🧭 Navigation
-
-### Using Next.js Link
-
-```typescript
-import Link from 'next/link';
-
-<Link href="/products">Products</Link>
-<Link href={`/product/${productId}`}>View Product</Link>
+<Link href="/product/nike-air-max">View Product</Link>;
 ```
 
 ### Programmatic Navigation
@@ -164,107 +139,254 @@ import Link from 'next/link';
 
 import { useRouter } from "next/navigation";
 
-function MyComponent() {
+export default function Component() {
   const router = useRouter();
 
   const handleClick = () => {
-    router.push("/products");
+    router.push("/cart");
   };
 
-  return <button onClick={handleClick}>Go to Products</button>;
+  return <button onClick={handleClick}>Go to Cart</button>;
 }
 ```
 
-### Navigation with Query Params
+### With Query Parameters
 
 ```typescript
-const router = useRouter();
-
 // Navigate with query params
-router.push("/products?category=1&search=shirt");
+router.push("/products?category=shoes&color=red");
 
-// Or use URLSearchParams
-const params = new URLSearchParams({ category: "1", search: "shirt" });
-router.push(`/products?${params.toString()}`);
+// Access query params
+import { useSearchParams } from "next/navigation";
+
+const searchParams = useSearchParams();
+const category = searchParams.get("category"); // "shoes"
 ```
 
-## 📄 Layouts
+## Route Protection
+
+### Public Routes
+
+No authentication required:
+
+- `/home`
+- `/men`, `/women`, `/kids`
+- `/product/[slug]`
+- `/brands`
+
+### Protected Routes
+
+Require authentication:
+
+- `/cart`
+- `/checkout`
+- `/wishlist`
+- `/profile/*`
+- `/sell`
+
+### Admin Routes
+
+Require store ownership:
+
+- `/store/*`
+
+### Implementation
+
+```typescript
+// shared/components/guards/RouteGuards.tsx
+export function ProtectedRoute({ children }: { children: React.ReactNode }) {
+  const { isAuthenticated } = useAuthStore();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!isAuthenticated()) {
+      router.push("/login");
+    }
+  }, [isAuthenticated, router]);
+
+  if (!isAuthenticated()) {
+    return <Spinner />;
+  }
+
+  return <>{children}</>;
+}
+```
+
+**Usage**:
+
+```typescript
+// app/(main)/cart/page.tsx
+import { ProtectedRoute } from "@/shared/components/guards/RouteGuards";
+
+export default function CartPage() {
+  return (
+    <ProtectedRoute>
+      <CartContent />
+    </ProtectedRoute>
+  );
+}
+```
+
+## Layouts
 
 ### Root Layout
 
-**Location:** `app/layout.tsx`
-
 ```typescript
+// app/layout.tsx
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
-    <html>
+    <html lang="en">
       <body>
-        <Navbar />
-        {children}
-        <Footer />
+        <AuthProvider>
+          <AppInitializer>
+            <Toaster />
+            {children}
+          </AppInitializer>
+        </AuthProvider>
       </body>
     </html>
   );
 }
 ```
 
-### Nested Layouts
+### Main Layout
 
 ```typescript
-// app/dashboard/layout.tsx
-export default function DashboardLayout({
+// app/(main)/layout.tsx
+export default function MainLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
-    <div>
-      <Sidebar />
-      <main>{children}</main>
+    <div className="flex min-h-screen flex-col">
+      <Navbar />
+      <main className="flex-1 pt-20 md:pt-24 lg:pt-36">{children}</main>
+      <Footer />
+      <BackToTop />
     </div>
   );
 }
 ```
 
-### Route Groups
+### Auth Layout
 
 ```typescript
-// app/(auth)/login/page.tsx
-// app/(auth)/register/page.tsx
-// Group routes tanpa mempengaruhi URL
+// app/(auth)/layout.tsx
+export default function AuthLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return <div className="min-h-screen">{children}</div>;
+}
 ```
 
-## ⚡ Loading States
+## Redirects
+
+### Root Page Redirect
+
+```typescript
+// app/(main)/page.tsx
+"use client";
+
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+
+export default function RootPage() {
+  const router = useRouter();
+
+  useEffect(() => {
+    router.replace("/home");
+  }, [router]);
+
+  return null;
+}
+```
+
+### Conditional Redirects
+
+```typescript
+// app/(main)/checkout/page.tsx
+export default function CheckoutPage() {
+  const { items } = useCartStore();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (items.length === 0) {
+      router.push("/cart");
+    }
+  }, [items, router]);
+
+  // ...
+}
+```
+
+## Middleware
+
+### Authentication Middleware
+
+```typescript
+// middleware.ts
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
+
+export function middleware(request: NextRequest) {
+  const token = request.cookies.get("token");
+  const { pathname } = request.nextUrl;
+
+  // Protected routes
+  const protectedRoutes = ["/cart", "/checkout", "/profile", "/sell"];
+  const isProtected = protectedRoutes.some((route) =>
+    pathname.startsWith(route)
+  );
+
+  if (isProtected && !token) {
+    return NextResponse.redirect(new URL("/login", request.url));
+  }
+
+  return NextResponse.next();
+}
+
+export const config = {
+  matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
+};
+```
+
+## Route Prefetching
+
+Next.js automatically prefetches routes in viewport:
+
+```typescript
+// Prefetch on hover
+<Link href="/product/nike-air-max" prefetch={true}>
+  Product
+</Link>;
+
+// Programmatic prefetch
+const router = useRouter();
+router.prefetch("/checkout");
+```
+
+## Loading States
 
 ### Loading UI
 
 ```typescript
-// app/products/loading.tsx
+// app/(main)/product/[slug]/loading.tsx
 export default function Loading() {
-  return <div>Loading products...</div>;
+  return <ProductDetailSkeleton />;
 }
 ```
 
-### Suspense Boundaries
+### Error Handling
 
 ```typescript
-import { Suspense } from "react";
-
-<Suspense fallback={<Loading />}>
-  <ProductList />
-</Suspense>;
-```
-
-## ❌ Error Handling
-
-### Error Boundaries
-
-```typescript
-// app/products/error.tsx
+// app/(main)/product/[slug]/error.tsx
 "use client";
 
 export default function Error({
@@ -277,100 +399,91 @@ export default function Error({
   return (
     <div>
       <h2>Something went wrong!</h2>
-      <button onClick={() => reset()}>Try again</button>
+      <button onClick={reset}>Try again</button>
     </div>
   );
 }
 ```
 
-### Not Found Pages
+## Not Found
 
 ```typescript
-// app/not-found.tsx
+// app/(main)/product/[slug]/not-found.tsx
 export default function NotFound() {
   return (
     <div>
-      <h2>404 - Page Not Found</h2>
+      <h2>Product Not Found</h2>
       <Link href="/">Go Home</Link>
     </div>
   );
 }
 ```
 
-## 🔄 Route Transitions
-
-### Prefetching
-
-Next.js automatically prefetches links yang terlihat di viewport:
+## Route Handlers (API Routes)
 
 ```typescript
-<Link href="/products" prefetch={true}>
-  Products
-</Link>
-```
+// app/api/products/route.ts
+import { NextResponse } from "next/server";
 
-### Disable Prefetching
+export async function GET() {
+  const products = await fetchProducts();
+  return NextResponse.json(products);
+}
 
-```typescript
-<Link href="/products" prefetch={false}>
-  Products
-</Link>
-```
-
-## 📊 Route Metadata
-
-### Static Metadata
-
-```typescript
-// app/products/page.tsx
-export const metadata = {
-  title: "Products",
-  description: "Browse our product collection",
-};
-```
-
-### Dynamic Metadata
-
-```typescript
-// app/product/[id]/page.tsx
-export async function generateMetadata({ params }: { params: { id: string } }) {
-  const product = await getProduct(params.id);
-
-  return {
-    title: product.name,
-    description: product.description,
-  };
+export async function POST(request: Request) {
+  const body = await request.json();
+  const product = await createProduct(body);
+  return NextResponse.json(product);
 }
 ```
 
-## 🎯 Best Practices
+## Best Practices
 
-### 1. Route Organization
+1. **Use route groups** for layout organization
+2. **Implement loading states** for better UX
+3. **Handle errors gracefully** with error boundaries
+4. **Protect sensitive routes** with guards
+5. **Prefetch important routes** for performance
+6. **Use dynamic imports** for code splitting
+7. **Implement proper redirects** for auth flows
 
-- Group related routes
-- Use route groups untuk shared layouts
-- Keep routes shallow when possible
+## Complete Route Map
 
-### 2. Code Splitting
+```
+/                           → /home (redirect)
+/home                       → Homepage
+/men                        → Men category
+/men/[category]             → Men subcategory
+/women                      → Women category
+/women/[category]           → Women subcategory
+/kids                       → Kids category
+/kids/[category]            → Kids subcategory
+/brands                     → Brands page
+/product/[slug]             → Product detail
+/product/[slug]/reviews     → Product reviews
+/cart                       → Shopping cart (protected)
+/checkout                   → Checkout (protected)
+/wishlist                   → Wishlist (protected)
+/profile                    → Profile redirect
+/profile/me                 → User profile (protected)
+/profile/address            → Address management (protected)
+/profile/orders             → Order history (protected)
+/profile/products           → User products (protected)
+/sell                       → Sell product (protected)
+/login                      → Login
+/register                   → Register
+/forgot                     → Forgot password
+/reset                      → Reset password
+/store                      → Store dashboard (admin)
+/store/create               → Create store (protected)
+/store/products             → Manage products (admin)
+/store/orders               → Manage orders (admin)
+/privacy                    → Privacy policy
+/terms                      → Terms of service
+/help                       → Help center
+/contact                    → Contact us
+```
 
-- Next.js automatically code splits
-- Use dynamic imports untuk large components
-- Lazy load heavy dependencies
+---
 
-### 3. SEO
-
-- Add metadata untuk setiap page
-- Use semantic HTML
-- Implement structured data
-
-### 4. Performance
-
-- Enable prefetching untuk important links
-- Use loading states
-- Optimize images dengan Next.js Image
-
-## 📚 Related Documentation
-
-- [Architecture](./02-ARCHITECTURE.md)
-- [Components](./03-COMPONENTS.md)
-- [Next.js App Router Documentation](https://nextjs.org/docs/app)
+**Next**: [Styling](./07-STYLING.md)

@@ -1,216 +1,367 @@
 # Architecture
 
-## 🏗 System Architecture
+## Overview
 
-Reluv Frontend menggunakan Next.js 16 dengan App Router, React 19, dan TypeScript. Aplikasi mengikuti feature-based architecture dengan separation of concerns yang jelas.
+Reluv App follows a **clean architecture** pattern with clear separation of concerns using Next.js 14+ App Router and route groups.
 
-## 📁 Project Structure
+## Core Principles
+
+### 1. Separation of Concerns
 
 ```
-Frontend/
-├── src/
-│   ├── app/                    # Next.js App Router
-│   │   ├── (routes)/           # Route groups
-│   │   ├── layout.tsx          # Root layout
-│   │   ├── page.tsx            # Home page
-│   │   └── globals.css         # Global styles
-│   ├── features/               # Feature modules
-│   │   ├── auth/               # Authentication
-│   │   │   ├── api/            # API calls
-│   │   │   ├── components/     # Feature components
-│   │   │   ├── hooks/          # Custom hooks
-│   │   │   ├── store/          # Zustand store
-│   │   │   └── types/          # TypeScript types
-│   │   ├── products/           # Products
-│   │   ├── cart/               # Shopping cart
+app/        → Pages & Layouts ONLY
+features/   → Business Logic & Components
+shared/     → Reusable Code
+```
+
+### 2. Route Groups
+
+Route groups organize code by domain without affecting URLs:
+
+- **(main)**: Public pages with Navbar + Footer
+- **(auth)**: Authentication pages (minimal layout)
+- **(admin)**: Admin/seller pages
+
+### 3. Feature-Based Organization
+
+Each feature is self-contained with its own:
+
+- API calls
+- Components
+- Hooks
+- State management
+- Types
+
+## Directory Structure
+
+### App Directory (`src/app/`)
+
+**Purpose**: Pages and layouts ONLY
+
+```
+app/
+├── (main)/                  # Public pages
+│   ├── layout.tsx          # Navbar + Footer + BackToTop
+│   ├── page.tsx            # Redirects to /home
+│   ├── home/page.tsx       # Homepage content
+│   ├── men/page.tsx        # Men category
+│   ├── product/[slug]/     # Product detail
+│   └── ...
+│
+├── (auth)/                  # Auth pages
+│   ├── layout.tsx          # Minimal layout
+│   ├── login/page.tsx
+│   └── register/page.tsx
+│
+├── (admin)/                 # Admin pages
+│   ├── layout.tsx          # Admin layout
+│   └── store/
+│       ├── layout.tsx      # Store dashboard layout
+│       └── page.tsx        # Store dashboard
+│
+├── layout.tsx              # Root layout
+└── globals.css             # Global styles
+```
+
+**Rules**:
+
+- ✅ ONLY pages (`page.tsx`) and layouts (`layout.tsx`)
+- ❌ NO business logic
+- ❌ NO API calls
+- ❌ NO complex components
+
+### Features Directory (`src/features/`)
+
+**Purpose**: Business logic and feature-specific code
+
+```
+features/
+├── (main)/                  # Public features
+│   ├── products/
+│   │   ├── api/            # Product API calls
+│   │   ├── components/     # Product components
+│   │   ├── hooks/          # Product hooks
+│   │   ├── store/          # Product state (Zustand)
+│   │   └── types/          # Product types
+│   │
+│   ├── cart/               # Shopping cart
+│   ├── wishlist/           # Wishlist
+│   ├── checkout/           # Checkout
+│   ├── orders/             # Orders
+│   ├── reviews/            # Reviews
+│   ├── categories/         # Categories
+│   ├── user/               # User profile
+│   ├── address/            # Address
+│   └── sell/               # Sell product
+│
+├── (auth)/                  # Authentication
+│   ├── api/                # Auth API
+│   ├── components/         # Login, Register forms
+│   ├── hooks/              # useAuth
+│   ├── store/              # Auth state
+│   └── types/              # Auth types
+│
+└── (admin)/                 # Admin features
+    └── store/              # Store management
+        ├── api/            # Store API
+        ├── components/     # Store components
+        ├── guards/         # Store guards
+        └── types/          # Store types
+```
+
+**Rules**:
+
+- ✅ Business logic here
+- ✅ API calls here
+- ✅ Feature components here
+- ❌ NO pages (use app/ for pages)
+
+### Shared Directory (`src/shared/`)
+
+**Purpose**: Reusable code across features
+
+```
+shared/
+├── components/
+│   ├── layout/             # Layout components
+│   │   ├── Navbar.tsx
+│   │   ├── Footer.tsx
+│   │   ├── BackToTop.tsx
+│   │   ├── Sidebar.tsx
+│   │   ├── AppInitializer.tsx
+│   │   ├── ThemeToggle.tsx
+│   │   └── ProfileSidebar.tsx
+│   │
+│   ├── organisms/          # Page-specific complex components
+│   │   ├── Banner.tsx
+│   │   ├── Categories.tsx
+│   │   ├── Promotion.tsx
+│   │   ├── CategoryHero.tsx
+│   │   ├── GeoSearch.tsx
+│   │   └── MapPicker.tsx
+│   │
+│   ├── common/             # Common reusable components
+│   │   ├── Spinner.tsx
+│   │   ├── Modal.tsx
+│   │   ├── Skeleton.tsx
 │   │   └── ...
-│   ├── shared/                 # Shared code
-│   │   ├── components/          # Reusable components
-│   │   │   ├── atoms/          # Basic components
-│   │   │   ├── molecules/      # Composite components
-│   │   │   ├── organisms/      # Complex components
-│   │   │   └── templates/      # Page templates
-│   │   ├── hooks/              # Shared hooks
-│   │   ├── lib/                # Utilities
-│   │   ├── store/              # Shared stores
-│   │   └── types/              # Shared types
-│   └── context/                # React contexts
-└── public/                     # Static assets
+│   │
+│   ├── ui/                 # UI primitives
+│   └── guards/             # Route guards
+│
+├── hooks/                  # Shared hooks
+├── lib/                    # Utilities
+│   ├── axios.ts           # API client
+│   └── utils.ts           # Helper functions
+├── types/                  # Shared types
+└── constants/              # Constants
 ```
 
-## 🎯 Design Patterns
+**Rules**:
 
-### 1. Feature-Based Architecture
+- ✅ Reusable components
+- ✅ Utilities and helpers
+- ❌ NO imports from features/
+- ❌ NO imports from app/
 
-Setiap feature adalah module independen dengan:
-- **api/**: API integration layer
-- **components/**: Feature-specific components
-- **hooks/**: Custom React hooks
-- **store/**: Zustand state management
-- **types/**: TypeScript type definitions
-
-### 2. Component Hierarchy
+## Data Flow
 
 ```
-Atoms → Molecules → Organisms → Templates → Pages
+┌─────────────────────────────────────────────┐
+│                   User                       │
+└─────────────────┬───────────────────────────┘
+                  │
+                  ▼
+┌─────────────────────────────────────────────┐
+│              App (Pages)                     │
+│  - Renders UI                                │
+│  - Handles routing                           │
+└─────────────────┬───────────────────────────┘
+                  │
+                  ▼
+┌─────────────────────────────────────────────┐
+│           Features (Logic)                   │
+│  - Business logic                            │
+│  - API calls                                 │
+│  - State management                          │
+└─────────────────┬───────────────────────────┘
+                  │
+                  ▼
+┌─────────────────────────────────────────────┐
+│          Shared (Utilities)                  │
+│  - Reusable components                       │
+│  - Helper functions                          │
+│  - API client                                │
+└─────────────────┬───────────────────────────┘
+                  │
+                  ▼
+┌─────────────────────────────────────────────┐
+│              Backend API                     │
+└─────────────────────────────────────────────┘
 ```
 
-- **Atoms**: Basic building blocks (Button, Input, Spinner)
-- **Molecules**: Simple combinations (Form, Card, Modal)
-- **Organisms**: Complex components (Navbar, Footer, ProductList)
-- **Templates**: Page layouts (AuthTemplate)
-- **Pages**: Full page components
+## Import Rules
 
-### 3. State Management
+### ✅ Allowed Imports
 
-- **Zustand** untuk global state
-- **React State** untuk local component state
-- **URL State** untuk shareable state (filters, search)
+```typescript
+// App can import from features and shared
+// app/(main)/page.tsx
+import { ProductCard } from "@/features/(main)/products/components/ProductCard";
+import Navbar from "@/shared/components/layout/Navbar";
 
-### 4. Data Fetching
+// Features can import from other features and shared
+// features/(main)/cart/components/CartItem.tsx
+import { useAuthStore } from "@/features/(auth)/store/auth.store";
+import { api } from "@/shared/lib/axios";
 
-- **Server Components** untuk initial data
-- **Client Components** dengan hooks untuk dynamic data
-- **React Query** pattern (jika diperlukan)
-
-## 🔄 Data Flow
-
-### Component Data Flow
-
-```
-Page Component
-    ↓
-Feature Hook (useProduct, useCart, etc.)
-    ↓
-API Layer (productsApi, cartApi, etc.)
-    ↓
-Axios Instance (shared/lib/axios.ts)
-    ↓
-Backend API
-    ↓
-Response → Store → Component Update
+// Shared can import from other shared
+// shared/components/common/Modal.tsx
+import { cn } from "@/shared/lib/utils";
 ```
 
-### State Flow
+### ❌ Forbidden Imports
+
+```typescript
+// Shared CANNOT import from features
+// ❌ shared/components/common/Button.tsx
+import { useCart } from "@/features/(main)/cart/hooks/useCart"; // WRONG!
+
+// Shared CANNOT import from app
+// ❌ shared/components/layout/Navbar.tsx
+import HomePage from "@/app/(main)/home/page"; // WRONG!
+
+// Features should NOT import from app
+// ❌ features/(main)/products/components/ProductCard.tsx
+import HomePage from "@/app/(main)/home/page"; // WRONG!
+```
+
+## Layout Hierarchy
 
 ```
-User Action
-    ↓
-Event Handler
-    ↓
-Store Action (Zustand)
-    ↓
-API Call
-    ↓
-Update Store
-    ↓
-Component Re-render
+Root Layout (app/layout.tsx)
+├── Providers (Auth, Theme)
+├── Global Styles
+└── Toaster
+    │
+    ├── Main Layout (app/(main)/layout.tsx)
+    │   ├── Navbar
+    │   ├── Main Content (children)
+    │   ├── Footer
+    │   └── BackToTop
+    │
+    ├── Auth Layout (app/(auth)/layout.tsx)
+    │   └── Main Content (children)
+    │       └── Minimal layout
+    │
+    └── Admin Layout (app/(admin)/layout.tsx)
+        └── Store Layout (app/(admin)/store/layout.tsx)
+            ├── StoreSidebar
+            └── Main Content (children)
 ```
 
-## 🎨 Component Architecture
+## State Management
 
-### Atomic Design
+### Global State (Zustand)
 
-#### Atoms
-Basic, indivisible components:
-- `Button`
-- `Input`
-- `Spinner`
-- `Skeleton`
+```typescript
+// features/(auth)/store/auth.store.ts
+export const useAuthStore = create<AuthState>((set) => ({
+  user: null,
+  token: null,
+  login: async (credentials) => {
+    /* ... */
+  },
+  logout: () => {
+    /* ... */
+  },
+}));
+```
 
-#### Molecules
-Simple combinations:
-- `CategorySelector`
-- `CustomSelect`
-- `ProductCardSkeleton`
-- `AuthForm`
+### Local State (React)
 
-#### Organisms
-Complex components:
-- `Navbar`
-- `Footer`
-- `ProductList`
-- `Banner`
-- `Categories`
+```typescript
+// app/(main)/product/[slug]/page.tsx
+const [quantity, setQuantity] = useState(1);
+```
 
-#### Templates
-Page layouts:
-- `AuthTemplate`
+### Server State (React Query - Future)
 
-#### Pages
-Full page components:
-- `app/page.tsx` (Home)
-- `app/product/[id]/page.tsx` (Product Detail)
+```typescript
+// features/(main)/products/hooks/useProducts.ts
+export const useProducts = () => {
+  return useQuery(["products"], fetchProducts);
+};
+```
 
-## 🔌 Integration Points
+## API Integration
 
-### Backend API
+### API Client
 
-- Base URL: `NEXT_PUBLIC_API_URL`
-- Axios instance: `shared/lib/axios.ts`
-- Auto token injection
-- Error handling
+```typescript
+// shared/lib/axios.ts
+export const api = axios.create({
+  baseURL: process.env.NEXT_PUBLIC_API_URL,
+});
+```
 
-### External Services
+### Feature API
 
-- **Cloudinary**: Image optimization
-- **Maps**: Leaflet untuk location picker
-- **Payment**: Midtrans integration (via backend)
+```typescript
+// features/(main)/products/api/productsApi.ts
+export const getProducts = async () => {
+  const response = await api.get("/products");
+  return response.data;
+};
+```
 
-## 📦 Key Technologies
+### Usage in Components
 
-### Core
-- **Next.js 16**: Framework dengan App Router
-- **React 19**: UI library
-- **TypeScript**: Type safety
+```typescript
+// app/(main)/home/page.tsx
+import { useProduct } from "@/features/(main)/products/hooks/useProduct";
 
-### State & Data
-- **Zustand**: State management
-- **Axios**: HTTP client
-- **React Hook Form**: Form handling
-- **Zod**: Schema validation
+export default function HomePage() {
+  const { products, isLoading } = useProduct();
+  // ...
+}
+```
 
-### UI & Styling
-- **Tailwind CSS**: Utility-first CSS
-- **Framer Motion**: Animations
-- **Lucide React**: Icons
-- **Radix UI**: Accessible components
+## Benefits
 
-### Other
-- **Embla Carousel**: Product carousels
-- **Sonner**: Toast notifications
-- **Leaflet**: Maps integration
+### 1. **Scalability**
 
-## 🎯 Best Practices
+- Easy to add new features
+- Clear boundaries between domains
+- Independent feature development
 
-### 1. Code Organization
-- Feature-based structure
-- Separation of concerns
-- Reusable components
-- Type safety
+### 2. **Maintainability**
 
-### 2. Performance
-- Image optimization dengan Next.js Image
-- Code splitting otomatis
-- Lazy loading
-- API response caching
+- Easy to find code
+- Clear responsibility
+- Consistent patterns
 
-### 3. Accessibility
-- Semantic HTML
-- ARIA labels
-- Keyboard navigation
-- Screen reader support
+### 3. **Testability**
 
-### 4. SEO
-- Server-side rendering
-- Meta tags
-- Structured data
-- Sitemap
+- Features are isolated
+- Easy to mock dependencies
+- Clear data flow
 
-## 📚 Related Documentation
+### 4. **Team Collaboration**
 
-- [Getting Started](./01-GETTING-STARTED.md)
-- [Components](./03-COMPONENTS.md)
-- [State Management](./04-STATE-MANAGEMENT.md)
-- [API Integration](./05-API-INTEGRATION.md)
+- Multiple developers can work on different features
+- Less merge conflicts
+- Clear ownership
 
+## Best Practices
+
+1. **Keep app/ clean**: Only pages and layouts
+2. **Feature isolation**: Features should be self-contained
+3. **Shared utilities**: Extract common code to shared/
+4. **Type safety**: Use TypeScript everywhere
+5. **Consistent naming**: Follow established patterns
+6. **Documentation**: Document complex logic
+
+---
+
+**Next**: [Components](./03-COMPONENTS.md)
