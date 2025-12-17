@@ -38,12 +38,30 @@ const Login = () => {
   const handleLoginSubmit = async (data: LoginPayload) => {
     setError(null);
     try {
-      await login(data);
-      await Promise.all([fetchCart(), fetchWishlist()]);
+      const authResponse = await login(data);
+      
+      // Fetch cart and wishlist only for USER role
+      if (authResponse.user.role === "USER") {
+        await Promise.all([fetchCart(), fetchWishlist()]);
+      }
+      
       toast.success("Login Successful!", {
         description: "Welcome back! Redirecting you now...",
       });
-      router.push("/");
+      
+      // Redirect based on role
+      switch (authResponse.user.role) {
+        case "STORE":
+          router.push("/store");
+          break;
+        case "ADMIN":
+          router.push("/superadmin");
+          break;
+        case "USER":
+        default:
+          router.push("/");
+          break;
+      }
     } catch (err: unknown) {
       let errorMessage = "An unknown error occurred.";
       if (axios.isAxiosError(err)) {

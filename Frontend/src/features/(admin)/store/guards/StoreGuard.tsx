@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { useAuthStore } from "@/features/(auth)/store/auth.store";
 
 interface StoreGuardProps {
@@ -10,6 +10,7 @@ interface StoreGuardProps {
 
 export function StoreGuard({ children }: StoreGuardProps) {
   const router = useRouter();
+  const pathname = usePathname();
   const { user, status, isHydrated } = useAuthStore();
   const [hasStore, setHasStore] = useState<boolean | null>(null);
   const [checking, setChecking] = useState(true);
@@ -22,6 +23,13 @@ export function StoreGuard({ children }: StoreGuardProps) {
       // Check if user is authenticated
       if (!user) {
         router.push("/login");
+        return;
+      }
+
+      // If already on create page, skip store check
+      if (pathname === "/store/create") {
+        setHasStore(false);
+        setChecking(false);
         return;
       }
 
@@ -49,7 +57,7 @@ export function StoreGuard({ children }: StoreGuardProps) {
     };
 
     checkStore();
-  }, [user, isHydrated, router]);
+  }, [user, isHydrated, router, pathname]);
 
   if (!isHydrated || checking || hasStore === null) {
     return (
@@ -60,6 +68,11 @@ export function StoreGuard({ children }: StoreGuardProps) {
         </div>
       </div>
     );
+  }
+
+  // Allow access to create page even without store
+  if (!hasStore && pathname === "/store/create") {
+    return <>{children}</>;
   }
 
   if (!hasStore) {

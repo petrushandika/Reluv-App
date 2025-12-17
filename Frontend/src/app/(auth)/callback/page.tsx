@@ -18,13 +18,26 @@ const CallbackContent = () => {
     const token = searchParams.get('token');
 
     if (token) {
-      const previousPage = localStorage.getItem('previousPage') || '/';
-
       setToken(token)
         .then(async () => {
-          await Promise.all([fetchCart(), fetchWishlist()]);
+          const user = useAuthStore.getState().user;
+          
+          // Only fetch cart and wishlist for USER role
+          if (user?.role === "USER") {
+            await Promise.all([fetchCart(), fetchWishlist()]);
+          }
+          
           localStorage.removeItem('previousPage');
-          router.push(previousPage);
+          
+          // Redirect based on role
+          if (user?.role === "STORE") {
+            router.push('/store');
+          } else if (user?.role === "ADMIN") {
+            router.push('/superadmin');
+          } else {
+            const previousPage = localStorage.getItem('previousPage') || '/';
+            router.push(previousPage);
+          }
         })
         .catch(() => {
           router.push('/login?error=authentication_failed');

@@ -15,7 +15,7 @@ interface AuthState {
   loginTimestamp: number | null;
   status: Status;
   isAuthenticated: () => boolean;
-  login: (data: LoginPayload) => Promise<void>;
+  login: (data: LoginPayload) => Promise<AuthResponse>;
   setToken: (token: string) => Promise<void>;
   logout: () => void;
   fetchAndSetUser: () => Promise<void>;
@@ -69,6 +69,7 @@ export const useAuthStore = create<AuthState>()(
             loginTimestamp: Date.now(),
             status: 'success',
           });
+          return response;
         } catch (error) {
           delete api.defaults.headers.common['Authorization'];
           set({ status: 'error' });

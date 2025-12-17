@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { usePathname } from "next/navigation";
 import { Menu } from "lucide-react";
 import { StoreGuard } from "@/features/(admin)/store/guards/StoreGuard";
 import StoreSidebar from "@/features/(admin)/store/components/StoreSidebar";
@@ -11,7 +12,17 @@ export default function StoreDashboardLayout({
   children: React.ReactNode;
 }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const pathname = usePathname();
+  
+  // Check if we're on the create page
+  const isCreatePage = pathname === "/store/create";
 
+  // If on create page, render without StoreGuard and sidebar
+  if (isCreatePage) {
+    return <>{children}</>;
+  }
+
+  // Otherwise, render with StoreGuard and sidebar
   return (
     <StoreGuard>
       <div className="h-screen overflow-hidden flex">

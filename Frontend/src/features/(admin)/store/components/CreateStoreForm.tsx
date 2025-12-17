@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { z } from "zod";
-import { Store, MapPin, Link as LinkIcon, Loader2 } from "lucide-react";
+import { Store, MapPin, Link as LinkIcon } from "lucide-react";
 import { toast } from "sonner";
 
 const createStoreSchema = z.object({
@@ -152,14 +152,11 @@ const CreateStoreForm = ({ onSubmit, isLoading }: CreateStoreFormProps) => {
         >
           {isLoading ? (
             <>
-              <Loader2 className="animate-spin -ml-1 mr-2 h-5 w-5" />
+              <div className="animate-spin -ml-1 mr-2 h-5 w-5 border-2 border-white border-t-transparent rounded-full"></div>
               Creating Store...
             </>
           ) : (
-            <>
-              <Store className="-ml-1 mr-2 h-5 w-5" />
-              Create Store
-            </>
+            "Create Store"
           )}
         </button>
 
