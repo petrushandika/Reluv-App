@@ -369,7 +369,7 @@ const SellerOrdersPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       if (!isAuthenticated()) {
-        router.push("/auth/login");
+        router.push("/login");
         return;
       }
 

@@ -86,7 +86,7 @@ const Register = () => {
           "Your account has been created! Please check your email for verification.",
       });
       router.push(
-        `/auth/verification?email=${encodeURIComponent(
+        `/verification?email=${encodeURIComponent(
           validationResult.data.email
         )}`
       );

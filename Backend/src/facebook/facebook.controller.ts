@@ -30,6 +30,6 @@ export class FacebookController {
     const frontendUrl =
       this.configService.get<string>('FRONTEND_URL') || 'https://fe-reluv-app.vercel.app';
 
-    res.redirect(`${frontendUrl}/auth/callback?token=${token}`);
+    res.redirect(`${frontendUrl}/callback?token=${token}`);
   }
 }

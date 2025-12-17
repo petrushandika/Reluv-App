@@ -781,7 +781,7 @@ const Navbar = () => {
               <div className="flex items-center space-x-2 text-sm">
                 <User className="w-5 h-5 text-sky-600 dark:text-sky-400" />
                 <Link
-                  href="/auth/login"
+                  href="/login"
                   aria-label="Sign In"
                   className="font-semibold hover:text-sky-600 dark:hover:text-sky-400 text-gray-800 dark:text-white transition-colors"
                 >
@@ -789,7 +789,7 @@ const Navbar = () => {
                 </Link>
                 <span className="text-gray-400 dark:text-gray-500">|</span>
                 <Link
-                  href="/auth/register"
+                  href="/register"
                   aria-label="Register"
                   className="font-semibold hover:text-sky-600 dark:hover:text-sky-400 text-gray-800 dark:text-white transition-colors"
                 >
@@ -1134,7 +1134,7 @@ const Navbar = () => {
             <div className="flex items-center space-x-2 text-sm py-3 font-semibold">
               <User className="w-5 h-5 text-gray-800 dark:text-white" />
               <Link
-                href="/auth/login"
+                href="/login"
                 className="hover:text-sky-600 dark:hover:text-sky-400 text-gray-800 dark:text-white"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
@@ -1142,7 +1142,7 @@ const Navbar = () => {
               </Link>
               <span className="text-gray-300 dark:text-gray-600">|</span>
               <Link
-                href="/auth/register"
+                href="/register"
                 className="hover:text-sky-600 dark:hover:text-sky-400 text-gray-800 dark:text-white"
                 onClick={() => setIsMobileMenuOpen(false)}
               >

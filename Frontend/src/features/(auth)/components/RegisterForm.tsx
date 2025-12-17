@@ -434,7 +434,7 @@ const RegisterForm = ({
         <p className="text-sm text-gray-600 dark:text-gray-300">
           Already have an account?{" "}
           <a
-            href="/auth/login"
+            href="/login"
             className="font-medium text-sky-600 dark:text-sky-400 hover:text-sky-500 dark:hover:text-sky-300"
           >
             Sign in here

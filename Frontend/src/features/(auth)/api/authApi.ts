@@ -11,12 +11,12 @@ import { api } from "@/shared/lib/axios";
 export { api };
 
 export const registerUser = async (data: RegisterPayload) => {
-  const response = await api.post("/register", data);
+  const response = await api.post("/auth/register", data);
   return response.data;
 };
 
 export const loginUser = async (data: LoginPayload): Promise<AuthResponse> => {
-  const response = await api.post<{ token: string }>("/login", data);
+  const response = await api.post<{ token: string }>("/auth/login", data);
   const token = response.data.token || response.data;
   
   if (!token || typeof token !== "string") {

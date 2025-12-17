@@ -228,7 +228,7 @@ const ProductDetail = () => {
       toast.error("Sign In Required", {
         description: "You must sign in to purchase items.",
       });
-      router.push("/auth/login");
+      router.push("/login");
       return;
     }
 

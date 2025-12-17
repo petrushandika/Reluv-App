@@ -73,7 +73,7 @@ const ProfilePage = () => {
   useEffect(() => {
     const fetchUser = async () => {
       if (!isAuthenticated()) {
-        router.push("/auth/login");
+        router.push("/login");
         return;
       }
 

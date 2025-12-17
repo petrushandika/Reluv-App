@@ -21,7 +21,7 @@ export function StoreGuard({ children }: StoreGuardProps) {
 
       // Check if user is authenticated
       if (!user) {
-        router.push("/auth/login");
+        router.push("/login");
         return;
       }
 

@@ -151,7 +151,7 @@ const LoginForm = ({
           </div>
           <div className="text-sm">
             <a
-              href="/auth/forgot"
+              href="/forgot"
               className="font-medium text-sky-600 dark:text-sky-400 hover:text-sky-500 dark:hover:text-sky-300"
             >
               Forgot password?
@@ -220,7 +220,7 @@ const LoginForm = ({
           <p className="text-sm text-gray-600 dark:text-gray-300">
             Don`t have an account?{" "}
             <a
-              href="/auth/register"
+              href="/register"
               className="font-medium text-sky-600 dark:text-sky-400 hover:text-sky-500 dark:hover:text-sky-300"
             >
               Register here

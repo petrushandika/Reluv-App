@@ -65,7 +65,7 @@
     "lastName": "Reluv",
     "password": "adminpassword",
     "phone": "089999999999",
-    "role": "ADMIN",
+    "role": "STORE",
     "isVerified": true,
     "profileBio": "System Administrator for Reluv Platform."
   }

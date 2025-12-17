@@ -96,7 +96,7 @@ const VerificationContent = () => {
   };
 
   const handleBackToLogin = () => {
-    router.push("/auth/login");
+    router.push("/login");
   };
 
   const handleTryAnotherEmail = () => {

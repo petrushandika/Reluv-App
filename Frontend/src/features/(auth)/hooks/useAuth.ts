@@ -38,7 +38,7 @@ export const useAuth = () => {
 
     const checkInterval = setInterval(() => {
       if (!checkSessionExpiry()) {
-        router.push('/auth/login');
+        router.push('/login');
       }
     }, 60000);
 

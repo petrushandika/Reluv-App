@@ -187,7 +187,7 @@ const CreateStoreForm = ({ onSubmit, isLoading }: CreateStoreFormProps) => {
           <p className="text-sm text-gray-600 dark:text-gray-300">
             Already have a store?{" "}
             <a
-              href="/dashboard/store"
+              href="/store"
               className="font-medium text-sky-600 dark:text-sky-400 hover:text-sky-500 dark:hover:text-sky-300"
             >
               Go to Dashboard

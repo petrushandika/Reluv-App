@@ -53,10 +53,10 @@ export class AuthController {
     
     try {
       await this.authService.confirm(query.token);
-      return res.redirect(`${frontendUrl}/auth/login?verified=true`);
+      return res.redirect(`${frontendUrl}/login?verified=true`);
     } catch (error) {
       return res.redirect(
-        `${frontendUrl}/auth/login?error=${encodeURIComponent(
+        `${frontendUrl}/login?error=${encodeURIComponent(
           error.message || 'Token is invalid or has expired.',
         )}`,
       );

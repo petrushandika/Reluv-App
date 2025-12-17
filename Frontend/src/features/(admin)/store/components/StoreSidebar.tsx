@@ -11,6 +11,8 @@ import {
   X,
   LogOut,
   Store as StoreIcon,
+  Tag,
+  Gift,
 } from "lucide-react";
 import { useAuthStore } from "@/features/(auth)/store/auth.store";
 import { toast } from "sonner";
@@ -45,6 +47,16 @@ const StoreSidebar = ({ isOpen, onClose }: StoreSidebarProps) => {
       name: "Reviews",
       href: "/store/reviews",
       icon: Star,
+    },
+    {
+      name: "Vouchers",
+      href: "/store/vouchers",
+      icon: Tag,
+    },
+    {
+      name: "Promotions",
+      href: "/store/promotions",
+      icon: Gift,
     },
     {
       name: "Settings",

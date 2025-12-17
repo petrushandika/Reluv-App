@@ -1,9 +1,15 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Save, RefreshCw, Upload } from "lucide-react";
-import Image from "next/image";
+import { Save, RefreshCw, Upload, Store, MapPin, Share2, Image as ImageIcon } from "lucide-react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/shared/components/ui/card";
+import { Input } from "@/shared/components/ui/input";
+import { Textarea } from "@/shared/components/ui/textarea";
+import { Label } from "@/shared/components/ui/label";
+import { Separator } from "@/shared/components/ui/separator";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/components/ui/tabs";
 import { toast } from "sonner";
+import Image from "next/image";
 
 interface StoreSettings {
   name: string;
@@ -23,6 +29,15 @@ interface StoreSettings {
     facebook?: string;
     twitter?: string;
   };
+  operational: {
+    monday: string;
+    tuesday: string;
+    wednesday: string;
+    thursday: string;
+    friday: string;
+    saturday: string;
+    sunday: string;
+  };
 }
 
 export default function SettingsPage() {
@@ -40,11 +55,21 @@ export default function SettingsPage() {
       postalCode: "",
     },
     socialMedia: {},
+    operational: {
+      monday: "09:00 - 17:00",
+      tuesday: "09:00 - 17:00",
+      wednesday: "09:00 - 17:00",
+      thursday: "09:00 - 17:00",
+      friday: "09:00 - 17:00",
+      saturday: "09:00 - 15:00",
+      sunday: "Closed",
+    },
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [logoPreview, setLogoPreview] = useState("");
   const [bannerPreview, setBannerPreview] = useState("");
+  const [activeTab, setActiveTab] = useState("general");
 
   useEffect(() => {
     fetchSettings();
@@ -52,10 +77,11 @@ export default function SettingsPage() {
 
   const fetchSettings = async () => {
     try {
-      // Mock data
+      await new Promise(resolve => setTimeout(resolve, 800));
+      
       const mockSettings: StoreSettings = {
         name: "My Fashion Store",
-        description: "Premium preloved fashion items",
+        description: "Premium preloved fashion items with guaranteed quality. We offer the best selection of vintage and modern fashion pieces.",
         logo: "/placeholder-logo.jpg",
         banner: "/placeholder-banner.jpg",
         phone: "+62 812-3456-7890",
@@ -69,6 +95,16 @@ export default function SettingsPage() {
         socialMedia: {
           instagram: "@myfashionstore",
           facebook: "myfashionstore",
+          twitter: "@myfashionstore",
+        },
+        operational: {
+          monday: "09:00 - 17:00",
+          tuesday: "09:00 - 17:00",
+          wednesday: "09:00 - 17:00",
+          thursday: "09:00 - 17:00",
+          friday: "09:00 - 17:00",
+          saturday: "09:00 - 15:00",
+          sunday: "Closed",
         },
       };
 
@@ -86,7 +122,6 @@ export default function SettingsPage() {
   const handleSave = async () => {
     try {
       setSaving(true);
-      // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1000));
       toast.success("Settings saved successfully");
     } catch (error) {
@@ -115,8 +150,8 @@ export default function SettingsPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[calc(100vh-200px)]">
-        <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-sky-600 mb-4"></div>
+        <div className="text-center space-y-4">
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-sky-600 border-t-transparent"></div>
           <p className="text-gray-600 dark:text-gray-400">Loading settings...</p>
         </div>
       </div>
@@ -124,313 +159,345 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="p-4 sm:p-6 space-y-6 max-w-5xl mx-auto">
+    <div className="p-6 space-y-8 max-w-[1400px] mx-auto animate-fade-in">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-2">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white glossy-text-title">
             Store Settings
           </h1>
-          <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400">
+          <p className="text-gray-600 dark:text-gray-400 mt-1">
             Manage your store information and preferences
           </p>
         </div>
-        <button
-          onClick={fetchSettings}
-          className="flex items-center justify-center gap-2 px-4 py-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-sm font-medium w-full sm:w-auto"
-        >
-          <RefreshCw className="w-4 h-4" />
-          <span>Reset Changes</span>
-        </button>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={fetchSettings}
+            className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors font-medium shadow-sm"
+          >
+            <RefreshCw className="w-4 h-4" />
+            <span className="hidden sm:inline">Reset</span>
+          </button>
+          <button
+            onClick={handleSave}
+            disabled={saving}
+            className="flex items-center gap-2 px-6 py-2 bg-sky-600 text-white rounded-xl hover:bg-sky-700 transition-all shadow-lg shadow-sky-600/20 disabled:opacity-50 font-medium"
+          >
+            {saving ? (
+              <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+            ) : (
+              <Save className="w-5 h-5" />
+            )}
+            <span>{saving ? "Saving..." : "Save Changes"}</span>
+          </button>
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Left Column - Store Profile */}
-        <div className="lg:col-span-2 space-y-6">
-          {/* Basic Information */}
-          <div className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 space-y-4">
-            <h2 className="text-lg font-bold text-gray-900 dark:text-white border-b border-gray-100 dark:border-gray-700 pb-4 mb-4">
-              Basic Information
-            </h2>
-            
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
-                  Store Name
-                </label>
-                <input
+      <Tabs value={activeTab} onValueChange={setActiveTab}>
+        <TabsList className="w-full justify-start">
+          <TabsTrigger value="general" className="gap-2">
+            <Store className="w-4 h-4" />
+            General
+          </TabsTrigger>
+          <TabsTrigger value="location" className="gap-2">
+            <MapPin className="w-4 h-4" />
+            Location
+          </TabsTrigger>
+          <TabsTrigger value="branding" className="gap-2">
+            <ImageIcon className="w-4 h-4" />
+            Branding
+          </TabsTrigger>
+          <TabsTrigger value="social" className="gap-2">
+            <Share2 className="w-4 h-4" />
+            Social Media
+          </TabsTrigger>
+        </TabsList>
+
+        {/* General Tab */}
+        <TabsContent value="general" className="space-y-6">
+          <Card className="glossy-card">
+            <CardHeader>
+              <CardTitle>Basic Information</CardTitle>
+              <CardDescription>Update your store's basic details</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="space-y-2">
+                <Label htmlFor="store-name">Store Name</Label>
+                <Input
+                  id="store-name"
                   type="text"
                   value={settings.name}
                   onChange={(e) => setSettings({ ...settings, name: e.target.value })}
-                  className="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 dark:text-white transition-all"
+                  placeholder="Enter your store name"
                 />
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
-                  Description
-                </label>
-                <textarea
+              <div className="space-y-2">
+                <Label htmlFor="description">Description</Label>
+                <Textarea
+                  id="description"
                   value={settings.description}
                   onChange={(e) => setSettings({ ...settings, description: e.target.value })}
                   rows={4}
-                  className="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 dark:text-white resize-none transition-all"
+                  placeholder="Describe your store..."
                 />
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
-                    Phone Number
-                  </label>
-                  <input
+              <Separator />
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <Label htmlFor="phone">Phone Number</Label>
+                  <Input
+                    id="phone"
                     type="tel"
                     value={settings.phone}
                     onChange={(e) => setSettings({ ...settings, phone: e.target.value })}
-                    className="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 dark:text-white transition-all"
+                    placeholder="+62 xxx-xxxx-xxxx"
                   />
                 </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
-                    Email Address
-                  </label>
-                  <input
+                <div className="space-y-2">
+                  <Label htmlFor="email">Email Address</Label>
+                  <Input
+                    id="email"
                     type="email"
                     value={settings.email}
                     onChange={(e) => setSettings({ ...settings, email: e.target.value })}
-                    className="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 dark:text-white transition-all"
+                    placeholder="store@example.com"
                   />
                 </div>
               </div>
-            </div>
-          </div>
 
-          {/* Address */}
-          <div className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 space-y-4">
-            <h2 className="text-lg font-bold text-gray-900 dark:text-white border-b border-gray-100 dark:border-gray-700 pb-4 mb-4">
-              Store Address
-            </h2>
-            
-            <div className="space-y-4">
+              <Separator />
+
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
-                  Street Address
-                </label>
-                <input
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Operational Hours</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {Object.entries(settings.operational).map(([day, hours]) => (
+                    <div key={day} className="space-y-2">
+                      <Label htmlFor={`op-${day}`} className="capitalize">{day}</Label>
+                      <Input
+                        id={`op-${day}`}
+                        type="text"
+                        value={hours}
+                        onChange={(e) => setSettings({
+                          ...settings,
+                          operational: { ...settings.operational, [day]: e.target.value }
+                        })}
+                        placeholder="09:00 - 17:00"
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Location Tab */}
+        <TabsContent value="location" className="space-y-6">
+          <Card className="glossy-card">
+            <CardHeader>
+              <CardTitle>Store Address</CardTitle>
+              <CardDescription>Manage your store's physical location</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="space-y-2">
+                <Label htmlFor="street">Street Address</Label>
+                <Input
+                  id="street"
                   type="text"
                   value={settings.address.street}
                   onChange={(e) => setSettings({
                     ...settings,
                     address: { ...settings.address, street: e.target.value }
                   })}
-                  className="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 dark:text-white transition-all"
+                  placeholder="Jl. Example No. 123"
                 />
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
-                    City
-                  </label>
-                  <input
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="city">City</Label>
+                  <Input
+                    id="city"
                     type="text"
                     value={settings.address.city}
                     onChange={(e) => setSettings({
                       ...settings,
                       address: { ...settings.address, city: e.target.value }
                     })}
-                    className="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 dark:text-white transition-all"
+                    placeholder="Jakarta"
                   />
                 </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
-                    Province
-                  </label>
-                  <input
+                <div className="space-y-2">
+                  <Label htmlFor="province">Province</Label>
+                  <Input
+                    id="province"
                     type="text"
                     value={settings.address.province}
                     onChange={(e) => setSettings({
                       ...settings,
                       address: { ...settings.address, province: e.target.value }
                     })}
-                    className="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 dark:text-white transition-all"
+                    placeholder="DKI Jakarta"
                   />
                 </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
-                    Postal Code
-                  </label>
-                  <input
+                <div className="space-y-2">
+                  <Label htmlFor="postal">Postal Code</Label>
+                  <Input
+                    id="postal"
                     type="text"
                     value={settings.address.postalCode}
                     onChange={(e) => setSettings({
                       ...settings,
                       address: { ...settings.address, postalCode: e.target.value }
                     })}
-                    className="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 dark:text-white transition-all"
+                    placeholder="12345"
                   />
                 </div>
               </div>
-            </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Branding Tab */}
+        <TabsContent value="branding" className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Card className="glossy-card">
+              <CardHeader>
+                <CardTitle>Store Logo</CardTitle>
+                <CardDescription>Upload your store logo (recommended: 400x400px)</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="flex flex-col items-center p-6 bg-gray-50 dark:bg-gray-900 rounded-xl border-2 border-dashed border-gray-300 dark:border-gray-700 hover:border-sky-500 dark:hover:border-sky-500 transition-colors">
+                  <div className="relative w-32 h-32 rounded-full overflow-hidden bg-white dark:bg-gray-800 mb-4 shadow-lg">
+                    {logoPreview ? (
+                      <Image src={logoPreview} alt="Logo" fill className="object-cover" />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-gray-400">
+                        <Upload className="w-12 h-12" />
+                      </div>
+                    )}
+                  </div>
+                  <label
+                    htmlFor="logo-upload"
+                    className="cursor-pointer px-4 py-2 bg-sky-600 text-white rounded-lg hover:bg-sky-700 transition-colors font-medium"
+                  >
+                    Change Logo
+                    <input
+                      type="file"
+                      id="logo-upload"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={(e) => e.target.files?.[0] && handleImageUpload("logo", e.target.files[0])}
+                    />
+                  </label>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">PNG, JPG up to 2MB</p>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="glossy-card">
+              <CardHeader>
+                <CardTitle>Store Banner</CardTitle>
+                <CardDescription>Upload your store banner (recommended: 1200x400px)</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="flex flex-col items-center p-6 bg-gray-50 dark:bg-gray-900 rounded-xl border-2 border-dashed border-gray-300 dark:border-gray-700 hover:border-sky-500 dark:hover:border-sky-500 transition-colors">
+                  <div className="relative w-full h-40 rounded-lg overflow-hidden bg-white dark:bg-gray-800 mb-4 shadow-lg">
+                    {bannerPreview ? (
+                      <Image src={bannerPreview} alt="Banner" fill className="object-cover" />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-gray-400">
+                        <Upload className="w-12 h-12" />
+                      </div>
+                    )}
+                  </div>
+                  <label
+                    htmlFor="banner-upload"
+                    className="cursor-pointer px-4 py-2 bg-sky-600 text-white rounded-lg hover:bg-sky-700 transition-colors font-medium"
+                  >
+                    Change Banner
+                    <input
+                      type="file"
+                      id="banner-upload"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={(e) => e.target.files?.[0] && handleImageUpload("banner", e.target.files[0])}
+                    />
+                  </label>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">PNG, JPG up to 5MB</p>
+                </div>
+              </CardContent>
+            </Card>
           </div>
-        </div>
+        </TabsContent>
 
-        {/* Right Column - Images & Social */}
-        <div className="space-y-6">
-          {/* Store Images */}
-          <div className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 space-y-6">
-            <h2 className="text-lg font-bold text-gray-900 dark:text-white border-b border-gray-100 dark:border-gray-700 pb-4 mb-4">
-              Branding
-            </h2>
-            
-            {/* Logo */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
-                Store Logo
-              </label>
-              <div className="flex flex-col items-center p-4 bg-gray-50 dark:bg-gray-900 rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-700 hover:border-sky-500 dark:hover:border-sky-500 transition-colors">
-                <div className="relative w-24 h-24 rounded-full overflow-hidden bg-white dark:bg-gray-800 mb-3 shadow-sm">
-                  {logoPreview ? (
-                    <Image src={logoPreview} alt="Logo" fill className="object-cover" />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center text-gray-400">
-                      <Upload className="w-8 h-8" />
-                    </div>
-                  )}
-                </div>
-                <label
-                  htmlFor="logo-upload"
-                  className="cursor-pointer text-sm text-sky-600 hover:text-sky-700 font-medium"
-                >
-                  Change Logo
-                  <input
-                    type="file"
-                    id="logo-upload"
-                    accept="image/*"
-                    className="hidden"
-                    onChange={(e) => e.target.files?.[0] && handleImageUpload("logo", e.target.files[0])}
-                  />
-                </label>
-                <p className="text-xs text-gray-500 mt-1">PNG, JPG up to 2MB</p>
-              </div>
-            </div>
-
-            {/* Banner */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
-                Store Banner
-              </label>
-              <div className="flex flex-col items-center p-4 bg-gray-50 dark:bg-gray-900 rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-700 hover:border-sky-500 dark:hover:border-sky-500 transition-colors">
-                <div className="relative w-full h-32 rounded-lg overflow-hidden bg-white dark:bg-gray-800 mb-3 shadow-sm">
-                  {bannerPreview ? (
-                    <Image src={bannerPreview} alt="Banner" fill className="object-cover" />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center text-gray-400">
-                      <Upload className="w-8 h-8" />
-                    </div>
-                  )}
-                </div>
-                <label
-                  htmlFor="banner-upload"
-                  className="cursor-pointer text-sm text-sky-600 hover:text-sky-700 font-medium"
-                >
-                  Change Banner
-                  <input
-                    type="file"
-                    id="banner-upload"
-                    accept="image/*"
-                    className="hidden"
-                    onChange={(e) => e.target.files?.[0] && handleImageUpload("banner", e.target.files[0])}
-                  />
-                </label>
-                <p className="text-xs text-gray-500 mt-1">1200x400px recommended</p>
-              </div>
-            </div>
-          </div>
-
-          {/* Social Media */}
-          <div className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 space-y-4">
-            <h2 className="text-lg font-bold text-gray-900 dark:text-white border-b border-gray-100 dark:border-gray-700 pb-4 mb-4">
-              Social Media
-            </h2>
-            
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
-                  Instagram
-                </label>
+        {/* Social Media Tab */}
+        <TabsContent value="social" className="space-y-6">
+          <Card className="glossy-card">
+            <CardHeader>
+              <CardTitle>Social Media Links</CardTitle>
+              <CardDescription>Connect your social media accounts</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="space-y-2">
+                <Label htmlFor="instagram">Instagram</Label>
                 <div className="relative">
-                  <span className="absolute left-3 top-2.5 text-gray-500">@</span>
-                  <input
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">@</span>
+                  <Input
+                    id="instagram"
                     type="text"
                     value={settings.socialMedia.instagram || ""}
                     onChange={(e) => setSettings({
                       ...settings,
                       socialMedia: { ...settings.socialMedia, instagram: e.target.value }
                     })}
-                    className="w-full pl-8 pr-4 py-2.5 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 dark:text-white transition-all"
+                    className="pl-8"
                     placeholder="username"
                   />
                 </div>
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
-                  Facebook
-                </label>
-                <input
+              <div className="space-y-2">
+                <Label htmlFor="facebook">Facebook</Label>
+                <Input
+                  id="facebook"
                   type="text"
                   value={settings.socialMedia.facebook || ""}
                   onChange={(e) => setSettings({
                     ...settings,
                     socialMedia: { ...settings.socialMedia, facebook: e.target.value }
                   })}
-                  className="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 dark:text-white transition-all"
                   placeholder="username"
                 />
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
-                  Twitter
-                </label>
+              <div className="space-y-2">
+                <Label htmlFor="twitter">Twitter / X</Label>
                 <div className="relative">
-                  <span className="absolute left-3 top-2.5 text-gray-500">@</span>
-                  <input
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">@</span>
+                  <Input
+                    id="twitter"
                     type="text"
                     value={settings.socialMedia.twitter || ""}
                     onChange={(e) => setSettings({
                       ...settings,
                       socialMedia: { ...settings.socialMedia, twitter: e.target.value }
                     })}
-                    className="w-full pl-8 pr-4 py-2.5 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 dark:text-white transition-all"
+                    className="pl-8"
                     placeholder="username"
                   />
                 </div>
               </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Save Button (Sticky Bottom on Mobile) */}
-      <div className="sticky bottom-0 z-10 bg-white dark:bg-gray-900 p-4 border-t border-gray-200 dark:border-gray-800 flex justify-end -mx-4 sm:mx-0 sm:static sm:bg-transparent sm:p-0 sm:border-0">
-        <button
-          onClick={handleSave}
-          disabled={saving}
-          className="flex items-center justify-center gap-2 px-8 py-3 bg-sky-600 text-white rounded-lg hover:bg-sky-700 transition-all transform active:scale-95 disabled:opacity-50 disabled:scale-100 font-medium w-full sm:w-auto shadow-lg shadow-sky-600/20"
-        >
-          {saving ? (
-            <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-          ) : (
-            <Save className="w-5 h-5" />
-          )}
-          <span>{saving ? "Saving Changes..." : "Save All Changes"}</span>
-        </button>
-      </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }

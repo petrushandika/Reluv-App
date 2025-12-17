@@ -27,10 +27,10 @@ const CallbackContent = () => {
           router.push(previousPage);
         })
         .catch(() => {
-          router.push('/auth/login?error=authentication_failed');
+          router.push('/login?error=authentication_failed');
         });
     } else {
-      router.push('/auth/login?error=no_token');
+      router.push('/login?error=no_token');
     }
   }, [searchParams, setToken, router, fetchCart, fetchWishlist]);
 

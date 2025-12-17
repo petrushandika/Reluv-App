@@ -101,7 +101,7 @@ const ResetComponent = () => {
   };
 
   const handleBackToLogin = () => {
-    router.push("/auth/login");
+    router.push("/login");
   };
 
   const promoCards = [

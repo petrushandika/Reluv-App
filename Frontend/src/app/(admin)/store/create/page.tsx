@@ -33,7 +33,7 @@ const CreateStore = () => {
       toast.success("Store Created Successfully!", {
         description: "Your store has been created. Welcome to Reluv seller community!",
       });
-      router.push("/dashboard/store");
+      router.push("/store");
     } catch (err: unknown) {
       let errorMessage = "An unknown error occurred.";
       if (err instanceof Error) {
@@ -113,7 +113,7 @@ const CreateStore = () => {
   }
 
   if (!isAuthenticated()) {
-    router.push("/auth/login");
+    router.push("/login");
     return <Spinner />;
   }
 
