@@ -87,24 +87,10 @@ const StoreSidebar = ({ isOpen, onClose }: StoreSidebarProps) => {
           isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
         }`}
       >
-        {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-800">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-sky-500 to-blue-600 flex items-center justify-center">
-              <StoreIcon className="w-6 h-6 text-white" />
-            </div>
-            <div>
-              <h2 className="text-lg font-bold text-gray-900 dark:text-white">
-                Store
-              </h2>
-              <p className="text-xs text-gray-500 dark:text-gray-400">
-                Dashboard
-              </p>
-            </div>
-          </div>
+        <div className="lg:hidden flex justify-end p-4">
           <button
             onClick={onClose}
-            className="lg:hidden p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+            className="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
           >
             <X className="w-5 h-5 text-gray-500" />
           </button>

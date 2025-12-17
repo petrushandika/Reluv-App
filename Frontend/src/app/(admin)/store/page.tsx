@@ -5,270 +5,314 @@ import {
   DollarSign, 
   ShoppingBag, 
   Package, 
-  Users, 
+  Users,
+  CreditCard,
+  Activity,
   TrendingUp,
-  TrendingDown,
-  RefreshCw,
-  ArrowUpRight,
-  ArrowDownRight
+  Download
 } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/shared/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/components/ui/tabs";
+import { Button } from "@/shared/components/ui/button";
+import { Avatar } from "@/shared/components/ui/avatar";
 import { toast } from "sonner";
-import RevenueChart from "@/features/(admin)/store/components/RevenueChart";
-import ProductsChart from "@/features/(admin)/store/components/ProductsChart";
-import RecentActivities from "@/features/(admin)/store/components/RecentActivities";
-import AlertsCard from "@/features/(admin)/store/components/AlertsCard";
 
 interface DashboardStats {
-  revenue: {
-    value: string;
-    change: number;
-    trend: "up" | "down";
-  };
-  orders: {
-    value: string;
-    change: number;
-    trend: "up" | "down";
-  };
-  products: {
-    value: string;
-    change: number;
-    trend: "up" | "down";
-  };
-  customers: {
-    value: string;
-    change: number;
-    trend: "up" | "down";
-  };
+  totalRevenue: number;
+  revenueChange: number;
+  subscriptions: number;
+  subscriptionsChange: number;
+  sales: number;
+  salesChange: number;
+  activeNow: number;
+  activeChange: number;
+}
+
+interface RecentSale {
+  id: string;
+  name: string;
+  email: string;
+  amount: number;
+  avatar?: string;
+}
+
+interface ChartData {
+  name: string;
+  total: number;
 }
 
 export default function StoreDashboard() {
   const [loading, setLoading] = useState(true);
-  const [refreshing, setRefreshing] = useState(false);
   const [stats, setStats] = useState<DashboardStats | null>(null);
-  const [timeRange, setTimeRange] = useState("7d");
+  const [recentSales, setRecentSales] = useState<RecentSale[]>([]);
+  const [chartData, setChartData] = useState<ChartData[]>([]);
+  const [activeTab, setActiveTab] = useState("overview");
+
+  useEffect(() => {
+    fetchDashboardData();
+  }, []);
 
   const fetchDashboardData = async () => {
     try {
-      setRefreshing(true);
+      setLoading(true);
       await new Promise((resolve) => setTimeout(resolve, 1000));
       
       setStats({
-        revenue: { value: "Rp 125.5M", change: 12.5, trend: "up" },
-        orders: { value: "1,245", change: 8.2, trend: "up" },
-        products: { value: "450", change: -2.1, trend: "down" },
-        customers: { value: "3,890", change: 15.3, trend: "up" },
+        totalRevenue: 45231890,
+        revenueChange: 20.1,
+        subscriptions: 2350,
+        subscriptionsChange: 180.1,
+        sales: 12234,
+        salesChange: 19.0,
+        activeNow: 573,
+        activeChange: 201,
       });
+
+      setRecentSales([
+        { 
+          id: "1", 
+          name: "Olivia Martin", 
+          email: "olivia.martin@email.com", 
+          amount: 1999000 
+        },
+        { 
+          id: "2", 
+          name: "Jackson Lee", 
+          email: "jackson.lee@email.com", 
+          amount: 3900000 
+        },
+        { 
+          id: "3", 
+          name: "Isabella Nguyen", 
+          email: "isabella.nguyen@email.com", 
+          amount: 2990000 
+        },
+        { 
+          id: "4", 
+          name: "William Kim", 
+          email: "will@email.com", 
+          amount: 9900000 
+        },
+        { 
+          id: "5", 
+          name: "Sofia Davis", 
+          email: "sofia.davis@email.com", 
+          amount: 3900000 
+        },
+      ]);
+
+      setChartData([
+        { name: "Jan", total: 4000000 },
+        { name: "Feb", total: 3000000 },
+        { name: "Mar", total: 5000000 },
+        { name: "Apr", total: 4500000 },
+        { name: "May", total: 6000000 },
+        { name: "Jun", total: 5500000 },
+        { name: "Jul", total: 7000000 },
+        { name: "Aug", total: 6500000 },
+        { name: "Sep", total: 8000000 },
+        { name: "Oct", total: 7500000 },
+        { name: "Nov", total: 9000000 },
+        { name: "Dec", total: 8500000 },
+      ]);
     } catch (error) {
       console.error("Error fetching dashboard data:", error);
       toast.error("Failed to load dashboard data");
     } finally {
       setLoading(false);
-      setRefreshing(false);
     }
   };
 
-  useEffect(() => {
-    fetchDashboardData();
-  }, [timeRange]);
+  const formatCurrency = (amount: number) => {
+    return new Intl.NumberFormat('id-ID', {
+      style: 'currency',
+      currency: 'IDR',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(amount);
+  };
+
+  const getInitials = (name: string) => {
+    return name
+      .split(' ')
+      .map(n => n[0])
+      .join('')
+      .toUpperCase();
+  };
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-[calc(100vh-120px)]">
+      <div className="flex items-center justify-center min-h-screen">
         <div className="text-center space-y-4">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-sky-600 border-t-transparent"></div>
-          <p className="text-gray-600 dark:text-gray-400 font-medium">Loading dashboard...</p>
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-primary border-t-transparent"></div>
+          <p className="text-sm text-muted-foreground">Loading dashboard...</p>
         </div>
       </div>
     );
   }
-
-  if (!stats) {
-    return (
-      <div className="flex items-center justify-center min-h-[calc(100vh-120px)]">
-        <Card className="max-w-md">
-          <CardHeader>
-            <CardTitle>Connection Error</CardTitle>
-            <CardDescription>
-              We couldn't load your dashboard data. Please try again.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <button
-              onClick={fetchDashboardData}
-              className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-sky-600 text-white rounded-xl hover:bg-sky-700 transition-colors font-medium"
-            >
-              <RefreshCw className="w-4 h-4" />
-              Retry
-            </button>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
-
-  const StatCard = ({ 
-    title, 
-    value, 
-    change, 
-    trend, 
-    icon: Icon,
-    iconBg 
-  }: { 
-    title: string; 
-    value: string; 
-    change: number; 
-    trend: "up" | "down";
-    icon: any;
-    iconBg: string;
-  }) => (
-    <Card className="glossy-card hover:shadow-lg transition-all duration-300">
-      <CardContent className="p-6">
-        <div className="flex items-center justify-between">
-          <div className="space-y-2">
-            <p className="text-sm font-medium text-gray-500 dark:text-gray-400">{title}</p>
-            <h3 className="text-2xl font-bold text-gray-900 dark:text-white">{value}</h3>
-            <div className="flex items-center gap-1">
-              {trend === "up" ? (
-                <ArrowUpRight className="w-4 h-4 text-green-600" />
-              ) : (
-                <ArrowDownRight className="w-4 h-4 text-red-600" />
-              )}
-              <span className={`text-sm font-medium ${trend === "up" ? "text-green-600" : "text-red-600"}`}>
-                {Math.abs(change)}%
-              </span>
-              <span className="text-sm text-gray-500 dark:text-gray-400">vs last period</span>
-            </div>
-          </div>
-          <div className={`w-14 h-14 rounded-2xl ${iconBg} flex items-center justify-center`}>
-            <Icon className="w-7 h-7 text-white" />
-          </div>
-        </div>
-      </CardContent>
-    </Card>
-  );
 
   return (
-    <div className="p-6 space-y-8 max-w-[1600px] mx-auto animate-fade-in">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white glossy-text-title">
-            Dashboard
-          </h1>
-          <p className="text-gray-600 dark:text-gray-400 mt-1">
-            Welcome back! Here's what's happening with your store today.
-          </p>
+    <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
+      <div className="flex items-center justify-between space-y-2">
+        <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
+        <div className="flex items-center space-x-2">
+          <Button>
+            <Download className="mr-2 h-4 w-4" />
+            Download
+          </Button>
         </div>
-        <div className="flex items-center gap-3">
-          <Tabs value={timeRange} onValueChange={setTimeRange}>
-            <TabsList>
-              <TabsTrigger value="24h">24h</TabsTrigger>
-              <TabsTrigger value="7d">7d</TabsTrigger>
-              <TabsTrigger value="30d">30d</TabsTrigger>
-              <TabsTrigger value="90d">90d</TabsTrigger>
-            </TabsList>
-          </Tabs>
-          <button
-            onClick={fetchDashboardData}
-            disabled={refreshing}
-            className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors disabled:opacity-50 font-medium shadow-sm"
-          >
-            <RefreshCw className={`w-4 h-4 ${refreshing ? "animate-spin" : ""}`} />
-            <span className="hidden sm:inline">Refresh</span>
-          </button>
-        </div>
-      </div>
-      
-      {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <StatCard
-          title="Total Revenue"
-          value={stats.revenue.value}
-          change={stats.revenue.change}
-          trend={stats.revenue.trend}
-          icon={DollarSign}
-          iconBg="bg-gradient-to-br from-green-500 to-emerald-600"
-        />
-        <StatCard
-          title="Total Orders"
-          value={stats.orders.value}
-          change={stats.orders.change}
-          trend={stats.orders.trend}
-          icon={ShoppingBag}
-          iconBg="bg-gradient-to-br from-sky-500 to-blue-600"
-        />
-        <StatCard
-          title="Total Products"
-          value={stats.products.value}
-          change={stats.products.change}
-          trend={stats.products.trend}
-          icon={Package}
-          iconBg="bg-gradient-to-br from-purple-500 to-violet-600"
-        />
-        <StatCard
-          title="Total Customers"
-          value={stats.customers.value}
-          change={stats.customers.change}
-          trend={stats.customers.trend}
-          icon={Users}
-          iconBg="bg-gradient-to-br from-orange-500 to-red-600"
-        />
       </div>
 
-      {/* Main Content Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Charts Column */}
-        <div className="lg:col-span-2 space-y-8">
-          <Card className="glossy-card">
-            <CardHeader>
-              <CardTitle>Revenue Overview</CardTitle>
-              <CardDescription>Your revenue performance over time</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <RevenueChart data={[
-                { name: "Mon", revenue: 4000, orders: 24 },
-                { name: "Tue", revenue: 3000, orders: 13 },
-                { name: "Wed", revenue: 2000, orders: 98 },
-                { name: "Thu", revenue: 2780, orders: 39 },
-                { name: "Fri", revenue: 1890, orders: 48 },
-                { name: "Sat", revenue: 2390, orders: 38 },
-                { name: "Sun", revenue: 3490, orders: 43 },
-              ]} />
-            </CardContent>
-          </Card>
-          
-          <Card className="glossy-card">
-            <CardHeader>
-              <CardTitle>Product Performance</CardTitle>
-              <CardDescription>Sales distribution by category</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <ProductsChart data={[
-                { name: "Sneakers", value: 400, color: "#3b82f6" },
-                { name: "Jeans", value: 300, color: "#a855f7" },
-                { name: "T-Shirts", value: 300, color: "#ef4444" },
-                { name: "Jackets", value: 200, color: "#f59e0b" },
-              ]} />
-            </CardContent>
-          </Card>
-        </div>
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
+        <TabsList>
+          <TabsTrigger value="overview">Overview</TabsTrigger>
+          <TabsTrigger value="analytics" disabled>
+            Analytics
+          </TabsTrigger>
+          <TabsTrigger value="reports" disabled>
+            Reports
+          </TabsTrigger>
+          <TabsTrigger value="notifications" disabled>
+            Notifications
+          </TabsTrigger>
+        </TabsList>
 
-        {/* Sidebar Column */}
-        <div className="space-y-8">
-          <AlertsCard alerts={[
-            { id: "1", title: "Low Stock: Nike Air Max", type: "warning", message: "Only 2 items left", count: 2 },
-            { id: "2", title: "New Review", type: "info", message: "5 star review received" },
-          ]} />
-          
-          <RecentActivities activities={[
-            { id: "1", type: "order", title: "New Order #ORD-001", description: "John Doe placed an order", timestamp: new Date(Date.now() - 1000 * 60 * 2), amount: 1500000 },
-            { id: "2", type: "product", title: "Product Updated", description: "Admin updated Nike Air Max stock", timestamp: new Date(Date.now() - 1000 * 60 * 60) },
-            { id: "3", type: "review", title: "New Review", description: "Alice left a review on Adidas Boost", timestamp: new Date(Date.now() - 1000 * 60 * 60 * 3) },
-          ]} />
-        </div>
-      </div>
+        <TabsContent value="overview" className="space-y-4">
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">
+                  Total Revenue
+                </CardTitle>
+                <DollarSign className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">
+                  {formatCurrency(stats?.totalRevenue || 0)}
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  <span className="text-emerald-600 font-medium">
+                    +{stats?.revenueChange}%
+                  </span>{" "}
+                  from last month
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">
+                  Subscriptions
+                </CardTitle>
+                <Users className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">
+                  +{stats?.subscriptions.toLocaleString()}
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  <span className="text-emerald-600 font-medium">
+                    +{stats?.subscriptionsChange}%
+                  </span>{" "}
+                  from last month
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Sales</CardTitle>
+                <CreditCard className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">
+                  +{stats?.sales.toLocaleString()}
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  <span className="text-emerald-600 font-medium">
+                    +{stats?.salesChange}%
+                  </span>{" "}
+                  from last month
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Active Now</CardTitle>
+                <Activity className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">
+                  +{stats?.activeNow}
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  <span className="text-emerald-600 font-medium">
+                    +{stats?.activeChange}
+                  </span>{" "}
+                  since last hour
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
+            <Card className="col-span-4">
+              <CardHeader>
+                <CardTitle>Overview</CardTitle>
+              </CardHeader>
+              <CardContent className="pl-2">
+                <div className="h-[350px] flex items-center justify-center border-2 border-dashed rounded-lg">
+                  <div className="text-center space-y-2">
+                    <TrendingUp className="h-12 w-12 text-muted-foreground mx-auto" />
+                    <p className="text-sm text-muted-foreground">
+                      Revenue chart will be displayed here
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      Integrate with Recharts or Chart.js
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="col-span-3">
+              <CardHeader>
+                <CardTitle>Recent Sales</CardTitle>
+                <CardDescription>
+                  You made {recentSales.length} sales this month.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-8">
+                  {recentSales.map((sale) => (
+                    <div key={sale.id} className="flex items-center">
+                      <Avatar className="h-9 w-9">
+                        <div className="flex h-full w-full items-center justify-center bg-muted rounded-full">
+                          <span className="text-xs font-medium">
+                            {getInitials(sale.name)}
+                          </span>
+                        </div>
+                      </Avatar>
+                      <div className="ml-4 space-y-1">
+                        <p className="text-sm font-medium leading-none">
+                          {sale.name}
+                        </p>
+                        <p className="text-sm text-muted-foreground">
+                          {sale.email}
+                        </p>
+                      </div>
+                      <div className="ml-auto font-medium">
+                        +{formatCurrency(sale.amount)}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }
