@@ -17,16 +17,13 @@ export function StoreGuard({ children }: StoreGuardProps) {
 
   useEffect(() => {
     const checkStore = async () => {
-      // Wait for hydration
       if (!isHydrated) return;
 
-      // Check if user is authenticated
       if (!user) {
         router.push("/login");
         return;
       }
 
-      // If already on create page, skip store check
       if (pathname === "/store/create") {
         setHasStore(false);
         setChecking(false);
@@ -70,7 +67,6 @@ export function StoreGuard({ children }: StoreGuardProps) {
     );
   }
 
-  // Allow access to create page even without store
   if (!hasStore && pathname === "/store/create") {
     return <>{children}</>;
   }

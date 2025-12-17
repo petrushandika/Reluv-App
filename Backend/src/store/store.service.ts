@@ -37,9 +37,9 @@ export class StoreService {
     if (!user) {
       throw new NotFoundException('User not found.');
     }
-    if (user.role !== UserRole.USER && user.role !== UserRole.ADMIN) {
+    if (user.role !== UserRole.STORE && user.role !== UserRole.ADMIN) {
       throw new ForbiddenException(
-        'Only users with USER or ADMIN role can create a store.',
+        'Only users with STORE or ADMIN role can create a store.',
       );
     }
 

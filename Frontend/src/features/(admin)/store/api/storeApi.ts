@@ -185,8 +185,16 @@ export interface CreateStorePayload {
 }
 
 export const createStore = async (data: CreateStorePayload): Promise<Store> => {
-  const response = await api.post("/store", data);
-  return response.data;
+  try {
+    console.log("API: Creating store with payload:", data);
+    const response = await api.post("/store", data);
+    console.log("API: Store created successfully:", response.data);
+    return response.data;
+  } catch (error: any) {
+    console.error("API: Store creation failed:", error);
+    console.error("API: Error response:", error.response?.data);
+    throw error;
+  }
 };
 
 export const getMyStore = async (): Promise<Store> => {
