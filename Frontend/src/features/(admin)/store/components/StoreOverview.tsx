@@ -33,15 +33,15 @@ export function StoreOverview() {
           fontSize={12}
           tickLine={false}
           axisLine={false}
-          tickFormatter={(value) => `$${value}`}
+          tickFormatter={(value) => `Rp. ${value.toLocaleString("id-ID")}`}
         />
         <Tooltip 
           cursor={{fill: 'transparent'}}
           content={({ active, payload }) => {
             if (active && payload && payload.length) {
               return (
-                <div className="bg-white dark:bg-gray-800 p-2 border rounded shadow-sm">
-                  <p className="text-sm font-bold">{`Revenue: $${payload[0].value}`}</p>
+                <div className="bg-white dark:bg-gray-800 p-2 border rounded shadow-sm border-slate-200 dark:border-slate-700">
+                  <p className="text-sm font-bold text-slate-900 dark:text-white">{`Revenue: Rp. ${payload[0].value.toLocaleString("id-ID")}`}</p>
                 </div>
               );
             }

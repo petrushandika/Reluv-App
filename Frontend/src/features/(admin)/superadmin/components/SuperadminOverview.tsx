@@ -28,16 +28,16 @@ export function SuperadminOverview() {
           fontSize={12}
           tickLine={false}
           axisLine={false}
-          tickFormatter={(value) => `$${value}`}
+          tickFormatter={(value) => `Rp. ${value.toLocaleString("id-ID")}`}
         />
         <Tooltip 
           content={({ active, payload }) => {
             if (active && payload && payload.length) {
               return (
-                <div className="bg-white dark:bg-gray-800 p-3 border rounded-lg shadow-lg">
-                  <p className="text-xs text-muted-foreground mb-1">{payload[0].payload.name}</p>
-                  <p className="text-sm font-bold text-primary">{`GMV: $${payload[0].value}`}</p>
-                  <p className="text-sm font-bold text-blue-500">{`Users: ${payload[1].value}`}</p>
+                <div className="bg-white dark:bg-gray-800 p-3 border rounded-lg shadow-lg border-slate-200 dark:border-slate-700">
+                  <p className="text-xs text-muted-foreground mb-1 font-medium">{payload[0].payload.name}</p>
+                  <p className="text-sm font-bold text-sky-600 dark:text-sky-400">{`GMV: Rp. ${payload[0].value.toLocaleString("id-ID")}`}</p>
+                  <p className="text-sm font-bold text-emerald-600 dark:text-emerald-400">{`Users: ${payload[1].value.toLocaleString("id-ID")}`}</p>
                 </div>
               );
             }
