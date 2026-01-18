@@ -13,7 +13,8 @@ import {
   TrendingUp,
   Activity,
   UserCheck,
-  AlertCircle
+  AlertCircle,
+  Settings
 } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/ui/card"
 import { Button } from "@/shared/components/ui/button"
@@ -45,6 +46,11 @@ const sidebarItems = [
     label: "Reviews",
     href: "/store/reviews",
     icon: MessageSquare,
+  },
+  {
+    label: "Settings",
+    href: "/store/settings",
+    icon: Settings,
   },
 ]
 

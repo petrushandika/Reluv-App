@@ -14,7 +14,8 @@ import {
   Activity,
   UserCheck,
   Zap,
-  Clock
+  Clock,
+  Settings
 } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/ui/card"
 import { Button } from "@/shared/components/ui/button"
@@ -47,6 +48,11 @@ const sidebarItems = [
     label: "Reviews",
     href: "/store/reviews",
     icon: MessageSquare,
+  },
+  {
+    label: "Settings",
+    href: "/store/settings",
+    icon: Settings,
   },
 ]
 
@@ -125,63 +131,81 @@ export default function StoreReviewsPage() {
           ))}
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Rating Breakdown */}
-          <Card className="lg:col-span-1 border-slate-200 dark:border-slate-800 shadow-none rounded-2xl bg-slate-50/50 dark:bg-slate-900/50">
-            <CardHeader>
-              <CardTitle className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Rating Breakdown</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {ratingBars.map((bar) => (
-                <div key={bar.star} className="flex items-center gap-3">
-                  <div className="flex items-center gap-1 w-8">
-                    <span className="text-xs font-bold text-slate-600 dark:text-slate-400">{bar.star}</span>
-                    <Star className="h-3 w-3 fill-slate-300 text-slate-300" />
-                  </div>
-                  <div className="flex-1 h-2 bg-white dark:bg-slate-800 rounded-full overflow-hidden border border-slate-200 dark:border-slate-800">
-                    <div 
-                      className="h-full bg-amber-400 rounded-full transition-all duration-500" 
-                      style={{ width: `${bar.percentage}%` }}
-                    />
-                  </div>
-                  <span className="text-[10px] font-bold text-slate-400 w-8 text-right">{bar.percentage}%</span>
-                </div>
-              ))}
-              <div className="mt-8 p-4 bg-white dark:bg-slate-950 rounded-xl border border-slate-200 dark:border-slate-800">
-                <div className="flex items-center gap-2 mb-2">
-                  <div className="h-2 w-2 rounded-full bg-emerald-500" />
-                  <span className="text-[10px] font-bold text-slate-900 dark:text-white uppercase tracking-widest">Sentiment Analysis</span>
-                </div>
-                <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">92% of your customers mention "quality" and "fast shipping" in their feedback.</p>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Filters & Search */}
-          <div className="lg:col-span-2 space-y-4">
-            <div className="flex flex-col md:flex-row gap-4 items-center justify-between p-5 bg-slate-50/50 dark:bg-slate-900/50 rounded-2xl border border-slate-200 dark:border-slate-800">
-              <div className="relative w-full md:w-96">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
-                <Input 
-                  placeholder="Search comments or customer names..." 
-                  className="pl-11 h-11 bg-white dark:bg-slate-950 border-slate-200 dark:border-slate-800 rounded-xl text-sm font-medium focus:ring-sky-500/20 focus:border-sky-500 transition-all border"
-                />
-              </div>
-              <div className="flex items-center space-x-3 w-full md:w-auto">
-                <Button variant="outline" className="flex-1 md:flex-none h-11 px-5 rounded-xl border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 font-bold text-xs uppercase tracking-widest hover:bg-slate-50 dark:hover:bg-slate-900 transition-all border">
-                  <Filter className="mr-2 h-4 w-4" />
-                  All Stars
-                </Button>
-                <div className="h-11 w-px bg-slate-200 dark:bg-slate-800 hidden md:block" />
-                <div className="flex-1 md:flex-none flex flex-col items-end">
-                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Sort By</span>
-                  <span className="text-xs font-bold text-slate-900 dark:text-white">Newest First</span>
-                </div>
+        <div className="flex flex-col gap-6">
+          {/* Filters & Search - Now top level in the stack */}
+          <div className="flex flex-col md:flex-row gap-4 items-center justify-between p-5 bg-slate-50/50 dark:bg-slate-900/50 rounded-2xl border border-slate-200 dark:border-slate-800">
+            <div className="relative w-full md:w-96">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+              <Input 
+                placeholder="Search comments or customer names..." 
+                className="pl-11 h-11 bg-white dark:bg-slate-950 border-slate-200 dark:border-slate-800 rounded-xl text-sm font-medium focus:ring-sky-500/20 focus:border-sky-500 transition-all border"
+              />
+            </div>
+            <div className="flex items-center space-x-3 w-full md:w-auto">
+              <Button variant="outline" className="flex-1 md:flex-none h-11 px-5 rounded-xl border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 font-bold text-xs uppercase tracking-widest hover:bg-slate-50 dark:hover:bg-slate-900 transition-all border">
+                <Filter className="mr-2 h-4 w-4" />
+                All Stars
+              </Button>
+              <div className="h-11 w-px bg-slate-200 dark:bg-slate-800 hidden md:block" />
+              <div className="flex-1 md:flex-none flex flex-col items-end">
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Sort By</span>
+                <span className="text-xs font-bold text-slate-900 dark:text-white">Newest First</span>
               </div>
             </div>
+          </div>
 
-            {/* Reviews List */}
-            <StoreReviewsList />
+          {/* Reviews List */}
+          <StoreReviewsList />
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Rating Breakdown */}
+            <Card className="border-slate-200 dark:border-slate-800 shadow-none rounded-2xl bg-slate-50/50 dark:bg-slate-900/50">
+              <CardHeader>
+                <CardTitle className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Rating Breakdown</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {ratingBars.map((bar) => (
+                  <div key={bar.star} className="flex items-center gap-3">
+                    <div className="flex items-center gap-1 w-8">
+                      <span className="text-xs font-bold text-slate-600 dark:text-slate-400">{bar.star}</span>
+                      <Star className="h-3 w-3 fill-slate-300 text-slate-300" />
+                    </div>
+                    <div className="flex-1 h-2 bg-white dark:bg-slate-800 rounded-full overflow-hidden border border-slate-200 dark:border-slate-800">
+                      <div 
+                        className="h-full bg-amber-400 rounded-full transition-all duration-500" 
+                        style={{ width: `${bar.percentage}%` }}
+                      />
+                    </div>
+                    <span className="text-[10px] font-bold text-slate-400 w-8 text-right">{bar.percentage}%</span>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+
+            {/* Sentiment Analysis */}
+            <Card className="border-slate-200 dark:border-slate-800 shadow-none rounded-2xl bg-slate-50/50 dark:bg-slate-900/50">
+              <CardHeader>
+                <CardTitle className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Insights & Sentiment</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid gap-4">
+                  <div className="p-4 bg-white dark:bg-slate-950 rounded-xl border border-slate-200 dark:border-slate-800">
+                    <div className="flex items-center gap-2 mb-2">
+                      <div className="h-2 w-2 rounded-full bg-emerald-500" />
+                      <span className="text-[10px] font-bold text-slate-900 dark:text-white uppercase tracking-widest">Sentiment Analysis</span>
+                    </div>
+                    <p className="text-sm text-slate-500 dark:text-slate-400 font-medium leading-relaxed">92% of your customers mention <span className="text-sky-600 font-bold">"quality"</span> and <span className="text-sky-600 font-bold">"fast shipping"</span> as the primary reasons for high ratings.</p>
+                  </div>
+                  <div className="p-4 bg-white dark:bg-slate-950 rounded-xl border border-slate-200 dark:border-slate-800">
+                    <div className="flex items-center gap-2 mb-2">
+                      <div className="h-2 w-2 rounded-full bg-amber-500" />
+                      <span className="text-[10px] font-bold text-slate-900 dark:text-white uppercase tracking-widest">Improvement Tips</span>
+                    </div>
+                    <p className="text-sm text-slate-500 dark:text-slate-400 font-medium leading-relaxed">Some users mentioned the <span className="text-amber-600 font-bold">"packaging size"</span> could be more compact for small items.</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </div>

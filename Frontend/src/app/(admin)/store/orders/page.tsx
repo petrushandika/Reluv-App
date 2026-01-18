@@ -6,7 +6,7 @@ import {
   Package, 
   ShoppingCart, 
   Ticket, 
-  Star, 
+  MessageSquare, 
   Settings,
   Clock, 
   CheckCircle2, 
@@ -44,7 +44,7 @@ const sidebarItems = [
   {
     label: "Reviews",
     href: "/store/reviews",
-    icon: Star,
+    icon: MessageSquare,
   },
   {
     label: "Settings",
@@ -99,7 +99,7 @@ export default function StoreOrdersPage() {
       type="store"
       sidebarItems={sidebarItems}
       actions={
-        <Button variant="outline" className="rounded-xl border-slate-200 dark:border-slate-800 font-bold text-xs uppercase tracking-widest h-10 px-4">
+        <Button variant="outline" className="h-10 px-4 rounded-xl border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-900 transition-all font-bold text-xs uppercase tracking-widest border shadow-none">
           <Download className="mr-2 h-4 w-4" />
           Export Orders
         </Button>

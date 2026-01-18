@@ -144,9 +144,17 @@ export function StoreReviewsList() {
                     "{review.comment}"
                   </p>
                   {review.images.length > 0 && (
-                    <div className="flex items-center mt-2 text-[10px] font-bold text-sky-600 uppercase tracking-widest">
-                      <ImageIcon className="h-3 w-3 mr-1" />
-                      {review.images.length} Image Attached
+                    <div className="flex gap-1.5 mt-2.5">
+                      {review.images.map((img, idx) => (
+                        <div key={idx} className="relative h-10 w-10 rounded-lg overflow-hidden border border-slate-200 dark:border-slate-800 shrink-0">
+                          <Image 
+                            src={img} 
+                            alt={`review-${idx}`} 
+                            fill 
+                            className="object-cover hover:scale-110 transition-transform duration-300" 
+                          />
+                        </div>
+                      ))}
                     </div>
                   )}
                 </div>
