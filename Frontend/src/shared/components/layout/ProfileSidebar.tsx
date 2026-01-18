@@ -60,26 +60,26 @@ const LogoutConfirmationModal = ({
       onClick={onClose}
     >
       <div
-        className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-lg rounded-xl shadow-xl w-full max-w-sm sm:max-w-md p-6 border border-gray-200/50 dark:border-gray-700/50"
+        className="bg-white/95 dark:bg-slate-900/95 backdrop-blur-lg rounded-2xl shadow-none w-full max-w-sm sm:max-w-md p-8 border border-slate-200 dark:border-slate-800"
         onClick={(e) => e.stopPropagation()}
       >
         <h2 className="text-lg font-bold text-black dark:text-white mb-4 glossy-text-title">
           Sign Out
         </h2>
-        <p className="text-gray-600 dark:text-gray-300 mb-8 glossy-text">
+        <p className="text-slate-600 dark:text-slate-400 mb-8 font-medium">
           Are you sure you want to sign out? You will need to log in again to
           access your account.
         </p>
         <div className="grid grid-cols-2 sm:flex sm:flex-row sm:justify-end items-center gap-3">
           <button
             onClick={onClose}
-            className="w-full px-5 py-2.5 rounded-md text-sm font-medium text-black dark:text-white border border-gray-300/50 dark:border-gray-600/50 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm hover:bg-gray-50/90 dark:hover:bg-gray-700/90 transition-colors shadow-sm glossy-text-strong cursor-pointer"
+            className="w-full px-5 py-2.5 rounded-xl text-xs font-bold uppercase tracking-widest text-slate-900 dark:text-white border border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm hover:bg-slate-50 dark:hover:bg-slate-800 transition-all cursor-pointer"
           >
             Cancel
           </button>
           <button
             onClick={onConfirm}
-            className="w-full px-5 py-2.5 rounded-md bg-red-600/90 dark:bg-red-500/90 backdrop-blur-sm text-sm font-medium text-white hover:bg-red-700/90 dark:hover:bg-red-600/90 transition-colors shadow-md glossy-text-strong cursor-pointer"
+            className="w-full px-5 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-xs font-bold uppercase tracking-widest text-white transition-all shadow-none cursor-pointer"
           >
             Sign Out
           </button>
@@ -312,12 +312,13 @@ const ProfileSidebar: React.FC<ProfileSidebarProps> = ({ user }) => {
         </div>
       </div>
 
-      <nav className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+      <nav className="border border-slate-200 dark:border-slate-800 rounded-2xl p-4 bg-white dark:bg-slate-950">
         <div className="space-y-6">
           {["My Details", "My Purchases", "My Sales", "Customer Services", "Account Management"].map(
             (category) => (
               <div key={category}>
-                <h3 className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3 px-2">
+                <h3 className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] mb-4 px-3 flex items-center gap-2">
+                  <div className="w-1.5 h-1.5 rounded-full bg-sky-500/50" />
                   {category}
                 </h3>
                 <div className="space-y-1">
@@ -331,23 +332,23 @@ const ProfileSidebar: React.FC<ProfileSidebarProps> = ({ user }) => {
                           <Link
                             key={item.href}
                             href={item.href}
-                            className={`relative flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors ${
+                            className={`relative flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all ${
                               isActive
-                                ? "bg-sky-50 dark:bg-sky-900/20 text-sky-600 dark:text-sky-400"
-                                : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
+                                ? "bg-sky-50 dark:bg-sky-500/10 text-sky-600 dark:text-sky-400 border border-sky-100 dark:border-sky-900/30"
+                                : "text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-900 border border-transparent"
                             }`}
                           >
                             {isActive && (
-                              <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-sky-600 dark:bg-sky-400 rounded-r-full" />
+                              <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1.5 h-6 bg-sky-600 dark:bg-sky-400 rounded-r-full" />
                             )}
                             <Icon
                               className={`w-5 h-5 ${
                                 isActive
                                   ? "text-sky-600 dark:text-sky-400"
-                                  : "text-gray-500 dark:text-gray-400"
+                                  : "text-slate-400 dark:text-slate-500"
                               }`}
                             />
-                            <span className="font-medium">{item.title}</span>
+                            <span className="text-xs font-bold uppercase tracking-widest">{item.title}</span>
                           </Link>
                         );
                       })}
@@ -361,23 +362,23 @@ const ProfileSidebar: React.FC<ProfileSidebarProps> = ({ user }) => {
                           <Link
                             key={item.href}
                             href={item.href}
-                            className={`relative flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors ${
+                            className={`relative flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all ${
                               isActive
-                                ? "bg-sky-50 dark:bg-sky-900/20 text-sky-600 dark:text-sky-400"
-                                : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
+                                ? "bg-sky-50 dark:bg-sky-500/10 text-sky-600 dark:text-sky-400 border border-sky-100 dark:border-sky-900/30"
+                                : "text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-900 border border-transparent"
                             }`}
                           >
                             {isActive && (
-                              <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-sky-600 dark:bg-sky-400 rounded-r-full" />
+                              <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1.5 h-6 bg-sky-600 dark:bg-sky-400 rounded-r-full" />
                             )}
                             <Icon
                               className={`w-5 h-5 ${
                                 isActive
                                   ? "text-sky-600 dark:text-sky-400"
-                                  : "text-gray-500 dark:text-gray-400"
+                                  : "text-slate-400 dark:text-slate-500"
                               }`}
                             />
-                            <span className="font-medium">{item.title}</span>
+                            <span className="text-xs font-bold uppercase tracking-widest">{item.title}</span>
                           </Link>
                         );
                       })}
@@ -391,23 +392,23 @@ const ProfileSidebar: React.FC<ProfileSidebarProps> = ({ user }) => {
                           <Link
                             key={item.href}
                             href={item.href}
-                            className={`relative flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors ${
+                            className={`relative flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all ${
                               isActive
-                                ? "bg-sky-50 dark:bg-sky-900/20 text-sky-600 dark:text-sky-400"
-                                : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
+                                ? "bg-sky-50 dark:bg-sky-500/10 text-sky-600 dark:text-sky-400 border border-sky-100 dark:border-sky-900/30"
+                                : "text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-900 border border-transparent"
                             }`}
                           >
                             {isActive && (
-                              <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-sky-600 dark:bg-sky-400 rounded-r-full" />
+                              <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1.5 h-6 bg-sky-600 dark:bg-sky-400 rounded-r-full" />
                             )}
                             <Icon
                               className={`w-5 h-5 ${
                                 isActive
                                   ? "text-sky-600 dark:text-sky-400"
-                                  : "text-gray-500 dark:text-gray-400"
+                                  : "text-slate-400 dark:text-slate-500"
                               }`}
                             />
-                            <span className="font-medium">{item.title}</span>
+                            <span className="text-xs font-bold uppercase tracking-widest">{item.title}</span>
                           </Link>
                         );
                       })}
@@ -421,33 +422,33 @@ const ProfileSidebar: React.FC<ProfileSidebarProps> = ({ user }) => {
                           <Link
                             key={item.href}
                             href={item.href}
-                            className={`relative flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors ${
+                            className={`relative flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all ${
                               isActive
-                                ? "bg-sky-50 dark:bg-sky-900/20 text-sky-600 dark:text-sky-400"
-                                : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
+                                ? "bg-sky-50 dark:bg-sky-500/10 text-sky-600 dark:text-sky-400 border border-sky-100 dark:border-sky-900/30"
+                                : "text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-900 border border-transparent"
                             }`}
                           >
                             {isActive && (
-                              <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-sky-600 dark:bg-sky-400 rounded-r-full" />
+                              <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1.5 h-6 bg-sky-600 dark:bg-sky-400 rounded-r-full" />
                             )}
                             <Icon
                               className={`w-5 h-5 ${
                                 isActive
                                   ? "text-sky-600 dark:text-sky-400"
-                                  : "text-gray-500 dark:text-gray-400"
+                                  : "text-slate-400 dark:text-slate-500"
                               }`}
                             />
-                            <span className="font-medium">{item.title}</span>
+                            <span className="text-xs font-bold uppercase tracking-widest">{item.title}</span>
                           </Link>
                         );
                       })}
                   {category === "Account Management" && (
                     <button
                       onClick={handleLogoutClick}
-                      className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors cursor-pointer"
+                      className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-500/10 transition-all cursor-pointer border border-transparent hover:border-rose-100 dark:hover:border-rose-900/30 group"
                     >
-                      <LogOut className="w-5 h-5" />
-                      <span className="font-medium">Sign Out</span>
+                      <LogOut className="w-5 h-5 transition-transform group-hover:-translate-x-0.5" />
+                      <span className="text-xs font-bold uppercase tracking-widest">Sign Out</span>
                     </button>
                   )}
                 </div>

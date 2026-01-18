@@ -3,72 +3,50 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
-  User,
-  Edit,
-  ChevronLeft,
-  ChevronRight,
-  X,
-  Plus,
+  User as UserIcon,
   Mail,
+  Phone,
+  Calendar,
+  ShieldCheck,
+  Bell,
+  Save,
+  Camera,
+  Info,
+  ChevronRight,
+  LogOut,
+  MapPin,
+  Check
 } from "lucide-react";
-import { z } from "zod";
 import { useAuthStore } from "@/features/(auth)/store/auth.store";
-import { getMe, updateMe } from "@/features/(main)/user/api/userApi";
+import { getMe, updateMe, updateMyProfile } from "@/features/(main)/user/api/userApi";
 import { User as UserType } from "@/features/(auth)/types";
 import { PrivateRoute } from "@/shared/components/guards/RouteGuards";
 import { toast } from "sonner";
 import ProfileSidebar from "@/shared/components/layout/ProfileSidebar";
 import Spinner from "@/shared/components/common/Spinner";
-
-const personalInfoSchema = z.object({
-  title: z.string().optional(),
-  firstName: z
-    .string()
-    .min(1, { message: "First name is required" })
-    .max(100, { message: "First name must be at most 100 characters" })
-    .trim(),
-  lastName: z
-    .string()
-    .min(1, { message: "Last name is required" })
-    .max(100, { message: "Last name must be at most 100 characters" })
-    .trim(),
-  dateOfBirth: z.string().optional(),
-});
-
-const phoneNumberSchema = z
-  .string()
-  .min(1, { message: "Phone number is required" })
-  .regex(/^\+?[0-9]{7,15}$/, { message: "Invalid phone number format" })
-  .trim();
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/shared/components/ui/card";
+import { Button } from "@/shared/components/ui/button";
+import { Input } from "@/shared/components/ui/input";
+import { Label } from "@/shared/components/ui/label";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/components/ui/tabs";
+import { Select } from "@/shared/components/ui/select";
+import { Textarea } from "@/shared/components/ui/textarea";
 
 const ProfilePage = () => {
   const router = useRouter();
   const { user: authUser, isAuthenticated, fetchAndSetUser } = useAuthStore();
   const [user, setUser] = useState<UserType | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [isEditPersonalInfoOpen, setIsEditPersonalInfoOpen] = useState(false);
-  const [formData, setFormData] = useState({
-    title: "",
-    firstName: "",
-    lastName: "",
-    dateOfBirth: "",
-  });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isEditAccountInfoOpen, setIsEditAccountInfoOpen] = useState(false);
-  const [isPhoneInputOpen, setIsPhoneInputOpen] = useState(false);
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [isSubmittingPhone, setIsSubmittingPhone] = useState(false);
-  const [validationError, setValidationError] = useState<string | null>(null);
-  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
-  const [phoneError, setPhoneError] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (validationError) {
-      toast.error("Validation Error", {
-        description: validationError,
-      });
-    }
-  }, [validationError]);
+  const [activeTab, setActiveTab] = useState("identity");
+  
+  // Form states
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [birth, setBirth] = useState("");
+  const [gender, setGender] = useState("");
+  const [phone, setPhone] = useState("");
+  const [bio, setBio] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -80,168 +58,50 @@ const ProfilePage = () => {
       try {
         const userData = await getMe();
         setUser(userData);
+        setFirstName(userData.firstName || "");
+        setLastName(userData.lastName || "");
+        setPhone(userData.phone || "");
+        setGender(userData.profile?.gender || "");
+        setBio(userData.profile?.bio || "");
+        if (userData.birth) {
+          setBirth(new Date(userData.birth).toISOString().split('T')[0]);
+        }
       } catch (error) {
-        setUser(null);
+        toast.error("Gagal memuat profil");
       } finally {
         setIsLoading(false);
       }
     };
 
-    if (isAuthenticated()) {
-      fetchUser();
-    } else {
-      setIsLoading(false);
-    }
+    fetchUser();
   }, [isAuthenticated, router]);
 
-  const handleOpenEditPersonalInfo = () => {
-    setFormData({
-      title: "",
-      firstName: user?.firstName || authUser?.firstName || "",
-      lastName: user?.lastName || authUser?.lastName || "",
-      dateOfBirth:
-        user?.birth || authUser?.birth
-          ? new Date(user?.birth || authUser?.birth || "")
-              .toISOString()
-              .split("T")[0]
-          : "",
-    });
-    setIsEditPersonalInfoOpen(true);
-  };
-
-  const handleCloseEditPersonalInfo = () => {
-    setIsEditPersonalInfoOpen(false);
-  };
-
-  const handleSubmitPersonalInfo = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    setValidationError(null);
-    setFieldErrors({});
-
-    const formValidation = personalInfoSchema.safeParse(formData);
-
-    if (!formValidation.success) {
-      const errors: Record<string, string> = {};
-      formValidation.error.errors.forEach((err) => {
-        if (err.path.length > 0) {
-          const fieldName = err.path[0] as string;
-          errors[fieldName] = err.message;
-        } else {
-          setValidationError(err.message);
-        }
-      });
-      setFieldErrors(errors);
-      if (Object.keys(errors).length === 0 && formValidation.error.errors[0]) {
-        setValidationError(formValidation.error.errors[0].message);
-      }
-      toast.error("Validation Failed", {
-        description: "Please fix the errors in the form before submitting.",
-      });
-      return;
-    }
-
-    setIsSubmitting(true);
-
+  const handleSaveIdentity = async () => {
+    setIsSaving(true);
     try {
-      const updateUserData: {
-        firstName?: string;
-        lastName?: string;
-        birth?: string;
-      } = {};
-      if (formData.firstName) updateUserData.firstName = formData.firstName;
-      if (formData.lastName) updateUserData.lastName = formData.lastName;
-      if (formData.dateOfBirth) {
-        updateUserData.birth = formData.dateOfBirth;
-      }
-
-      if (Object.keys(updateUserData).length > 0) {
-        await updateMe(updateUserData);
-      }
-
+      await updateMe({ firstName, lastName, birth });
+      await updateMyProfile({ gender, bio });
       await fetchAndSetUser();
-      const userData = await getMe();
-      setUser(userData);
-      setIsEditPersonalInfoOpen(false);
-      toast.success("Profile Updated", {
-        description: "Your personal information has been updated successfully.",
-      });
-    } catch (error) {
-      toast.error("Update Failed", {
-        description: "Unable to update personal information. Please try again.",
-      });
+      toast.success("Profil berhasil diperbarui");
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || "Gagal memperbarui profil");
     } finally {
-      setIsSubmitting(false);
+      setIsSaving(false);
     }
   };
 
-  const handleOpenEditAccountInfo = () => {
-    setPhoneNumber(user?.phone || "");
-    setIsPhoneInputOpen(false);
-    setIsEditAccountInfoOpen(true);
-  };
-
-  const handleCloseEditAccountInfo = () => {
-    setIsEditAccountInfoOpen(false);
-    setIsPhoneInputOpen(false);
-    setPhoneNumber(user?.phone || "");
-  };
-
-  const handleTogglePhoneInput = () => {
-    setIsPhoneInputOpen(!isPhoneInputOpen);
-    if (!isPhoneInputOpen) {
-      setPhoneNumber(user?.phone || "");
-    }
-  };
-
-  const handleSubmitPhoneNumber = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    setPhoneError(null);
-
-    const phoneValidation = phoneNumberSchema.safeParse(phoneNumber);
-
-    if (!phoneValidation.success) {
-      setPhoneError(
-        phoneValidation.error.errors[0]?.message || "Invalid phone number"
-      );
-      toast.error("Validation Failed", {
-        description: "Please fix the phone number before submitting.",
-      });
-      return;
-    }
-
-    setIsSubmittingPhone(true);
-
+  const handleSaveContact = async () => {
+    setIsSaving(true);
     try {
-      await updateMe({ phone: phoneNumber });
+      await updateMe({ phone });
       await fetchAndSetUser();
-      const userData = await getMe();
-      setUser(userData);
-      setIsPhoneInputOpen(false);
-      toast.success("Phone Updated", {
-        description: "Your phone number has been updated successfully.",
-      });
-    } catch (error) {
-      toast.error("Update Failed", {
-        description: "Unable to update phone number. Please try again.",
-      });
+      toast.success("Info kontak berhasil diperbarui");
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || "Gagal memperbarui kontak");
     } finally {
-      setIsSubmittingPhone(false);
+      setIsSaving(false);
     }
   };
-
-  const formatDate = (date: Date | string | null) => {
-    if (!date) return "-";
-    const d = new Date(date);
-    return d.toLocaleDateString("id-ID", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-  };
-
-  const displayEmail = user?.email || authUser?.email || "";
 
   if (isLoading) {
     return <Spinner />;
@@ -249,559 +109,224 @@ const ProfilePage = () => {
 
   return (
     <PrivateRoute>
-      <div className="min-h-screen bg-white dark:bg-gray-900">
-        {isEditPersonalInfoOpen ? (
-          <div className="lg:hidden min-h-screen bg-white dark:bg-gray-900 overflow-y-auto">
-            <div className="container mx-auto px-4 sm:px-6 md:px-10 xl:px-20 2xl:px-40 py-10 sm:py-12 md:py-14">
-              <div className="mb-4">
-                <button
-                  onClick={handleCloseEditPersonalInfo}
-                  className="flex items-center gap-2 text-gray-700 dark:text-gray-300 cursor-pointer"
-                >
-                  <ChevronLeft className="w-5 h-5" />
-                  <h1 className="text-lg font-bold text-gray-900 dark:text-white">
-                    Personal Info
-                  </h1>
-                </button>
-              </div>
-
-              <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 shadow-sm">
-                <form onSubmit={handleSubmitPersonalInfo} className="space-y-5">
-
-                  <div>
-                    <label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block">
-                      Title
-                    </label>
-                    <div className="flex gap-4">
-                      <label className="flex items-center gap-2 cursor-pointer">
-                        <input
-                          type="radio"
-                          name="title"
-                          value="Mr."
-                          checked={formData.title === "Mr."}
-                          onChange={(e) =>
-                            setFormData({ ...formData, title: e.target.value })
-                          }
-                          className="w-4 h-4 text-sky-600 bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 focus:ring-sky-500 dark:focus:ring-sky-400 focus:ring-2"
-                        />
-                        <span className="text-gray-700 dark:text-gray-300">
-                          Mr.
-                        </span>
-                      </label>
-                      <label className="flex items-center gap-2 cursor-pointer">
-                        <input
-                          type="radio"
-                          name="title"
-                          value="Mrs./Ms."
-                          checked={formData.title === "Mrs./Ms."}
-                          onChange={(e) =>
-                            setFormData({ ...formData, title: e.target.value })
-                          }
-                          className="w-4 h-4 text-sky-600 bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 focus:ring-sky-500 dark:focus:ring-sky-400 focus:ring-2"
-                        />
-                        <span className="text-gray-700 dark:text-gray-300">
-                          Mrs./Ms.
-                        </span>
-                      </label>
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block">
-                      First Name<span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      value={formData.firstName}
-                      onChange={(e) => {
-                        setFormData({ ...formData, firstName: e.target.value });
-                        if (fieldErrors.firstName) {
-                          setFieldErrors((prev) => {
-                            const newErrors = { ...prev };
-                            delete newErrors.firstName;
-                            return newErrors;
-                          });
-                        }
-                      }}
-                      required
-                      className={`w-full px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-transparent transition-colors ${
-                        fieldErrors.firstName
-                          ? "border-red-500 dark:border-red-500"
-                          : "border-gray-300 dark:border-gray-600"
-                      }`}
-                      placeholder="First Name*"
-                    />
-                    {fieldErrors.firstName && (
-                      <p className="mt-1 text-sm text-red-600 dark:text-red-400">
-                        {fieldErrors.firstName}
-                      </p>
-                    )}
-                  </div>
-
-                  <div>
-                    <label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block">
-                      Last Name<span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      value={formData.lastName}
-                      onChange={(e) => {
-                        setFormData({ ...formData, lastName: e.target.value });
-                        if (fieldErrors.lastName) {
-                          setFieldErrors((prev) => {
-                            const newErrors = { ...prev };
-                            delete newErrors.lastName;
-                            return newErrors;
-                          });
-                        }
-                      }}
-                      required
-                      className={`w-full px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-transparent transition-colors ${
-                        fieldErrors.lastName
-                          ? "border-red-500 dark:border-red-500"
-                          : "border-gray-300 dark:border-gray-600"
-                      }`}
-                      placeholder="Last Name*"
-                    />
-                    {fieldErrors.lastName && (
-                      <p className="mt-1 text-sm text-red-600 dark:text-red-400">
-                        {fieldErrors.lastName}
-                      </p>
-                    )}
-                  </div>
-
-                  <div>
-                    <label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block">
-                      Date of Birth
-                    </label>
-                    <div className="relative">
-                      <input
-                        type="date"
-                        value={formData.dateOfBirth}
-                        onChange={(e) => {
-                          setFormData({
-                            ...formData,
-                            dateOfBirth: e.target.value,
-                          });
-                          if (fieldErrors.dateOfBirth) {
-                            setFieldErrors((prev) => {
-                              const newErrors = { ...prev };
-                              delete newErrors.dateOfBirth;
-                              return newErrors;
-                            });
-                          }
-                        }}
-                        className={`w-full px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-transparent transition-colors ${
-                          fieldErrors.dateOfBirth
-                            ? "border-red-500 dark:border-red-500"
-                            : "border-gray-300 dark:border-gray-600"
-                        }`}
-                        placeholder="Date of Birth"
-                      />
-                    </div>
-                    {fieldErrors.dateOfBirth && (
-                      <p className="mt-1 text-sm text-red-600 dark:text-red-400">
-                        {fieldErrors.dateOfBirth}
-                      </p>
-                    )}
-                    {!fieldErrors.dateOfBirth && (
-                      <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                        Fill your date of birth to get birthday reward once a
-                        year.
-                      </p>
-                    )}
-                  </div>
-
-                  <button
-                    type="submit"
-                    disabled={
-                      isSubmitting || !formData.firstName || !formData.lastName
-                    }
-                    className={`w-full py-2 text-sm rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer ${
-                      formData.firstName && formData.lastName && !isSubmitting
-                        ? "bg-sky-600 dark:bg-sky-500 text-white hover:bg-sky-700 dark:hover:bg-sky-600"
-                        : "bg-sky-600 dark:bg-sky-500 text-white hover:bg-sky-700 dark:hover:bg-sky-600"
-                    }`}
-                  >
-                    {isSubmitting ? "Saving..." : "Save"}
-                  </button>
-                </form>
-              </div>
-            </div>
-          </div>
-        ) : null}
-        <div
-          className={`container mx-auto px-4 sm:px-6 md:px-10 xl:px-20 2xl:px-40 py-10 sm:py-12 md:py-14 ${
-            isEditPersonalInfoOpen ? "hidden lg:block" : ""
-          }`}
-        >
-          <div className="flex flex-col lg:flex-row lg:items-start lg:gap-8">
-            <div className="lg:hidden">
-              <button
-                onClick={() => router.back()}
-                className="flex items-center gap-2 text-gray-700 dark:text-gray-300 mb-4 cursor-pointer"
-              >
-                <ChevronLeft className="w-5 h-5" />
-                <h1 className="text-lg font-bold text-gray-900 dark:text-white">
-                  My Profile
-                </h1>
-              </button>
-            </div>
-
+      <div className="min-h-screen bg-slate-50 dark:bg-slate-900/50">
+        <div className="container mx-auto px-4 sm:px-6 md:px-10 xl:px-20 2xl:px-40 py-10 sm:py-12 md:py-14">
+          <div className="flex flex-col lg:flex-row lg:items-start gap-8 lg:gap-12">
+            
             <ProfileSidebar user={user} />
 
-            <main className="flex-1 min-w-0">
-              <div className="hidden lg:block mb-6 lg:pt-6">
-                <div className="flex items-center gap-3 mb-2">
-                  <User className="w-6 h-6 text-sky-600 dark:text-sky-400" />
-                  <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 dark:text-white">
-                    My Profile
-                  </h1>
-                </div>
+            <main className="flex-1 space-y-8">
+              <div className="flex flex-col gap-1">
+                <h1 className="text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-3">
+                   <UserIcon className="w-6 h-6 text-sky-600" />
+                   Pengaturan Profil
+                </h1>
+                <p className="text-sm text-slate-500 font-medium tracking-tight">Kelola informasi pribadi dan pengaturan keamanan akun Anda.</p>
               </div>
 
-              <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 sm:p-6 mb-6">
-                <div className="flex items-center justify-between mb-4 sm:mb-6">
-                  <h2 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">
-                    Personal Info
-                  </h2>
-                  <button
-                    onClick={handleOpenEditPersonalInfo}
-                    className="flex items-center gap-2 text-sky-600 dark:text-sky-400 hover:text-sky-700 dark:hover:text-sky-300 font-medium text-sm transition-colors cursor-pointer"
+              <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+                <div className="w-full overflow-x-auto pb-2 scrollbar-hide">
+                  <TabsList className="bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 p-1 rounded-xl w-fit flex h-12 shadow-none">
+                  <TabsTrigger 
+                    value="identity" 
+                    className="px-6 rounded-lg text-[10px] font-bold uppercase tracking-widest data-[state=active]:bg-slate-50 dark:data-[state=active]:bg-slate-900 data-[state=active]:text-sky-600 data-[state=active]:border border-transparent transition-all h-full"
                   >
-                    <Edit className="w-4 h-4" />
-                    Edit
-                  </button>
-                </div>
-                <div className="space-y-4 sm:space-y-5">
-                  <div className="border-b border-gray-200 dark:border-gray-700 pb-4">
-                    <label className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1 block">
-                      Title
-                    </label>
-                    <p className="text-gray-900 dark:text-white font-semibold">
-                      -
-                    </p>
-                  </div>
-                  <div className="border-b border-gray-200 dark:border-gray-700 pb-4">
-                    <label className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1 block">
-                      First Name
-                    </label>
-                    <p className="text-gray-900 dark:text-white font-semibold">
-                      {user?.firstName || authUser?.firstName || "-"}
-                    </p>
-                  </div>
-                  <div className="border-b border-gray-200 dark:border-gray-700 pb-4">
-                    <label className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1 block">
-                      Last Name
-                    </label>
-                    <p className="text-gray-900 dark:text-white font-semibold">
-                      {user?.lastName || authUser?.lastName || "-"}
-                    </p>
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1 block">
-                      Date of Birth
-                    </label>
-                    <p className="text-gray-900 dark:text-white font-semibold">
-                      {formatDate(user?.birth || authUser?.birth || null)}
-                    </p>
-                  </div>
-                </div>
-              </div>
+                    Identitas
+                  </TabsTrigger>
+                  <TabsTrigger 
+                    value="account"
+                    className="px-6 rounded-lg text-[10px] font-bold uppercase tracking-widest data-[state=active]:bg-slate-50 dark:data-[state=active]:bg-slate-900 data-[state=active]:text-sky-600 data-[state=active]:border border-transparent transition-all h-full"
+                  >
+                    Akun & Kontak
+                  </TabsTrigger>
+                  <TabsTrigger 
+                    value="security"
+                    className="px-6 rounded-lg text-[10px] font-bold uppercase tracking-widest data-[state=active]:bg-slate-50 dark:data-[state=active]:bg-slate-900 data-[state=active]:text-sky-600 data-[state=active]:border border-transparent transition-all h-full"
+                  >
+                    Keamanan
+                  </TabsTrigger>
+                </TabsList>
 
-              <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 sm:p-6">
-                <div className="flex items-center justify-between mb-4 sm:mb-6">
-                  <h2 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">
-                    Account Info
-                  </h2>
-                  <button
-                    onClick={handleOpenEditAccountInfo}
-                    className="flex items-center gap-2 text-sky-600 dark:text-sky-400 hover:text-sky-700 dark:hover:text-sky-300 font-medium text-sm transition-colors cursor-pointer"
-                  >
-                    <Edit className="w-4 h-4" />
-                    Edit
-                  </button>
-                </div>
-                <div className="space-y-4 sm:space-y-5">
-                  <div className="border-b border-gray-200 dark:border-gray-700 pb-4">
-                    <label className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1 block">
-                      Phone Number
-                    </label>
-                    <p className="text-gray-900 dark:text-white font-semibold">
-                      {user?.phone || "-"}
-                    </p>
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1 block">
-                      Email
-                    </label>
-                    <p className="text-gray-900 dark:text-white font-semibold break-words">
-                      {displayEmail || "-"}
-                    </p>
-                  </div>
-                </div>
-              </div>
+                </div >
+
+                <TabsContent value="identity" className="space-y-6 focus-visible:outline-none mt-4 md:mt-0">
+                  <Card className="border-slate-200 dark:border-slate-800 shadow-none rounded-2xl overflow-hidden bg-white dark:bg-slate-950 border">
+                    <CardHeader className="bg-slate-50/50 dark:bg-slate-900/50 border-b border-slate-100 dark:border-slate-800 py-6">
+                      <CardTitle className="text-sm font-bold uppercase tracking-widest text-slate-900 dark:text-white flex items-center gap-2">
+                        <Info className="w-4 h-4 text-sky-600" />
+                        Informasi Pribadi
+                      </CardTitle>
+                      <CardDescription className="text-xs font-medium text-slate-500">Nama dan data diri Anda yang akan ditampilkan di platform.</CardDescription>
+                    </CardHeader>
+                    <CardContent className="p-5 md:p-8 space-y-6">
+                      <div className="grid gap-6 md:grid-cols-2">
+                        <div className="space-y-2">
+                          <Label htmlFor="first-name" className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Nama Depan</Label>
+                          <Input 
+                            id="first-name"
+                            value={firstName}
+                            onChange={(e) => setFirstName(e.target.value)}
+                            className="h-11 rounded-xl bg-slate-50/50 dark:bg-slate-900/50 border-slate-200 dark:border-slate-800 focus:ring-sky-500/20 focus:border-sky-500 transition-all font-medium border"
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="last-name" className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Nama Belakang</Label>
+                          <Input 
+                            id="last-name"
+                            value={lastName}
+                            onChange={(e) => setLastName(e.target.value)}
+                            className="h-11 rounded-xl bg-slate-50/50 dark:bg-slate-900/50 border-slate-200 dark:border-slate-800 focus:ring-sky-500/20 focus:border-sky-500 transition-all font-medium border"
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="birth" className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Tanggal Lahir</Label>
+                          <div className="relative">
+                            <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+                            <Input 
+                              id="birth"
+                              type="date"
+                              value={birth}
+                              onChange={(e) => setBirth(e.target.value)}
+                              className="pl-11 h-11 rounded-xl bg-slate-50/50 dark:bg-slate-900/50 border-slate-200 dark:border-slate-800 focus:ring-sky-500/20 focus:border-sky-500 transition-all font-medium border"
+                            />
+                          </div>
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="gender" className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Jenis Kelamin</Label>
+                          <div className="h-11 border border-slate-200 dark:border-slate-800 rounded-xl bg-slate-50/50 dark:bg-slate-900/50 flex items-center px-4">
+                             <select 
+                               id="gender"
+                               value={gender}
+                               onChange={(e) => setGender(e.target.value)}
+                               className="w-full bg-transparent text-sm font-medium focus:outline-none dark:text-white"
+                             >
+                               <option value="" disabled className="dark:bg-slate-900">Pilih Jenis Kelamin</option>
+                               <option value="male" className="dark:bg-slate-900">Laki-laki</option>
+                               <option value="female" className="dark:bg-slate-900">Perempuan</option>
+                               <option value="other" className="dark:bg-slate-900">Lainnya</option>
+                             </select>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="bio" className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Bio / Tentang Sata</Label>
+                        <Textarea 
+                          id="bio"
+                          value={bio}
+                          onChange={(e) => setBio(e.target.value)}
+                          placeholder="Ceritakan sedikit tentang Anda..."
+                          className="min-h-[100px] rounded-xl bg-slate-50/50 dark:bg-slate-900/50 border-slate-200 dark:border-slate-800 focus:ring-sky-500/20 focus:border-sky-500 transition-all font-medium border"
+                        />
+                      </div>
+
+                      <div className="flex flex-col sm:flex-row justify-end pt-4 border-t border-slate-100 dark:border-slate-800">
+                        <Button 
+                          onClick={handleSaveIdentity}
+                          disabled={isSaving}
+                          className="w-full sm:w-auto h-11 px-8 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs uppercase tracking-widest transition-all active:scale-95 shadow-none"
+                        >
+                          {isSaving ? "Menyimpan..." : "Simpan Perubahan"}
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </TabsContent>
+
+                <TabsContent value="account" className="space-y-6 focus-visible:outline-none">
+                  <Card className="border-slate-200 dark:border-slate-800 shadow-none rounded-2xl overflow-hidden bg-white dark:bg-slate-950 border">
+                    <CardHeader className="bg-slate-50/50 dark:bg-slate-900/50 border-b border-slate-100 dark:border-slate-800 py-6">
+                      <CardTitle className="text-sm font-bold uppercase tracking-widest text-slate-900 dark:text-white flex items-center gap-2">
+                        <Phone className="w-4 h-4 text-sky-600" />
+                        Info Kontak
+                      </CardTitle>
+                      <CardDescription className="text-xs font-medium text-slate-500">Kelola nomor telepon dan email untuk komunikasi pesanan.</CardDescription>
+                    </CardHeader>
+                    <CardContent className="p-5 md:p-8 space-y-6">
+                      <div className="space-y-4">
+                        <div className="space-y-2">
+                          <Label className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Email Utama</Label>
+                          <div className="relative group">
+                            <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+                            <Input 
+                              disabled
+                              value={user?.email}
+                              className="pl-11 h-11 rounded-xl bg-slate-100 dark:bg-slate-900/80 border-slate-200 dark:border-slate-800 font-medium border opacity-70 cursor-not-allowed"
+                            />
+                            <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-1.5 px-2 py-1 bg-emerald-50 dark:bg-emerald-500/10 rounded-lg border border-emerald-100 dark:border-emerald-900/30">
+                               <Check className="w-3 h-3 text-emerald-600" />
+                               <span className="text-[9px] font-bold uppercase text-emerald-600">Terverifikasi</span>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="space-y-2">
+                          <Label htmlFor="phone" className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Nomor Telepon</Label>
+                          <div className="relative">
+                            <Phone className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+                            <Input 
+                              id="phone"
+                              value={phone}
+                              onChange={(e) => setPhone(e.target.value)}
+                              placeholder="0812XXXXXXXX"
+                              className="pl-11 h-11 rounded-xl bg-slate-50/50 dark:bg-slate-900/50 border-slate-200 dark:border-slate-800 focus:ring-sky-500/20 focus:border-sky-500 transition-all font-medium border"
+                            />
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="flex flex-col sm:flex-row justify-end pt-4 border-t border-slate-100 dark:border-slate-800">
+                        <Button 
+                          onClick={handleSaveContact}
+                          disabled={isSaving}
+                          className="w-full sm:w-auto h-11 px-8 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs uppercase tracking-widest transition-all active:scale-95 shadow-none"
+                        >
+                          Simpan Kontak
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </TabsContent>
+
+                <TabsContent value="security" className="space-y-6 focus-visible:outline-none">
+                  <Card className="border-slate-200 dark:border-slate-800 shadow-none rounded-2xl overflow-hidden bg-white dark:bg-slate-950 border">
+                    <CardHeader className="bg-slate-50/50 dark:bg-slate-900/50 border-b border-slate-100 dark:border-slate-800 py-6">
+                      <CardTitle className="text-sm font-bold uppercase tracking-widest text-slate-900 dark:text-white flex items-center gap-2">
+                        <ShieldCheck className="w-4 h-4 text-sky-600" />
+                        Akses & Keamanan
+                      </CardTitle>
+                      <CardDescription className="text-xs font-medium text-slate-500">Jaga keamanan akun Anda dengan verifikasi dan kata sandi.</CardDescription>
+                    </CardHeader>
+                    <CardContent className="p-5 md:p-8 space-y-6">
+                       <div className="flex flex-col gap-4">
+                          <div className="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-slate-50/50 dark:bg-slate-900/50 rounded-xl border border-slate-100 dark:border-slate-800 gap-4">
+                             <div>
+                                <h4 className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">Kata Sandi</h4>
+                                <p className="text-[10px] text-slate-500 font-medium mt-0.5">Terakhir diubah 3 bulan yang lalu</p>
+                             </div>
+                             <Button variant="outline" className="w-full sm:w-auto h-9 px-4 rounded-lg border-slate-200 dark:border-slate-800 text-[10px] font-bold uppercase tracking-widest hover:bg-white dark:hover:bg-slate-900 border">
+                               Ubah Sandi
+                             </Button>
+                          </div>
+
+                          <div className="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-slate-50/50 dark:bg-slate-900/50 rounded-xl border border-slate-100 dark:border-slate-800 gap-4">
+                             <div>
+                                <h4 className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">Metode Masuk</h4>
+                                <p className="text-[10px] text-slate-500 font-medium mt-0.5">Tersambung dengan Google</p>
+                             </div>
+                             <div className="w-fit flex items-center gap-2 px-3 py-1.5 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg">
+                                <span className="text-[9px] font-bold text-slate-500 uppercase">Google</span>
+                             </div>
+                          </div>
+                       </div>
+                    </CardContent>
+                  </Card>
+                </TabsContent>
+              </Tabs>
             </main>
           </div>
         </div>
       </div>
-
-      {isEditPersonalInfoOpen && (
-        <div
-          className="hidden lg:flex fixed inset-0 bg-gray-900/40 backdrop-blur-sm z-50 items-center justify-center p-4"
-          onClick={handleCloseEditPersonalInfo}
-        >
-          <div
-            className="bg-white dark:bg-gray-800 rounded-xl shadow-xl w-full max-w-md max-h-[90vh] overflow-y-auto flex flex-col border border-gray-200 dark:border-gray-700"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
-              <div className="flex items-center justify-between w-full">
-                <h2 className="text-lg font-bold text-gray-900 dark:text-white">
-                  Personal Info
-                </h2>
-                <button
-                  onClick={handleCloseEditPersonalInfo}
-                  className="p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer"
-                >
-                  <X className="w-5 h-5 text-gray-500 dark:text-gray-400" />
-                </button>
-              </div>
-            </div>
-
-            <form
-              onSubmit={handleSubmitPersonalInfo}
-              className="flex-1 overflow-y-auto p-4 space-y-5"
-            >
-
-              <div>
-                <label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block">
-                  Title
-                </label>
-                <div className="flex gap-4">
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input
-                      type="radio"
-                      name="title"
-                      value="Mr."
-                      checked={formData.title === "Mr."}
-                      onChange={(e) =>
-                        setFormData({ ...formData, title: e.target.value })
-                      }
-                      className="w-4 h-4 text-sky-600 border-gray-300 focus:ring-sky-500 dark:focus:ring-sky-400 dark:bg-gray-700 dark:border-gray-600"
-                    />
-                    <span className="text-gray-700 dark:text-gray-300">
-                      Mr.
-                    </span>
-                  </label>
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input
-                      type="radio"
-                      name="title"
-                      value="Mrs./Ms."
-                      checked={formData.title === "Mrs./Ms."}
-                      onChange={(e) =>
-                        setFormData({ ...formData, title: e.target.value })
-                      }
-                      className="w-4 h-4 text-sky-600 border-gray-300 focus:ring-sky-500 dark:focus:ring-sky-400 dark:bg-gray-700 dark:border-gray-600"
-                    />
-                    <span className="text-gray-700 dark:text-gray-300">
-                      Mrs./Ms.
-                    </span>
-                  </label>
-                </div>
-              </div>
-
-              <div>
-                <label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block">
-                  First Name<span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  value={formData.firstName}
-                  onChange={(e) =>
-                    setFormData({ ...formData, firstName: e.target.value })
-                  }
-                  required
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-transparent dark:focus:bg-gray-700 transition-colors"
-                  placeholder="First Name*"
-                />
-              </div>
-
-              <div>
-                <label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block">
-                  Last Name<span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  value={formData.lastName}
-                  onChange={(e) =>
-                    setFormData({ ...formData, lastName: e.target.value })
-                  }
-                  required
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-transparent dark:focus:bg-gray-700 transition-colors"
-                  placeholder="Last Name*"
-                />
-              </div>
-
-              <div>
-                <label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block">
-                  Date of Birth
-                </label>
-                <div className="relative">
-                  <input
-                    type="date"
-                    value={formData.dateOfBirth}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        dateOfBirth: e.target.value,
-                      })
-                    }
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-transparent transition-colors"
-                    placeholder="Date of Birth"
-                  />
-                </div>
-                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                  Fill your date of birth to get birthday reward once a year.
-                </p>
-              </div>
-
-              <button
-                type="submit"
-                disabled={
-                  isSubmitting || !formData.firstName || !formData.lastName
-                }
-                className="w-full py-3 bg-sky-600 dark:bg-sky-500 text-white rounded-lg font-medium hover:bg-sky-700 dark:hover:bg-sky-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
-              >
-                {isSubmitting ? "Saving..." : "Save"}
-              </button>
-            </form>
-          </div>
-        </div>
-      )}
-
-      {isEditAccountInfoOpen && (
-        <div
-          className="fixed inset-0 bg-gray-900/40 backdrop-blur-sm z-50 flex flex-col justify-end lg:flex lg:items-center lg:justify-center lg:p-4"
-          onClick={handleCloseEditAccountInfo}
-        >
-          <div
-            className="bg-white dark:bg-gray-800 lg:rounded-xl lg:shadow-xl w-full h-auto lg:h-auto lg:max-w-md lg:max-h-[90vh] flex flex-col mt-auto lg:mt-0 rounded-t-2xl lg:rounded-t-xl max-h-[85vh] lg:overflow-hidden border-t lg:border border-gray-200 dark:border-gray-700"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
-              <div className="flex items-center gap-2 lg:hidden">
-                <button
-                  onClick={handleCloseEditAccountInfo}
-                  className="p-1 -ml-1"
-                >
-                  <ChevronLeft className="w-5 h-5 text-gray-700 dark:text-gray-300" />
-                </button>
-                <h2 className="text-lg font-bold text-gray-900 dark:text-white">
-                  Account Info
-                </h2>
-              </div>
-              <div className="hidden lg:flex items-center justify-between w-full">
-                <h2 className="text-lg font-bold text-gray-900 dark:text-white">
-                  Account Info
-                </h2>
-                <button
-                  onClick={handleCloseEditAccountInfo}
-                  className="p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                >
-                  <X className="w-5 h-5 text-gray-500 dark:text-gray-400" />
-                </button>
-              </div>
-            </div>
-
-            <div className="flex-1 overflow-y-auto p-4 space-y-0">
-              <button
-                type="button"
-                onClick={handleTogglePhoneInput}
-                className="w-full flex items-center justify-between p-4 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-              >
-                <div className="flex items-center gap-3">
-                  <Plus className="w-5 h-5 text-gray-900 dark:text-white" />
-                  <span className="text-gray-900 dark:text-white font-medium">
-                    Add Phone Number
-                  </span>
-                </div>
-                <ChevronRight className="w-5 h-5 text-gray-900 dark:text-white" />
-              </button>
-
-              {isPhoneInputOpen && (
-                <form
-                  onSubmit={handleSubmitPhoneNumber}
-                  className="py-2 space-y-4"
-                >
-                  <div>
-                    <label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block">
-                      Phone Number
-                    </label>
-                    <input
-                      type="tel"
-                      value={phoneNumber}
-                      onChange={(e) => {
-                        setPhoneNumber(e.target.value);
-                        if (phoneError) {
-                          setPhoneError(null);
-                        }
-                      }}
-                      className={`w-full px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:border-transparent transition-colors ${
-                        phoneError
-                          ? "border-red-500 dark:border-red-500"
-                          : "border-gray-300 dark:border-gray-600"
-                      }`}
-                      placeholder="Enter phone number"
-                    />
-                    {phoneError && (
-                      <p className="mt-1 text-sm text-red-600 dark:text-red-400">
-                        {phoneError}
-                      </p>
-                    )}
-                  </div>
-                  <div className="flex gap-2">
-                    <button
-                      type="button"
-                      onClick={() => setIsPhoneInputOpen(false)}
-                      className="flex-1 py-2 px-4 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      type="submit"
-                      disabled={isSubmittingPhone}
-                      className="flex-1 py-2 px-4 bg-sky-600 dark:bg-sky-500 text-white rounded-lg hover:bg-sky-700 dark:hover:bg-sky-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                      {isSubmittingPhone ? "Saving..." : "Save"}
-                    </button>
-                  </div>
-                </form>
-              )}
-
-              <button
-                type="button"
-                disabled
-                className="w-full flex items-center justify-between p-4 rounded-lg opacity-60 cursor-not-allowed"
-              >
-                <div className="flex items-center gap-3">
-                  <Mail className="w-5 h-5 text-gray-900 dark:text-white" />
-                  <div className="flex flex-col items-start">
-                    <span className="text-gray-900 dark:text-white font-medium">
-                      Change Email
-                    </span>
-                    <span className="text-sm text-gray-500 dark:text-gray-400 mt-1 break-words">
-                      {displayEmail || "-"}
-                    </span>
-                  </div>
-                </div>
-                <ChevronRight className="w-5 h-5 text-gray-900 dark:text-white" />
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </PrivateRoute>
   );
 };
