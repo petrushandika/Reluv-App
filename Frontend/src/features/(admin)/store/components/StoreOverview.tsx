@@ -1,6 +1,6 @@
 "use client"
 
-import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip } from "recharts"
+import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip, CartesianGrid } from "recharts"
 
 const data = [
   { name: "Jan", total: 1200 },
@@ -21,27 +21,41 @@ export function StoreOverview() {
   return (
     <ResponsiveContainer width="100%" height={350}>
       <BarChart data={data}>
+        <defs>
+          <linearGradient id="colorTotal" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#0ea5e9" stopOpacity={1}/>
+            <stop offset="100%" stopColor="#0284c7" stopOpacity={0.8}/>
+          </linearGradient>
+        </defs>
+        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" opacity={0.5} />
         <XAxis
           dataKey="name"
-          stroke="#888888"
-          fontSize={12}
+          stroke="#94a3b8"
+          fontSize={10}
           tickLine={false}
           axisLine={false}
+          dy={10}
+          fontWeight={600}
         />
         <YAxis
-          stroke="#888888"
-          fontSize={12}
+          stroke="#94a3b8"
+          fontSize={10}
           tickLine={false}
           axisLine={false}
-          tickFormatter={(value) => `Rp. ${value.toLocaleString("id-ID")}`}
+          tickFormatter={(value) => `Rp. ${(value / 1000)}k`}
+          dx={-10}
+          fontWeight={600}
         />
         <Tooltip 
-          cursor={{fill: 'transparent'}}
-          content={({ active, payload }) => {
+          cursor={{fill: '#f1f5f9', opacity: 0.4}}
+          content={({ active, payload, label }) => {
             if (active && payload && payload.length) {
               return (
-                <div className="bg-white dark:bg-gray-800 p-2 border rounded shadow-sm border-slate-200 dark:border-slate-700">
-                  <p className="text-sm font-bold text-slate-900 dark:text-white">{`Revenue: Rp. ${payload[0].value.toLocaleString("id-ID")}`}</p>
+                <div className="bg-white dark:bg-slate-900 p-3 border border-slate-200 dark:border-slate-800 rounded-xl shadow-none">
+                  <p className="text-[10px] uppercase tracking-widest text-slate-400 font-bold mb-1">{label}</p>
+                  <p className="text-lg font-bold text-sky-600 dark:text-sky-400">
+                    {`Rp. ${payload[0].value?.toLocaleString("id-ID")}`}
+                  </p>
                 </div>
               );
             }
@@ -50,9 +64,10 @@ export function StoreOverview() {
         />
         <Bar
           dataKey="total"
-          fill="currentColor"
-          radius={[4, 4, 0, 0]}
-          className="fill-primary"
+          fill="url(#colorTotal)"
+          radius={[6, 6, 0, 0]}
+          barSize={28}
+          animationDuration={1500}
         />
       </BarChart>
     </ResponsiveContainer>

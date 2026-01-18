@@ -3,45 +3,104 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "@/shared/components/ui/avatar"
+import { motion } from "framer-motion"
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1
+    }
+  }
+}
+
+const itemVariants = {
+  hidden: { x: -20, opacity: 0 },
+  visible: {
+    x: 0,
+    opacity: 1
+  }
+}
 
 export function StoreRecentSales() {
+  const sales = [
+    {
+      name: "John Doe",
+      email: "john.doe@example.com",
+      amount: 250000,
+      avatar: "https://ikoverk.com/wp-content/uploads/2025/04/5187871.webp",
+      initials: "JD",
+      time: "2 mins ago"
+    },
+    {
+      name: "Alice Smith",
+      email: "alice@email.com",
+      amount: 120500,
+      avatar: "https://ikoverk.com/wp-content/uploads/2025/04/5187871.webp",
+      initials: "AS",
+      time: "15 mins ago"
+    },
+    {
+      name: "Bob Knight",
+      email: "bob.k@gmail.com",
+      amount: 340000,
+      avatar: "https://ikoverk.com/wp-content/uploads/2025/04/5187871.webp",
+      initials: "BK",
+      time: "42 mins ago"
+    },
+    {
+      name: "Sarah Parker",
+      email: "sarah.p@example.com",
+      amount: 85000,
+      avatar: "https://ikoverk.com/wp-content/uploads/2025/04/5187871.webp",
+      initials: "SP",
+      time: "1 hour ago"
+    },
+    {
+      name: "Mike Johnson",
+      email: "mike.j@example.com",
+      amount: 1200000,
+      avatar: "https://ikoverk.com/wp-content/uploads/2025/04/5187871.webp",
+      initials: "MJ",
+      time: "2 hours ago"
+    }
+  ]
+
   return (
-    <div className="space-y-8">
-      <div className="flex items-center">
-        <Avatar className="h-9 w-9 border border-slate-200 dark:border-slate-800">
-          <AvatarImage src="https://ikoverk.com/wp-content/uploads/2025/04/5187871.webp" alt="John Doe" />
-          <AvatarFallback>JD</AvatarFallback>
-        </Avatar>
-        <div className="ml-4 space-y-1">
-          <p className="text-sm font-medium leading-none">John Doe</p>
-          <p className="text-sm text-muted-foreground">
-            john.doe@example.com
-          </p>
-        </div>
-        <div className="ml-auto font-medium">+Rp. 250.000</div>
-      </div>
-      <div className="flex items-center">
-        <Avatar className="h-9 w-9 border border-slate-200 dark:border-slate-800">
-          <AvatarImage src="https://ikoverk.com/wp-content/uploads/2025/04/5187871.webp" alt="Alice Smith" />
-          <AvatarFallback>AS</AvatarFallback>
-        </Avatar>
-        <div className="ml-4 space-y-1">
-          <p className="text-sm font-medium leading-none">Alice Smith</p>
-          <p className="text-sm text-muted-foreground">alice@email.com</p>
-        </div>
-        <div className="ml-auto font-medium">+Rp. 120.500</div>
-      </div>
-      <div className="flex items-center">
-        <Avatar className="h-9 w-9 border border-slate-200 dark:border-slate-800">
-          <AvatarImage src="https://ikoverk.com/wp-content/uploads/2025/04/5187871.webp" alt="Bob Knight" />
-          <AvatarFallback>BK</AvatarFallback>
-        </Avatar>
-        <div className="ml-4 space-y-1">
-          <p className="text-sm font-medium leading-none">Bob Knight</p>
-          <p className="text-sm text-muted-foreground">bob.k@gmail.com</p>
-        </div>
-        <div className="ml-auto font-medium">+Rp. 340.000</div>
-      </div>
-    </div>
+    <motion.div 
+      className="space-y-6"
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+    >
+      {sales.map((sale, i) => (
+        <motion.div 
+          key={i} 
+          variants={itemVariants}
+          className="flex items-center justify-between p-3 rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-900/50 transition-all border border-transparent hover:border-slate-200 dark:hover:border-slate-800 group"
+        >
+          <div className="flex items-center gap-4">
+            <Avatar className="h-10 w-10 border-2 border-slate-200 dark:border-slate-800 group-hover:scale-105 transition-transform">
+              <AvatarImage src={sale.avatar} alt={sale.name} />
+              <AvatarFallback className="font-bold bg-slate-100 dark:bg-slate-800 text-slate-500">{sale.initials}</AvatarFallback>
+            </Avatar>
+            <div className="space-y-1">
+              <p className="text-sm font-bold text-slate-900 dark:text-white leading-none group-hover:text-sky-600 dark:group-hover:text-sky-400 transition-colors">{sale.name}</p>
+              <div className="flex items-center gap-2">
+                <p className="text-[10px] text-slate-500 font-medium truncate max-w-[120px]">{sale.email}</p>
+                <span className="text-[9px] text-slate-300 dark:text-slate-700">•</span>
+                <p className="text-[9px] text-slate-400 font-medium">{sale.time}</p>
+              </div>
+            </div>
+          </div>
+          <div className="text-right">
+            <div className="text-sm font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-500/10 px-2.5 py-1 rounded-lg border border-emerald-100 dark:border-emerald-900/30">
+              +Rp. {sale.amount.toLocaleString("id-ID")}
+            </div>
+          </div>
+        </motion.div>
+      ))}
+    </motion.div>
   )
 }

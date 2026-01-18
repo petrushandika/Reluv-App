@@ -10,17 +10,20 @@ import {
 } from "@/shared/components/ui/table"
 import { Badge } from "@/shared/components/ui/badge"
 import { Button } from "@/shared/components/ui/button"
+import { Input } from "@/shared/components/ui/input"
 import { 
+  Search, 
+  Filter, 
+  ChevronDown,
   Star, 
-  MessageSquare, 
-  ExternalLink, 
-  Reply,
-  MoreVertical,
+  MessageSquare,
   Calendar,
-  Image as ImageIcon
+  ChevronLeft,
+  ChevronRight
 } from "lucide-react"
 import { cn } from "@/shared/lib/utils"
 import Image from "next/image"
+import { motion } from "framer-motion"
 
 const mockReviews = [
   {
@@ -31,14 +34,12 @@ const mockReviews = [
     author: {
       firstName: "Budi",
       lastName: "Santoso",
-      profile: { avatar: null }
     },
     product: {
       name: "Vintage Denim Jacket",
-      images: ["/placeholder-product.png"]
+      images: ["https://ikoverk.com/wp-content/uploads/2025/04/5187871.webp"]
     },
     reply: "Terima kasih Kak Budi! Semoga awet jaketnya ya.",
-    images: ["/placeholder-product.png"]
   },
   {
     id: 2,
@@ -48,14 +49,12 @@ const mockReviews = [
     author: {
       firstName: "Siti",
       lastName: "Aminah",
-      profile: { avatar: null }
     },
     product: {
       name: "Classic White Tee",
-      images: ["/placeholder-product.png"]
+      images: ["https://ikoverk.com/wp-content/uploads/2025/04/5187871.webp"]
     },
     reply: null,
-    images: []
   },
   {
     id: 3,
@@ -65,14 +64,12 @@ const mockReviews = [
     author: {
       firstName: "Andi",
       lastName: "Wijaya",
-      profile: { avatar: null }
     },
     product: {
       name: "Slim Fit Chinos",
-      images: ["/placeholder-product.png"]
+      images: ["https://ikoverk.com/wp-content/uploads/2025/04/5187871.webp"]
     },
     reply: "Terima kasih banyak atas feedbacknya Kak Andi!",
-    images: []
   }
 ]
 
@@ -94,91 +91,115 @@ export function StoreReviewsList() {
   }
 
   return (
-    <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 overflow-hidden shadow-none">
-      <Table>
-        <TableHeader className="bg-slate-50/50 dark:bg-slate-900/50 border-b border-slate-200 dark:border-slate-800">
-          <TableRow className="hover:bg-transparent border-none">
-            <TableHead className="w-[280px] text-[10px] font-bold uppercase tracking-widest text-slate-500 py-4 pl-6">Review & Product</TableHead>
-            <TableHead className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Customer</TableHead>
-            <TableHead className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Comment</TableHead>
-            <TableHead className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Status</TableHead>
-            <TableHead className="text-right text-[10px] font-bold uppercase tracking-widest text-slate-500 pr-6">Action</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {mockReviews.map((review) => (
-            <TableRow key={review.id} className="border-slate-100 dark:border-slate-800/60 hover:bg-sky-50/30 dark:hover:bg-sky-500/5 transition-all group">
-              <TableCell className="py-5 pl-6">
-                <div className="flex items-start space-x-3">
-                  <div className="relative h-12 w-12 rounded-xl bg-slate-100 dark:bg-slate-900 overflow-hidden border border-slate-200 dark:border-slate-800 shrink-0">
-                    <Image 
-                      src={review.product.images[0] || "/placeholder-product.png"} 
-                      alt={review.product.name}
-                      fill
-                      className="object-cover"
-                    />
+    <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden">
+      {/* Integrated Search & Filter Header */}
+      <div className="p-4 border-b border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4 bg-slate-50/30 dark:bg-slate-900/40">
+        <div className="relative w-full sm:w-96">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+          <Input 
+            placeholder="Search reviews or customers..." 
+            className="pl-9 h-10 bg-white dark:bg-slate-950 border-slate-200 dark:border-slate-800 focus:ring-sky-500/10 focus:border-sky-500 rounded-xl text-xs font-bold"
+          />
+        </div>
+        <div className="flex items-center gap-2 w-full sm:w-auto">
+          <Button variant="outline" className="h-10 px-4 rounded-xl border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-[10px] font-black uppercase tracking-widest text-slate-500 hover:bg-slate-50 transition-all">
+            <Filter className="mr-2 h-3.5 w-3.5" />
+            Rating
+            <ChevronDown className="ml-2 h-3.5 w-3.5" />
+          </Button>
+          <div className="h-6 w-px bg-slate-200 dark:bg-slate-800 mx-2 hidden sm:block" />
+          <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] hidden sm:block whitespace-nowrap">
+            All Star Feed
+          </p>
+        </div>
+      </div>
+
+      <div className="overflow-x-auto">
+        <Table>
+          <TableHeader>
+            <TableRow className="bg-slate-50/50 dark:bg-slate-950/50 border-b border-slate-200 dark:border-slate-800 hover:bg-transparent">
+              <TableHead className="py-5 pl-8 text-[11px] font-black uppercase tracking-widest text-slate-400">Review & Product</TableHead>
+              <TableHead className="text-[11px] font-black uppercase tracking-widest text-slate-400">Customer</TableHead>
+              <TableHead className="text-[11px] font-black uppercase tracking-widest text-slate-400">Commentary</TableHead>
+              <TableHead className="text-[11px] font-black uppercase tracking-widest text-slate-400">Status</TableHead>
+              <TableHead className="text-right pr-8 text-[11px] font-black uppercase tracking-widest text-slate-400">Actions</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody className="divide-y divide-slate-100 dark:divide-slate-800">
+            {mockReviews.map((review) => (
+              <TableRow 
+                key={review.id} 
+                className="group hover:bg-slate-50/50 dark:hover:bg-slate-800/20 transition-all duration-200 border-none"
+              >
+                <TableCell className="py-5 pl-8">
+                  <div className="flex items-start space-x-3">
+                    <div className="relative h-12 w-12 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shrink-0 overflow-hidden">
+                      <Image 
+                        src={review.product.images[0]} 
+                        alt={review.product.name}
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+                    <div className="flex flex-col min-w-0">
+                      <span className="text-xs font-bold text-slate-900 dark:text-white truncate mb-1">{review.product.name}</span>
+                      {renderStars(review.rating)}
+                      <span className="text-[10px] font-bold text-slate-400 mt-1.5 uppercase tracking-tighter">
+                        {new Date(review.createdAt).toLocaleDateString("id-ID")}
+                      </span>
+                    </div>
                   </div>
-                  <div className="flex flex-col min-w-0">
-                    <span className="text-xs font-bold text-slate-900 dark:text-white truncate mb-1">{review.product.name}</span>
-                    {renderStars(review.rating)}
-                    <span className="text-[10px] font-semibold text-slate-400 mt-1.5 flex items-center">
-                      <Calendar className="h-3 w-3 mr-1" />
-                      {new Date(review.createdAt).toLocaleDateString("id-ID")}
+                </TableCell>
+                <TableCell>
+                  <div className="flex items-center space-x-2">
+                    <div className="h-8 w-8 rounded-full bg-sky-50 dark:bg-sky-500/10 border border-sky-100 dark:border-sky-900/30 flex items-center justify-center text-[10px] font-bold text-sky-600">
+                      {review.author.firstName[0]}{review.author.lastName[0]}
+                    </div>
+                    <span className="text-sm font-bold text-slate-900 dark:text-white truncate">
+                      {review.author.firstName} {review.author.lastName}
                     </span>
                   </div>
-                </div>
-              </TableCell>
-              <TableCell>
-                <div className="flex items-center space-x-2">
-                  <div className="h-8 w-8 rounded-full bg-sky-50 dark:bg-sky-500/10 border border-sky-100 dark:border-sky-900/30 flex items-center justify-center text-[10px] font-bold text-sky-600">
-                    {review.author.firstName[0]}{review.author.lastName[0]}
-                  </div>
-                  <span className="text-sm font-bold text-slate-900 dark:text-white truncate">
-                    {review.author.firstName} {review.author.lastName}
-                  </span>
-                </div>
-              </TableCell>
-              <TableCell className="max-w-[300px]">
-                <div className="flex flex-col">
-                  <p className="text-sm font-medium text-slate-600 dark:text-slate-400 line-clamp-2 italic">
+                </TableCell>
+                <TableCell className="max-w-[300px]">
+                  <p className="text-xs font-medium text-slate-600 dark:text-slate-400 line-clamp-2 italic leading-relaxed">
                     "{review.comment}"
                   </p>
-                  {review.images.length > 0 && (
-                    <div className="flex gap-1.5 mt-2.5">
-                      {review.images.map((img, idx) => (
-                        <div key={idx} className="relative h-10 w-10 rounded-lg overflow-hidden border border-slate-200 dark:border-slate-800 shrink-0">
-                          <Image 
-                            src={img} 
-                            alt={`review-${idx}`} 
-                            fill 
-                            className="object-cover hover:scale-110 transition-transform duration-300" 
-                          />
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              </TableCell>
-              <TableCell>
-                {review.reply ? (
-                  <Badge className="bg-emerald-50 text-emerald-600 border-emerald-100 dark:bg-emerald-500/10 dark:text-emerald-400 dark:border-emerald-900/30 font-bold text-[9px] uppercase tracking-widest px-3 py-1 border-2 rounded-full">
-                    Replied
-                  </Badge>
-                ) : (
-                  <Badge className="bg-amber-50 text-amber-600 border-amber-100 dark:bg-amber-500/10 dark:text-amber-400 dark:border-amber-900/30 font-bold text-[9px] uppercase tracking-widest px-3 py-1 border-2 rounded-full">
-                    No Reply
-                  </Badge>
-                )}
-              </TableCell>
-              <TableCell className="text-right pr-6">
-                <Button variant="outline" className="h-9 px-4 rounded-xl border-slate-200 dark:border-slate-800 text-[10px] font-bold uppercase tracking-widest text-sky-600 hover:bg-sky-50 dark:hover:bg-sky-500/10 transition-all border">
-                  {review.reply ? "Edit Reply" : "Reply Now"}
-                </Button>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+                </TableCell>
+                <TableCell>
+                  <div className={cn(
+                    "inline-flex items-center px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase tracking-widest border border-slate-200 dark:border-slate-800",
+                    review.reply ? "text-emerald-500 bg-emerald-500/5" : "text-amber-500 bg-amber-500/5"
+                  )}>
+                    {review.reply ? "Replied" : "Pending"}
+                  </div>
+                </TableCell>
+                <TableCell className="pr-8">
+                   <div className="flex items-center justify-end gap-2">
+                      <Button variant="ghost" className="h-8 px-3 rounded-lg text-sky-600 hover:text-sky-700 hover:bg-sky-50 dark:hover:bg-sky-500/10 text-[10px] font-black uppercase tracking-widest transition-all">
+                        {review.reply ? "Edit" : "Reply"}
+                      </Button>
+                      <Button variant="ghost" className="h-8 px-3 rounded-lg text-rose-600 hover:text-rose-700 hover:bg-rose-50 dark:hover:bg-rose-500/10 text-[10px] font-black uppercase tracking-widest transition-all">
+                        Delete
+                      </Button>
+                   </div>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+
+      <div className="px-8 py-4 bg-slate-50/50 dark:bg-slate-950/50 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
+        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Sentiment Analytics Active</p>
+        <div className="flex gap-2">
+           <Button variant="outline" size="icon" className="h-8 w-8 border-slate-200 dark:border-slate-800 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-all">
+             <ChevronLeft className="h-4 w-4 text-slate-500" />
+           </Button>
+           <Button variant="outline" size="icon" className="h-8 w-8 border-slate-200 dark:border-slate-800 rounded-lg hover:bg-sky-50 dark:hover:bg-sky-500/10 transition-all">
+             <ChevronRight className="h-4 w-4 text-sky-500" />
+           </Button>
+        </div>
+      </div>
     </div>
   )
 }

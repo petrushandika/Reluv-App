@@ -10,14 +10,18 @@ import {
 } from "@/shared/components/ui/table"
 import { Badge } from "@/shared/components/ui/badge"
 import { Button } from "@/shared/components/ui/button"
+import { Input } from "@/shared/components/ui/input"
 import { 
-  Eye, 
-  Truck, 
-  CheckCircle2, 
-  Clock, 
+  Search, 
+  Filter, 
+  ChevronDown,
   User,
-  MoreVertical
+  Truck,
+  ChevronLeft,
+  ChevronRight
 } from "lucide-react"
+import { cn } from "@/shared/lib/utils"
+import { motion } from "framer-motion"
 
 const orders = [
   {
@@ -83,104 +87,120 @@ const orders = [
 ]
 
 export function StoreOrdersList() {
-  const getStatusIcon = (status: string) => {
+  const getStatusStyle = (status: string) => {
     switch (status) {
-      case "PENDING": return <Clock className="h-3 w-3 mr-1" />;
-      case "PAID": return <CheckCircle2 className="h-3 w-3 mr-1" />;
-      case "SHIPPED": return <Truck className="h-3 w-3 mr-1" />;
-      case "DELIVERED": return <CheckCircle2 className="h-3 w-3 mr-1" />;
-      default: return null;
+      case "PENDING": return "text-amber-500 bg-amber-500/5"
+      case "PAID": return "text-sky-500 bg-sky-500/5"
+      case "SHIPPED": return "text-indigo-500 bg-indigo-500/5"
+      case "DELIVERED": return "text-emerald-500 bg-emerald-500/5"
+      case "CANCELLED": return "text-rose-500 bg-rose-500/5"
+      default: return "text-slate-500 bg-slate-500/5"
     }
-  };
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "PENDING": return "text-amber-600 border-amber-100 bg-amber-50 dark:bg-amber-500/10 dark:border-amber-900/30";
-      case "PAID": return "text-sky-600 border-sky-100 bg-sky-50 dark:bg-sky-500/10 dark:border-sky-900/30";
-      case "SHIPPED": return "text-blue-600 border-blue-100 bg-blue-50 dark:bg-blue-500/10 dark:border-blue-900/30";
-      case "DELIVERED": return "text-emerald-600 border-emerald-100 bg-emerald-50 dark:bg-emerald-500/10 dark:border-emerald-900/30";
-      case "CANCELLED": return "text-rose-600 border-rose-100 bg-rose-50 dark:bg-rose-500/10 dark:border-rose-900/30";
-      default: return "text-slate-500 border-slate-100 bg-slate-50 dark:bg-slate-800/50 dark:border-slate-700";
-    }
-  };
+  }
 
   return (
-    <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 overflow-hidden">
-      <Table>
-        <TableHeader className="bg-slate-50/50 dark:bg-slate-900/50 border-b border-slate-200 dark:border-slate-800">
-          <TableRow className="hover:bg-transparent border-none">
-            <TableHead className="w-[200px] text-[10px] font-bold uppercase tracking-widest text-slate-500 py-4">Order ID</TableHead>
-            <TableHead className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Customer</TableHead>
-            <TableHead className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Date</TableHead>
-            <TableHead className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Items</TableHead>
-            <TableHead className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Total</TableHead>
-            <TableHead className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Status</TableHead>
-            <TableHead className="text-right text-[10px] font-bold uppercase tracking-widest text-slate-500 pr-6">Actions</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {orders.map((order) => (
-            <TableRow key={order.id} className="border-slate-100 dark:border-slate-800/60 hover:bg-sky-50/30 dark:hover:bg-sky-500/5 transition-colors group">
-              <TableCell className="py-4">
-                <div className="flex flex-col">
-                  <span className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-sky-600 dark:group-hover:text-sky-400 transition-colors">#{order.orderNumber.split('-')[1]}</span>
-                  <span className="text-[10px] text-slate-400 font-medium">#{order.orderNumber}</span>
-                </div>
-              </TableCell>
-              <TableCell>
-                <div className="flex items-center space-x-3">
-                  <div className="h-8 w-8 rounded-full bg-slate-100 dark:bg-slate-900 flex items-center justify-center border border-slate-200 dark:border-slate-800">
-                    <User className="h-4 w-4 text-slate-400" />
-                  </div>
-                  <div className="flex flex-col">
-                    <span className="text-xs font-bold text-slate-900 dark:text-white">{order.customer.name}</span>
-                    <span className="text-[10px] text-slate-400 font-medium">{order.customer.email}</span>
-                  </div>
-                </div>
-              </TableCell>
-              <TableCell>
-                <div className="text-[11px] font-semibold text-slate-600 dark:text-slate-400">
-                  {new Date(order.createdAt).toLocaleDateString()}
-                </div>
-              </TableCell>
-              <TableCell>
-                <div className="text-[11px] font-bold text-slate-700 dark:text-slate-300">
-                  {order.itemCount} Items
-                </div>
-              </TableCell>
-              <TableCell className="font-bold text-sm text-slate-900 dark:text-white">
-                Rp. {order.totalAmount.toLocaleString("id-ID")}
-              </TableCell>
-              <TableCell>
-                <Badge 
-                  variant="outline" 
-                  className={cn(
-                    "font-bold text-[9px] uppercase tracking-[0.15em] px-2.5 py-1 border-2 rounded-full flex items-center w-fit",
-                    getStatusColor(order.status)
-                  )}
-                >
-                  {getStatusIcon(order.status)}
-                  {order.status}
-                </Badge>
-              </TableCell>
-              <TableCell className="text-right pr-6">
-                <div className="flex items-center justify-end space-x-1.5">
-                  <Button variant="ghost" size="icon" className="h-9 w-9 text-slate-400 hover:text-sky-600 hover:bg-sky-50 dark:hover:bg-sky-500/10 border border-transparent hover:border-sky-100 dark:hover:border-sky-900/30 rounded-xl transition-all">
-                    <Eye className="h-4 w-4" />
-                  </Button>
-                  <Button variant="ghost" size="icon" className="h-9 w-9 text-slate-400 hover:text-slate-600 hover:bg-slate-50 dark:hover:bg-slate-500/10 border border-transparent hover:border-slate-200 dark:hover:border-slate-700 rounded-xl transition-all">
-                    <MoreVertical className="h-4 w-4" />
-                  </Button>
-                </div>
-              </TableCell>
+    <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden">
+      {/* Integrated Search & Filter Header */}
+      <div className="p-4 border-b border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4 bg-slate-50/30 dark:bg-slate-900/40">
+        <div className="relative w-full sm:w-96">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+          <Input 
+            placeholder="Search orders..." 
+            className="pl-9 h-10 bg-white dark:bg-slate-950 border-slate-200 dark:border-slate-800 focus:ring-sky-500/10 focus:border-sky-500 rounded-xl text-xs font-bold"
+          />
+        </div>
+        <div className="flex items-center gap-2 w-full sm:w-auto">
+          <Button variant="outline" className="h-10 px-4 rounded-xl border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-[10px] font-black uppercase tracking-widest text-slate-500 hover:bg-slate-50 transition-all">
+            <Filter className="mr-2 h-3.5 w-3.5" />
+            Category
+            <ChevronDown className="ml-2 h-3.5 w-3.5" />
+          </Button>
+          <div className="h-6 w-px bg-slate-200 dark:bg-slate-800 mx-2 hidden sm:block" />
+          <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] hidden sm:block whitespace-nowrap">
+            {orders.length} Records Found
+          </p>
+        </div>
+      </div>
+
+      <div className="overflow-x-auto">
+        <Table>
+          <TableHeader>
+            <TableRow className="bg-slate-50/50 dark:bg-slate-950/50 border-b border-slate-200 dark:border-slate-800 hover:bg-transparent">
+              <TableHead className="py-5 pl-8 text-[11px] font-black uppercase tracking-widest text-slate-400">Order ID</TableHead>
+              <TableHead className="text-[11px] font-black uppercase tracking-widest text-slate-400">Customer</TableHead>
+              <TableHead className="text-[11px] font-black uppercase tracking-widest text-slate-400">Value</TableHead>
+              <TableHead className="text-[11px] font-black uppercase tracking-widest text-slate-400">Lifecycle</TableHead>
+              <TableHead className="text-right pr-8 text-[11px] font-black uppercase tracking-widest text-slate-400">Actions</TableHead>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHeader>
+          <TableBody className="divide-y divide-slate-100 dark:divide-slate-800">
+            {orders.map((order) => (
+              <TableRow 
+                key={order.id} 
+                className="group hover:bg-slate-50/50 dark:hover:bg-slate-800/20 transition-all duration-200 border-none"
+              >
+                <TableCell className="py-5 pl-8">
+                  <div className="flex flex-col gap-0.5">
+                    <span className="text-sm font-black text-slate-900 dark:text-white tracking-tight">{order.orderNumber}</span>
+                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-tight">
+                      {new Date(order.createdAt).toLocaleDateString("en-US", { month: 'short', day: '2-digit', year: 'numeric' })}
+                    </span>
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <div className="flex items-center gap-3">
+                    <div className="h-9 w-9 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center border border-slate-200 dark:border-slate-800">
+                      <User className="h-4 w-4 text-slate-500" />
+                    </div>
+                    <div className="flex flex-col min-w-0">
+                      <span className="text-sm font-bold text-slate-900 dark:text-white truncate max-w-[150px]">{order.customer.name}</span>
+                      <span className="text-[10px] font-medium text-slate-400 truncate max-w-[150px]">{order.customer.email}</span>
+                    </div>
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <div className="flex flex-col">
+                    <span className="text-sm font-black text-slate-900 dark:text-white leading-none">
+                      Rp {(order.totalAmount / 1000).toLocaleString()}k
+                    </span>
+                    <span className="text-[10px] font-bold text-slate-400 uppercase mt-1 tracking-tighter">{order.itemCount} Items</span>
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <div className={cn(
+                    "inline-flex items-center px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase tracking-widest border border-slate-200 dark:border-slate-800",
+                    getStatusStyle(order.status)
+                  )}>
+                    {order.status}
+                  </div>
+                </TableCell>
+                <TableCell className="pr-8">
+                   <div className="flex items-center justify-end gap-2">
+                      <Button variant="ghost" className="h-8 px-3 rounded-lg text-sky-600 hover:text-sky-700 hover:bg-sky-50 dark:hover:bg-sky-500/10 text-[10px] font-black uppercase tracking-widest transition-all">
+                        View
+                      </Button>
+                      <Button variant="ghost" className="h-8 px-3 rounded-lg text-rose-600 hover:text-rose-700 hover:bg-rose-50 dark:hover:bg-rose-500/10 text-[10px] font-black uppercase tracking-widest transition-all">
+                        Cancel
+                      </Button>
+                   </div>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+
+      <div className="px-8 py-4 bg-slate-50/50 dark:bg-slate-950/50 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
+        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Transaction Feed Active</p>
+        <div className="flex gap-2">
+           <Button variant="outline" size="icon" className="h-8 w-8 border-slate-200 dark:border-slate-800 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-all">
+             <ChevronLeft className="h-4 w-4 text-slate-500" />
+           </Button>
+           <Button variant="outline" size="icon" className="h-8 w-8 border-slate-200 dark:border-slate-800 rounded-lg hover:bg-sky-50 dark:hover:bg-sky-500/10 transition-all">
+             <ChevronRight className="h-4 w-4 text-sky-500" />
+           </Button>
+        </div>
+      </div>
     </div>
   )
-}
-
-function cn(...classes: any[]) {
-  return classes.filter(Boolean).join(" ");
 }

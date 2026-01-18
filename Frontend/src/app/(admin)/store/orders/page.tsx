@@ -11,13 +11,10 @@ import {
   Clock, 
   CheckCircle2, 
   Truck,
-  Filter,
-  Search,
   Download
 } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/ui/card"
 import { Button } from "@/shared/components/ui/button"
-import { Input } from "@/shared/components/ui/input"
 import { StoreOrdersList } from "@/features/(admin)/store/components/StoreOrdersList"
 
 const sidebarItems = [
@@ -60,95 +57,65 @@ export default function StoreOrdersPage() {
       value: "156",
       description: "Last 30 days",
       icon: ShoppingCart,
-      color: "text-sky-600",
-      bg: "bg-sky-50 dark:bg-sky-500/10",
-      border: "border-sky-100 dark:border-sky-900/30",
+      color: "text-sky-500",
+      bg: "bg-sky-50 dark:bg-sky-500/5",
     },
     {
       title: "Pending",
       value: "12",
-      description: "Needs processing",
+      description: "Needs attention",
       icon: Clock,
-      color: "text-amber-600",
-      bg: "bg-amber-50 dark:bg-amber-500/10",
-      border: "border-amber-100 dark:border-amber-900/30",
+      color: "text-amber-500",
+      bg: "bg-amber-50 dark:bg-amber-500/5",
     },
     {
       title: "Shipped",
       value: "45",
       description: "In transit",
       icon: Truck,
-      color: "text-blue-600",
-      bg: "bg-blue-50 dark:bg-blue-500/10",
-      border: "border-blue-100 dark:border-blue-900/30",
+      color: "text-sky-600",
+      bg: "bg-sky-50 dark:bg-sky-600/5",
     },
     {
       title: "Completed",
       value: "94",
       description: "Successfully delivered",
       icon: CheckCircle2,
-      color: "text-emerald-600",
-      bg: "bg-emerald-50 dark:bg-emerald-500/10",
-      border: "border-emerald-100 dark:border-emerald-900/30",
+      color: "text-emerald-500",
+      bg: "bg-emerald-50 dark:bg-emerald-500/5",
     },
   ]
 
   return (
     <DashboardShell
-      title="Orders"
+      title="Order Manifest"
       type="store"
       sidebarItems={sidebarItems}
       actions={
-        <Button variant="outline" className="h-10 px-4 rounded-xl border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-900 transition-all font-bold text-xs uppercase tracking-widest border shadow-none">
+        <Button variant="outline" className="h-10 px-4 rounded-xl border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-50 transition-all font-bold text-[10px] uppercase tracking-widest border">
           <Download className="mr-2 h-4 w-4" />
-          Export Orders
+          Export Transaction Log
         </Button>
       }
     >
       <div className="space-y-6">
-        {}
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           {stats.map((stat) => (
-            <Card key={stat.title} className="border-slate-200 dark:border-slate-800 shadow-none rounded-2xl group overflow-hidden">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-[10px] font-bold uppercase tracking-widest text-slate-500">{stat.title}</CardTitle>
-                <div className={`${stat.bg} ${stat.border} p-2 rounded-xl group-hover:scale-110 transition-transform duration-300 border`}>
+            <div key={stat.title} className="p-5 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 flex flex-col gap-4">
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{stat.title}</span>
+                <div className={`${stat.bg} p-2 rounded-lg border border-slate-100 dark:border-slate-800`}>
                   <stat.icon className={`h-4 w-4 ${stat.color}`} />
                 </div>
-              </CardHeader>
-              <CardContent>
-                <div className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">{stat.value}</div>
-                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">
-                  {stat.description}
-                </p>
-              </CardContent>
-            </Card>
+              </div>
+              <div>
+                <h3 className="text-3xl font-black text-slate-900 dark:text-white tracking-tighter">{stat.value}</h3>
+                <p className="text-[10px] font-bold text-slate-400 uppercase mt-1 tracking-widest">{stat.description}</p>
+              </div>
+            </div>
           ))}
         </div>
 
-        {}
-        <div className="flex flex-col md:flex-row gap-4 items-center justify-between p-5 bg-slate-50/50 dark:bg-slate-900/50 rounded-2xl border border-slate-200 dark:border-slate-800">
-          <div className="relative w-full md:w-96">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
-            <Input 
-              placeholder="Search by order number or customer..." 
-              className="pl-11 h-11 bg-white dark:bg-slate-950 border-slate-200 dark:border-slate-800 rounded-xl text-sm font-medium focus:ring-sky-500/20 focus:border-sky-500 transition-all"
-            />
-          </div>
-          <div className="flex items-center space-x-3 w-full md:w-auto">
-            <Button variant="outline" className="flex-1 md:flex-none h-11 px-5 rounded-xl border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 font-bold text-xs uppercase tracking-widest hover:bg-slate-50 dark:hover:bg-slate-900 transition-all">
-              <Filter className="mr-2 h-4 w-4" />
-              Filter
-            </Button>
-            <div className="h-11 w-px bg-slate-200 dark:bg-slate-800 hidden md:block" />
-            <div className="flex-1 md:flex-none flex flex-col items-end">
-              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Sorted by</span>
-              <span className="text-xs font-bold text-slate-900 dark:text-white">Latest Orders</span>
-            </div>
-          </div>
-        </div>
-
-        {}
         <StoreOrdersList />
       </div>
     </DashboardShell>

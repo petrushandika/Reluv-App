@@ -21,8 +21,13 @@ import {
   Settings,
   MessageSquare,
   Star,
-  DollarSign
+  DollarSign,
+  TrendingUp,
+  ArrowUpRight,
+  ChevronRight
 } from "lucide-react"
+import { motion } from "framer-motion"
+import { cn } from "@/shared/lib/utils"
 
 const sidebarItems = [
   {
@@ -57,124 +62,135 @@ const sidebarItems = [
   },
 ]
 
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1
+    }
+  }
+}
+
+const itemVariants = {
+  hidden: { y: 20, opacity: 0 },
+  visible: {
+    y: 0,
+    opacity: 1,
+    transition: {
+      type: "spring",
+      stiffness: 100
+    }
+  }
+}
+
 export default function StoreDashboardPage() {
   return (
-    <DashboardShell 
-      title="Dashboard" 
+    <DashboardShell
+      title="Dashboard"
       sidebarItems={sidebarItems}
       type="store"
       actions={
-        <div className="flex items-center space-x-2">
-          <Button variant="outline" className="h-10 px-4 rounded-xl border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-900 transition-all font-bold text-xs uppercase tracking-widest border">
+        <div className="flex items-center space-x-3">
+          <Button variant="outline" className="h-10 px-5 rounded-xl border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 font-bold text-xs uppercase tracking-widest hover:bg-white transition-all">
             <Download className="mr-2 h-4 w-4" />
-            Export
+            Export Data
           </Button>
-          <Button className="bg-sky-600 hover:bg-sky-700 text-white transition-all active:scale-95 border border-sky-500 dark:border-sky-400 font-bold text-xs uppercase tracking-widest h-10 px-4 rounded-xl shadow-none">
+          <Button className="h-10 px-5 rounded-xl bg-sky-500 hover:bg-sky-600 text-white font-bold text-xs uppercase tracking-widest transition-all active:scale-95 border-none">
             <Plus className="mr-2 h-4 w-4" />
             New Product
           </Button>
         </div>
       }
     >
-      <div className="space-y-6">
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-          <Card className="border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 transition-all hover:border-emerald-200 dark:hover:border-emerald-900/50 group">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Store Revenue</CardTitle>
-              <div className="p-2 bg-emerald-50 dark:bg-emerald-500/10 rounded-lg border border-emerald-100 dark:border-emerald-900/20 group-hover:bg-emerald-100 transition-colors">
-                <DollarSign className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-slate-900 dark:text-white">Rp. 12.431.890</div>
-              <p className="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold mt-1 flex items-center bg-emerald-50 dark:bg-emerald-500/10 w-fit px-1.5 py-0.5 rounded">
-                +12.1% from last month
-              </p>
-            </CardContent>
-          </Card>
-          <Card className="border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 transition-all hover:border-sky-200 dark:hover:border-sky-900/50 group">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Active Products</CardTitle>
-              <div className="p-2 bg-sky-50 dark:bg-sky-500/10 rounded-lg border border-sky-100 dark:border-sky-900/20 group-hover:bg-sky-100 transition-colors">
-                <Package className="h-4 w-4 text-sky-600 dark:text-sky-400" />
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-slate-900 dark:text-white">+45</div>
-              <p className="text-[10px] text-slate-400 font-bold mt-1 uppercase tracking-wider">2 drafts awaiting approval</p>
-            </CardContent>
-          </Card>
-          <Card className="border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 transition-all hover:border-amber-200 dark:hover:border-amber-900/50 group">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Store Rating</CardTitle>
-              <div className="p-2 bg-amber-50 dark:bg-amber-500/10 rounded-lg border border-amber-100 dark:border-amber-900/20 group-hover:bg-amber-100 transition-colors">
-                <Star className="h-4 w-4 text-amber-500 fill-amber-500" />
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-slate-900 dark:text-white">4.8 / 5.0</div>
-              <p className="text-[10px] text-slate-400 font-bold mt-1 uppercase tracking-wider">128 verified reviews</p>
-            </CardContent>
-          </Card>
-          <Card className="border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 transition-all hover:border-indigo-200 dark:hover:border-indigo-900/50 group">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Order Velocity</CardTitle>
-              <div className="p-2 bg-indigo-50 dark:bg-indigo-500/10 rounded-lg border border-indigo-100 dark:border-indigo-900/20 group-hover:bg-indigo-100 transition-colors">
-                <ShoppingCart className="h-4 w-4 text-indigo-600 dark:text-indigo-400" />
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-slate-900 dark:text-white">+12</div>
-              <p className="text-[10px] text-rose-500 font-bold mt-1 uppercase tracking-wider flex items-center bg-rose-50 dark:bg-rose-500/10 w-fit px-1.5 py-0.5 rounded">4 needs shipment</p>
-            </CardContent>
-          </Card>
+      <div className="space-y-8 animate-in fade-in duration-700">
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+          {[
+            { label: "Total Revenue", value: "Rp. 12.4M", trend: "+12.1%", icon: DollarSign, color: "sky" },
+            { label: "Active Products", value: "45", trend: "2 new", icon: Package, color: "emerald" },
+            { label: "Store Rating", value: "4.8", trend: "128 reviews", icon: Star, color: "amber" },
+            { label: "New Orders", value: "12", trend: "4 pending", icon: ShoppingCart, color: "indigo" }
+          ].map((stat, i) => (
+            <motion.div
+              key={stat.label}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.1 }}
+            >
+               <Card className="group border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-sky-500/50 transition-all duration-300 overflow-hidden shadow-none">
+                <div className="p-6 relative">
+                  <div className="flex items-center justify-between mb-4">
+                     <div className={cn(
+                      "p-2.5 rounded-xl border border-slate-100 dark:border-slate-800",
+                      "bg-sky-50 dark:bg-sky-500/10 text-sky-500"
+                    )}>
+                      <stat.icon className="h-5 w-5" />
+                    </div>
+                    <span className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">Live</span>
+                  </div>
+                  <div className="space-y-1">
+                    <p className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide">{stat.label}</p>
+                    <div className="flex items-baseline space-x-2">
+                       <h3 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">{stat.value}</h3>
+                    </div>
+                    <div className="flex items-center pt-2">
+                      <div className="flex items-center text-[10px] font-black text-emerald-500 bg-emerald-500/5 px-2 py-0.5 rounded-xl border border-emerald-500/10 uppercase tracking-widest">
+                        {stat.trend}
+                      </div>
+                      <span className="ml-2 text-[10px] font-black text-slate-400 uppercase tracking-widest">vs prev</span>
+                    </div>
+                  </div>
+
+                  {/* Decorative background accent */}
+                  <div className="absolute -bottom-2 -right-2 opacity-5 scale-150 rotate-12 group-hover:rotate-0 transition-transform duration-700">
+                    <stat.icon className="h-20 w-20 text-sky-500" />
+                  </div>
+                </div>
+              </Card>
+            </motion.div>
+          ))}
         </div>
-        <div className="grid gap-6 lg:grid-cols-7">
-          {}
-          <Card className="lg:col-span-4 border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 transition-all">
-            <CardHeader className="flex flex-row items-center justify-between pb-4 border-b border-slate-50 dark:border-slate-800/50">
-              <div className="space-y-1">
-                <CardTitle className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-widest">Sales Revenue</CardTitle>
-                <CardDescription className="text-xs font-medium text-slate-400 uppercase tracking-tight">
-                  Performance overview for the current month
-                </CardDescription>
+
+        <div className="grid gap-8 lg:grid-cols-7">
+          <Card className="lg:col-span-4 border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-none overflow-hidden">
+            <CardHeader className="flex flex-row items-center justify-between px-8 py-6 border-b border-slate-200/50 dark:border-slate-800/50">
+              <div>
+                <CardTitle className="text-lg font-black text-slate-900 dark:text-white tracking-tight uppercase">Revenue Analytics</CardTitle>
+                <CardDescription className="text-xs font-bold text-slate-400 uppercase tracking-widest">Performance Insights</CardDescription>
               </div>
-              <div className="flex items-center space-x-1 bg-slate-100 dark:bg-slate-800 p-1 rounded-xl border border-slate-200 dark:border-slate-700">
-                <button className="px-3 py-1.5 text-[9px] font-bold uppercase tracking-widest bg-white dark:bg-slate-700 text-slate-900 dark:text-white rounded-lg border border-slate-200 dark:border-slate-600">Monthly</button>
-                <button className="px-3 py-1.5 text-[9px] font-bold uppercase tracking-widest text-slate-400 hover:text-slate-600 transition-colors">Weekly</button>
+              <div className="flex items-center p-1 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl">
+                 <button className="px-4 py-1.5 text-[10px] font-black uppercase tracking-widest bg-white dark:bg-slate-800 text-sky-500 shadow-sm rounded-lg border border-slate-200 dark:border-slate-700">Monthly</button>
+                 <button className="px-4 py-1.5 text-[10px] font-bold uppercase tracking-widest text-slate-400 hover:text-slate-600 transition-all">Weekly</button>
               </div>
             </CardHeader>
-            <CardContent className="pt-6">
-              <div className="h-[350px] w-full">
+            <CardContent className="p-8">
+              <div className="h-[380px] w-full">
                 <StoreOverview />
               </div>
             </CardContent>
           </Card>
 
-          {}
-          <Card className="lg:col-span-3 border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 overflow-hidden shadow-none">
-            <CardHeader className="pb-4 border-b border-slate-50 dark:border-slate-800/50">
+          <Card className="lg:col-span-3 border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-none overflow-hidden flex flex-col">
+            <CardHeader className="px-8 py-6 border-b border-slate-200/50 dark:border-slate-800/50">
               <div className="flex items-center justify-between">
-                <div className="space-y-1">
-                  <CardTitle className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-widest">Recent Sales</CardTitle>
-                  <CardDescription className="text-xs font-medium text-slate-400 uppercase tracking-tight">
-                    You have <span className="text-sky-600 dark:text-sky-400 font-bold">12 orders</span> to process.
-                  </CardDescription>
+                <div>
+                  <CardTitle className="text-lg font-black text-slate-900 dark:text-white tracking-tight uppercase">Recent Sales</CardTitle>
+                  <CardDescription className="text-xs font-bold text-slate-400 uppercase tracking-widest">Latest Transactions</CardDescription>
                 </div>
-                <div className="p-2 bg-sky-50 dark:bg-sky-500/10 rounded-xl border border-sky-100 dark:border-sky-900/30">
-                  <ShoppingCart className="h-4 w-4 text-sky-600" />
+                <div className="h-10 w-10 rounded-xl bg-sky-50 dark:bg-sky-500/10 flex items-center justify-center border border-sky-100 dark:border-sky-900/30">
+                  <TrendingUp className="h-5 w-5 text-sky-500" />
                 </div>
               </div>
             </CardHeader>
-            <CardContent className="p-0 flex flex-col h-[450px]">
-              <div className="px-6 py-6 flex-1 overflow-y-auto scrollbar-hide">
+            <CardContent className="p-0 flex flex-col flex-1">
+              <div className="px-6 py-6 flex-1 overflow-y-auto max-h-[352px] custom-scrollbar">
                 <StoreRecentSales />
               </div>
-              <div className="p-4 bg-slate-50/50 dark:bg-slate-900/50 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
-                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">128 Total Orders</p>
-                <button className="text-[10px] font-bold text-sky-600 dark:text-sky-400 uppercase tracking-widest hover:text-sky-700 transition-colors flex items-center cursor-pointer">
-                  View All
-                </button>
+              <div className="p-6 bg-slate-50/50 dark:bg-slate-950/50 border-t border-slate-200 dark:border-slate-800 flex items-center justify-center mt-auto">
+                <Button variant="ghost" className="w-full text-[10px] font-black uppercase tracking-[0.2em] text-sky-500 hover:text-sky-600 hover:bg-sky-500/5 group">
+                  View Full Transaction Log
+                  <ChevronRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                </Button>
               </div>
             </CardContent>
           </Card>

@@ -10,12 +10,16 @@ import {
 } from "@/shared/components/ui/table"
 import { Badge } from "@/shared/components/ui/badge"
 import { Button } from "@/shared/components/ui/button"
+import { Input } from "@/shared/components/ui/input"
 import { 
-  Edit, 
-  Trash2, 
-  Eye, 
-  CircleDot 
+  Search, 
+  Filter, 
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight
 } from "lucide-react"
+import { cn } from "@/shared/lib/utils"
+import { motion } from "framer-motion"
 
 const products = [
   {
@@ -72,87 +76,127 @@ const products = [
 
 export function StoreProductsList() {
   return (
-    <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 overflow-hidden">
-      <Table>
-        <TableHeader className="bg-slate-50/50 dark:bg-slate-900/50 border-b border-slate-200 dark:border-slate-800">
-          <TableRow className="hover:bg-transparent border-none">
-            <TableHead className="w-[300px] text-[10px] font-bold uppercase tracking-widest text-slate-500 py-4">Product</TableHead>
-            <TableHead className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Category</TableHead>
-            <TableHead className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Price</TableHead>
-            <TableHead className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Stock</TableHead>
-            <TableHead className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Status</TableHead>
-            <TableHead className="text-right text-[10px] font-bold uppercase tracking-widest text-slate-500 pr-6">Actions</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {products.map((product) => (
-            <TableRow key={product.id} className="border-slate-100 dark:border-slate-800/60 hover:bg-sky-50/30 dark:hover:bg-sky-500/5 transition-colors group">
-              <TableCell className="py-4">
-                <div className="flex items-center space-x-4">
-                  <div className="h-14 w-14 rounded-lg overflow-hidden border border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-slate-900 shrink-0">
-                    <img 
-                      src={product.image} 
-                      alt={product.name} 
-                      className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500" 
-                    />
-                  </div>
-                  <div className="flex flex-col min-w-0">
-                    <span className="text-sm font-bold text-slate-900 dark:text-white truncate group-hover:text-sky-600 dark:group-hover:text-sky-400 transition-colors">{product.name}</span>
-                          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1 flex items-center gap-1">
-                            Expiry
-                          </span>
-                  </div>
-                </div>
-              </TableCell>
-              <TableCell>
-                <div className="flex items-center text-xs font-semibold text-slate-600 dark:text-slate-400 bg-slate-100 dark:bg-slate-900 px-2.5 py-1 rounded-md w-fit border border-slate-200 dark:border-slate-800/50">
-                  {product.category}
-                </div>
-              </TableCell>
-              <TableCell className="font-bold text-slate-900 dark:text-white">
-                Rp. {product.price.toLocaleString("id-ID")}
-              </TableCell>
-              <TableCell>
-                <div className="flex items-center">
-                  <span className={cn("text-sm font-bold", product.stock <= 2 ? "text-rose-600 dark:text-rose-400" : "text-slate-700 dark:text-slate-300")}>
-                    {product.stock}
-                  </span>
-                </div>
-              </TableCell>
-              <TableCell>
-                <Badge 
-                  variant="outline" 
-                  className={cn(
-                    "font-bold text-[9px] uppercase tracking-[0.15em] px-2.5 py-1 border-2 rounded-full",
-                    product.status === "published" ? "text-emerald-600 border-emerald-100 bg-emerald-50 dark:bg-emerald-500/10 dark:border-emerald-900/30" :
-                    product.status === "draft" ? "text-slate-500 border-slate-100 bg-slate-50 dark:bg-slate-800/50 dark:border-slate-700" :
-                    "text-rose-600 border-rose-100 bg-rose-50 dark:bg-rose-500/10 dark:border-rose-900/30"
-                  )}
-                >
-                  {product.status}
-                </Badge>
-              </TableCell>
-              <TableCell className="text-right pr-6">
-                <div className="flex items-center justify-end space-x-1.5">
-                  <Button variant="ghost" size="icon" className="h-9 w-9 text-slate-400 hover:text-sky-600 hover:bg-sky-50 dark:hover:bg-sky-500/10 border border-transparent hover:border-sky-100 dark:hover:border-sky-900/30 rounded-xl transition-all">
-                    <Eye className="h-4 w-4" />
-                  </Button>
-                  <Button variant="ghost" size="icon" className="h-9 w-9 text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-500/10 border border-transparent hover:border-emerald-100 dark:hover:border-emerald-900/30 rounded-xl transition-all">
-                    <Edit className="h-4 w-4" />
-                  </Button>
-                  <Button variant="ghost" size="icon" className="h-9 w-9 text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-500/10 border border-transparent hover:border-rose-100 dark:hover:border-rose-900/30 rounded-xl transition-all">
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                </div>
-              </TableCell>
+    <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden">
+      {/* Integrated Search & Filter Header */}
+      <div className="p-4 border-b border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4 bg-slate-50/30 dark:bg-slate-900/40">
+        <div className="relative w-full sm:w-96">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+          <Input 
+            placeholder="Search products..." 
+            className="pl-9 h-10 bg-white dark:bg-slate-950 border-slate-200 dark:border-slate-800 focus:ring-sky-500/10 focus:border-sky-500 rounded-xl text-xs font-bold"
+          />
+        </div>
+        <div className="flex items-center gap-2 w-full sm:w-auto">
+          <Button variant="outline" className="h-10 px-4 rounded-xl border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-[10px] font-black uppercase tracking-widest text-slate-500 hover:bg-slate-50 transition-all">
+            <Filter className="mr-2 h-3.5 w-3.5" />
+            Filters
+            <ChevronDown className="ml-2 h-3.5 w-3.5" />
+          </Button>
+          <div className="h-6 w-px bg-slate-200 dark:bg-slate-800 mx-2 hidden sm:block" />
+          <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] hidden sm:block whitespace-nowrap">
+            {products.length} Products Found
+          </p>
+        </div>
+      </div>
+
+      <div className="overflow-x-auto">
+        <Table>
+          <TableHeader>
+            <TableRow className="bg-slate-50/50 dark:bg-slate-950/50 border-b border-slate-200 dark:border-slate-800 hover:bg-transparent">
+              <TableHead className="py-5 pl-8 text-[11px] font-black uppercase tracking-widest text-slate-400">Product Portfolio</TableHead>
+              <TableHead className="text-[11px] font-black uppercase tracking-widest text-slate-400">Inventory</TableHead>
+              <TableHead className="text-[11px] font-black uppercase tracking-widest text-slate-400">Pricing</TableHead>
+              <TableHead className="text-[11px] font-black uppercase tracking-widest text-slate-400">Status</TableHead>
+              <TableHead className="text-right pr-8 text-[11px] font-black uppercase tracking-widest text-slate-400">Actions</TableHead>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHeader>
+          <TableBody className="divide-y divide-slate-100 dark:divide-slate-800">
+            {products.map((product) => (
+              <TableRow 
+                key={product.id} 
+                className="group hover:bg-slate-50/50 dark:hover:bg-slate-800/20 transition-all duration-200 border-none"
+              >
+                <TableCell className="py-5 pl-8">
+                  <div className="flex items-center gap-4">
+                    <div className="relative h-14 w-14 rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden bg-white shrink-0">
+                      <img 
+                        src={product.image} 
+                        alt={product.name} 
+                        className="absolute inset-0 h-full w-full object-cover group-hover:scale-110 transition-transform duration-700" 
+                      />
+                    </div>
+                    <div className="flex flex-col gap-0.5 min-w-0">
+                      <span className="text-sm font-black text-slate-900 dark:text-white truncate max-w-[200px]">{product.name}</span>
+                      <span className="text-[10px] font-bold text-slate-400 uppercase tracking-tight">{product.category}</span>
+                    </div>
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <div className="flex flex-col gap-1.5 w-24">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[10px] font-bold text-slate-400 uppercase">Stock</span>
+                      <span className={cn(
+                        "text-[10px] font-black",
+                        product.stock <= 2 ? "text-rose-500" : "text-slate-900 dark:text-white"
+                      )}>{product.stock} Units</span>
+                    </div>
+                    <div className="h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                      <motion.div 
+                        initial={{ width: 0 }}
+                        animate={{ width: `${Math.min((product.stock / 20) * 100, 100)}%` }}
+                        className={cn(
+                          "h-full rounded-full transition-all duration-1000",
+                          product.stock <= 2 ? "bg-rose-500" : "bg-sky-500"
+                        )}
+                      />
+                    </div>
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <div className="flex flex-col">
+                    <span className="text-sm font-black text-slate-900 dark:text-white leading-none">
+                      Rp {(product.price / 1000).toLocaleString()}k
+                    </span>
+                    <span className="text-[10px] font-bold text-slate-400 uppercase mt-1 tracking-tighter">Net Price</span>
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <div className={cn(
+                    "inline-flex items-center px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase tracking-widest border border-slate-200 dark:border-slate-800",
+                    product.status === "published" ? "text-emerald-500 bg-emerald-500/5" :
+                    product.status === "draft" ? "text-slate-500 bg-slate-500/5" :
+                    "text-rose-500 bg-rose-500/5"
+                  )}>
+                    {product.status}
+                  </div>
+                </TableCell>
+                <TableCell className="pr-8">
+                   <div className="flex items-center justify-end gap-2">
+                      <Button variant="ghost" className="h-8 px-3 rounded-lg text-sky-600 hover:text-sky-700 hover:bg-sky-50 dark:hover:bg-sky-500/10 text-[10px] font-black uppercase tracking-widest transition-all">
+                        Edit
+                      </Button>
+                      <Button variant="ghost" className="h-8 px-3 rounded-lg text-rose-600 hover:text-rose-700 hover:bg-rose-50 dark:hover:bg-rose-500/10 text-[10px] font-black uppercase tracking-widest transition-all">
+                        Delete
+                      </Button>
+                   </div>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+
+      <div className="px-8 py-4 bg-slate-50/50 dark:bg-slate-950/50 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
+        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Inventory Manifest v1.0.4</p>
+        <div className="flex gap-2">
+           <Button variant="outline" size="icon" className="h-8 w-8 border-slate-200 dark:border-slate-800 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-all">
+             <ChevronLeft className="h-4 w-4 text-slate-500" />
+           </Button>
+           <Button variant="outline" size="icon" className="h-8 w-8 border-slate-200 dark:border-slate-800 rounded-lg hover:bg-sky-50 dark:hover:bg-sky-500/10 transition-all border-sky-100 dark:border-sky-500/20">
+             <ChevronRight className="h-4 w-4 text-sky-500" />
+           </Button>
+        </div>
+      </div>
     </div>
   )
-}
-
-function cn(...classes: string[]) {
-  return classes.filter(Boolean).join(" ");
 }

@@ -6,7 +6,7 @@ export function StoreSearch() {
       <Input
         type="search"
         placeholder="Search..."
-        className="h-9 w-[150px] md:w-[200px] lg:w-[300px] bg-slate-50/50 dark:bg-slate-900/50 border-slate-200 dark:border-slate-800"
+        className="h-10 w-[200px] lg:w-[300px] bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 rounded-xl"
       />
     </div>
   )
