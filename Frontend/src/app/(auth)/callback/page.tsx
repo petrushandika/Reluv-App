@@ -22,14 +22,14 @@ const CallbackContent = () => {
         .then(async () => {
           const user = useAuthStore.getState().user;
           
-          // Only fetch cart and wishlist for USER role
+          
           if (user?.role === "USER") {
             await Promise.all([fetchCart(), fetchWishlist()]);
           }
           
           localStorage.removeItem('previousPage');
           
-          // Redirect based on role
+          
           if (user?.role === "STORE") {
             router.push('/store');
           } else if (user?.role === "ADMIN") {

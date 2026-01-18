@@ -83,7 +83,7 @@ export default function VouchersPage() {
       <div className="min-h-screen bg-white dark:bg-slate-950">
         <div className="container mx-auto px-4 sm:px-6 md:px-10 xl:px-20 2xl:px-40 py-10">
           <div className="flex flex-col lg:flex-row lg:items-start lg:gap-10">
-            {/* Mobile Header */}
+            {}
             <div className="lg:hidden mb-6">
               <button
                 onClick={() => router.back()}
@@ -111,7 +111,7 @@ export default function VouchersPage() {
                 </div>
               </div>
 
-              {/* Promo Banner Style Card */}
+              {}
               <div className="mb-8 p-6 bg-linear-to-r from-sky-600 to-indigo-600 rounded-2xl border border-white/10 overflow-hidden relative group">
                 <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:scale-110 transition-transform duration-500">
                   <Tag className="w-32 h-32 text-white" />
@@ -133,7 +133,7 @@ export default function VouchersPage() {
                 </div>
               </div>
 
-              {/* Search & Filter */}
+              {}
               <div className="mb-8 flex flex-col md:flex-row gap-4">
                 <div className="relative flex-1">
                   <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
@@ -147,14 +147,14 @@ export default function VouchersPage() {
                 </Button>
               </div>
 
-              {/* Vouchers List */}
+              {}
               <div className="grid gap-6">
                 {mockAvailableVouchers.map((voucher) => (
                   <div 
                     key={voucher.id}
                     className="flex flex-col md:flex-row bg-white dark:bg-slate-950 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden hover:border-sky-300 dark:hover:border-sky-900/50 transition-all group"
                   >
-                    {/* Left Side: Discount Info */}
+                    {}
                     <div className="w-full md:w-56 bg-slate-50 dark:bg-slate-900/50 p-6 flex flex-col items-center justify-center border-b md:border-b-0 md:border-r border-slate-200 dark:border-slate-800 relative">
                       <div className="absolute -top-3 -right-3 h-6 w-6 bg-white dark:bg-slate-950 rounded-full border border-slate-200 dark:border-slate-800 hidden md:block" />
                       <div className="absolute -bottom-3 -right-3 h-6 w-6 bg-white dark:bg-slate-950 rounded-full border border-slate-200 dark:border-slate-800 hidden md:block" />
@@ -170,7 +170,7 @@ export default function VouchersPage() {
                       </Badge>
                     </div>
 
-                    {/* Right Side: Details */}
+                    {}
                     <div className="flex-1 p-6">
                       <div className="flex items-start justify-between gap-4 mb-2">
                         <div>
@@ -216,7 +216,7 @@ export default function VouchersPage() {
                 ))}
               </div>
 
-              {/* No Vouchers State (Hidden if mock data present) */}
+              {}
               {mockAvailableVouchers.length === 0 && (
                 <div className="flex flex-col items-center justify-center py-20 bg-slate-50/50 dark:bg-slate-900/50 rounded-3xl border border-slate-200 dark:border-slate-800 border-dashed">
                   <Ticket className="w-16 h-16 text-slate-300 dark:text-slate-700 mb-4" />

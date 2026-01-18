@@ -106,7 +106,7 @@ export default function SuperadminOrdersPage() {
       }
     >
       <div className="space-y-6">
-        {/* Stats Grid */}
+        {}
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           {stats.map((stat) => (
             <Card key={stat.title} className="border-slate-200 dark:border-slate-800 shadow-none rounded-2xl group overflow-hidden">
@@ -126,7 +126,7 @@ export default function SuperadminOrdersPage() {
           ))}
         </div>
 
-        {/* Filters */}
+        {}
         <div className="flex flex-col md:flex-row gap-4 items-center justify-between p-5 bg-slate-50/50 dark:bg-slate-900/50 rounded-2xl border border-slate-200 dark:border-slate-800">
           <div className="relative w-full md:w-96">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
@@ -148,7 +148,7 @@ export default function SuperadminOrdersPage() {
           </div>
         </div>
 
-        {/* Global Orders List */}
+        {}
         <SuperadminOrdersList />
       </div>
     </DashboardShell>

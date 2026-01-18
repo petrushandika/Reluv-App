@@ -155,7 +155,7 @@ const Cart = () => {
                         <img
                           src={
                             item.variant.product.images[0] ||
-                            "https://placehold.co/100x100/e2e8f0/e2e8f0?text=Image"
+                            "https:
                           }
                           alt={item.variant.product.name}
                           className="w-full aspect-square sm:w-20 md:w-24 sm:h-20 md:h-24 object-cover rounded-lg bg-gray-100 dark:bg-gray-700"

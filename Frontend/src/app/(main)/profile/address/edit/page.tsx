@@ -203,7 +203,7 @@ const EditAddressPageContent = () => {
 
         if (provinceMatch) {
           const response = await fetch(
-            `https://www.emsifa.com/api-wilayah-indonesia/api/regencies/${provinceMatch.id}.json`
+            `https:
           );
           const data: Regency[] = await response.json();
           setRegencies(data);
@@ -213,7 +213,7 @@ const EditAddressPageContent = () => {
             setFormData((prev) => ({ ...prev, city: cityMatch.id }));
 
             const districtResponse = await fetch(
-              `https://www.emsifa.com/api-wilayah-indonesia/api/districts/${cityMatch.id}.json`
+              `https:
             );
             const districtData: District[] = await districtResponse.json();
             setDistricts(districtData);
@@ -225,7 +225,7 @@ const EditAddressPageContent = () => {
               setFormData((prev) => ({ ...prev, district: districtMatch.id }));
 
               const subDistrictResponse = await fetch(
-                `https://www.emsifa.com/api-wilayah-indonesia/api/villages/${districtMatch.id}.json`
+                `https:
               );
               const subDistrictData: SubDistrict[] =
                 await subDistrictResponse.json();
@@ -261,7 +261,7 @@ const EditAddressPageContent = () => {
       setIsLoadingProvinces(true);
       try {
         const response = await fetch(
-          "https://www.emsifa.com/api-wilayah-indonesia/api/provinces.json"
+          "https:
         );
         const data: Province[] = await response.json();
         setProvinces(data);
@@ -279,7 +279,7 @@ const EditAddressPageContent = () => {
         setIsLoadingRegencies(true);
         try {
           const response = await fetch(
-            `https://www.emsifa.com/api-wilayah-indonesia/api/regencies/${formData.province}.json`
+            `https:
           );
           const data: Regency[] = await response.json();
           setRegencies(data);
@@ -307,7 +307,7 @@ const EditAddressPageContent = () => {
         setIsLoadingDistricts(true);
         try {
           const response = await fetch(
-            `https://www.emsifa.com/api-wilayah-indonesia/api/districts/${formData.city}.json`
+            `https:
           );
           const data: District[] = await response.json();
           setDistricts(data);
@@ -336,7 +336,7 @@ const EditAddressPageContent = () => {
       setDistricts([]);
       setFormData((prev) => ({ ...prev, district: "", subDistrict: "" }));
     }
-  }, [formData.city]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [formData.city]); 
 
   useEffect(() => {
     if (formData.district) {
@@ -344,7 +344,7 @@ const EditAddressPageContent = () => {
         setIsLoadingSubDistricts(true);
         try {
           const response = await fetch(
-            `https://www.emsifa.com/api-wilayah-indonesia/api/villages/${formData.district}.json`
+            `https:
           );
           const data: SubDistrict[] = await response.json();
           setSubDistricts(data);
@@ -376,7 +376,7 @@ const EditAddressPageContent = () => {
       setSubDistricts([]);
       setFormData((prev) => ({ ...prev, subDistrict: "" }));
     }
-  }, [formData.district]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [formData.district]); 
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>

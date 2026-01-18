@@ -4,18 +4,13 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   User as UserIcon,
+  MapPin,
+  Check,
+  ShieldCheck,
   Mail,
   Phone,
   Calendar,
-  ShieldCheck,
-  Bell,
-  Save,
-  Camera,
-  Info,
-  ChevronRight,
-  LogOut,
-  MapPin,
-  Check
+  Info
 } from "lucide-react";
 import { useAuthStore } from "@/features/(auth)/store/auth.store";
 import { getMe, updateMe, updateMyProfile } from "@/features/(main)/user/api/userApi";
@@ -29,7 +24,6 @@ import { Button } from "@/shared/components/ui/button";
 import { Input } from "@/shared/components/ui/input";
 import { Label } from "@/shared/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/components/ui/tabs";
-import { Select } from "@/shared/components/ui/select";
 import { Textarea } from "@/shared/components/ui/textarea";
 
 const ProfilePage = () => {
@@ -39,7 +33,7 @@ const ProfilePage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("identity");
   
-  // Form states
+  
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [birth, setBirth] = useState("");

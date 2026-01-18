@@ -92,7 +92,7 @@ const Wishlist = () => {
               const imageUrl =
                 product.images && product.images.length > 0
                   ? product.images[0]
-                  : "https://placehold.co/400x400/e2e8f0/e2e8f0?text=Image";
+                  : "https:
 
               return (
                 <div

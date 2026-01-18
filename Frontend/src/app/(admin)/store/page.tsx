@@ -130,7 +130,7 @@ export default function StoreDashboardPage() {
           </Card>
         </div>
         <div className="grid gap-6 lg:grid-cols-7">
-          {/* Sales Revenue Section */}
+          {}
           <Card className="lg:col-span-4 border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 transition-all">
             <CardHeader className="flex flex-row items-center justify-between pb-4 border-b border-slate-50 dark:border-slate-800/50">
               <div className="space-y-1">
@@ -151,7 +151,7 @@ export default function StoreDashboardPage() {
             </CardContent>
           </Card>
 
-          {/* Recent Orders Section */}
+          {}
           <Card className="lg:col-span-3 border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 overflow-hidden shadow-none">
             <CardHeader className="pb-4 border-b border-slate-50 dark:border-slate-800/50">
               <div className="flex items-center justify-between">

@@ -428,7 +428,7 @@ const ProfilePage = () => {
                   {user?.id ? (
                     <div className="w-48 h-48 sm:w-56 sm:h-56 flex items-center justify-center rounded overflow-hidden bg-white p-2">
                       <QRCode
-                        value={`reluv://member/${user.id}`}
+                        value={`reluv:
                         size={200}
                         level="H"
                         fgColor="#000000"

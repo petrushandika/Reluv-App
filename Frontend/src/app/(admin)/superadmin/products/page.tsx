@@ -99,7 +99,7 @@ export default function SuperadminProductsPage() {
       }
     >
       <div className="space-y-6 text-slate-900 dark:text-white">
-        {/* Moderation Queue Alert */}
+        {}
         <div className="bg-white dark:bg-slate-900 border border-sky-100 dark:border-sky-900/40 p-5 rounded-2xl flex items-center justify-between">
           <div className="flex items-center space-x-4">
             <div className="h-12 w-12 bg-sky-50 dark:bg-sky-500/10 rounded-xl flex items-center justify-center border border-sky-100 dark:border-sky-900/30">
@@ -115,7 +115,7 @@ export default function SuperadminProductsPage() {
           </Button>
         </div>
 
-        {/* Global Search & Filter Zone */}
+        {}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-slate-50/50 dark:bg-slate-900/50 p-4 rounded-xl border border-slate-200 dark:border-slate-800">
           <div className="relative flex-1 max-w-md">
             <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
@@ -132,7 +132,7 @@ export default function SuperadminProductsPage() {
           </div>
         </div>
 
-        {/* Pending Products Grid */}
+        {}
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 pt-2">
           {pendingProducts.map((p) => (
             <div key={p.id} className="bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden transition-all group hover:border-sky-500/30">

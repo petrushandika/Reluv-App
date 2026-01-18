@@ -38,7 +38,7 @@ const ContactPage = () => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simulate API call
+    
     setTimeout(() => {
       setIsSubmitting(false);
       setIsSubmitted(true);
@@ -90,7 +90,7 @@ const ContactPage = () => {
     <PublicRoute>
       <div className="min-h-screen bg-white dark:bg-gray-900">
         <div className="container mx-auto px-4 sm:px-6 md:px-10 xl:px-20 2xl:px-40 py-8 sm:py-10 md:py-12">
-          {/* Header */}
+          {}
           <div className="text-center mb-8 sm:mb-10 md:mb-12">
             <div className="flex items-center justify-center gap-3 mb-4">
               <MessageCircle className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 text-sky-600 dark:text-sky-400" />
@@ -104,7 +104,7 @@ const ContactPage = () => {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-10 md:gap-12">
-            {/* Contact Methods */}
+            {}
             <div>
               <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 dark:text-white mb-6 sm:mb-8">
                 Get in Touch
@@ -137,7 +137,7 @@ const ContactPage = () => {
                 })}
               </div>
 
-              {/* Additional Info */}
+              {}
               <div className="mt-6 sm:mt-8 p-4 sm:p-6 bg-sky-50 dark:bg-sky-900/20 rounded-lg border border-sky-200 dark:border-sky-800">
                 <h3 className="text-sm sm:text-base font-semibold text-gray-900 dark:text-white mb-2">
                   Response Time
@@ -148,7 +148,7 @@ const ContactPage = () => {
               </div>
             </div>
 
-            {/* Contact Form */}
+            {}
             <div>
               <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 dark:text-white mb-6 sm:mb-8">
                 Send us a Message

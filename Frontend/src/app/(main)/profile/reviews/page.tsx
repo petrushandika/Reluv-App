@@ -96,7 +96,7 @@ export default function UserReviewsPage() {
       <div className="min-h-screen bg-white dark:bg-slate-950">
         <div className="container mx-auto px-4 sm:px-6 md:px-10 xl:px-20 2xl:px-40 py-10">
           <div className="flex flex-col lg:flex-row lg:items-start lg:gap-10">
-            {/* Mobile Header */}
+            {}
             <div className="lg:hidden mb-6">
               <button
                 onClick={() => router.back()}
@@ -124,7 +124,7 @@ export default function UserReviewsPage() {
                 </div>
               </div>
 
-              {/* Stats Overview */}
+              {}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
                 <div className="bg-slate-50/50 dark:bg-slate-900/50 rounded-2xl p-5 border border-slate-200 dark:border-slate-800">
                   <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest block mb-1">Total Reviews</span>
@@ -140,20 +140,20 @@ export default function UserReviewsPage() {
                 </div>
               </div>
 
-              {/* Tabs */}
+              {}
               <div className="flex items-center gap-6 border-b border-slate-200 dark:border-slate-800 mb-8 overflow-x-auto pb-0.5">
                 <button className="text-[11px] font-bold uppercase tracking-widest text-sky-600 border-b-2 border-sky-600 pb-3 h-full">All Reviews</button>
                 <button className="text-[11px] font-bold uppercase tracking-widest text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 pb-3 transition-colors h-full">To Be Reviewed</button>
               </div>
 
-              {/* Reviews List */}
+              {}
               <div className="space-y-6">
                 {mockUserReviews.map((review) => (
                   <div 
                     key={review.id}
                     className="bg-white dark:bg-slate-950 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden flex flex-col group"
                   >
-                    {/* Header: Product Info */}
+                    {}
                     <div className="p-5 border-b border-slate-100 dark:border-slate-800 bg-slate-50/30 dark:bg-slate-900/30 flex items-center justify-between">
                       <div className="flex items-center gap-4">
                         <div className="relative h-12 w-12 rounded-xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 overflow-hidden shrink-0">
@@ -178,7 +178,7 @@ export default function UserReviewsPage() {
                       </div>
                     </div>
 
-                    {/* Content */}
+                    {}
                     <div className="p-6">
                       <p className="text-sm text-slate-600 dark:text-slate-300 font-medium mb-6 leading-relaxed">
                         "{review.comment}"
@@ -194,7 +194,7 @@ export default function UserReviewsPage() {
                         </div>
                       )}
 
-                      {/* Store Reply */}
+                      {}
                       {review.reply && (
                         <div className="mb-6 p-4 bg-sky-50 dark:bg-sky-500/5 rounded-2xl border border-sky-100 dark:border-sky-900/30 relative">
                           <div className="absolute -top-3 left-4 bg-sky-100 dark:bg-sky-900/50 text-sky-700 dark:text-sky-300 text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-lg border border-sky-200 dark:border-sky-800">
@@ -223,7 +223,7 @@ export default function UserReviewsPage() {
                 ))}
               </div>
 
-              {/* Empty State */}
+              {}
               {mockUserReviews.length === 0 && (
                 <div className="flex flex-col items-center justify-center py-20 bg-slate-50/50 dark:bg-slate-900/50 rounded-3xl border border-slate-200 dark:border-slate-800 border-dashed">
                   <MessageSquare className="w-16 h-16 text-slate-300 dark:text-slate-700 mb-4" />

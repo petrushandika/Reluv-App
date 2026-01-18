@@ -71,7 +71,7 @@ export default function StoreProductsPage() {
       }
     >
       <div className="space-y-6">
-        {/* Stats Header */}
+        {}
         <div className="grid gap-4 md:grid-cols-3">
           <div className="p-5 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 flex items-center justify-between group hover:border-sky-500/50 transition-colors">
             <div>
@@ -102,7 +102,7 @@ export default function StoreProductsPage() {
           </div>
         </div>
 
-        {/* Filter Bar */}
+        {}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-slate-50/50 dark:bg-slate-900/50 p-4 rounded-xl border border-slate-200 dark:border-slate-800">
           <div className="relative flex-1 max-w-md">
             <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
@@ -125,7 +125,7 @@ export default function StoreProductsPage() {
           </div>
         </div>
 
-        {/* Products List */}
+        {}
         <StoreProductsList />
       </div>
     </DashboardShell>

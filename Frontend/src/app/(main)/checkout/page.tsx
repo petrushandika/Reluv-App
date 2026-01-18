@@ -357,7 +357,7 @@ const Checkout = () => {
     };
 
     fetchAddresses();
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []); 
 
   useEffect(() => {
     const fetchVouchers = async () => {
@@ -400,7 +400,7 @@ const Checkout = () => {
       setIsLoadingProvinces(true);
       try {
         const response = await fetch(
-          "https://www.emsifa.com/api-wilayah-indonesia/api/provinces.json"
+          "https:
         );
         const data: Province[] = await response.json();
         setProvinces(data);
@@ -418,7 +418,7 @@ const Checkout = () => {
         setIsLoadingRegencies(true);
         try {
           const response = await fetch(
-            `https://www.emsifa.com/api-wilayah-indonesia/api/regencies/${formData.province}.json`
+            `https:
           );
           const data: Regency[] = await response.json();
           setRegencies(data);
@@ -447,7 +447,7 @@ const Checkout = () => {
       }, 300);
       return () => clearTimeout(timer);
     }
-  }, [formData.city, addressMode, buyItem, cart?.items]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [formData.city, addressMode, buyItem, cart?.items]); 
 
   useEffect(() => {
     if (formData.city) {
@@ -455,7 +455,7 @@ const Checkout = () => {
         setIsLoadingDistricts(true);
         try {
           const response = await fetch(
-            `https://www.emsifa.com/api-wilayah-indonesia/api/districts/${formData.city}.json`
+            `https:
           );
           const data: District[] = await response.json();
           setDistricts(data);
@@ -478,7 +478,7 @@ const Checkout = () => {
         setIsLoadingSubDistricts(true);
         try {
           const response = await fetch(
-            `https://www.emsifa.com/api-wilayah-indonesia/api/villages/${formData.district}.json`
+            `https:
           );
           const data: SubDistrict[] = await response.json();
           setSubDistricts(data);
@@ -682,7 +682,7 @@ const Checkout = () => {
     if (provinceMatch) {
       try {
         const regenciesResponse = await fetch(
-          `https://www.emsifa.com/api-wilayah-indonesia/api/regencies/${provinceMatch.id}.json`
+          `https:
         );
         const regenciesData: Regency[] = await regenciesResponse.json();
         setRegencies(regenciesData);
@@ -692,7 +692,7 @@ const Checkout = () => {
           cityId = cityMatch.id;
 
           const districtsResponse = await fetch(
-            `https://www.emsifa.com/api-wilayah-indonesia/api/districts/${cityMatch.id}.json`
+            `https:
           );
           const districtsData: District[] = await districtsResponse.json();
           setDistricts(districtsData);
@@ -702,7 +702,7 @@ const Checkout = () => {
             districtId = districtMatch.id;
 
             const subDistrictsResponse = await fetch(
-              `https://www.emsifa.com/api-wilayah-indonesia/api/villages/${districtMatch.id}.json`
+              `https:
             );
             const subDistrictsData: SubDistrict[] = await subDistrictsResponse.json();
             setSubDistricts(subDistrictsData);

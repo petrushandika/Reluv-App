@@ -40,7 +40,7 @@ const Login = () => {
     try {
       const authResponse = await login(data);
       
-      // Fetch cart and wishlist only for USER role
+      
       if (authResponse.user.role === "USER") {
         await Promise.all([fetchCart(), fetchWishlist()]);
       }
@@ -49,7 +49,7 @@ const Login = () => {
         description: "Welcome back! Redirecting you now...",
       });
       
-      // Redirect based on role
+      
       switch (authResponse.user.role) {
         case "STORE":
           router.push("/store");

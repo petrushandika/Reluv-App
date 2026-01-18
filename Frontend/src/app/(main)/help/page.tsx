@@ -171,7 +171,7 @@ const HelpPage = () => {
     <PublicRoute>
       <div className="min-h-screen bg-white dark:bg-gray-900">
         <div className="container mx-auto px-4 sm:px-6 md:px-10 xl:px-20 2xl:px-40 py-8 sm:py-10 md:py-12">
-          {/* Header */}
+          {}
           <div className="text-center mb-8 sm:mb-10 md:mb-12">
             <div className="flex items-center justify-center gap-3 mb-4">
               <HelpCircle className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 text-sky-600 dark:text-sky-400" />
@@ -184,7 +184,7 @@ const HelpPage = () => {
             </p>
           </div>
 
-          {/* Search Bar */}
+          {}
           <div className="mb-8 sm:mb-10">
             <div className="relative max-w-2xl mx-auto">
               <Search className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-gray-400 dark:text-gray-500" />
@@ -198,7 +198,7 @@ const HelpPage = () => {
             </div>
           </div>
 
-          {/* Categories */}
+          {}
           <div className="mb-8 sm:mb-10 md:mb-12">
             <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 dark:text-white mb-4 sm:mb-6">
               Browse by Category
@@ -247,7 +247,7 @@ const HelpPage = () => {
             </div>
           </div>
 
-          {/* FAQs */}
+          {}
           <div className="mb-8 sm:mb-10 md:mb-12">
             <div className="flex items-center justify-between mb-4 sm:mb-6">
               <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 dark:text-white">
@@ -302,7 +302,7 @@ const HelpPage = () => {
             </div>
           </div>
 
-          {/* Contact Section */}
+          {}
           <div className="bg-sky-50 dark:bg-sky-900/20 rounded-lg p-6 sm:p-8 md:p-10 border border-sky-200 dark:border-sky-800">
             <div className="text-center mb-6 sm:mb-8">
               <MessageCircle className="w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 text-sky-600 dark:text-sky-400 mx-auto mb-4" />
