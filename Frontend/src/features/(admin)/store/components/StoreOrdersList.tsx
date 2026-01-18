@@ -15,9 +15,7 @@ import {
   Truck, 
   CheckCircle2, 
   Clock, 
-  Calendar,
   User,
-  ShoppingBag,
   MoreVertical
 } from "lucide-react"
 
@@ -141,14 +139,12 @@ export function StoreOrdersList() {
                 </div>
               </TableCell>
               <TableCell>
-                <div className="flex items-center text-[11px] font-semibold text-slate-600 dark:text-slate-400">
-                  <Calendar className="h-3 w-3 mr-1.5 text-slate-400" />
+                <div className="text-[11px] font-semibold text-slate-600 dark:text-slate-400">
                   {new Date(order.createdAt).toLocaleDateString()}
                 </div>
               </TableCell>
               <TableCell>
-                <div className="flex items-center text-[11px] font-bold text-slate-700 dark:text-slate-300">
-                  <ShoppingBag className="h-3 w-3 mr-1.5 text-slate-400" />
+                <div className="text-[11px] font-bold text-slate-700 dark:text-slate-300">
                   {order.itemCount} Items
                 </div>
               </TableCell>

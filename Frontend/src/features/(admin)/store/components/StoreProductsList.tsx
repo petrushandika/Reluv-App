@@ -14,8 +14,6 @@ import {
   Edit, 
   Trash2, 
   Eye, 
-  Package, 
-  Layers, 
   CircleDot 
 } from "lucide-react"
 
@@ -100,19 +98,14 @@ export function StoreProductsList() {
                   </div>
                   <div className="flex flex-col min-w-0">
                     <span className="text-sm font-bold text-slate-900 dark:text-white truncate group-hover:text-sky-600 dark:group-hover:text-sky-400 transition-colors">{product.name}</span>
-                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider flex items-center mt-1">
-                      <CircleDot className={cn("h-2.5 w-2.5 mr-1.5", 
-                        product.condition === "New" ? "text-emerald-500" : 
-                        product.condition === "Like New" ? "text-sky-500" : "text-amber-500"
-                      )} />
-                      {product.condition}
-                    </span>
+                          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1 flex items-center gap-1">
+                            Expiry
+                          </span>
                   </div>
                 </div>
               </TableCell>
               <TableCell>
                 <div className="flex items-center text-xs font-semibold text-slate-600 dark:text-slate-400 bg-slate-100 dark:bg-slate-900 px-2.5 py-1 rounded-md w-fit border border-slate-200 dark:border-slate-800/50">
-                  <Layers className="h-3 w-3 mr-1.5 text-slate-400" />
                   {product.category}
                 </div>
               </TableCell>
@@ -121,7 +114,6 @@ export function StoreProductsList() {
               </TableCell>
               <TableCell>
                 <div className="flex items-center">
-                  <Package className={cn("h-3.5 w-3.5 mr-2", product.stock <= 2 ? "text-rose-500" : "text-slate-400")} />
                   <span className={cn("text-sm font-bold", product.stock <= 2 ? "text-rose-600 dark:text-rose-400" : "text-slate-700 dark:text-slate-300")}>
                     {product.stock}
                   </span>

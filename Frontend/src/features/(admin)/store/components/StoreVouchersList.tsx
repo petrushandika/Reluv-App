@@ -15,7 +15,6 @@ import {
   Trash2, 
   Edit, 
   Ticket, 
-  Calendar,
   MoreVertical,
   Activity,
   ArrowRight
@@ -141,8 +140,7 @@ export function StoreVouchersList() {
                 </div>
               </TableCell>
               <TableCell>
-                <div className="flex items-center text-[11px] font-semibold text-slate-600 dark:text-slate-400">
-                  <Calendar className="h-3.5 w-3.5 mr-2 text-slate-400" />
+                <div className="text-[11px] font-semibold text-slate-600 dark:text-slate-400">
                   {new Date(voucher.expiry).toLocaleDateString("id-ID", { day: 'numeric', month: 'short', year: 'numeric' })}
                 </div>
               </TableCell>

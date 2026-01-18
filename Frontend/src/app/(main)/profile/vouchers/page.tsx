@@ -183,7 +183,6 @@ export default function VouchersPage() {
                         </div>
                         <div className="flex flex-col items-end">
                           <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1 flex items-center gap-1">
-                            <Clock className="w-3 h-3" />
                             Expiry
                           </span>
                           <span className="text-xs font-bold text-slate-900 dark:text-white">
