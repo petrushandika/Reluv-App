@@ -69,4 +69,11 @@ export class VouchersController {
   remove(@GetUser() user: User, @Param('id', ParseIntPipe) id: number) {
     return this.vouchersService.remove(user, id);
   }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('seller/all')
+  @HttpCode(HttpStatus.OK)
+  findAllForSeller(@GetUser() user: User) {
+    return this.vouchersService.findAllForSeller(user.id);
+  }
 }

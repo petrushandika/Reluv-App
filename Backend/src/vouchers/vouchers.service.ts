@@ -229,4 +229,20 @@ export class VouchersService {
 
     return this.prisma.voucher.delete({ where: { id } });
   }
+
+  async findAllForSeller(userId: number) {
+    return this.prisma.voucher.findMany({
+      where: {
+        store: {
+          userId: userId,
+        },
+      },
+      include: {
+        _count: {
+          select: { usages: true },
+        },
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+  }
 }

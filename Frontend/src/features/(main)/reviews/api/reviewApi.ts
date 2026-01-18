@@ -92,3 +92,30 @@ export const replyReview = async (
   }
 };
 
+export const getSellerReviews = async (): Promise<Review[]> => {
+  try {
+    const response = await api.get<Review[]>("/reviews/seller/all");
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching seller reviews:", error);
+    return [];
+  }
+};
+
+export interface ReviewStats {
+  totalReviews: number;
+  avgRating: number;
+  pendingReplies: number;
+  ratingDistribution: Record<number, number>;
+}
+
+export const getSellerReviewStats = async (): Promise<ReviewStats> => {
+  try {
+    const response = await api.get<ReviewStats>("/reviews/seller/stats");
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching seller review stats:", error);
+    throw error;
+  }
+};
+

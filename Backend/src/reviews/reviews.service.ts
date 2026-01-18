@@ -343,4 +343,74 @@ export class ReviewsService {
 
     return review;
   }
+
+  async findAllForSeller(userId: number) {
+    return this.prisma.review.findMany({
+      where: {
+        product: {
+          sellerId: userId,
+        },
+      },
+      include: {
+        author: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            profile: {
+              select: {
+                avatar: true,
+              },
+            },
+          },
+        },
+        product: {
+          select: {
+            id: true,
+            name: true,
+            images: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+  }
+
+  async findStatsForSeller(userId: number) {
+    const reviews = await this.prisma.review.findMany({
+      where: {
+        product: {
+          sellerId: userId,
+        },
+      },
+      select: {
+        rating: true,
+        reply: true,
+      },
+    });
+
+    const totalReviews = reviews.length;
+    const avgRating =
+      totalReviews > 0
+        ? reviews.reduce((sum, r) => sum + r.rating, 0) / totalReviews
+        : 0;
+    const pendingReplies = reviews.filter((r) => !r.reply).length;
+
+    const ratingDistribution = {
+      1: reviews.filter((r) => r.rating === 1).length,
+      2: reviews.filter((r) => r.rating === 2).length,
+      3: reviews.filter((r) => r.rating === 3).length,
+      4: reviews.filter((r) => r.rating === 4).length,
+      5: reviews.filter((r) => r.rating === 5).length,
+    };
+
+    return {
+      totalReviews,
+      avgRating: parseFloat(avgRating.toFixed(1)),
+      pendingReplies,
+      ratingDistribution,
+    };
+  }
 }

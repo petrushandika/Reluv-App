@@ -19,6 +19,7 @@ import {
   ShoppingCart, 
   Ticket, 
   Settings,
+  MessageSquare,
   Star,
   DollarSign
 } from "lucide-react"
@@ -47,7 +48,7 @@ const sidebarItems = [
   {
     label: "Reviews",
     href: "/store/reviews",
-    icon: Star,
+    icon: MessageSquare,
   },
   {
     label: "Settings",
@@ -64,11 +65,11 @@ export default function StoreDashboardPage() {
       type="store"
       actions={
         <div className="flex items-center space-x-2">
-          <Button variant="outline" size="sm" className="border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors">
+          <Button variant="outline" className="h-10 px-4 rounded-xl border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-900 transition-all font-bold text-xs uppercase tracking-widest border">
             <Download className="mr-2 h-4 w-4" />
             Export
           </Button>
-          <Button size="sm" className="bg-sky-600 hover:bg-sky-700 text-white transition-all active:scale-95 border border-sky-500 dark:border-sky-400 font-bold text-xs uppercase tracking-widest h-10 px-4 rounded-xl">
+          <Button className="bg-sky-600 hover:bg-sky-700 text-white transition-all active:scale-95 border border-sky-500 dark:border-sky-400 font-bold text-xs uppercase tracking-widest h-10 px-4 rounded-xl shadow-none">
             <Plus className="mr-2 h-4 w-4" />
             New Product
           </Button>

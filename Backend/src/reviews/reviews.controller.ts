@@ -70,3 +70,22 @@ export class ReviewsController {
     return this.reviewsService.reply(user.id, reviewId, replyReviewDto);
   }
 }
+
+@Controller('reviews')
+export class ReviewsManagementController {
+  constructor(private readonly reviewsService: ReviewsService) {}
+
+  @UseGuards(JwtAuthGuard)
+  @Get('seller/all')
+  @HttpCode(HttpStatus.OK)
+  findAllForSeller(@GetUser() user: User) {
+    return this.reviewsService.findAllForSeller(user.id);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('seller/stats')
+  @HttpCode(HttpStatus.OK)
+  findStatsForSeller(@GetUser() user: User) {
+    return this.reviewsService.findStatsForSeller(user.id);
+  }
+}

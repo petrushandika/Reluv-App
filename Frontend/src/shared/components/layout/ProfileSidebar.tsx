@@ -8,6 +8,7 @@ import { usePathname } from "next/navigation";
 import {
   User,
   MapPin,
+  MessageSquare,
   ShoppingBag,
   LogOut,
   Check,
@@ -17,6 +18,7 @@ import {
   Package,
   HelpCircle,
   MessageCircle,
+  Ticket,
 } from "lucide-react";
 import { useAuthStore } from "@/features/(auth)/store/auth.store";
 import { User as UserType } from "@/features/(auth)/types";
@@ -54,7 +56,7 @@ const LogoutConfirmationModal = ({
 
   const modalContent = (
     <div
-      className="fixed inset-0 bg-gray-900/30 backdrop-blur-sm z-[9999] flex justify-center items-center p-4"
+      className="fixed inset-0 bg-gray-900/30 backdrop-blur-sm z-9999 flex justify-center items-center p-4"
       onClick={onClose}
     >
       <div
@@ -132,6 +134,18 @@ const ProfileSidebar: React.FC<ProfileSidebarProps> = ({ user }) => {
       title: "Order History",
       href: "/profile/orders",
       icon: ShoppingBag,
+      category: "My Purchases",
+    },
+    {
+      title: "My Vouchers",
+      href: "/profile/vouchers",
+      icon: Ticket,
+      category: "My Purchases",
+    },
+    {
+      title: "My Reviews",
+      href: "/profile/reviews",
+      icon: MessageSquare,
       category: "My Purchases",
     },
     {
@@ -227,7 +241,7 @@ const ProfileSidebar: React.FC<ProfileSidebarProps> = ({ user }) => {
 
   return (
     <aside className="hidden lg:block w-full lg:w-80 shrink-0 lg:sticky lg:self-start">
-      <div className="bg-gradient-to-br from-sky-500 to-sky-700 dark:from-sky-600 dark:to-sky-800 rounded-lg p-4 sm:p-6 mb-6 relative overflow-hidden">
+      <div className="bg-linear-to-br from-sky-500 to-sky-700 dark:from-sky-600 dark:to-sky-800 rounded-lg p-4 sm:p-6 mb-6 relative overflow-hidden">
         <div
           className="absolute inset-0 opacity-10"
           style={{
