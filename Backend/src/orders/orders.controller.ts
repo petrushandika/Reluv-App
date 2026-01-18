@@ -53,4 +53,14 @@ export class OrdersController {
   findOneForSeller(@GetUser() user: User, @Param('id', ParseIntPipe) id: number) {
     return this.ordersService.findOneForSeller(id, user.id);
   }
+
+  @Post('seller/:id/status')
+  @HttpCode(HttpStatus.OK)
+  updateOrderStatus(
+    @GetUser() user: User,
+    @Param('id', ParseIntPipe) id: number,
+    @Body(new ValidationPipe()) updateOrderDto: import('./dto/update-order.dto').UpdateOrderDto,
+  ) {
+    return this.ordersService.updateOrderStatus(id, user.id, updateOrderDto);
+  }
 }

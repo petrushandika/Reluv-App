@@ -19,6 +19,8 @@ import Spinner from '@/shared/components/common/Spinner';
 import { getOrders } from '@/features/(main)/orders/api/ordersApi';
 import { Order } from '@/features/(main)/orders/types';
 import { getStatusColor, formatCurrency, formatDate } from '@/features/(main)/orders/utils';
+import { Badge } from '@/shared/components/ui/badge';
+import { cn } from '@/shared/lib/utils';
 
 const OrdersPage = () => {
   const router = useRouter();
@@ -62,16 +64,16 @@ const OrdersPage = () => {
 
   return (
     <PrivateRoute>
-      <div className="min-h-screen bg-white dark:bg-gray-900">
+      <div className="min-h-screen bg-white dark:bg-slate-950">
         <div className="container mx-auto px-4 sm:px-6 md:px-10 xl:px-20 2xl:px-40 py-10 sm:py-12 md:py-14">
-          <div className="flex flex-col lg:flex-row lg:items-start lg:gap-8">
+          <div className="flex flex-col lg:flex-row lg:items-start lg:gap-10">
             <div className="lg:hidden">
               <button
                 onClick={() => router.back()}
-                className="flex items-center gap-2 text-gray-700 dark:text-gray-300 mb-4 cursor-pointer"
+                className="flex items-center gap-2 text-slate-600 dark:text-slate-400 mb-6 cursor-pointer hover:text-sky-600 transition-colors"
               >
                 <ChevronLeft className="w-5 h-5" />
-                <h1 className="text-lg font-bold text-gray-900 dark:text-white">
+                <h1 className="text-xl font-bold text-slate-900 dark:text-white tracking-tight">
                   Order History
                 </h1>
               </button>
@@ -80,88 +82,94 @@ const OrdersPage = () => {
             <ProfileSidebar user={user} />
 
             <main className="flex-1 min-w-0">
-              <div className="hidden lg:block mb-6 lg:pt-6">
+              <div className="hidden lg:block mb-8 lg:pt-2">
                 <div className="flex items-center gap-3 mb-2">
-                  <ShoppingBag className="w-6 h-6 text-sky-600 dark:text-sky-400" />
-                  <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 dark:text-white">
-                    Order History
-                  </h1>
+                  <div className="p-2 bg-sky-50 dark:bg-sky-500/10 rounded-xl border border-sky-100 dark:border-sky-900/30">
+                    <ShoppingBag className="w-6 h-6 text-sky-600 dark:text-sky-400" />
+                  </div>
+                  <div>
+                    <h1 className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">
+                      Order History
+                    </h1>
+                    <p className="text-sm font-medium text-slate-500 uppercase tracking-widest mt-0.5">Manage and track your purchases</p>
+                  </div>
                 </div>
               </div>
 
               {orders.length === 0 ? (
-                <div className="flex flex-col items-center justify-center min-h-[400px] py-12">
-                  <div className="mb-8 flex items-center justify-center">
-                    <Package className="w-24 h-24 sm:w-32 sm:h-32 text-sky-600 dark:text-sky-400 stroke-[1.5]" />
+                <div className="flex flex-col items-center justify-center min-h-[450px] py-12 bg-slate-50/50 dark:bg-slate-900/50 rounded-3xl border border-slate-200 dark:border-slate-800 border-dashed">
+                  <div className="mb-8 p-6 bg-white dark:bg-slate-950 rounded-full border border-slate-100 dark:border-slate-800 shadow-none">
+                    <Package className="w-20 h-20 text-sky-600 dark:text-sky-400 stroke-[1.5]" />
                   </div>
 
-                  <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-2">
+                  <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-2 tracking-tight">
                     No orders yet
                   </h2>
 
-                  <p className="text-sm sm:text-base text-gray-500 dark:text-gray-400 text-center mb-8 max-w-md">
-                    When you place an order, it will appear here.
+                  <p className="text-sm text-slate-500 dark:text-slate-400 text-center mb-8 max-w-sm font-medium">
+                    Looks like you haven't made any purchases yet. Your future orders will appear here.
                   </p>
 
                   <button
                     onClick={() => router.push('/')}
-                    className="px-4 py-2 text-sm bg-sky-600 dark:bg-sky-500 text-white font-medium rounded-lg hover:bg-sky-700 dark:hover:bg-sky-600 transition-colors cursor-pointer"
+                    className="px-8 py-3 bg-sky-600 dark:bg-sky-500 text-white font-bold text-xs uppercase tracking-widest rounded-xl hover:bg-sky-700 dark:hover:bg-sky-600 transform transition-all active:scale-95 cursor-pointer ring-offset-2 focus:ring-2 focus:ring-sky-500"
                   >
                     Start Shopping
                   </button>
                 </div>
               ) : (
-                <div className="space-y-4">
+                <div className="space-y-6">
                   {orders.map((order) => (
                     <div
                       key={order.id}
-                      className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden"
+                      className="bg-white dark:bg-slate-950 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden group hover:border-sky-200 dark:hover:border-sky-900/50 transition-all duration-300"
                     >
-                      <div className="p-4 sm:p-6 border-b border-gray-200 dark:border-gray-700">
-                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                      <div className="p-5 sm:p-6 bg-slate-50/50 dark:bg-slate-900/50 border-b border-slate-200 dark:border-slate-800">
+                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
                           <div className="flex-1">
-                            <div className="flex items-center gap-3 mb-2">
-                              <h3 className="text-lg font-bold text-gray-900 dark:text-white">
+                            <div className="flex flex-wrap items-center gap-3 mb-2.5">
+                              <h3 className="text-lg font-bold text-slate-900 dark:text-white tracking-tight">
                                 Order #{order.orderNumber}
                               </h3>
-                              <span
-                                className={`px-3 py-1 rounded-full text-xs font-semibold ${getStatusColor(
-                                  order.status
-                                )}`}
+                              <Badge
+                                className={cn(
+                                  "px-3 py-1 text-[10px] uppercase font-bold tracking-widest rounded-full border-2",
+                                  getStatusColor(order.status)
+                                )}
                               >
                                 {order.status}
-                              </span>
+                              </Badge>
                             </div>
-                            <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600 dark:text-gray-400">
-                              <div className="flex items-center gap-1">
-                                <Calendar className="w-4 h-4" />
+                            <div className="flex flex-wrap items-center gap-5 text-[11px] font-bold text-slate-400 uppercase tracking-widest">
+                              <div className="flex items-center gap-2">
+                                <Calendar className="w-3.5 h-3.5 text-slate-400" />
                                 <span>{formatDate(order.createdAt)}</span>
                               </div>
-                              <div className="flex items-center gap-1">
-                                <Package className="w-4 h-4" />
+                              <div className="flex items-center gap-2">
+                                <Package className="w-3.5 h-3.5 text-slate-400" />
                                 <span>{order.items.length} item(s)</span>
                               </div>
                             </div>
                           </div>
-                          <div className="text-right">
-                            <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">
-                              Total
+                          <div className="flex flex-row sm:flex-col items-center sm:items-end justify-between sm:justify-center gap-1 bg-white dark:bg-slate-900 px-4 py-2 rounded-xl border border-slate-100 dark:border-slate-800">
+                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                              Total Paid
                             </p>
-                            <p className="text-xl font-bold text-gray-900 dark:text-white">
+                            <p className="text-lg font-bold text-sky-600 dark:text-sky-400">
                               {formatCurrency(order.totalAmount)}
                             </p>
                           </div>
                         </div>
                       </div>
 
-                      <div className="p-4 sm:p-6">
-                        <div className="space-y-4">
+                      <div className="p-5 sm:p-6">
+                        <div className="space-y-5">
                           {order.items.map((item) => (
                             <div
                               key={item.id}
-                              className="flex gap-4 pb-4 border-b border-gray-100 dark:border-gray-700 last:border-b-0 last:pb-0"
+                              className="flex gap-5 pb-5 border-b border-slate-100 dark:border-slate-800 last:border-b-0 last:pb-0 group/item"
                             >
-                              <div className="relative w-20 h-20 sm:w-24 sm:h-24 flex-shrink-0 rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-700">
+                              <div className="relative w-24 h-24 sm:w-28 sm:h-28 flex-shrink-0 rounded-2xl overflow-hidden bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
                                 <Image
                                   src={
                                     item.variant.image ||
@@ -170,24 +178,28 @@ const OrdersPage = () => {
                                   }
                                   alt={item.variant.product.name}
                                   fill
-                                  className="object-cover"
-                                  sizes="(max-width: 640px) 80px, 96px"
+                                  className="object-cover group-hover/item:scale-105 transition-transform duration-500"
+                                  sizes="(max-width: 640px) 96px, 112px"
                                 />
                               </div>
-                              <div className="flex-1 min-w-0">
-                                <h4 className="font-semibold text-gray-900 dark:text-white mb-1 line-clamp-2">
+                              <div className="flex-1 min-w-0 pt-1">
+                                <h4 className="font-bold text-slate-900 dark:text-white mb-2 line-clamp-2 text-base tracking-tight group-hover/item:text-sky-600 transition-colors">
                                   {item.variant.product.name}
                                 </h4>
-                                <div className="flex flex-wrap items-center gap-2 text-sm text-gray-600 dark:text-gray-400 mb-2">
-                                  {item.variant.size && (
-                                    <span>Size: {item.variant.size}</span>
+                                <div className="flex flex-wrap items-center gap-3 mb-3">
+                                  {(item.variant.size || item.variant.color) && (
+                                    <div className="flex gap-2">
+                                      {item.variant.size && (
+                                        <span className="px-2 py-0.5 bg-slate-100 dark:bg-slate-900 rounded-md text-[10px] font-bold text-slate-500 uppercase">Size: {item.variant.size}</span>
+                                      )}
+                                      {item.variant.color && (
+                                        <span className="px-2 py-0.5 bg-slate-100 dark:bg-slate-900 rounded-md text-[10px] font-bold text-slate-500 uppercase">Color: {item.variant.color}</span>
+                                      )}
+                                    </div>
                                   )}
-                                  {item.variant.color && (
-                                    <span>Color: {item.variant.color}</span>
-                                  )}
-                                  <span>Qty: {item.quantity}</span>
+                                  <span className="text-[10px] font-bold text-slate-400 uppercase">Qty: {item.quantity}</span>
                                 </div>
-                                <p className="text-base font-semibold text-gray-900 dark:text-white">
+                                <p className="text-lg font-bold text-slate-900 dark:text-white">
                                   {formatCurrency(item.total)}
                                 </p>
                               </div>
@@ -195,53 +207,20 @@ const OrdersPage = () => {
                           ))}
                         </div>
 
-                        {order.discountAmount > 0 && (
-                          <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
-                            <div className="flex justify-between text-sm mb-2">
-                              <span className="text-gray-600 dark:text-gray-400">
-                                Subtotal
-                              </span>
-                              <span className="text-gray-900 dark:text-white">
-                                {formatCurrency(order.itemsAmount)}
-                              </span>
-                            </div>
-                            <div className="flex justify-between text-sm mb-2">
-                              <span className="text-gray-600 dark:text-gray-400">
-                                Discount
-                              </span>
-                              <span className="text-green-600 dark:text-green-400">
-                                -{formatCurrency(order.discountAmount)}
-                              </span>
-                            </div>
-                            <div className="flex justify-between text-sm mb-2">
-                              <span className="text-gray-600 dark:text-gray-400">
-                                Shipping
-                              </span>
-                              <span className="text-gray-900 dark:text-white">
-                                {formatCurrency(order.shippingCost)}
-                              </span>
-                            </div>
-                            <div className="flex justify-between text-base font-semibold pt-2 border-t border-gray-200 dark:border-gray-700">
-                              <span className="text-gray-900 dark:text-white">
-                                Total
-                              </span>
-                              <span className="text-gray-900 dark:text-white">
-                                {formatCurrency(order.totalAmount)}
-                              </span>
-                            </div>
-                          </div>
-                        )}
-
-                        <div className="mt-4 flex justify-end">
-                          <button
-                            onClick={() =>
-                              router.push(`/profile/orders/${order.id}`)
-                            }
-                            className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-sky-600 dark:text-sky-400 hover:text-sky-700 dark:hover:text-sky-300 transition-colors cursor-pointer"
-                          >
-                            View Details
-                            <ChevronRight className="w-4 h-4" />
-                          </button>
+                        <div className="mt-6 pt-5 flex flex-col sm:flex-row items-center justify-between border-t border-slate-100 dark:border-slate-800 gap-4">
+                           <div className="flex items-center gap-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest bg-slate-50 dark:bg-slate-900/50 px-3 py-1.5 rounded-lg border border-slate-100 dark:border-slate-800">
+                              <div className="w-1.5 h-1.5 rounded-full bg-sky-500" />
+                              Estimated Arrival: 2-3 Days
+                           </div>
+                           <button
+                             onClick={() =>
+                               router.push(`/profile/orders/${order.id}`)
+                             }
+                             className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-2.5 text-xs font-bold uppercase tracking-widest text-sky-600 dark:text-sky-400 hover:bg-sky-50 dark:hover:bg-sky-500/10 rounded-xl transition-all border border-transparent hover:border-sky-100 dark:hover:border-sky-900/30 active:scale-95 cursor-pointer"
+                           >
+                             View Details
+                             <ChevronRight className="w-4 h-4" />
+                           </button>
                         </div>
                       </div>
                     </div>

@@ -106,7 +106,7 @@ export function DashboardShell({
             className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-300"
             onClick={() => setIsMobileMenuOpen(false)}
           />
-          <div className="absolute left-0 top-0 w-72 h-full bg-white dark:bg-slate-950 shadow-2xl animate-in slide-in-from-left duration-300">
+          <div className="absolute left-0 top-0 w-72 h-full bg-white dark:bg-slate-950 border-r border-slate-200 dark:border-slate-800 animate-in slide-in-from-left duration-300">
              <div className="h-full flex flex-col">
                <div className="h-16 flex items-center justify-between px-6 border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-950">
                  <span className="text-2xl font-bold text-slate-900 dark:text-white">Reluv</span>

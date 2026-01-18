@@ -3,21 +3,19 @@ import { OrderStatus } from "../types";
 export const getStatusColor = (status: OrderStatus) => {
   switch (status) {
     case "PENDING":
-      return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400";
+      return "text-amber-600 border-amber-100 bg-amber-50 dark:bg-amber-500/10 dark:border-amber-900/30 border";
     case "PAID":
-      return "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400";
+      return "text-sky-600 border-sky-100 bg-sky-50 dark:bg-sky-500/10 dark:border-sky-900/30 border";
     case "SHIPPED":
-      return "bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400";
+      return "text-blue-600 border-blue-100 bg-blue-50 dark:bg-blue-500/10 dark:border-blue-900/30 border";
     case "DELIVERED":
-      return "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400";
     case "COMPLETED":
-      return "bg-sky-100 text-sky-800 dark:bg-sky-900/30 dark:text-sky-400";
+      return "text-emerald-600 border-emerald-100 bg-emerald-50 dark:bg-emerald-500/10 dark:border-emerald-900/30 border";
     case "CANCELLED":
-      return "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400";
     case "REFUNDED":
-      return "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300";
+      return "text-rose-600 border-rose-100 bg-rose-50 dark:bg-rose-500/10 dark:border-rose-900/30 border";
     default:
-      return "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300";
+      return "text-slate-500 border-slate-100 bg-slate-50 dark:bg-slate-800/50 dark:border-slate-700 border";
   }
 };
 

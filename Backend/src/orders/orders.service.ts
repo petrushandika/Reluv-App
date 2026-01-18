@@ -614,4 +614,60 @@ export class OrdersService {
     }
     return order;
   }
+
+  async updateOrderStatus(id: number, userId: number, updateOrderDto: any) {
+    const { status, trackingNumber } = updateOrderDto;
+
+    // Verify order exists and belongs to the seller
+    const order = await this.prisma.order.findFirst({
+      where: {
+        id,
+        items: {
+          some: {
+            variant: {
+              product: {
+                sellerId: userId,
+              },
+            },
+          },
+        },
+      },
+      include: {
+        shipment: true,
+      },
+    });
+
+    if (!order) {
+      throw new NotFoundException(`Order with ID ${id} not found for this seller.`);
+    }
+
+    return this.prisma.$transaction(async (tx) => {
+      const updatedOrder = await tx.order.update({
+        where: { id },
+        data: { status },
+      });
+
+      if (trackingNumber) {
+        if (order.shipment) {
+          await tx.shipment.update({
+            where: { orderId: id },
+            data: { trackingNumber, status: 'IN_TRANSIT' },
+          });
+        } else {
+          // If for some reason shipment doesn't exist, create it (should ideally exist from BiteShip)
+          await tx.shipment.create({
+            data: {
+              orderId: id,
+              trackingNumber,
+              status: 'IN_TRANSIT',
+              courier: 'Unknown',
+              service: 'Manual',
+            },
+          });
+        }
+      }
+
+      return updatedOrder;
+    });
+  }
 }
