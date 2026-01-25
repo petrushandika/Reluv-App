@@ -599,7 +599,9 @@ export class StoreService {
       throw new NotFoundException('You do not have a store yet.');
     }
 
-    const { page = 1, limit = 10, search, status, categoryId, sortBy = 'createdAt', sortOrder = 'desc' } = query;
+    const page = Number(query.page) || 1;
+    const limit = Number(query.limit) || 10;
+    const { search, status, categoryId, sortBy = 'createdAt', sortOrder = 'desc' } = query;
     const skip = (page - 1) * limit;
 
     const where: Prisma.ProductWhereInput = {
@@ -688,7 +690,9 @@ export class StoreService {
       throw new NotFoundException('You do not have a store yet.');
     }
 
-    const { page = 1, limit = 10, search, status, dateFrom, dateTo, sortBy = 'createdAt', sortOrder = 'desc' } = query;
+    const page = Number(query.page) || 1;
+    const limit = Number(query.limit) || 10;
+    const { search, status, dateFrom, dateTo, sortBy = 'createdAt', sortOrder = 'desc' } = query;
     const skip = (page - 1) * limit;
 
     const where: Prisma.OrderWhereInput = {
@@ -789,7 +793,9 @@ export class StoreService {
       throw new NotFoundException('You do not have a store yet.');
     }
 
-    const { page = 1, limit = 10, rating, hasReply, productId, sortBy = 'createdAt', sortOrder = 'desc' } = query;
+    const page = Number(query.page) || 1;
+    const limit = Number(query.limit) || 10;
+    const { rating, hasReply, productId, sortBy = 'createdAt', sortOrder = 'desc' } = query;
     const skip = (page - 1) * limit;
 
     const where: Prisma.ReviewWhereInput = {

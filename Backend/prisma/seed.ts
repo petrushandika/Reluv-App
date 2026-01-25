@@ -242,6 +242,11 @@ async function main() {
       createdUsers.push(user);
     }
     let sellerUsers = createdUsers.filter((u) => u.role === UserRole.USER);
+    const storeUser = createdUsers.find(u => u.role === UserRole.STORE);
+    
+    if (storeUser) {
+      sellerUsers.unshift(storeUser);
+    }
 
     while (sellerUsers.length < 5) {
       const newUser = await prisma.user.create({

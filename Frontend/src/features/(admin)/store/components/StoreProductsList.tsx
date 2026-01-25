@@ -23,9 +23,9 @@ import { motion } from "framer-motion"
 import { useState } from "react"
 import { ProductModal } from "./modals/ProductModal"
 import { DeleteConfirmModal } from "./modals/DeleteConfirmModal"
-
+import { StatusConfirmModal } from "./modals/StatusConfirmModal"
 import { useEffect } from "react"
-import { getStoreProducts, deleteStoreProduct, StoreProduct } from "../api/storeApi"
+import { getStoreProducts, deleteStoreProduct, toggleProductStatus, StoreProduct } from "../api/storeApi"
 import { Skeleton } from "@/shared/components/ui/skeleton"
 import { toast } from "sonner"
 
@@ -33,6 +33,7 @@ export function StoreProductsList() {
   const [selectedProduct, setSelectedProduct] = useState<any>(null)
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
+  const [isStatusModalOpen, setIsStatusModalOpen] = useState(false)
   const [products, setProducts] = useState<StoreProduct[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [search, setSearch] = useState("")
@@ -83,6 +84,24 @@ export function StoreProductsList() {
       toast.error(error.message || "Failed to delete product")
     } finally {
       setIsDeleteModalOpen(false)
+    }
+  }
+
+  const handleToggleStatus = (product: StoreProduct) => {
+    setSelectedProduct(product)
+    setIsStatusModalOpen(true)
+  }
+
+  const confirmStatusToggle = async () => {
+    if (!selectedProduct) return
+    try {
+      await toggleProductStatus(selectedProduct.id)
+      toast.success(selectedProduct.status === 'active' ? "Product deactivated" : "Product activated")
+      fetchProducts()
+    } catch (error: any) {
+      toast.error("Failed to update status")
+    } finally {
+      setIsStatusModalOpen(false)
     }
   }
 
@@ -198,14 +217,15 @@ export function StoreProductsList() {
                   </div>
                 </TableCell>
                 <TableCell>
-                  <div className={cn(
-                    "inline-flex items-center justify-center w-24 px-2.5 py-0.5 rounded-full text-[9px] font-medium uppercase tracking-widest border border-slate-200 dark:border-slate-800",
-                    product.status === "published" ? "text-emerald-500 bg-emerald-500/5" :
-                    product.status === "draft" ? "text-slate-500 bg-slate-500/5" :
-                    "text-rose-500 bg-rose-500/5"
+                  <button 
+                    onClick={() => handleToggleStatus(product)}
+                    className={cn(
+                    "inline-flex items-center justify-center w-24 px-2.5 py-0.5 rounded-full text-[9px] font-medium uppercase tracking-widest border border-slate-200 dark:border-slate-800 transition-all hover:scale-105 active:scale-95 cursor-pointer",
+                    product.status === "active" ? "text-emerald-500 bg-emerald-500/5 hover:bg-emerald-500/10 border-emerald-500/20" :
+                    "text-rose-500 bg-rose-500/5 hover:bg-rose-500/10 border-rose-500/20"
                   )}>
-                    {product.status}
-                  </div>
+                    {product.status === "active" ? "Active" : "Inactive"}
+                  </button>
                 </TableCell>
                 <TableCell className="pr-8 text-right">
                     <div className="flex items-center justify-end gap-2">
@@ -275,6 +295,18 @@ export function StoreProductsList() {
         title="Confirm Purge"
         description="Are you sure you want to delete this product? This action is irreversible."
         itemName={selectedProduct?.name}
+      />
+
+      <StatusConfirmModal
+        isOpen={isStatusModalOpen}
+        onClose={() => setIsStatusModalOpen(false)}
+        onConfirm={confirmStatusToggle}
+        title={selectedProduct?.status === 'active' ? "Deactivate Product" : "Activate Product"}
+        description={selectedProduct?.status === 'active' 
+          ? "Are you sure you want to deactivate this product? It will no longer be visible to customers." 
+          : "Are you sure you want to activate this product? It will be visible to everyone."}
+        itemName={selectedProduct?.name}
+        currentStatus={selectedProduct?.status}
       />
     </div>
   )

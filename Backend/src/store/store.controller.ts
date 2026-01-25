@@ -35,11 +35,7 @@ export class StoreController {
     return this.storeService.findAllPublic(queryDto);
   }
 
-  @Get(':slug')
-  @HttpCode(HttpStatus.OK)
-  findBySlug(@Param('slug') slug: string) {
-    return this.storeService.findBySlug(slug);
-  }
+
 
   @UseGuards(JwtAuthGuard)
   @Post()
@@ -213,5 +209,11 @@ export class StoreController {
     @Body('status') status: string,
   ) {
     return this.storeService.updateOrderStatus(user.id, id, status);
+  }
+
+  @Get(':slug')
+  @HttpCode(HttpStatus.OK)
+  findBySlug(@Param('slug') slug: string) {
+    return this.storeService.findBySlug(slug);
   }
 }

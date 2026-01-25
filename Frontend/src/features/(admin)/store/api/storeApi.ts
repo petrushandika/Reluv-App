@@ -287,6 +287,11 @@ export const deleteStoreProduct = async (id: number): Promise<void> => {
   await api.delete(`/store/products/${id}`);
 };
 
+export const toggleProductStatus = async (id: number): Promise<StoreProduct> => {
+  const response = await api.patch(`/store/products/${id}/toggle`);
+  return response.data;
+};
+
 export const createStoreVoucher = async (data: any): Promise<StoreVoucher> => {
   const response = await api.post("/store/vouchers", data);
   return response.data;

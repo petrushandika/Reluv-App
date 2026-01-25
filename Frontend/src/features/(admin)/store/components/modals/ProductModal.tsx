@@ -14,7 +14,7 @@ import { Input } from "@/shared/components/ui/input"
 import { Label } from "@/shared/components/ui/label"
 import { Select } from "@/shared/components/ui/select"
 import { Textarea } from "@/shared/components/ui/textarea"
-import { Package, Image as ImageIcon, Plus } from "lucide-react"
+import { Plus } from "lucide-react"
 
 import { useState, useEffect } from "react"
 import { createStoreProduct, updateStoreProduct, uploadImage } from "../../api/storeApi"
@@ -116,10 +116,6 @@ export function ProductModal({ isOpen, onClose, product, mode }: ProductModalPro
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className="sm:max-w-[600px] border-none bg-white dark:bg-slate-900 p-0 overflow-hidden rounded-2xl shadow-2xl flex flex-col max-h-[95vh] sm:max-h-[90vh]">
         <DialogHeader className="p-6 sm:p-8 pb-0 shrink-0">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="h-10 w-10 rounded-xl bg-sky-500/10 flex items-center justify-center border border-sky-500/20">
-              <Package className="h-5 w-5 text-sky-500" />
-            </div>
             <div>
               <DialogTitle className="text-lg sm:text-xl font-semibold text-slate-900 dark:text-white uppercase tracking-tight">
                 {mode === "create" ? "Add New Asset" : "Modify Inventory"}
@@ -128,7 +124,6 @@ export function ProductModal({ isOpen, onClose, product, mode }: ProductModalPro
                 {mode === "create" ? "Register a new product" : `Editing ID: #${product?.id}`}
               </DialogDescription>
             </div>
-          </div>
         </DialogHeader>
 
         <div className="flex-1 overflow-y-auto custom-scrollbar">
