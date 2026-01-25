@@ -185,7 +185,7 @@ const AddAddressPage = () => {
       setIsLoadingProvinces(true);
       try {
         const response = await fetch(
-          "https:
+          "https://www.emsifa.com/api-wilayah-indonesia/api/provinces.json"
         );
         const data: Province[] = await response.json();
         setProvinces(data);
@@ -203,7 +203,7 @@ const AddAddressPage = () => {
         setIsLoadingRegencies(true);
         try {
           const response = await fetch(
-            `https:
+            `https://www.emsifa.com/api-wilayah-indonesia/api/regencies/${formData.province}.json`
           );
           const data: Regency[] = await response.json();
           setRegencies(data);
@@ -231,7 +231,7 @@ const AddAddressPage = () => {
         setIsLoadingDistricts(true);
         try {
           const response = await fetch(
-            `https:
+            `https://www.emsifa.com/api-wilayah-indonesia/api/districts/${formData.city}.json`
           );
           const data: District[] = await response.json();
           setDistricts(data);
@@ -254,7 +254,7 @@ const AddAddressPage = () => {
         setIsLoadingSubDistricts(true);
         try {
           const response = await fetch(
-            `https:
+            `https://www.emsifa.com/api-wilayah-indonesia/api/villages/${formData.district}.json`
           );
           const data: SubDistrict[] = await response.json();
           setSubDistricts(data);

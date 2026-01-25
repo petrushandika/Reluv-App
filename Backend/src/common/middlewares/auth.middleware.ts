@@ -20,7 +20,8 @@ export class AuthMiddleware implements NestMiddleware {
       path.startsWith('/api/v1/auth/google') ||
       path.startsWith('/api/v1/auth/facebook') ||
       (path.startsWith('/api/v1/auth/forgot') && method === 'POST') ||
-      (path.startsWith('/api/v1/auth/reset') && method === 'POST')
+      (path.startsWith('/api/v1/auth/reset') && method === 'POST') ||
+      (path.startsWith('/api/v1/auth/verification') && method === 'POST')
     ) {
       return next();
     }
