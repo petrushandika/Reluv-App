@@ -1,0 +1,73 @@
+name: Deployment
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  validate-frontend:
+    name: Validate Frontend (Lint & Build)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18.x
+          cache: 'npm'
+          cache-dependency-path: Frontend/package-lock.json
+
+      - name: Install Dependencies
+        working-directory: ./Frontend
+        run: npm ci
+
+      - name: Lint
+        working-directory: ./Frontend
+        run: npm run lint
+
+      - name: Build
+        working-directory: ./Frontend
+        run: npm run build
+
+  validate-backend:
+    name: Validate Backend (Lint & Build)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18.x
+          cache: 'npm'
+          cache-dependency-path: Backend/package-lock.json
+
+      - name: Install Dependencies
+        working-directory: ./Backend
+        run: npm ci --legacy-peer-deps
+
+      - name: Lint
+        working-directory: ./Backend
+        run: npm run lint
+
+      - name: Build
+        working-directory: ./Backend
+        run: npm run build
+
+  deploy:
+    name: Deploy Application
+    needs: [validate-frontend, validate-backend]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+      
+      - name: Deploy
+        run: |
+          echo "Deploying application..."
+          # Add your deployment commands here (e.g., Docker build/push, SSH, Vercel, etc.)
+          echo "Deployment successful!"
