@@ -196,7 +196,7 @@ export class ProductsService {
       orderBy = { createdAt: 'desc' };
     }
 
-    const [products, total] = await this.prisma.$transaction([
+    const [products, totalAmount] = await this.prisma.$transaction([
       this.prisma.product.findMany({
         where,
         skip: needsPriceSort ? 0 : skip,
@@ -309,10 +309,10 @@ export class ProductsService {
     return {
       data: sortedProducts,
       meta: {
-        total,
+        total: totalAmount,
         page,
         limit,
-        totalPages: Math.ceil(total / limit),
+        totalPages: Math.ceil(totalAmount / limit),
       },
     };
   }

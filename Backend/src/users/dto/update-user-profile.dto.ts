@@ -1,4 +1,4 @@
-import { IsOptional, IsString, Length, IsEnum } from 'class-validator';
+import { IsOptional, IsString, Length } from 'class-validator';
 
 export class UpdateUserProfileDto {
   @IsString()

@@ -158,7 +158,6 @@ export class ShippingRatesService {
       if (error instanceof AxiosError) {
         const errorData = error.response?.data;
         const status = error.response?.status;
-        const statusText = error.response?.statusText;
         const errorMessage = errorData?.message || errorData?.error || error.message;
         const code = error.code;
         
@@ -206,7 +205,6 @@ export class ShippingRatesService {
       }
       
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      const errorCode = error instanceof AxiosError ? error.code : 'UNKNOWN';
       
       throw new BadGatewayException(
         `Failed to retrieve shipping rates: ${errorMessage}. Please check BITESHIP_API_KEY and BITESHIP_BASE_URL configuration.`,

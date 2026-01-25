@@ -57,7 +57,7 @@ export class AuthService {
 
     await this.emailService.sendUserConfirmation(user, tokenDetails.token);
 
-    const { password: _, ...result } = user;
+    const { password: _password, ...result } = user;
     return result;
   }
 

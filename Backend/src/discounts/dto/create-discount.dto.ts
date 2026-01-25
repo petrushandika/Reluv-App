@@ -7,7 +7,6 @@ import {
   IsDate,
   IsBoolean,
   Min,
-  Max,
   Length,
   ValidateIf,
 } from 'class-validator';

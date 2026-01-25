@@ -1,7 +1,6 @@
 import { HttpService } from '@nestjs/axios';
 import {
   Injectable,
-  InternalServerErrorException,
   BadGatewayException,
 } from '@nestjs/common';
 import { firstValueFrom } from 'rxjs';
