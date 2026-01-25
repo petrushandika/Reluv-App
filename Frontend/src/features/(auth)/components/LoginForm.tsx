@@ -22,7 +22,7 @@ const LoginForm = ({
   onSubmit,
   onSocialLogin,
   isLoading,
-  error,
+  // error, // kept in props interface but not used in render currently
 }: LoginFormProps) => {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
@@ -33,13 +33,12 @@ const LoginForm = ({
     setShowPassword(!showPassword);
   };
 
-  useEffect(() => {
-    if (error) {
-      toast.error("Error", {
-        description: error,
-      });
-    }
-  }, [error]);
+
+  /* 
+    The parent component or handleApiError utility is responsible for showing the error toast.
+    We don't need to duplicate it here, but we keep the prop for potential future use (e.g. inline error display).
+  */
+
 
   useEffect(() => {
     if (validationError) {

@@ -25,6 +25,7 @@ import {
   redirectToFacebookAuth,
 } from "@/features/(auth)/api/authApi";
 import { LoginPayload, SocialProvider } from "@/features/(auth)/types";
+import { handleApiError } from "@/shared/utils/handleApiError";
 
 const Login = () => {
   const router = useRouter();
@@ -63,25 +64,15 @@ const Login = () => {
           break;
       }
     } catch (err: unknown) {
-      let errorMessage = "An unknown error occurred.";
-      if (axios.isAxiosError(err)) {
-        errorMessage =
-          err.response?.data?.message ||
-          err.message ||
-          "Login failed. Please check your credentials.";
-        
-        if (errorMessage.includes("verify your email") || errorMessage.includes("email")) {
-          const email = data.email;
-          router.push(`/verification?email=${encodeURIComponent(email)}`);
-          return;
-        }
-      } else if (err instanceof Error) {
-        errorMessage = err.message;
+      const errorMessage = handleApiError(err, "Login Failed");
+      
+      if (errorMessage.toLowerCase().includes("verify your email") || errorMessage.toLowerCase().includes("not verified")) {
+        const email = data.email;
+        router.push(`/verification?email=${encodeURIComponent(email)}`);
+        return;
       }
+      
       setError(errorMessage);
-      toast.error("Login Failed", {
-        description: errorMessage,
-      });
     }
   };
 

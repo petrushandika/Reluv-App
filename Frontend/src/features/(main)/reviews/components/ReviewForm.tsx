@@ -1,9 +1,10 @@
 "use client";
 
 import React, { useState } from "react";
-import { Star, X, Upload, Image as ImageIcon } from "lucide-react";
+import { Star, X, Upload } from "lucide-react";
 import { CreateReviewData } from "../types";
 import { toast } from "sonner";
+import { handleApiError } from "@/shared/utils/handleApiError";
 
 interface ReviewFormProps {
   productId: number;
@@ -63,7 +64,7 @@ const ReviewForm = ({
         onCancel();
       }
     } catch (error: any) {
-      toast.error(error?.response?.data?.message || error?.message || "Failed to submit review");
+      handleApiError(error, "Failed to submit review");
     } finally {
       setIsSubmitting(false);
     }
@@ -198,7 +199,7 @@ const ReviewForm = ({
                         src={url}
                         alt={`Review image ${index + 1}`}
                         className="w-full h-full object-cover rounded-lg border-2 border-gray-200 dark:border-gray-700 hover:border-sky-500 dark:hover:border-sky-400 transition-colors"
-                        onError={(e) => {
+                        onError={() => {
                           toast.error(`Invalid image URL: ${url.substring(0, 30)}...`);
                           handleImageRemove(index);
                         }}

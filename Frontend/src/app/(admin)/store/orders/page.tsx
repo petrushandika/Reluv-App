@@ -13,7 +13,6 @@ import {
   Truck,
   Download
 } from "lucide-react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/ui/card"
 import { Button } from "@/shared/components/ui/button"
 import { StoreOrdersList } from "@/features/(admin)/store/components/StoreOrdersList"
 
@@ -54,6 +53,8 @@ import { useEffect, useState } from "react"
 import { getDashboardAnalytics, DashboardAnalytics } from "@/features/(admin)/store/api/storeApi"
 import { Skeleton } from "@/shared/components/ui/skeleton"
 
+import { handleApiError } from "@/shared/utils/handleApiError"
+
 export default function StoreOrdersPage() {
   const [data, setData] = useState<DashboardAnalytics | null>(null)
   const [isLoading, setIsLoading] = useState(true)
@@ -65,7 +66,7 @@ export default function StoreOrdersPage() {
         const response = await getDashboardAnalytics()
         setData(response)
       } catch (error) {
-        console.error("Failed to fetch order stats:", error)
+        handleApiError(error, "Failed to fetch order stats")
       } finally {
         setIsLoading(false)
       }
