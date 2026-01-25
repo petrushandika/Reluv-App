@@ -28,6 +28,8 @@ import { getSellerOrders, getSellerOrder } from "@/features/(main)/orders/api/or
 import { Order, OrderStatus } from "@/features/(main)/orders/types";
 import { getStatusColor, formatCurrency, formatDate } from "@/features/(main)/orders/utils";
 import { toast } from "sonner";
+import { cn } from "@/shared/lib/utils";
+import { Badge } from "@/shared/components/ui/badge";
 
 type TabFilter = "all" | "PENDING" | "PAID" | "SHIPPED" | "DELIVERED" | "COMPLETED" | "CANCELLED";
 
