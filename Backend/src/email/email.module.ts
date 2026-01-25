@@ -27,15 +27,25 @@ import { existsSync } from 'fs';
         },
         template: {
           dir: (() => {
-            if (process.env.NODE_ENV === 'production') {
-              const distPath = join(process.cwd(), 'dist', 'templates');
-              const srcPath = join(process.cwd(), 'src', 'templates');
-              const relativePath = join(__dirname, '..', 'templates');
+            // Priority list of directories to check
+            const possibleDirs = [
+              join(process.cwd(), 'dist', 'templates'),
+              join(process.cwd(), 'templates'),
+              join(process.cwd(), 'src', 'templates'),
+              join(__dirname, '..', 'templates'),
+              join(__dirname, '..', '..', 'templates'),
+            ];
 
-              if (existsSync(distPath)) return distPath;
-              if (existsSync(srcPath)) return srcPath;
-              return relativePath;
+            for (const dir of possibleDirs) {
+              if (
+                existsSync(dir) &&
+                existsSync(join(dir, 'verification.hbs'))
+              ) {
+                return dir;
+              }
             }
+
+            // Fallback to original logic if none found
             return join(__dirname, '..', 'templates');
           })(),
           adapter: new HandlebarsAdapter(),

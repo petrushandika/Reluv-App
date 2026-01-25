@@ -35,7 +35,25 @@ export class AuthService {
     const existingUser = await this.prisma.user.findUnique({
       where: { email },
     });
+
     if (existingUser) {
+      if (!existingUser.isVerified) {
+        const tokenDetails = this._createVerificationToken();
+        await this.prisma.user.update({
+          where: { id: existingUser.id },
+          data: {
+            verificationToken: tokenDetails.hashedToken,
+            verificationTokenExpiry: tokenDetails.expiry,
+          },
+        });
+        await this.emailService.sendUserConfirmation(
+          existingUser,
+          tokenDetails.token,
+        );
+        throw new ConflictException(
+          'Email already registered but not verified. A new verification email has been sent.',
+        );
+      }
       throw new ConflictException('Email already in use');
     }
 
@@ -101,8 +119,19 @@ export class AuthService {
     }
 
     const payload = { sub: user.id, email: user.email, role: user.role };
+
+    // Fetch full user data including profile
+    const userWithProfile = await this.prisma.user.findUnique({
+      where: { id: user.id },
+      include: { profile: true },
+    });
+
+    const result = { ...userWithProfile };
+    delete (result as any).password;
+
     return {
       token: this.jwtService.sign(payload),
+      user: result,
     };
   }
 

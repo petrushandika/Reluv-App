@@ -98,6 +98,15 @@ const Register = () => {
         } else {
           errorMessage = err.response?.data?.message || err.message;
         }
+
+        // Handle case where email is already registered but not verified
+        if (errorMessage.toLowerCase().includes("not verified") || errorMessage.toLowerCase().includes("verify your email")) {
+          toast.info("Account Exists", {
+            description: "This email is already registered but not verified. Redirecting you to verification page...",
+          });
+          router.push(`/verification?email=${encodeURIComponent(validationResult.data.email)}`);
+          return;
+        }
       } else if (err instanceof Error) {
         errorMessage = err.message;
       }
@@ -193,7 +202,7 @@ const Register = () => {
             >
               {[...Array(10)].map((_, j) => (
                 <div key={j} className="stream-icon">
-                  {streamIcons[Math.floor(Math.random() * streamIcons.length)]}
+                  {streamIcons[(i + j) % streamIcons.length]}
                 </div>
               ))}
             </div>

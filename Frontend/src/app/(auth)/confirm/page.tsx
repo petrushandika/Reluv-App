@@ -81,7 +81,7 @@ const Confirm = () => {
             >
               {[...Array(10)].map((_, j) => (
                 <div key={j} className="stream-icon">
-                  {streamIcons[Math.floor(Math.random() * streamIcons.length)]}
+                  {streamIcons[(i + j) % streamIcons.length]}
                 </div>
               ))}
             </div>
