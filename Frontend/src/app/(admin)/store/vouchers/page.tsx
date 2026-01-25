@@ -59,6 +59,7 @@ export default function StoreVouchersPage() {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
   const [data, setData] = useState<DashboardAnalytics | null>(null)
   const [isLoading, setIsLoading] = useState(true)
+  const [refreshKey, setRefreshKey] = useState(0)
 
   useEffect(() => {
     const fetchStats = async () => {
@@ -74,6 +75,11 @@ export default function StoreVouchersPage() {
     }
     fetchStats()
   }, [])
+
+  const handleModalClose = (refresh?: boolean) => {
+    setIsCreateModalOpen(false)
+    if (refresh) setRefreshKey(prev => prev + 1)
+  }
 
   const stats = [
     {
@@ -149,12 +155,12 @@ export default function StoreVouchersPage() {
           )}
         </div>
 
-        <StoreVouchersList />
+        <StoreVouchersList refreshKey={refreshKey} />
       </div>
 
       <VoucherModal 
         isOpen={isCreateModalOpen} 
-        onClose={() => setIsCreateModalOpen(false)} 
+        onClose={handleModalClose} 
         mode="create" 
       />
     </DashboardShell>

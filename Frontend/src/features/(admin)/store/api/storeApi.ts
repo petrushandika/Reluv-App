@@ -263,6 +263,11 @@ export const getStoreReviews = async (params?: any): Promise<StoreReviewsRespons
   return response.data;
 };
 
+export const createMyStore = async (data: any): Promise<Store> => {
+  const response = await api.post("/store", data);
+  return response.data;
+};
+
 export const updateStore = async (data: UpdateStoreDto): Promise<Store> => {
   const response = await api.patch("/store/me/my-store", data);
   return response.data;
@@ -273,22 +278,32 @@ export const updateStoreProfile = async (data: UpdateStoreProfileDto): Promise<S
   return response.data;
 };
 
+export const getStoreProduct = async (id: number): Promise<StoreProduct> => {
+  const response = await api.get(`/products/${id}`);
+  return response.data;
+};
+
 export const createStoreProduct = async (data: any): Promise<StoreProduct> => {
-  const response = await api.post("/store/products", data);
+  const response = await api.post("/products", data);
   return response.data;
 };
 
 export const updateStoreProduct = async (id: number, data: any): Promise<StoreProduct> => {
-  const response = await api.patch(`/store/products/${id}`, data);
+  const response = await api.patch(`/products/${id}`, data);
   return response.data;
 };
 
 export const deleteStoreProduct = async (id: number): Promise<void> => {
-  await api.delete(`/store/products/${id}`);
+  await api.delete(`/products/${id}`);
 };
 
 export const toggleProductStatus = async (id: number): Promise<StoreProduct> => {
   const response = await api.patch(`/store/products/${id}/toggle`);
+  return response.data;
+};
+
+export const updateStoreVariant = async (productId: number, variantId: number, data: any): Promise<any> => {
+  const response = await api.patch(`/products/${productId}/variants/${variantId}`, data);
   return response.data;
 };
 

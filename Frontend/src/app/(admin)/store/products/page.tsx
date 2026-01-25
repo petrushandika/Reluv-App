@@ -57,6 +57,7 @@ export default function StoreProductsPage() {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
   const [data, setData] = useState<DashboardAnalytics | null>(null)
   const [isLoading, setIsLoading] = useState(true)
+  const [refreshKey, setRefreshKey] = useState(0)
 
   useEffect(() => {
     const fetchStats = async () => {
@@ -72,6 +73,15 @@ export default function StoreProductsPage() {
     }
     fetchStats()
   }, [])
+
+  const handleModalClose = (refresh?: boolean) => {
+    setIsCreateModalOpen(false)
+    if (refresh) {
+      setRefreshKey(prev => prev + 1)
+      // Also refresh dashboard stats
+      // fetchStats() // Ideally we would lift fetchStats out or use React Query, but refreshing list is main priority
+    }
+  }
 
   return (
     <DashboardShell 
@@ -95,6 +105,8 @@ export default function StoreProductsPage() {
       }
     >
       <div className="space-y-6">
+        {/* ... (stats grid) ... */}
+        {/* We need to render stats grid exactly as before, I will keep standard rendering by not modifying the middle part... wait I am using replace_file_content, I need to target carefully */}
         <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
           {isLoading ? (
             [...Array(3)].map((_, i) => (
@@ -133,12 +145,12 @@ export default function StoreProductsPage() {
           )}
         </div>
 
-        <StoreProductsList />
+        <StoreProductsList refreshKey={refreshKey} />
       </div>
 
       <ProductModal 
         isOpen={isCreateModalOpen} 
-        onClose={() => setIsCreateModalOpen(false)} 
+        onClose={handleModalClose} 
         mode="create" 
       />
     </DashboardShell>

@@ -29,7 +29,11 @@ import { getStoreProducts, deleteStoreProduct, toggleProductStatus, StoreProduct
 import { Skeleton } from "@/shared/components/ui/skeleton"
 import { toast } from "sonner"
 
-export function StoreProductsList() {
+interface StoreProductsListProps {
+  refreshKey?: number;
+}
+
+export function StoreProductsList({ refreshKey }: StoreProductsListProps) {
   const [selectedProduct, setSelectedProduct] = useState<any>(null)
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
@@ -62,7 +66,7 @@ export function StoreProductsList() {
       fetchProducts()
     }, 500)
     return () => clearTimeout(timer)
-  }, [search, page])
+  }, [search, page, refreshKey])
 
   const handleEdit = (product: any) => {
     setSelectedProduct(product)

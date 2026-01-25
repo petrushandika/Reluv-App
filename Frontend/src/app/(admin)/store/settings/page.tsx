@@ -24,7 +24,7 @@ import { Label } from "@/shared/components/ui/label"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/components/ui/tabs"
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/components/ui/avatar"
 import { toast } from "sonner"
-import { getMyStore, updateStore, updateStoreProfile, uploadImage, Store } from "@/features/(admin)/store/api/storeApi"
+import { getMyStore, updateStore, updateStoreProfile, uploadImage, createMyStore, Store } from "@/features/(admin)/store/api/storeApi"
 
 const sidebarItems = [
   { label: "Dashboard", href: "/store", icon: LayoutDashboard },
@@ -146,7 +146,34 @@ export default function StoreSettingsPage() {
                 <StoreIcon className="h-8 w-8 text-slate-400" />
             </div>
             <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-2">Store Not Detected</h2>
-            <p className="text-slate-500 max-w-md mb-8">It looks like you haven't set up a store yet. Please contact support or use the creation wizard.</p>
+            <p className="text-slate-500 max-w-md mb-8">It looks like you haven't set up a store yet. Click below to initialize your store ecosystem.</p>
+            <Button 
+                onClick={async () => {
+                    setIsLoading(true);
+                    try {
+                        const storeName = "New Store " + Date.now().toString().slice(-4);
+                        const storeSlug = storeName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '') + '-' + Date.now();
+                        
+                        const newStore = await createMyStore({ 
+                            name: storeName, 
+                            slug: storeSlug
+                        });
+                        
+                        setStore(newStore);
+                        setName(newStore.name);
+                        setSlug(newStore.slug || "");
+                        setNoStore(false);
+                        toast.success("Store initialized successfully!");
+                    } catch (e: any) {
+                        toast.error("Failed to create store: " + (e.message || "Unknown error"));
+                    } finally {
+                        setIsLoading(false);
+                    }
+                }}
+                className="bg-sky-500 hover:bg-sky-600 text-white font-medium uppercase tracking-widest px-8 rounded-xl h-11"
+            >
+                Initialize Store
+            </Button>
         </div>
       </DashboardShell>
     )
@@ -192,7 +219,13 @@ export default function StoreSettingsPage() {
                       <Label className="text-[10px] font-medium uppercase tracking-widest text-slate-500 ml-1">Official Name</Label>
                       <Input 
                         value={name}
-                        onChange={(e) => setName(e.target.value)}
+                        onChange={(e) => {
+                          const newName = e.target.value;
+                          setName(newName);
+                          // Auto-generate slug
+                          const newSlug = newName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
+                          setSlug(newSlug);
+                        }}
                         className="h-12 bg-slate-50 dark:bg-slate-950 border-slate-200 dark:border-slate-800 rounded-2xl focus:ring-sky-500/10 focus:border-sky-500 transition-all font-medium text-sm"
                       />
                     </div>

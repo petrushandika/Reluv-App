@@ -12,12 +12,18 @@ import {
 import { Button } from "@/shared/components/ui/button"
 import { Input } from "@/shared/components/ui/input"
 import { Label } from "@/shared/components/ui/label"
-import { Select } from "@/shared/components/ui/select"
+// import { Select } from "@/shared/components/ui/select"
 import { Textarea } from "@/shared/components/ui/textarea"
 import { Plus, ChevronDown, ChevronUp } from "lucide-react"
 
 import { useState, useEffect } from "react"
-import { createStoreProduct, updateStoreProduct, uploadImage } from "../../api/storeApi"
+import { 
+  createStoreProduct, 
+  updateStoreProduct, 
+  updateStoreVariant, // Add import
+  uploadImage,
+  getStoreProduct 
+} from "../../api/storeApi"
 import { toast } from "sonner"
 import { Loader2 } from "lucide-react"
 
@@ -32,48 +38,100 @@ export function ProductModal({ isOpen, onClose, product, mode }: ProductModalPro
   const [isSaving, setIsSaving] = useState(false)
   const [formData, setFormData] = useState({
     name: "",
+    slug: "",
     categoryId: 1, // Default category
     description: "",
     price: 0,
     stock: 0,
+    condition: "NEW", // Default condition
+    weight: 0,
+    length: 0,
+    width: 0,
+    height: 0,
     images: [] as string[]
   })
 
   useEffect(() => {
-    if (product && mode === "edit") {
-      setFormData({
-        name: product.name,
-        categoryId: product.category?.id || 1,
-        description: product.description || "",
-        price: product.minPrice || 0,
-        stock: product.totalStock || 0,
-        images: product.images || []
-      })
-    } else {
-      setFormData({
-        name: "",
-        categoryId: 1,
-        description: "",
-        price: 0,
-        stock: 0,
-        images: []
-      })
+    const loadProductDetails = async () => {
+      if (product && mode === "edit") {
+        try {
+            // Fetch full details to ensure we have weight, dimensions etc.
+            const fullProduct: any = await getStoreProduct(product.id)
+            const variant = fullProduct.variants?.[0] || {}
+            
+            setFormData({
+                name: fullProduct.name || "",
+                slug: fullProduct.slug || "",
+                categoryId: fullProduct.category?.id || 1,
+                description: fullProduct.description || "",
+                price: variant.price || fullProduct.minPrice || 0,
+                stock: variant.stock || fullProduct.totalStock || 0,
+                condition: variant.condition || "NEW",
+                weight: variant.weight || 0,
+                length: variant.length || 0,
+                width: variant.width || 0,
+                height: variant.height || 0,
+                images: fullProduct.images || []
+            })
+        } catch (error) {
+            console.error("Failed to load product details", error)
+            // Fallback to existing product prop if fetch fails, though it might be incomplete
+             const variant = product.variants?.[0] || {}
+             setFormData({
+                name: product.name || "",
+                slug: product.slug || "",
+                categoryId: product.category?.id || 1,
+                description: product.description || "",
+                price: variant.price || product.minPrice || 0,
+                stock: variant.stock || product.totalStock || 0,
+                condition: variant.condition || "NEW",
+                weight: variant.weight || 0,
+                length: variant.length || 0,
+                width: variant.width || 0,
+                height: variant.height || 0,
+                images: product.images || []
+            })
+        }
+      } else {
+        setFormData({
+            name: "",
+            slug: "",
+            categoryId: 1,
+            description: "",
+            price: 0,
+            stock: 0,
+            condition: "NEW",
+            weight: 0,
+            length: 0,
+            width: 0,
+            height: 0,
+            images: []
+        })
+      }
     }
+    loadProductDetails()
   }, [product, mode, isOpen])
 
+  // ... (useEffect above)
+
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (!file) return
+    const files = e.target.files
+    if (!files || files.length === 0) return
     
     try {
       setIsSaving(true)
-      const { url } = await uploadImage(file)
-      setFormData(prev => ({ ...prev, images: [...prev.images, url] }))
-      toast.success("Image uploaded")
-    } catch (error) {
-      toast.error("Failed to upload image")
+      const uploadPromises = Array.from(files).map(file => uploadImage(file))
+      const results = await Promise.all(uploadPromises)
+      const newUrls = results.map(res => res.url)
+      
+      setFormData(prev => ({ ...prev, images: [...prev.images, ...newUrls] }))
+      toast.success(`${newUrls.length} image(s) uploaded`)
+    } catch {
+      toast.error("Failed to upload images")
     } finally {
       setIsSaving(false)
+      // Reset input value to allow selecting same files again if needed
+      e.target.value = ""
     }
   }
 
@@ -81,27 +139,55 @@ export function ProductModal({ isOpen, onClose, product, mode }: ProductModalPro
     e.preventDefault()
     setIsSaving(true)
     try {
-      // Backend expects price and stock in variants. For now we simplify or match backend DTO.
-      // Based on typical Reluv DTO, we might need to send variants.
-      const payload = {
+      // Auto-generate slug if empty
+      const finalSlug = formData.slug || formData.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '') + '-' + Date.now();
+
+      const basePayload = {
         name: formData.name,
+        slug: finalSlug,
         description: formData.description,
         categoryId: formData.categoryId,
         images: formData.images,
-        variants: [
-            {
-                price: Number(formData.price),
-                stock: Number(formData.stock),
-                sku: `${formData.name.substring(0, 3).toUpperCase()}-${Date.now()}`
-            }
-        ]
+      }
+
+      const variantData = {
+        price: Number(formData.price),
+        stock: Number(formData.stock),
+        condition: formData.condition,
+        weight: Number(formData.weight),
+        length: Number(formData.length),
+        width: Number(formData.width),
+        height: Number(formData.height),
       }
 
       if (mode === "create") {
-        await createStoreProduct(payload)
+        // For create, we send everything including variants
+        const createPayload = {
+          ...basePayload,
+          variants: [variantData]
+        }
+        await createStoreProduct(createPayload)
         toast.success("Product created successfully")
       } else {
-        await updateStoreProduct(product.id, payload)
+        // For update, we must split updates
+        
+        // 1. Update Product Info
+        await updateStoreProduct(product.id, basePayload)
+        
+        // 2. Update Variant Info
+        // We find the variant ID from the product object. We assume the first variant is the main one for simple products.
+        // We need to be careful: product prop might be summary, so we use the fetched ID if available, or fall back to prop.
+        // But wait, 'product' from prop has variants array.
+        const variantId = product.variants?.[0]?.id;
+        
+        if (variantId) {
+           await updateStoreVariant(product.id, variantId, variantData);
+        } else {
+             // If no variant exists (which shouldn't happen for valid products), we might need to create one?
+             // For now, we assume it exists as per business logic.
+             console.warn("No variant ID found for product update")
+        }
+        
         toast.success("Product updated successfully")
       }
       onClose(true)
@@ -138,7 +224,7 @@ export function ProductModal({ isOpen, onClose, product, mode }: ProductModalPro
                 />
               </div>
 
-              <div className="space-y-2">
+               <div className="space-y-2">
                 <Label className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Category</Label>
                 <div className="relative">
                   <select 
@@ -162,12 +248,15 @@ export function ProductModal({ isOpen, onClose, product, mode }: ProductModalPro
                 <Label className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Condition</Label>
                 <div className="relative">
                   <select 
+                    value={formData.condition}
+                    onChange={(e) => setFormData(prev => ({ ...prev, condition: e.target.value }))}
                     className="w-full h-11 sm:h-12 border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50 rounded-xl px-4 pr-10 text-sm focus:ring-sky-500 focus:border-sky-500 outline-none appearance-none"
                   >
-                    <option value="New">New</option>
-                    <option value="Like New">Like New</option>
-                    <option value="Good">Good</option>
-                    <option value="Fair">Fair</option>
+                    <option value="NEW">New</option>
+                    <option value="LIKE_NEW">Like New</option>
+                    <option value="GOOD">Good</option>
+                    <option value="FAIR">Fair</option>
+                    <option value="POOR">Poor</option>
                   </select>
                   <div className="absolute right-3 top-1/2 -translate-y-1/2 flex flex-col pointer-events-none text-slate-400">
                     <ChevronUp className="h-3 w-3 -mb-0.5" />
@@ -180,10 +269,14 @@ export function ProductModal({ isOpen, onClose, product, mode }: ProductModalPro
                 <Label className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Base Price (IDR)</Label>
                 <Input 
                   required
-                  type="number" 
+                  type="text" 
                   placeholder="0"
-                  value={formData.price}
-                  onChange={(e) => setFormData(prev => ({ ...prev, price: Number(e.target.value) }))}
+                  value={formData.price === 0 ? "" : formData.price.toLocaleString("id-ID")}
+                  onChange={(e) => {
+                    const val = e.target.value.replace(/\D/g, ""); 
+                    const numVal = Number(val);
+                    setFormData(prev => ({ ...prev, price: numVal }));
+                  }}
                   className="h-11 sm:h-12 border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50 rounded-xl"
                 />
               </div>
@@ -192,13 +285,66 @@ export function ProductModal({ isOpen, onClose, product, mode }: ProductModalPro
                 <Label className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Stock Count</Label>
                 <Input 
                   required
-                  type="number" 
+                  type="text" 
                   placeholder="0"
-                  value={formData.stock}
-                  onChange={(e) => setFormData(prev => ({ ...prev, stock: Number(e.target.value) }))}
+                  value={formData.stock === 0 ? "" : formData.stock.toLocaleString("id-ID")}
+                  onChange={(e) => {
+                    const val = e.target.value.replace(/\D/g, ""); 
+                    const numVal = Number(val);
+                    setFormData(prev => ({ ...prev, stock: numVal }));
+                  }}
                   className="h-11 sm:h-12 border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50 rounded-xl"
                 />
               </div>
+
+              <div className="space-y-2">
+                  <Label className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Weight (g)</Label>
+                  <Input 
+                    required
+                    type="number" 
+                    placeholder="1000"
+                    value={formData.weight || ""}
+                    onChange={(e) => setFormData(prev => ({ ...prev, weight: Number(e.target.value) }))}
+                    className="h-11 sm:h-12 border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50 rounded-xl"
+                  />
+              </div>
+
+              <div className="sm:col-span-2 grid grid-cols-3 gap-4">
+                  <div className="space-y-2">
+                    <Label className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Length (cm)</Label>
+                    <Input 
+                      required
+                      type="number" 
+                      placeholder="10"
+                      value={formData.length || ""}
+                      onChange={(e) => setFormData(prev => ({ ...prev, length: Number(e.target.value) }))}
+                      className="h-11 sm:h-12 border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50 rounded-xl"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Width (cm)</Label>
+                    <Input 
+                      required
+                      type="number" 
+                      placeholder="10"
+                      value={formData.width || ""}
+                      onChange={(e) => setFormData(prev => ({ ...prev, width: Number(e.target.value) }))}
+                      className="h-11 sm:h-12 border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50 rounded-xl"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Height (cm)</Label>
+                    <Input 
+                      required
+                      type="number" 
+                      placeholder="10"
+                      value={formData.height || ""}
+                      onChange={(e) => setFormData(prev => ({ ...prev, height: Number(e.target.value) }))}
+                      className="h-11 sm:h-12 border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50 rounded-xl"
+                    />
+                  </div>
+              </div>
+
 
               <div className="sm:col-span-2 space-y-2">
                 <Label className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Description</Label>
@@ -216,7 +362,7 @@ export function ProductModal({ isOpen, onClose, product, mode }: ProductModalPro
                 <div className="grid grid-cols-2 xs:grid-cols-3 sm:grid-cols-4 gap-4">
                   {formData.images.map((img, idx) => (
                     <div key={idx} className="relative group aspect-square rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800">
-                      <img src={img} className="h-full w-full object-cover" />
+                      <img src={img} alt={`Product ${idx}`} className="h-full w-full object-cover" />
                       <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                         <Button 
                           type="button"
@@ -234,6 +380,7 @@ export function ProductModal({ isOpen, onClose, product, mode }: ProductModalPro
                     <input 
                       type="file" 
                       accept="image/*" 
+                      multiple
                       onChange={handleImageUpload}
                       className="absolute inset-0 opacity-0 cursor-pointer z-10" 
                     />

@@ -3,16 +3,13 @@
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
   DropdownMenuTrigger,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
 } from "@/shared/components/ui/dropdown-menu"
 import { Button } from "@/shared/components/ui/button"
 import { Bell, Info, AlertTriangle, CheckCircle } from "lucide-react"
 import { useState, useEffect } from "react"
-import { io, Socket } from "socket.io-client"
-import { useAuthStore } from "@/features/(auth)/store/auth.store"
+// import { io, Socket } from "socket.io-client"
+// import { useAuthStore } from "@/features/(auth)/store/auth.store"
 import { cn } from "@/shared/lib/utils"
 
 interface Notification {
@@ -27,9 +24,10 @@ interface Notification {
 export function StoreNotifications() {
   const [notifications, setNotifications] = useState<Notification[]>([])
   const [unreadCount, setUnreadCount] = useState(0)
-  const [socket, setSocket] = useState<Socket | null>(null)
-  const { user } = useAuthStore()
+  // const [socket, setSocket] = useState<Socket | null>(null)
+  // const { user } = useAuthStore()
 
+  /* 
   useEffect(() => {
     // Initialize Socket.IO connection
     // Assuming backend is running on localhost:3000 or defined in env
@@ -57,6 +55,7 @@ export function StoreNotifications() {
       newSocket.disconnect()
     }
   }, [])
+  */
 
   // Mock initial data for demonstration if no socket
   useEffect(() => {
@@ -70,7 +69,7 @@ export function StoreNotifications() {
            setNotifications(initial)
            setUnreadCount(2)
       }
-  }, [])
+  }, [notifications.length])
 
   const markAllRead = () => {
     setNotifications(notifications.map(n => ({ ...n, read: true })))

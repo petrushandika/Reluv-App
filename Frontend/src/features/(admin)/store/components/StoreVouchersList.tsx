@@ -31,7 +31,11 @@ import { toast } from "sonner"
 import { getStoreVouchers, deleteStoreVoucher, updateStoreVoucher, StoreVoucher } from "../api/storeApi"
 import { Skeleton } from "@/shared/components/ui/skeleton"
 
-export function StoreVouchersList() {
+interface StoreVouchersListProps {
+  refreshKey?: number;
+}
+
+export function StoreVouchersList({ refreshKey }: StoreVouchersListProps) {
   const [selectedVoucher, setSelectedVoucher] = useState<any>(null)
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
@@ -53,7 +57,7 @@ export function StoreVouchersList() {
 
   useEffect(() => {
     fetchVouchers()
-  }, [])
+  }, [refreshKey])
 
   const handleEdit = (voucher: any) => {
     setSelectedVoucher(voucher)
