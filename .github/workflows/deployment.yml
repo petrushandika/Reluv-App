@@ -35,6 +35,8 @@ jobs:
   validate-backend:
     name: Validate Backend (Lint & Build)
     runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: postgresql://neondb_owner:npg_mzVou94trfBM@ep-snowy-queen-ahruwcm2-pooler.c-3.us-east-1.aws.neon.tech/neondb?sslmode=require
     steps:
       - uses: actions/checkout@v4
       
@@ -48,8 +50,6 @@ jobs:
       - name: Install Dependencies
         working-directory: ./Backend
         run: npm ci --legacy-peer-deps
-        env:
-          DATABASE_URL: postgresql://dummy:dummy@localhost:5432/dummy
 
 
       - name: Lint
