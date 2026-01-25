@@ -4,6 +4,7 @@ import { StoreSearch } from "@/features/(admin)/store/components/StoreSearch"
 import { StoreUserNav } from "@/features/(admin)/store/components/StoreUserNav"
 import { SuperadminSearch } from "@/features/(admin)/superadmin/components/SuperadminSearch"
 import { SuperadminUserNav } from "@/features/(admin)/superadmin/components/SuperadminUserNav"
+import { StoreNotifications } from "@/features/(admin)/store/components/StoreNotifications"
 import { DashboardSidebar } from "./DashboardSidebar"
 import { LucideIcon, Menu, X, Bell, ChevronRight } from "lucide-react"
 import { useState } from "react"
@@ -69,10 +70,14 @@ export function DashboardShell({
              </div>
 
             <div className="flex items-center space-x-1 p-1 bg-(--bg-secondary) rounded-full border border-(--border-color) h-9 sm:h-10">
-               <Button variant="ghost" size="icon" className="h-7 w-7 sm:h-8 sm:w-8 rounded-full text-slate-500 hover:text-sky-500 hover:bg-(--bg-primary) transition-all relative">
-                <Bell className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                <span className="absolute top-1.5 right-1.5 sm:top-2 sm:right-2 h-1.5 w-1.5 bg-sky-500 rounded-full ring-2 ring-(--bg-primary)" />
-              </Button>
+               {type === "store" ? (
+                 <StoreNotifications />
+               ) : (
+                 <Button variant="ghost" size="icon" className="h-7 w-7 sm:h-8 sm:w-8 rounded-full text-slate-500 hover:text-sky-500 hover:bg-(--bg-primary) transition-all relative">
+                  <Bell className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                  <span className="absolute top-1.5 right-1.5 sm:top-2 sm:right-2 h-1.5 w-1.5 bg-sky-500 rounded-full ring-2 ring-(--bg-primary)" />
+                </Button>
+               )}
               <div className="h-4 w-px bg-(--border-color) mx-0.5 sm:mx-1" />
               {type === "store" ? <StoreUserNav /> : <SuperadminUserNav />}
             </div>
