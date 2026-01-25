@@ -36,7 +36,7 @@ jobs:
     name: Validate Backend (Lint & Build)
     runs-on: ubuntu-latest
     env:
-      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      DATABASE_URL: ${{ secrets.DATABASE_URL || 'postgresql://dummy:dummy@localhost:5432/dummy?sslmode=require' }}
     steps:
       - uses: actions/checkout@v4
       
