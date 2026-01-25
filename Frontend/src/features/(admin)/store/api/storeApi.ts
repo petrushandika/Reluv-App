@@ -85,6 +85,99 @@ export interface DashboardAnalytics {
   };
 }
 
+export interface StoreProduct {
+  id: number;
+  name: string;
+  slug: string;
+  description: string;
+  images: string[];
+  isPublished: boolean;
+  isActive: boolean;
+  createdAt: string;
+  category: {
+    id: number;
+    name: string;
+  };
+  variants: Array<{
+    id: number;
+    price: number;
+    compareAtPrice: number;
+    stock: number;
+    isActive: boolean;
+  }>;
+  totalStock: number;
+  minPrice: number;
+  maxPrice: number;
+  status: string;
+}
+
+export interface StoreOrder {
+  id: number;
+  orderNumber: string;
+  status: string;
+  totalAmount: number;
+  shippingCost: number;
+  discountAmount: number;
+  createdAt: string;
+  buyer: {
+    id: number;
+    firstName: string;
+    lastName: string;
+    email: string;
+  };
+  location: {
+    city: string;
+    province: string;
+  };
+  items: Array<{
+    id: number;
+    quantity: number;
+    price: number;
+    total: number;
+    variant: {
+      id: number;
+      size?: string;
+      color?: string;
+      product: {
+        id: number;
+        name: string;
+        images: string[];
+      };
+    };
+  }>;
+  payment?: {
+    status: string;
+    method: string;
+  };
+  shipment?: {
+    status: string;
+    trackingNumber: string;
+    courier: string;
+  };
+  storeItemsTotal: number;
+  itemsCount: number;
+}
+
+export interface StoreProductsResponse {
+  data: StoreProduct[];
+  meta: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+  };
+}
+
+export interface StoreOrdersResponse {
+  data: StoreOrder[];
+  meta: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+  };
+}
+
 export const getMyStore = async (): Promise<Store> => {
   const response = await api.get("/store/me/my-store");
   return response.data;
@@ -92,6 +185,16 @@ export const getMyStore = async (): Promise<Store> => {
 
 export const getDashboardAnalytics = async (): Promise<DashboardAnalytics> => {
   const response = await api.get("/store/analytics");
+  return response.data;
+};
+
+export const getStoreProducts = async (params?: any): Promise<StoreProductsResponse> => {
+  const response = await api.get("/store/products", { params });
+  return response.data;
+};
+
+export const getStoreOrders = async (params?: any): Promise<StoreOrdersResponse> => {
+  const response = await api.get("/store/orders", { params });
   return response.data;
 };
 

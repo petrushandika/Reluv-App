@@ -48,33 +48,35 @@ export function OrderManifestModal({ isOpen, onClose, order }: OrderManifestModa
                     <User className="h-3.5 w-3.5" />
                     <span className="text-[10px] font-bold uppercase tracking-[0.2em]">Customer Entity</span>
                  </div>
-                 <div className="flex flex-col">
-                    <span className="text-sm font-semibold text-slate-900 dark:text-white">{order.customer.name}</span>
-                    <span className="text-xs text-slate-500">{order.customer.email}</span>
+                  <div className="flex flex-col">
+                    <span className="text-sm font-semibold text-slate-900 dark:text-white">
+                      {`${order.buyer.firstName} ${order.buyer.lastName}`}
+                    </span>
+                    <span className="text-xs text-slate-500">{order.buyer.email}</span>
                  </div>
               </div>
-
-              <div className="space-y-4">
-                 <div className="flex items-center gap-2 text-slate-400">
-                    <CreditCard className="h-3.5 w-3.5" />
-                    <span className="text-[10px] font-bold uppercase tracking-[0.2em]">Financial Status</span>
-                 </div>
-                 <div className="flex flex-col">
-                    <span className="text-sm font-bold text-sky-500">Rp {order.totalAmount.toLocaleString()}</span>
-                    <span className="text-[10px] font-medium text-slate-400 uppercase tracking-tight mt-1">Payment Method: Vault Direct</span>
-                 </div>
-              </div>
-            </div>
-
-            <div className="space-y-4 pt-4 border-t border-slate-100 dark:border-slate-800">
-               <div className="flex items-center gap-2 text-slate-400">
-                  <MapPin className="h-3.5 w-3.5" />
-                  <span className="text-[10px] font-bold uppercase tracking-[0.2em]">Logistics Route</span>
+ 
+               <div className="space-y-4">
+                  <div className="flex items-center gap-2 text-slate-400">
+                     <CreditCard className="h-3.5 w-3.5" />
+                     <span className="text-[10px] font-bold uppercase tracking-[0.2em]">Financial Status</span>
+                  </div>
+                  <div className="flex flex-col">
+                     <span className="text-sm font-bold text-sky-500">Rp {order.totalAmount.toLocaleString()}</span>
+                     <span className="text-[10px] font-medium text-slate-400 uppercase tracking-tight mt-1">Payment Method: {order.payment?.method || "Vault Direct"}</span>
+                  </div>
                </div>
-               <p className="text-xs text-slate-500 leading-relaxed font-medium">
-                  Warehouse 7-B, Distribution Hub 4, Jakarta, ID 10110
-               </p>
-            </div>
+             </div>
+ 
+             <div className="space-y-4 pt-4 border-t border-slate-100 dark:border-slate-800">
+                <div className="flex items-center gap-2 text-slate-400">
+                   <MapPin className="h-3.5 w-3.5" />
+                   <span className="text-[10px] font-bold uppercase tracking-[0.2em]">Logistics Route</span>
+                </div>
+                <p className="text-xs text-slate-500 leading-relaxed font-medium uppercase tracking-tight">
+                   {order.location ? `${order.location.city}, ${order.location.province}` : "Warehouse 7-B, Distribution Hub 4, Jakarta, ID 10110"}
+                </p>
+             </div>
 
             <div className="space-y-4 pt-4 border-t border-slate-100 dark:border-slate-800">
                <div className="flex items-center gap-2 text-slate-400">

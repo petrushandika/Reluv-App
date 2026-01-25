@@ -50,19 +50,41 @@ const sidebarItems = [
   },
 ]
 
+import { useEffect, useState } from "react"
+import { getDashboardAnalytics, DashboardAnalytics } from "@/features/(admin)/store/api/storeApi"
+import { Skeleton } from "@/shared/components/ui/skeleton"
+
 export default function StoreOrdersPage() {
+  const [data, setData] = useState<DashboardAnalytics | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        setIsLoading(true)
+        const response = await getDashboardAnalytics()
+        setData(response)
+      } catch (error) {
+        console.error("Failed to fetch order stats:", error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    fetchStats()
+  }, [])
+
   const stats = [
     {
       title: "Total Orders",
-      value: "156",
-      description: "Last 30 days",
+      value: data?.stats.totalOrders.toString() || "0",
+      description: "Lifetime history",
       icon: ShoppingCart,
       color: "text-sky-500",
       bg: "bg-sky-50 dark:bg-sky-500/5",
     },
     {
       title: "Pending",
-      value: "12",
+      value: data?.stats.pendingOrders.toString() || "0",
       description: "Needs attention",
       icon: Clock,
       color: "text-amber-500",
@@ -70,7 +92,7 @@ export default function StoreOrdersPage() {
     },
     {
       title: "Shipped",
-      value: "45",
+      value: data?.stats.shippedOrders.toString() || "0",
       description: "In transit",
       icon: Truck,
       color: "text-sky-600",
@@ -78,7 +100,7 @@ export default function StoreOrdersPage() {
     },
     {
       title: "Completed",
-      value: "94",
+      value: data?.stats.completedOrders.toString() || "0",
       description: "Successfully delivered",
       icon: CheckCircle2,
       color: "text-emerald-500",
@@ -100,20 +122,26 @@ export default function StoreOrdersPage() {
     >
       <div className="space-y-6">
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {stats.map((stat) => (
-            <div key={stat.title} className="p-5 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 flex flex-col gap-4">
-              <div className="flex items-center justify-between">
-                <span className="text-[10px] font-medium text-slate-400 uppercase tracking-widest">{stat.title}</span>
-                <div className={`${stat.bg} p-2 rounded-lg border border-slate-100 dark:border-slate-800`}>
-                  <stat.icon className={`h-4 w-4 ${stat.color}`} />
+          {isLoading ? (
+            [...Array(4)].map((_, i) => (
+              <Skeleton key={i} className="h-32 rounded-xl" />
+            ))
+          ) : (
+            stats.map((stat) => (
+              <div key={stat.title} className="p-5 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 flex flex-col gap-4">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-medium text-slate-400 uppercase tracking-widest">{stat.title}</span>
+                  <div className={`${stat.bg} p-2 rounded-lg border border-slate-100 dark:border-slate-800`}>
+                    <stat.icon className={`h-4 w-4 ${stat.color}`} />
+                  </div>
+                </div>
+                <div>
+                  <h3 className="text-3xl font-medium text-slate-900 dark:text-white tracking-tighter">{stat.value}</h3>
+                  <p className="text-[10px] font-medium text-slate-400 uppercase mt-1 tracking-widest">{stat.description}</p>
                 </div>
               </div>
-              <div>
-                <h3 className="text-3xl font-medium text-slate-900 dark:text-white tracking-tighter">{stat.value}</h3>
-                <p className="text-[10px] font-medium text-slate-400 uppercase mt-1 tracking-widest">{stat.description}</p>
-              </div>
-            </div>
-          ))}
+            ))
+          )}
         </div>
 
         <StoreOrdersList />

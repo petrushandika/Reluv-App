@@ -49,8 +49,29 @@ const sidebarItems = [
   },
 ]
 
+import { useEffect } from "react"
+import { getDashboardAnalytics, DashboardAnalytics } from "@/features/(admin)/store/api/storeApi"
+import { Skeleton } from "@/shared/components/ui/skeleton"
+
 export default function StoreProductsPage() {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
+  const [data, setData] = useState<DashboardAnalytics | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        setIsLoading(true)
+        const response = await getDashboardAnalytics()
+        setData(response)
+      } catch (error) {
+        console.error("Failed to fetch product stats:", error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    fetchStats()
+  }, [])
 
   return (
     <DashboardShell 
@@ -75,33 +96,41 @@ export default function StoreProductsPage() {
     >
       <div className="space-y-6">
         <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
-          <div className="p-5 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 flex items-center justify-between group">
-            <div>
-              <p className="text-[10px] font-medium text-slate-400 uppercase tracking-[0.2em] mb-1">Total Products</p>
-              <h3 className="text-3xl font-medium text-slate-900 dark:text-white tracking-tight">124</h3>
-            </div>
-            <div className="h-12 w-12 rounded-xl bg-slate-50 dark:bg-slate-800/50 flex items-center justify-center border border-slate-200 dark:border-slate-800">
-              <Package className="h-6 w-6 text-sky-500" />
-            </div>
-          </div>
-          <div className="p-5 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 flex items-center justify-between group">
-            <div>
-              <p className="text-[10px] font-medium text-slate-400 uppercase tracking-[0.2em] mb-1">Active Listings</p>
-              <h3 className="text-3xl font-medium text-emerald-500 tracking-tight">92</h3>
-            </div>
-            <div className="h-12 w-12 rounded-xl bg-emerald-500/5 flex items-center justify-center border border-slate-200 dark:border-slate-800">
-              <Plus className="h-6 w-6 text-emerald-500" />
-            </div>
-          </div>
-          <div className="p-5 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 flex items-center justify-between group">
-            <div>
-              <p className="text-[10px] font-medium text-slate-400 uppercase tracking-[0.2em] mb-1">Out of Stock</p>
-              <h3 className="text-3xl font-medium text-rose-500 tracking-tight">12</h3>
-            </div>
-            <div className="h-12 w-12 rounded-xl bg-rose-500/5 flex items-center justify-center border border-slate-200 dark:border-slate-800">
-              <ShoppingCart className="h-6 w-6 text-rose-500" />
-            </div>
-          </div>
+          {isLoading ? (
+            [...Array(3)].map((_, i) => (
+              <Skeleton key={i} className="h-24 rounded-xl" />
+            ))
+          ) : (
+            <>
+              <div className="p-5 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 flex items-center justify-between group">
+                <div>
+                  <p className="text-[10px] font-medium text-slate-400 uppercase tracking-[0.2em] mb-1">Total Products</p>
+                  <h3 className="text-3xl font-medium text-slate-900 dark:text-white tracking-tight">{data?.stats.totalProducts || 0}</h3>
+                </div>
+                <div className="h-12 w-12 rounded-xl bg-slate-50 dark:bg-slate-800/50 flex items-center justify-center border border-slate-200 dark:border-slate-800">
+                  <Package className="h-6 w-6 text-sky-500" />
+                </div>
+              </div>
+              <div className="p-5 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 flex items-center justify-between group">
+                <div>
+                  <p className="text-[10px] font-medium text-slate-400 uppercase tracking-[0.2em] mb-1">Active Listings</p>
+                  <h3 className="text-3xl font-medium text-emerald-500 tracking-tight">{data?.stats.activeProducts || 0}</h3>
+                </div>
+                <div className="h-12 w-12 rounded-xl bg-emerald-500/5 flex items-center justify-center border border-slate-200 dark:border-slate-800">
+                  <Plus className="h-6 w-6 text-emerald-500" />
+                </div>
+              </div>
+              <div className="p-5 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 flex items-center justify-between group">
+                <div>
+                  <p className="text-[10px] font-medium text-slate-400 uppercase tracking-[0.2em] mb-1">Out of Stock</p>
+                  <h3 className="text-3xl font-medium text-rose-500 tracking-tight">{data?.stats.outOfStockProducts || 0}</h3>
+                </div>
+                <div className="h-12 w-12 rounded-xl bg-rose-500/5 flex items-center justify-center border border-slate-200 dark:border-slate-800">
+                  <ShoppingCart className="h-6 w-6 text-rose-500" />
+                </div>
+              </div>
+            </>
+          )}
         </div>
 
         <StoreProductsList />
