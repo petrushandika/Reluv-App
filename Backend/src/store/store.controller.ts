@@ -203,4 +203,15 @@ export class StoreController {
   ) {
     return this.storeService.replyToReview(user.id, id, reply);
   }
+
+  @UseGuards(JwtAuthGuard)
+  @Patch('orders/:id/status')
+  @HttpCode(HttpStatus.OK)
+  updateOrderStatus(
+    @GetUser() user: User,
+    @Param('id', ParseIntPipe) id: number,
+    @Body('status') status: string,
+  ) {
+    return this.storeService.updateOrderStatus(user.id, id, status);
+  }
 }

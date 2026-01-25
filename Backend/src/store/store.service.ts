@@ -9,7 +9,7 @@ import { CreateStoreDto } from './dto/create-store.dto';
 import { UpdateStoreDto } from './dto/update-store.dto';
 import { UpdateStoreProfileDto } from './dto/update-store-profile.dto';
 import { AdminCreateStoreDto } from './dto/admin-create-store.dto';
-import { Prisma, UserRole } from '@prisma/client';
+import { Prisma, UserRole, OrderStatus } from '@prisma/client';
 import { QueryStoreDto } from './dto/query-store.dto';
 
 @Injectable()
@@ -1086,6 +1086,46 @@ export class StoreService {
           },
         },
       },
+    });
+  }
+
+
+  async updateOrderStatus(userId: number, orderId: number, status: string) {
+    const store = await this.prisma.store.findUnique({
+      where: { userId },
+      select: { id: true },
+    });
+
+    if (!store) {
+      throw new NotFoundException('You do not have a store yet.');
+    }
+
+    const order = await this.prisma.order.findFirst({
+      where: {
+        id: orderId,
+        items: {
+          some: {
+            variant: {
+              product: { storeId: store.id },
+            },
+          },
+        },
+      },
+      select: { id: true, status: true },
+    });
+
+    if (!order) {
+      throw new NotFoundException('Order not found or does not contain your products.');
+    }
+
+    // Since OrderStatus enum is imported, we should validate the status string
+    if (!Object.values(OrderStatus).includes(status as OrderStatus)) {
+      throw new ConflictException(`Invalid status. Allowed: ${Object.values(OrderStatus).join(', ')}`);
+    }
+
+    return this.prisma.order.update({
+      where: { id: orderId },
+      data: { status: status as OrderStatus },
     });
   }
 }

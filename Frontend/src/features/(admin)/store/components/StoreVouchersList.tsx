@@ -26,7 +26,8 @@ import { VoucherModal } from "./modals/VoucherModal"
 import { DeleteConfirmModal } from "./modals/DeleteConfirmModal"
 
 import { useEffect } from "react"
-import { getStoreVouchers, StoreVoucher } from "../api/storeApi"
+import { toast } from "sonner"
+import { getStoreVouchers, deleteStoreVoucher, StoreVoucher } from "../api/storeApi"
 import { Skeleton } from "@/shared/components/ui/skeleton"
 
 export function StoreVouchersList() {
@@ -62,9 +63,17 @@ export function StoreVouchersList() {
     setIsDeleteModalOpen(true)
   }
 
-  const confirmDelete = () => {
-    console.log("Deleting voucher:", selectedVoucher?.id)
-    setIsDeleteModalOpen(false)
+  const confirmDelete = async () => {
+    if (!selectedVoucher) return
+    try {
+      await deleteStoreVoucher(selectedVoucher.id)
+      toast.success("Voucher deleted successfully")
+      fetchVouchers()
+    } catch (error: any) {
+      toast.error(error.message || "Failed to delete voucher")
+    } finally {
+      setIsDeleteModalOpen(false)
+    }
   }
   return (
     <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden">
@@ -211,7 +220,10 @@ export function StoreVouchersList() {
 
       <VoucherModal
         isOpen={isEditModalOpen}
-        onClose={() => setIsEditModalOpen(false)}
+        onClose={(refresh) => {
+          setIsEditModalOpen(false)
+          if (refresh) fetchVouchers()
+        }}
         voucher={selectedVoucher}
         mode="edit"
       />

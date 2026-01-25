@@ -25,8 +25,9 @@ import { ProductModal } from "./modals/ProductModal"
 import { DeleteConfirmModal } from "./modals/DeleteConfirmModal"
 
 import { useEffect } from "react"
-import { getStoreProducts, StoreProduct } from "../api/storeApi"
+import { getStoreProducts, deleteStoreProduct, StoreProduct } from "../api/storeApi"
 import { Skeleton } from "@/shared/components/ui/skeleton"
+import { toast } from "sonner"
 
 export function StoreProductsList() {
   const [selectedProduct, setSelectedProduct] = useState<any>(null)
@@ -72,9 +73,17 @@ export function StoreProductsList() {
     setIsDeleteModalOpen(true)
   }
 
-  const confirmDelete = () => {
-    console.log("Deleting product:", selectedProduct?.id)
-    setIsDeleteModalOpen(false)
+  const confirmDelete = async () => {
+    if (!selectedProduct) return
+    try {
+      await deleteStoreProduct(selectedProduct.id)
+      toast.success("Product deleted successfully")
+      fetchProducts()
+    } catch (error: any) {
+      toast.error(error.message || "Failed to delete product")
+    } finally {
+      setIsDeleteModalOpen(false)
+    }
   }
 
   return (
@@ -250,7 +259,11 @@ export function StoreProductsList() {
 
       <ProductModal 
         isOpen={isEditModalOpen} 
-        onClose={() => setIsEditModalOpen(false)} 
+        onClose={(refresh) => {
+          setIsEditModalOpen(true)
+          if (refresh) fetchProducts()
+          setIsEditModalOpen(false)
+        }} 
         product={selectedProduct}
         mode="edit"
       />

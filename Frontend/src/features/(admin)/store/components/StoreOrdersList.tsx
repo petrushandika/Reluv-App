@@ -23,12 +23,19 @@ import {
 import { cn } from "@/shared/lib/utils"
 import { motion } from "framer-motion"
 import { useState } from "react"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/shared/components/ui/dropdown-menu"
 import { OrderManifestModal } from "./modals/OrderManifestModal"
 import { DeleteConfirmModal } from "./modals/DeleteConfirmModal"
 
 import { useEffect } from "react"
-import { getStoreOrders, StoreOrder } from "../api/storeApi"
+import { getStoreOrders, updateOrderStatus, StoreOrder } from "../api/storeApi"
 import { Skeleton } from "@/shared/components/ui/skeleton"
+import { toast } from "sonner"
 
 export function StoreOrdersList() {
   const [selectedOrder, setSelectedOrder] = useState<any>(null)
@@ -76,9 +83,17 @@ export function StoreOrdersList() {
     setIsCancelModalOpen(true)
   }
 
-  const confirmCancel = () => {
-    console.log("Cancelling order:", selectedOrder?.id)
-    setIsCancelModalOpen(false)
+  const confirmCancel = async () => {
+    if (!selectedOrder) return
+    try {
+      await updateOrderStatus(selectedOrder.id, "CANCELLED")
+      toast.success("Order cancelled successfully")
+      fetchOrders()
+    } catch (error: any) {
+      toast.error(error.message || "Failed to cancel order")
+    } finally {
+      setIsCancelModalOpen(false)
+    }
   }
 
   const getStatusStyle = (status: string) => {
@@ -110,11 +125,29 @@ export function StoreOrdersList() {
           />
         </div>
         <div className="flex items-center gap-2 w-full sm:w-auto">
-          <Button variant="outline" className="h-10 px-4 rounded-xl border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-[10px] font-medium uppercase tracking-widest text-slate-500 hover:bg-slate-50 transition-all">
-            <Filter className="mr-2 h-3.5 w-3.5" />
-            Filters
-            <ChevronDown className="ml-2 h-3.5 w-3.5" />
-          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="h-10 px-4 rounded-xl border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-[10px] font-medium uppercase tracking-widest text-slate-500 hover:bg-slate-50 transition-all">
+                <Filter className="mr-2 h-3.5 w-3.5" />
+                {statusFilter ? statusFilter.replace("_", " ") : "All Status"}
+                <ChevronDown className="ml-2 h-3.5 w-3.5" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-48 p-2 rounded-xl bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800">
+              <DropdownMenuItem onClick={() => setStatusFilter(null)} className="text-xs font-medium cursor-pointer rounded-lg p-2.5 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+                All Status
+              </DropdownMenuItem>
+              {['PENDING', 'PAID', 'SHIPPED', 'COMPLETED', 'CANCELLED'].map((status) => (
+                <DropdownMenuItem 
+                  key={status} 
+                  onClick={() => setStatusFilter(status)}
+                  className="text-xs font-medium cursor-pointer rounded-lg p-2.5 hover:bg-slate-50 dark:hover:bg-slate-800/50"
+                >
+                  {status}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
           <div className="h-6 w-px bg-slate-200 dark:bg-slate-800 mx-2 hidden sm:block" />
           <p className="text-[10px] font-medium text-slate-400 uppercase tracking-[0.2em] hidden sm:block whitespace-nowrap">
             {meta?.total || 0} Records Found

@@ -15,13 +15,45 @@ import { Label } from "@/shared/components/ui/label"
 import { MessageSquare, Star, Quote } from "lucide-react"
 import { cn } from "@/shared/lib/utils"
 
+import { useState, useEffect } from "react"
+import { replyToReview } from "../../api/storeApi"
+import { toast } from "sonner"
+import { Loader2 } from "lucide-react"
+
 interface ReviewReplyModalProps {
   isOpen: boolean
-  onClose: () => void
+  onClose: (refresh?: boolean) => void
   review: any
 }
 
 export function ReviewReplyModal({ isOpen, onClose, review }: ReviewReplyModalProps) {
+  const [isSaving, setIsSaving] = useState(false)
+  const [reply, setReply] = useState("")
+
+  useEffect(() => {
+    if (review) {
+      setReply(review.reply || "")
+    }
+  }, [review, isOpen])
+
+  const handleSubmit = async () => {
+    if (!reply.trim()) {
+      toast.error("Reply cannot be empty")
+      return
+    }
+
+    setIsSaving(true)
+    try {
+      await replyToReview(review.id, reply)
+      toast.success("Reply published")
+      onClose(true)
+    } catch (error: any) {
+      toast.error(error.message || "Failed to publish reply")
+    } finally {
+      setIsSaving(false)
+    }
+  }
+
   if (!review) return null
 
   return (
@@ -64,7 +96,8 @@ export function ReviewReplyModal({ isOpen, onClose, review }: ReviewReplyModalPr
                <Label className="text-[10px] font-bold uppercase tracking-widest text-slate-400 block px-1">Your Response</Label>
                <Textarea 
                  placeholder="Write a thoughtful reply..."
-                 defaultValue={review.reply}
+                 value={reply}
+                 onChange={(e) => setReply(e.target.value)}
                  className="min-h-[120px] sm:min-h-[140px] border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50 rounded-2xl p-4 text-xs leading-relaxed focus:ring-amber-500/20 focus:border-amber-500 transition-all resize-none"
                />
                <div className="flex justify-between items-center px-1">
@@ -76,11 +109,15 @@ export function ReviewReplyModal({ isOpen, onClose, review }: ReviewReplyModalPr
         </div>
 
         <DialogFooter className="p-6 sm:p-8 bg-slate-50 dark:bg-slate-950/50 border-t border-slate-100 dark:border-slate-800 flex flex-row items-center justify-between gap-3 shrink-0">
-          <Button variant="ghost" onClick={onClose} className="rounded-xl px-4 sm:px-6 h-11 sm:h-12 text-[10px] sm:text-[11px] font-bold uppercase tracking-widest text-slate-500 flex-1 sm:flex-none">
+          <Button variant="ghost" onClick={() => onClose()} className="rounded-xl px-4 sm:px-6 h-11 sm:h-12 text-[10px] sm:text-[11px] font-bold uppercase tracking-widest text-slate-500 flex-1 sm:flex-none">
             Cancel
           </Button>
-          <Button onClick={onClose} className="rounded-xl px-6 sm:px-8 h-11 sm:h-12 bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 hover:bg-black dark:hover:bg-white transition-all active:scale-95 text-[10px] sm:text-[11px] font-bold uppercase tracking-widest border-none shadow-xl shadow-black/10 flex-1 sm:flex-none">
-            {review.reply ? "Update" : "Publish"}
+          <Button 
+            onClick={handleSubmit} 
+            disabled={isSaving}
+            className="rounded-xl px-6 sm:px-8 h-11 sm:h-12 bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 hover:bg-black dark:hover:bg-white transition-all active:scale-95 text-[10px] sm:text-[11px] font-bold uppercase tracking-widest border-none shadow-xl shadow-black/10 flex-1 sm:flex-none"
+          >
+            {isSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : review.reply ? "Update" : "Publish"}
           </Button>
         </DialogFooter>
       </DialogContent>

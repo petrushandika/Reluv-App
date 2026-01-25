@@ -296,7 +296,13 @@ export default function StoreDashboardPage() {
 
       <ProductModal 
         isOpen={isProductModalOpen} 
-        onClose={() => setIsProductModalOpen(false)} 
+        onClose={(refresh) => {
+          setIsProductModalOpen(false)
+          if (refresh) {
+            // Re-fetch dashboard data
+            getDashboardAnalytics().then(setData).catch(console.error)
+          }
+        }} 
         mode="create" 
       />
     </DashboardShell>

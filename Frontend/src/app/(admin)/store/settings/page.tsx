@@ -40,6 +40,7 @@ export default function StoreSettingsPage() {
   const [activeTab, setActiveTab] = useState("general")
   const [isLoading, setIsLoading] = useState(true)
   const [isSaving, setIsSaving] = useState(false)
+  const [noStore, setNoStore] = useState(false)
 
   const [name, setName] = useState("")
   const [slug, setSlug] = useState("")
@@ -52,11 +53,15 @@ export default function StoreSettingsPage() {
         const data = await getMyStore()
         setStore(data)
         setName(data.name)
-        setSlug(data.slug)
+        setSlug(data.slug || "")
         setBio(data.profile?.bio || "")
         setOperational(data.profile?.operational || "")
-      } catch (error) {
-        toast.error("Failed to load store settings")
+      } catch (error: any) {
+        if (error.response?.status === 404) {
+          setNoStore(true)
+        } else {
+          toast.error("Failed to load store settings")
+        }
       } finally {
         setIsLoading(false)
       }
@@ -132,6 +137,20 @@ export default function StoreSettingsPage() {
   }
 
   if (isLoading) return null
+
+  if (noStore) {
+    return (
+      <DashboardShell title="Store Ecosystem" type="store" sidebarItems={sidebarItems}>
+        <div className="flex flex-col items-center justify-center p-12 text-center">
+            <div className="h-16 w-16 bg-slate-100 dark:bg-slate-800 rounded-2xl flex items-center justify-center mb-4">
+                <StoreIcon className="h-8 w-8 text-slate-400" />
+            </div>
+            <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-2">Store Not Detected</h2>
+            <p className="text-slate-500 max-w-md mb-8">It looks like you haven't set up a store yet. Please contact support or use the creation wizard.</p>
+        </div>
+      </DashboardShell>
+    )
+  }
 
   return (
     <DashboardShell title="Store Ecosystem" type="store" sidebarItems={sidebarItems}>

@@ -273,6 +273,48 @@ export const updateStoreProfile = async (data: UpdateStoreProfileDto): Promise<S
   return response.data;
 };
 
+export const createStoreProduct = async (data: any): Promise<StoreProduct> => {
+  const response = await api.post("/store/products", data);
+  return response.data;
+};
+
+export const updateStoreProduct = async (id: number, data: any): Promise<StoreProduct> => {
+  const response = await api.patch(`/store/products/${id}`, data);
+  return response.data;
+};
+
+export const deleteStoreProduct = async (id: number): Promise<void> => {
+  await api.delete(`/store/products/${id}`);
+};
+
+export const createStoreVoucher = async (data: any): Promise<StoreVoucher> => {
+  const response = await api.post("/store/vouchers", data);
+  return response.data;
+};
+
+export const updateStoreVoucher = async (id: number, data: any): Promise<StoreVoucher> => {
+  const response = await api.patch(`/store/vouchers/${id}`, data);
+  return response.data;
+};
+
+export const deleteStoreVoucher = async (id: number): Promise<void> => {
+  await api.delete(`/store/vouchers/${id}`);
+};
+
+export const replyToReview = async (id: number, reply: string): Promise<StoreReview> => {
+  const response = await api.post(`/store/reviews/${id}/reply`, { reply });
+  return response.data;
+};
+
+export const deleteStoreReview = async (id: number): Promise<void> => {
+  await api.delete(`/store/reviews/${id}`);
+};
+
+export const updateOrderStatus = async (id: number, status: string): Promise<StoreOrder> => {
+  const response = await api.patch(`/store/orders/${id}/status`, { status });
+  return response.data;
+};
+
 export const uploadImage = async (file: File): Promise<{ url: string }> => {
   const formData = new FormData();
   formData.append("file", file);

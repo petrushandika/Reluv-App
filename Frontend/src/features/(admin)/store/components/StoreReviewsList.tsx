@@ -24,12 +24,11 @@ import {
 import { cn } from "@/shared/lib/utils"
 import Image from "next/image"
 import { motion } from "framer-motion"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { ReviewReplyModal } from "./modals/ReviewReplyModal"
 import { DeleteConfirmModal } from "./modals/DeleteConfirmModal"
-
-import { useEffect } from "react"
-import { getStoreReviews, StoreReview } from "../api/storeApi"
+import { toast } from "sonner"
+import { getStoreReviews, deleteStoreReview, StoreReview } from "../api/storeApi"
 import { Skeleton } from "@/shared/components/ui/skeleton"
 
 export function StoreReviewsList() {
@@ -76,9 +75,17 @@ export function StoreReviewsList() {
     setIsDeleteModalOpen(true)
   }
 
-  const confirmDelete = () => {
-    console.log("Deleting review:", selectedReview?.id)
-    setIsDeleteModalOpen(false)
+  const confirmDelete = async () => {
+    if (!selectedReview) return
+    try {
+      await deleteStoreReview(selectedReview.id)
+      toast.success("Review deleted successfully")
+      fetchReviews()
+    } catch (error: any) {
+      toast.error(error.message || "Failed to delete review")
+    } finally {
+      setIsDeleteModalOpen(false)
+    }
   }
 
   const renderStars = (rating: number) => {
@@ -270,7 +277,10 @@ export function StoreReviewsList() {
 
       <ReviewReplyModal
         isOpen={isReplyModalOpen}
-        onClose={() => setIsReplyModalOpen(false)}
+        onClose={(refresh) => {
+          setIsReplyModalOpen(false)
+          if (refresh) fetchReviews()
+        }}
         review={selectedReview}
       />
 
