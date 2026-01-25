@@ -29,10 +29,11 @@ const weeklyData = [
 
 interface StoreOverviewProps {
   view?: "weekly" | "monthly"
+  chartData?: { name: string; total: number }[]
 }
 
-export function StoreOverview({ view = "monthly" }: StoreOverviewProps) {
-  const data = view === "weekly" ? weeklyData : monthlyData
+export function StoreOverview({ view = "monthly", chartData }: StoreOverviewProps) {
+  const data = chartData || []
   return (
     <ResponsiveContainer width="100%" height={350}>
       <BarChart data={data}>

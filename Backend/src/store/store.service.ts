@@ -449,6 +449,39 @@ export class StoreService {
       star5: reviews.filter(r => r.rating === 5).length,
     };
 
+    // Generate Chart Data
+    const monthlyRevenueData: { name: string; total: number }[] = [];
+    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    
+    for (let i = 0; i < 12; i++) {
+      const monthStart = new Date(now.getFullYear(), i, 1);
+      const monthEnd = new Date(now.getFullYear(), i + 1, 0);
+      
+      const monthRevenue = revenueOrders
+        .filter(o => o.createdAt >= monthStart && o.createdAt <= monthEnd)
+        .reduce((sum, o) => sum + o.items.reduce((s, i) => s + i.total, 0), 0);
+        
+      monthlyRevenueData.push({ name: monthNames[i], total: monthRevenue });
+    }
+
+    const weeklyRevenueData: { name: string; total: number }[] = [];
+    const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+    
+    // Get last 7 days including today
+    for (let i = 6; i >= 0; i--) {
+      const date = new Date(now);
+      date.setDate(date.getDate() - i);
+      date.setHours(0, 0, 0, 0);
+      const dayEnd = new Date(date);
+      dayEnd.setHours(23, 59, 59, 999);
+      
+      const dayRevenue = revenueOrders
+        .filter(o => o.createdAt >= date && o.createdAt <= dayEnd)
+        .reduce((sum, o) => sum + o.items.reduce((s, i) => s + i.total, 0), 0);
+        
+      weeklyRevenueData.push({ name: dayNames[date.getDay()], total: dayRevenue });
+    }
+
     // Get vouchers and discounts count
     const [vouchers, discounts, promotions] = await Promise.all([
       this.prisma.voucher.findMany({
@@ -496,7 +529,7 @@ export class StoreService {
         thisMonthRevenue,
         lastMonthRevenue,
         todayRevenue,
-        totalReviews,
+        totalReviews: totalReviews,
         averageRating: Math.round(averageRating * 10) / 10,
         unrepliedReviews: unrepliedReviews.length,
         totalVouchers: vouchers.length,
@@ -505,6 +538,10 @@ export class StoreService {
         activeDiscounts: activeDiscounts.length,
         totalPromotions: promotions.length,
         activePromotions: activePromotions.length,
+      },
+      charts: {
+        monthlyRevenue: monthlyRevenueData,
+        weeklyRevenue: weeklyRevenueData,
       },
       alerts: {
         lowStockProducts,

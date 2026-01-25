@@ -31,8 +31,67 @@ export interface UpdateStoreProfileDto {
   operational?: string;
 }
 
+export interface DashboardAnalytics {
+  store: Store;
+  stats: {
+    totalProducts: number;
+    activeProducts: number;
+    draftProducts: number;
+    outOfStockProducts: number;
+    totalOrders: number;
+    pendingOrders: number;
+    paidOrders: number;
+    shippedOrders: number;
+    completedOrders: number;
+    cancelledOrders: number;
+    totalRevenue: number;
+    thisMonthRevenue: number;
+    lastMonthRevenue: number;
+    todayRevenue: number;
+    totalReviews: number;
+    averageRating: number;
+    unrepliedReviews: number;
+    totalVouchers: number;
+    activeVouchers: number;
+    totalDiscounts: number;
+    activeDiscounts: number;
+    totalPromotions: number;
+    activePromotions: number;
+  };
+  recentOrders: Array<{
+    id: number;
+    orderNumber: string;
+    status: string;
+    totalAmount: number;
+    buyer: {
+      firstName: string;
+      lastName: string;
+      email: string;
+    };
+    createdAt: string;
+  }>;
+  recentReviews: Array<{
+    id: number;
+    rating: number;
+    comment: string;
+    productName: string;
+    authorName: string;
+    hasReply: boolean;
+    createdAt: string;
+  }>;
+  charts: {
+    monthlyRevenue: Array<{ name: string; total: number }>;
+    weeklyRevenue: Array<{ name: string; total: number }>;
+  };
+}
+
 export const getMyStore = async (): Promise<Store> => {
   const response = await api.get("/store/me/my-store");
+  return response.data;
+};
+
+export const getDashboardAnalytics = async (): Promise<DashboardAnalytics> => {
+  const response = await api.get("/store/analytics");
   return response.data;
 };
 

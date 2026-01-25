@@ -86,10 +86,78 @@ const itemVariants = {
   }
 }
 
+import { useEffect } from "react"
+import { getDashboardAnalytics, DashboardAnalytics } from "@/features/(admin)/store/api/storeApi"
+import { Skeleton } from "@/shared/components/ui/skeleton"
+
 export default function StoreDashboardPage() {
   const [isProductModalOpen, setIsProductModalOpen] = useState(false)
   const [revenueView, setRevenueView] = useState<"weekly" | "monthly">("weekly")
+  const [data, setData] = useState<DashboardAnalytics | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
 
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      try {
+        setIsLoading(true)
+        const analytics = await getDashboardAnalytics()
+        setData(analytics)
+      } catch (error) {
+        console.error("Failed to fetch dashboard analytics:", error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    fetchDashboardData()
+  }, [])
+
+  if (isLoading) {
+    return (
+      <DashboardShell title="Dashboard" sidebarItems={sidebarItems} type="store">
+        <div className="space-y-8 p-8">
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+            {[...Array(4)].map((_, i) => (
+              <Skeleton key={i} className="h-32 w-full rounded-2xl" />
+            ))}
+          </div>
+          <div className="grid gap-6 lg:grid-cols-7">
+            <Skeleton className="lg:col-span-4 h-[400px] rounded-2xl" />
+            <Skeleton className="lg:col-span-3 h-[400px] rounded-2xl" />
+          </div>
+        </div>
+      </DashboardShell>
+    )
+  }
+
+  const statsCards = [
+    { 
+      label: "Total Revenue", 
+      value: `Rp. ${(data?.stats.totalRevenue || 0).toLocaleString("id-ID")}`, 
+      trend: data?.stats.thisMonthRevenue && data?.stats.lastMonthRevenue 
+        ? `${(((data.stats.thisMonthRevenue - data.stats.lastMonthRevenue) / data.stats.lastMonthRevenue) * 100).toFixed(1)}%`
+        : "+0.0%", 
+      icon: DollarSign 
+    },
+    { 
+      label: "Active Products", 
+      value: data?.stats.activeProducts.toString() || "0", 
+      trend: `${data?.stats.totalProducts || 0} total`, 
+      icon: Package 
+    },
+    { 
+      label: "Store Rating", 
+      value: data?.stats.averageRating.toFixed(1) || "0.0", 
+      trend: `${data?.stats.totalReviews || 0} reviews`, 
+      icon: Star 
+    },
+    { 
+      label: "New Orders", 
+      value: data?.stats.pendingOrders.toString() || "0", 
+      trend: `${data?.stats.shippedOrders || 0} shipped`, 
+      icon: ShoppingCart 
+    }
+  ]
   return (
     <DashboardShell
       title="Dashboard"
@@ -116,12 +184,7 @@ export default function StoreDashboardPage() {
     >
       <div className="space-y-8 animate-in fade-in duration-700">
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-          {[
-            { label: "Total Revenue", value: "Rp. 12.4M", trend: "+12.1%", icon: DollarSign, color: "sky" },
-            { label: "Active Products", value: "45", trend: "2 new", icon: Package, color: "emerald" },
-            { label: "Store Rating", value: "4.8", trend: "128 reviews", icon: Star, color: "amber" },
-            { label: "New Orders", value: "12", trend: "4 pending", icon: ShoppingCart, color: "indigo" }
-          ].map((stat, i) => (
+          {statsCards.map((stat, i) => (
             <motion.div
               key={stat.label}
               initial={{ opacity: 0, y: 20 }}
@@ -196,7 +259,10 @@ export default function StoreDashboardPage() {
             </CardHeader>
             <CardContent className="p-4 sm:p-8">
               <div className="h-[300px] sm:h-[380px] w-full">
-                <StoreOverview view={revenueView} />
+                <StoreOverview 
+                  view={revenueView} 
+                  chartData={revenueView === "weekly" ? data?.charts.weeklyRevenue : data?.charts.monthlyRevenue}
+                />
               </div>
             </CardContent>
           </Card>
@@ -215,7 +281,7 @@ export default function StoreDashboardPage() {
             </CardHeader>
             <CardContent className="p-0 flex flex-col flex-1">
               <div className="px-6 py-6 flex-1 overflow-y-auto max-h-[352px] custom-scrollbar">
-                <StoreRecentSales />
+                <StoreRecentSales orders={data?.recentOrders} />
               </div>
               <div className="p-6 bg-slate-50/50 dark:bg-slate-950/50 border-t border-slate-200 dark:border-slate-800 flex items-center justify-center mt-auto">
                 <Button variant="ghost" className="w-full h-11 bg-sky-50 dark:bg-sky-500/10 text-[10px] font-medium uppercase tracking-[0.2em] text-sky-500 hover:text-sky-600 hover:bg-sky-100 dark:hover:bg-sky-500/20 group rounded-xl transition-all">

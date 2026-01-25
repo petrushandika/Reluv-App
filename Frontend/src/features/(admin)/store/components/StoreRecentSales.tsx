@@ -23,49 +23,29 @@ const itemVariants = {
   }
 }
 
-export function StoreRecentSales() {
-  const sales = [
-    {
-      name: "John Doe",
-      email: "john.doe@example.com",
-      amount: 250000,
-      avatar: "https://ikoverk.com/wp-content/uploads/2025/04/5187871.webp",
-      initials: "JD",
-      time: "2 mins ago"
-    },
-    {
-      name: "Alice Smith",
-      email: "alice@email.com",
-      amount: 120500,
-      avatar: "https://ikoverk.com/wp-content/uploads/2025/04/5187871.webp",
-      initials: "AS",
-      time: "15 mins ago"
-    },
-    {
-      name: "Bob Knight",
-      email: "bob.k@gmail.com",
-      amount: 340000,
-      avatar: "https://ikoverk.com/wp-content/uploads/2025/04/5187871.webp",
-      initials: "BK",
-      time: "42 mins ago"
-    },
-    {
-      name: "Sarah Parker",
-      email: "sarah.p@example.com",
-      amount: 85000,
-      avatar: "https://ikoverk.com/wp-content/uploads/2025/04/5187871.webp",
-      initials: "SP",
-      time: "1 hour ago"
-    },
-    {
-      name: "Mike Johnson",
-      email: "mike.j@example.com",
-      amount: 1200000,
-      avatar: "https://ikoverk.com/wp-content/uploads/2025/04/5187871.webp",
-      initials: "MJ",
-      time: "2 hours ago"
-    }
-  ]
+import { formatDistanceToNow } from "date-fns"
+
+interface StoreRecentSalesProps {
+  orders?: any[]
+}
+
+export function StoreRecentSales({ orders = [] }: StoreRecentSalesProps) {
+  if (orders.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center py-12 text-center">
+        <p className="text-xs font-medium text-slate-400 uppercase tracking-widest">No recent sales</p>
+      </div>
+    )
+  }
+
+  const sales = orders.map(order => ({
+    name: `${order.buyer.firstName} ${order.buyer.lastName}`.trim(),
+    email: order.buyer.email,
+    amount: order.totalAmount,
+    avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(order.buyer.firstName)}&background=random`,
+    initials: `${order.buyer.firstName?.[0] || ""}${order.buyer.lastName?.[0] || ""}`.toUpperCase(),
+    time: formatDistanceToNow(new Date(order.createdAt), { addSuffix: true })
+  }))
 
   return (
     <motion.div 
