@@ -1,9 +1,18 @@
-import { IsNotEmpty, IsOptional, IsString, IsInt, Length, Min } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  IsInt,
+  Length,
+  Min,
+} from 'class-validator';
 
 export class CreateCategoryDto {
   @IsString()
   @IsNotEmpty()
-  @Length(1, 255, { message: 'Category name must be between 1 and 255 characters' })
+  @Length(1, 255, {
+    message: 'Category name must be between 1 and 255 characters',
+  })
   name: string;
 
   @IsString()

@@ -1,9 +1,18 @@
-import { IsEmail, IsNotEmpty, IsOptional, IsString, Length, MaxLength } from 'class-validator';
+import {
+  IsEmail,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  Length,
+  MaxLength,
+} from 'class-validator';
 
 export class FacebookDto {
   @IsString()
   @IsNotEmpty()
-  @Length(1, 255, { message: 'Facebook ID must be between 1 and 255 characters' })
+  @Length(1, 255, {
+    message: 'Facebook ID must be between 1 and 255 characters',
+  })
   facebookId: string;
 
   @IsEmail({}, { message: 'Please provide a valid email address' })

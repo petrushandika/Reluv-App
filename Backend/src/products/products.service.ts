@@ -136,18 +136,31 @@ export class ProductsService {
   }
 
   async findAll(queryDto: QueryProductDto) {
-    const { page = 1, limit = 10, categoryId, parentCategoryId, childCategoryId, sellerId, search, sortBy, excludeIds } = queryDto;
+    const {
+      page = 1,
+      limit = 10,
+      categoryId,
+      parentCategoryId,
+      childCategoryId,
+      sellerId,
+      search,
+      sortBy,
+      excludeIds,
+    } = queryDto;
     const skip = (page - 1) * limit;
-    
+
     let parsedExcludeIds: number[] = [];
     if (excludeIds) {
       if (Array.isArray(excludeIds)) {
         parsedExcludeIds = excludeIds;
       } else if (typeof excludeIds === 'string') {
-        parsedExcludeIds = excludeIds.split(',').map(id => parseInt(id.trim(), 10)).filter(id => !isNaN(id));
+        parsedExcludeIds = excludeIds
+          .split(',')
+          .map((id) => parseInt(id.trim(), 10))
+          .filter((id) => !isNaN(id));
       }
     }
-    
+
     const where: Prisma.ProductWhereInput = {
       isActive: true,
       isPublished: true,
@@ -165,10 +178,7 @@ export class ProductsService {
         ],
       }),
       ...(sortBy === 'trending' && {
-        OR: [
-          { isTrending: true },
-          { viewCount: { gt: 0 } },
-        ],
+        OR: [{ isTrending: true }, { viewCount: { gt: 0 } }],
       }),
       ...(sortBy === 'slashed' && {
         variants: {
@@ -185,7 +195,7 @@ export class ProductsService {
 
     let orderBy: Prisma.ProductOrderByWithRelationInput = { createdAt: 'desc' };
     const needsPriceSort = sortBy === 'price_asc' || sortBy === 'price_desc';
-    
+
     if (sortBy === 'trending') {
       orderBy = { viewCount: 'desc' } as any;
     } else if (sortBy === 'slashed') {
@@ -267,16 +277,36 @@ export class ProductsService {
     } else if (sortBy === 'slashed') {
       sortedProducts = products
         .filter((product) => {
-          return product.variants && product.variants.length > 0 && 
-                 product.variants.some((v) => v.compareAtPrice && v.compareAtPrice > 0 && v.compareAtPrice > v.price);
+          return (
+            product.variants &&
+            product.variants.length > 0 &&
+            product.variants.some(
+              (v) =>
+                v.compareAtPrice &&
+                v.compareAtPrice > 0 &&
+                v.compareAtPrice > v.price,
+            )
+          );
         })
         .sort((a, b) => {
-          const aDiscount = a.variants && a.variants.length > 0 && a.variants[0].compareAtPrice && a.variants[0].compareAtPrice > a.variants[0].price
-            ? ((a.variants[0].compareAtPrice - a.variants[0].price) / a.variants[0].compareAtPrice) * 100
-            : 0;
-          const bDiscount = b.variants && b.variants.length > 0 && b.variants[0].compareAtPrice && b.variants[0].compareAtPrice > b.variants[0].price
-            ? ((b.variants[0].compareAtPrice - b.variants[0].price) / b.variants[0].compareAtPrice) * 100
-            : 0;
+          const aDiscount =
+            a.variants &&
+            a.variants.length > 0 &&
+            a.variants[0].compareAtPrice &&
+            a.variants[0].compareAtPrice > a.variants[0].price
+              ? ((a.variants[0].compareAtPrice - a.variants[0].price) /
+                  a.variants[0].compareAtPrice) *
+                100
+              : 0;
+          const bDiscount =
+            b.variants &&
+            b.variants.length > 0 &&
+            b.variants[0].compareAtPrice &&
+            b.variants[0].compareAtPrice > b.variants[0].price
+              ? ((b.variants[0].compareAtPrice - b.variants[0].price) /
+                  b.variants[0].compareAtPrice) *
+                100
+              : 0;
           return bDiscount - aDiscount;
         })
         .slice(0, limit);
@@ -286,14 +316,18 @@ export class ProductsService {
           return product.isRecommended;
         })
         .sort((a, b) => {
-          return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+          return (
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+          );
         })
         .slice(0, limit);
     } else if (needsPriceSort) {
       sortedProducts = products.sort((a, b) => {
-        const aPrice = a.variants && a.variants.length > 0 ? a.variants[0].price : Infinity;
-        const bPrice = b.variants && b.variants.length > 0 ? b.variants[0].price : Infinity;
-        
+        const aPrice =
+          a.variants && a.variants.length > 0 ? a.variants[0].price : Infinity;
+        const bPrice =
+          b.variants && b.variants.length > 0 ? b.variants[0].price : Infinity;
+
         if (sortBy === 'price_asc') {
           return aPrice - bPrice;
         } else {
@@ -331,7 +365,7 @@ export class ProductsService {
       }),
     };
 
-    const [products, total] = await this.prisma.$transaction([
+    const [products] = await this.prisma.$transaction([
       this.prisma.product.findMany({
         where,
         skip,
@@ -385,7 +419,7 @@ export class ProductsService {
 
   async findOneBySlug(slug: string) {
     const product = await this.prisma.product.findFirst({
-      where: { 
+      where: {
         slug,
         isActive: true,
         isPublished: true,
@@ -491,7 +525,7 @@ export class ProductsService {
 
   async findOne(id: number) {
     const product = await this.prisma.product.findFirst({
-      where: { 
+      where: {
         id,
         isActive: true,
         isPublished: true,
@@ -598,16 +632,16 @@ export class ProductsService {
   async update(user: User, id: number, updateProductDto: UpdateProductDto) {
     await this.checkProductOwnership(id, user.id);
 
-    const { 
-      categoryId, 
-      parentCategoryId, 
-      childCategoryId, 
+    const {
+      categoryId,
+      parentCategoryId,
+      childCategoryId,
       isActive,
-      ...otherData 
+      ...otherData
     } = updateProductDto;
 
     const storeId = (otherData as any).storeId;
-    
+
     if ('storeId' in otherData) {
       delete (otherData as any).storeId;
     }

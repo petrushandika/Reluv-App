@@ -31,7 +31,7 @@ import { existsSync } from 'fs';
               const distPath = join(process.cwd(), 'dist', 'templates');
               const srcPath = join(process.cwd(), 'src', 'templates');
               const relativePath = join(__dirname, '..', 'templates');
-              
+
               if (existsSync(distPath)) return distPath;
               if (existsSync(srcPath)) return srcPath;
               return relativePath;

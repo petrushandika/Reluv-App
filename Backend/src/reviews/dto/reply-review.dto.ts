@@ -6,4 +6,3 @@ export class ReplyReviewDto {
   @Length(1, 1000, { message: 'Reply must be between 1 and 1000 characters' })
   reply: string;
 }
-

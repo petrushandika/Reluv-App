@@ -35,7 +35,9 @@ export class RateLimitGuard implements CanActivate {
           {
             statusCode: HttpStatus.TOO_MANY_REQUESTS,
             message: 'Please wait 30 seconds before making another request.',
-            retryAfter: Math.ceil((this.windowMs - timeSinceFirstRequest) / 1000),
+            retryAfter: Math.ceil(
+              (this.windowMs - timeSinceFirstRequest) / 1000,
+            ),
           },
           HttpStatus.TOO_MANY_REQUESTS,
         );
@@ -56,4 +58,3 @@ export class RateLimitGuard implements CanActivate {
     return true;
   }
 }
-

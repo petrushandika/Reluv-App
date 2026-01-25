@@ -48,9 +48,9 @@ export class AuthController {
     let frontendUrl =
       this.configService.get<string>('FRONTEND_URL') ||
       'https://fe-reluv-app.vercel.app';
-    
+
     frontendUrl = frontendUrl.replace(/\/$/, '');
-    
+
     try {
       await this.authService.confirm(query.token);
       return res.redirect(`${frontendUrl}/login?verified=true`);
@@ -80,9 +80,7 @@ export class AuthController {
   @Post('verification')
   @HttpCode(HttpStatus.OK)
   @UseGuards(RateLimitGuard)
-  verification(
-    @Body(new ValidationPipe()) verificationDto: VerificationDto,
-  ) {
+  verification(@Body(new ValidationPipe()) verificationDto: VerificationDto) {
     return this.authService.verification(verificationDto.email);
   }
 }

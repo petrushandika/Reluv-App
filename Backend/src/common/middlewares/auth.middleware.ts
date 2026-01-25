@@ -51,17 +51,20 @@ export class AuthMiddleware implements NestMiddleware {
     }
 
     if (
-      path.startsWith('/api/v1/payments/midtrans-notification') && method === 'POST' ||
-      path.startsWith('/api/v1/shipments/biteship-webhook') && method === 'POST'
+      (path.startsWith('/api/v1/payments/midtrans-notification') &&
+        method === 'POST') ||
+      (path.startsWith('/api/v1/shipments/biteship-webhook') &&
+        method === 'POST')
     ) {
       return next();
     }
 
     if (
       (path.startsWith('/api/v1/vouchers') ||
-       path.startsWith('/api/v1/discounts') ||
-       path.startsWith('/api/v1/promotions') ||
-       path.startsWith('/api/v1/badges')) && method === 'GET'
+        path.startsWith('/api/v1/discounts') ||
+        path.startsWith('/api/v1/promotions') ||
+        path.startsWith('/api/v1/badges')) &&
+      method === 'GET'
     ) {
       return next();
     }

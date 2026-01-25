@@ -162,8 +162,7 @@ export class PaymentsService {
       if (updatedOrder.status === 'PAID') {
         try {
           await this.shipmentsService.createShipment(updatedOrder.id);
-        } catch (error) {
-        }
+        } catch (error) {}
       }
     }
   }

@@ -1,4 +1,11 @@
-import { Controller, Get, Query, ValidationPipe, HttpCode, HttpStatus } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Query,
+  ValidationPipe,
+  HttpCode,
+  HttpStatus,
+} from '@nestjs/common';
 import { MapsService } from './maps.service';
 import { SearchAreaDto, SearchMapDto } from './dto/search-area.dto';
 

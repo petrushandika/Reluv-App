@@ -46,7 +46,13 @@ export class QueryProductDto {
 
   @IsOptional()
   @IsString()
-  sortBy?: 'trending' | 'slashed' | 'recommended' | 'newest' | 'price_asc' | 'price_desc';
+  sortBy?:
+    | 'trending'
+    | 'slashed'
+    | 'recommended'
+    | 'newest'
+    | 'price_asc'
+    | 'price_desc';
 
   @IsOptional()
   excludeIds?: number[] | string;

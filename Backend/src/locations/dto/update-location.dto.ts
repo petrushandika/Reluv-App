@@ -1,4 +1,12 @@
-import { IsBoolean, IsNumber, IsOptional, IsString, Length, Min, Max } from 'class-validator';
+import {
+  IsBoolean,
+  IsNumber,
+  IsOptional,
+  IsString,
+  Length,
+  Min,
+  Max,
+} from 'class-validator';
 
 export class UpdateLocationDto {
   @IsString()
@@ -8,7 +16,9 @@ export class UpdateLocationDto {
 
   @IsString()
   @IsOptional()
-  @Length(1, 100, { message: 'Recipient name must be between 1 and 100 characters' })
+  @Length(1, 100, {
+    message: 'Recipient name must be between 1 and 100 characters',
+  })
   recipient?: string;
 
   @IsString()
@@ -33,7 +43,9 @@ export class UpdateLocationDto {
 
   @IsString()
   @IsOptional()
-  @Length(1, 100, { message: 'Sub district must be between 1 and 100 characters' })
+  @Length(1, 100, {
+    message: 'Sub district must be between 1 and 100 characters',
+  })
   subDistrict?: string;
 
   @IsString()
@@ -52,7 +64,9 @@ export class UpdateLocationDto {
 
   @IsString()
   @IsOptional()
-  @Length(0, 100, { message: 'Biteship area ID must be at most 100 characters' })
+  @Length(0, 100, {
+    message: 'Biteship area ID must be at most 100 characters',
+  })
   biteship_area_id?: string;
 
   @IsNumber()

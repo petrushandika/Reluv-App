@@ -16,6 +16,8 @@ export class UpdateStoreProfileDto {
 
   @IsString()
   @IsOptional()
-  @Length(0, 200, { message: 'Operational hours must be at most 200 characters' })
+  @Length(0, 200, {
+    message: 'Operational hours must be at most 200 characters',
+  })
   operational?: string;
 }

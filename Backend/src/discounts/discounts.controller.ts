@@ -27,7 +27,9 @@ export class DiscountsController {
 
   @Get()
   @HttpCode(HttpStatus.OK)
-  findAll(@Query(new ValidationPipe({ transform: true })) queryDto: QueryDiscountDto) {
+  findAll(
+    @Query(new ValidationPipe({ transform: true })) queryDto: QueryDiscountDto,
+  ) {
     return this.discountsService.findAll(queryDto);
   }
 

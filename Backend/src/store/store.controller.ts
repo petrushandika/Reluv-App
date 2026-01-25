@@ -35,8 +35,6 @@ export class StoreController {
     return this.storeService.findAllPublic(queryDto);
   }
 
-
-
   @UseGuards(JwtAuthGuard)
   @Post()
   @HttpCode(HttpStatus.CREATED)
@@ -180,10 +178,7 @@ export class StoreController {
   @UseGuards(JwtAuthGuard)
   @Get('orders/:id')
   @HttpCode(HttpStatus.OK)
-  getStoreOrder(
-    @GetUser() user: User,
-    @Param('id', ParseIntPipe) id: number,
-  ) {
+  getStoreOrder(@GetUser() user: User, @Param('id', ParseIntPipe) id: number) {
     return this.storeService.getStoreOrder(user.id, id);
   }
 

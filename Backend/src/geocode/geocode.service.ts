@@ -1,8 +1,5 @@
 import { HttpService } from '@nestjs/axios';
-import {
-  Injectable,
-  BadGatewayException,
-} from '@nestjs/common';
+import { Injectable, BadGatewayException } from '@nestjs/common';
 import { firstValueFrom } from 'rxjs';
 import { AxiosError } from 'axios';
 
@@ -47,7 +44,7 @@ export class GeocodeService {
     await this.ensureRateLimit();
 
     const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&addressdetails=1&zoom=18`;
-    
+
     try {
       const response = await firstValueFrom(
         this.httpService.get(url, {

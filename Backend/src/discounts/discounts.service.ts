@@ -19,7 +19,9 @@ export class DiscountsService {
       createDiscountDto;
 
     if (scope === DiscountScope.CATEGORY && !categoryId) {
-      throw new BadRequestException('categoryId is required for CATEGORY scope');
+      throw new BadRequestException(
+        'categoryId is required for CATEGORY scope',
+      );
     }
     if (scope === DiscountScope.PRODUCT && !productId) {
       throw new BadRequestException('productId is required for PRODUCT scope');
@@ -50,7 +52,9 @@ export class DiscountsService {
         where: { id: categoryId },
       });
       if (!category) {
-        throw new NotFoundException(`Category with ID ${categoryId} not found.`);
+        throw new NotFoundException(
+          `Category with ID ${categoryId} not found.`,
+        );
       }
     }
 
@@ -79,8 +83,15 @@ export class DiscountsService {
   }
 
   async findAll(queryDto: QueryDiscountDto) {
-    const { page = 1, limit = 10, scope, type, storeId, categoryId, productId } =
-      queryDto;
+    const {
+      page = 1,
+      limit = 10,
+      scope,
+      type,
+      storeId,
+      categoryId,
+      productId,
+    } = queryDto;
     const skip = (page - 1) * limit;
 
     const where: any = {
@@ -245,10 +256,7 @@ export class DiscountsService {
       return { discountAmount: 0, discountId: null };
     }
 
-    if (
-      discount.usageLimit &&
-      discount.usedCount >= discount.usageLimit
-    ) {
+    if (discount.usageLimit && discount.usedCount >= discount.usageLimit) {
       return { discountAmount: 0, discountId: null };
     }
 

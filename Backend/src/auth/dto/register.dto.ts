@@ -1,9 +1,18 @@
-import { IsEmail, IsNotEmpty, IsString, MinLength, Length, MaxLength } from 'class-validator';
+import {
+  IsEmail,
+  IsNotEmpty,
+  IsString,
+  MinLength,
+  Length,
+  MaxLength,
+} from 'class-validator';
 
 export class RegisterDto {
   @IsNotEmpty()
   @IsString()
-  @Length(1, 100, { message: 'First name must be between 1 and 100 characters' })
+  @Length(1, 100, {
+    message: 'First name must be between 1 and 100 characters',
+  })
   firstName: string;
 
   @IsString()
@@ -27,6 +36,8 @@ export class RegisterDto {
   @MinLength(6, {
     message: 'Confirm password must be at least 6 characters long',
   })
-  @MaxLength(100, { message: 'Confirm password must be at most 100 characters' })
+  @MaxLength(100, {
+    message: 'Confirm password must be at most 100 characters',
+  })
   confirmPassword: string;
 }

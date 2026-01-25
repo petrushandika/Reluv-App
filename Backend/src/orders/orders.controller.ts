@@ -50,7 +50,10 @@ export class OrdersController {
 
   @Get('seller/:id')
   @HttpCode(HttpStatus.OK)
-  findOneForSeller(@GetUser() user: User, @Param('id', ParseIntPipe) id: number) {
+  findOneForSeller(
+    @GetUser() user: User,
+    @Param('id', ParseIntPipe) id: number,
+  ) {
     return this.ordersService.findOneForSeller(id, user.id);
   }
 
@@ -59,7 +62,8 @@ export class OrdersController {
   updateOrderStatus(
     @GetUser() user: User,
     @Param('id', ParseIntPipe) id: number,
-    @Body(new ValidationPipe()) updateOrderDto: import('./dto/update-order.dto').UpdateOrderDto,
+    @Body(new ValidationPipe())
+    updateOrderDto: import('./dto/update-order.dto').UpdateOrderDto,
   ) {
     return this.ordersService.updateOrderStatus(id, user.id, updateOrderDto);
   }

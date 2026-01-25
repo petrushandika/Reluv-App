@@ -180,9 +180,7 @@ export class ReviewsService {
     }
 
     if (review.authorId !== authorId) {
-      throw new ForbiddenException(
-        'You can only edit your own reviews.',
-      );
+      throw new ForbiddenException('You can only edit your own reviews.');
     }
 
     if (review.editCount >= 3) {
@@ -256,9 +254,7 @@ export class ReviewsService {
     }
 
     if (!userStore) {
-      throw new ForbiddenException(
-        'Only store owners can reply to reviews.',
-      );
+      throw new ForbiddenException('Only store owners can reply to reviews.');
     }
 
     if (review.product.storeId !== userStore.id) {

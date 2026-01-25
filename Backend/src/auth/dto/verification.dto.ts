@@ -6,4 +6,3 @@ export class VerificationDto {
   @MaxLength(255, { message: 'Email must be at most 255 characters' })
   email: string;
 }
-

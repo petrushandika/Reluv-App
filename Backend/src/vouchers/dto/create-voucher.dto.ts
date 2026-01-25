@@ -15,17 +15,23 @@ import { VoucherType } from '@prisma/client';
 export class CreateVoucherDto {
   @IsString()
   @IsNotEmpty()
-  @Length(1, 255, { message: 'Voucher name must be between 1 and 255 characters' })
+  @Length(1, 255, {
+    message: 'Voucher name must be between 1 and 255 characters',
+  })
   name: string;
 
   @IsString()
   @IsNotEmpty()
-  @Length(1, 50, { message: 'Voucher code must be between 1 and 50 characters' })
+  @Length(1, 50, {
+    message: 'Voucher code must be between 1 and 50 characters',
+  })
   code: string;
 
   @IsString()
   @IsNotEmpty()
-  @Length(1, 1000, { message: 'Description must be between 1 and 1000 characters' })
+  @Length(1, 1000, {
+    message: 'Description must be between 1 and 1000 characters',
+  })
   description: string;
 
   @IsEnum(VoucherType, { message: 'Type must be one of: PERCENTAGE, FIXED' })

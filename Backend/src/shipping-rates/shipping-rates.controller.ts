@@ -1,9 +1,9 @@
-import { 
-  Controller, 
-  Post, 
-  Body, 
-  ValidationPipe, 
-  HttpCode, 
+import {
+  Controller,
+  Post,
+  Body,
+  ValidationPipe,
+  HttpCode,
   HttpStatus,
   HttpException,
 } from '@nestjs/common';
@@ -17,7 +17,9 @@ export class ShippingRatesController {
 
   @Post('check-by-area')
   @HttpCode(HttpStatus.OK)
-  async checkRatesByArea(@Body(new ValidationPipe()) checkRatesDto: CheckRatesDto) {
+  async checkRatesByArea(
+    @Body(new ValidationPipe()) checkRatesDto: CheckRatesDto,
+  ) {
     try {
       return await this.shippingRatesService.checkRatesByArea(checkRatesDto);
     } catch (error) {
@@ -37,7 +39,9 @@ export class ShippingRatesController {
     @Body(new ValidationPipe()) checkRatesByCoordsDto: CheckRatesByCoordsDto,
   ) {
     try {
-      return await this.shippingRatesService.checkRatesByCoords(checkRatesByCoordsDto);
+      return await this.shippingRatesService.checkRatesByCoords(
+        checkRatesByCoordsDto,
+      );
     } catch (error) {
       if (error instanceof HttpException) {
         throw error;

@@ -121,10 +121,7 @@ export class VouchersService {
         expiry: { gt: new Date() },
         ...(storeId !== undefined
           ? {
-              OR: [
-                { storeId: storeId },
-                { storeId: null },
-              ],
+              OR: [{ storeId: storeId }, { storeId: null }],
             }
           : {}),
       },

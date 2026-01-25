@@ -85,8 +85,8 @@ export class CartService {
 
     const variant = await this.prisma.variant.findUnique({
       where: { id: variantId },
-      select: { 
-        id: true, 
+      select: {
+        id: true,
         stock: true,
         product: {
           select: {

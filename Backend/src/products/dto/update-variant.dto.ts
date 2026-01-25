@@ -1,4 +1,12 @@
-import { IsEnum, IsInt, IsOptional, IsString, Min, Max, Length } from 'class-validator';
+import {
+  IsEnum,
+  IsInt,
+  IsOptional,
+  IsString,
+  Min,
+  Max,
+  Length,
+} from 'class-validator';
 import { Condition } from '@prisma/client';
 
 export class UpdateVariantDto {
@@ -30,7 +38,9 @@ export class UpdateVariantDto {
   @Max(999999, { message: 'Stock must be less than 1 million' })
   stock?: number;
 
-  @IsEnum(Condition, { message: 'Condition must be one of: NEW, LIKE_NEW, GOOD, FAIR, POOR' })
+  @IsEnum(Condition, {
+    message: 'Condition must be one of: NEW, LIKE_NEW, GOOD, FAIR, POOR',
+  })
   @IsOptional()
   condition?: Condition;
 

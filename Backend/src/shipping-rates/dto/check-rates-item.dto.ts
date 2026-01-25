@@ -1,4 +1,12 @@
-import { IsInt, IsNotEmpty, IsOptional, IsString, Min, Max, Length } from 'class-validator';
+import {
+  IsInt,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  Min,
+  Max,
+  Length,
+} from 'class-validator';
 
 export class CheckRatesItemDto {
   @IsString()

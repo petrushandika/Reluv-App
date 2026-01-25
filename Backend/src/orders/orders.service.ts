@@ -21,7 +21,13 @@ export class OrdersService {
   ) {}
 
   async createOrder(userId: number, createOrderDto: CreateOrderDto) {
-    const { locationId, shippingCost, notes, voucherCode, items: directItems } = createOrderDto;
+    const {
+      locationId,
+      shippingCost,
+      notes,
+      voucherCode,
+      items: directItems,
+    } = createOrderDto;
 
     let orderItems: Array<{
       variantId: number;
@@ -60,7 +66,9 @@ export class OrdersService {
         });
 
         if (!variant) {
-          throw new NotFoundException(`Variant with ID ${item.variantId} not found.`);
+          throw new NotFoundException(
+            `Variant with ID ${item.variantId} not found.`,
+          );
         }
 
         orderItems.push({
@@ -124,9 +132,7 @@ export class OrdersService {
 
     for (const item of orderItems) {
       if (item.variant.product.sellerId === userId) {
-        throw new ForbiddenException(
-          'You cannot purchase your own products.',
-        );
+        throw new ForbiddenException('You cannot purchase your own products.');
       }
       if (item.variant.stock < item.quantity) {
         throw new BadRequestException(
@@ -638,7 +644,9 @@ export class OrdersService {
     });
 
     if (!order) {
-      throw new NotFoundException(`Order with ID ${id} not found for this seller.`);
+      throw new NotFoundException(
+        `Order with ID ${id} not found for this seller.`,
+      );
     }
 
     return this.prisma.$transaction(async (tx) => {

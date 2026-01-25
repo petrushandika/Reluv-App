@@ -44,4 +44,8 @@ export interface GlobalDiscount extends BaseDiscount {
   scope: DiscountScope.GLOBAL;
 }
 
-export type Discount = CategoryDiscount | ProductDiscount | StoreDiscount | GlobalDiscount;
+export type Discount =
+  | CategoryDiscount
+  | ProductDiscount
+  | StoreDiscount
+  | GlobalDiscount;

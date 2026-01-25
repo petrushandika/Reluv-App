@@ -325,7 +325,11 @@ export class StoreService {
     }
 
     const now = new Date();
-    const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const startOfToday = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate(),
+    );
     const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
     const startOfLastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
     const endOfLastMonth = new Date(now.getFullYear(), now.getMonth(), 0);
@@ -345,18 +349,22 @@ export class StoreService {
       },
     });
 
-    const activeProducts = products.filter(p => p.isPublished && p.isActive);
-    const draftProducts = products.filter(p => !p.isPublished);
-    const outOfStockProducts = products.filter(p => 
-      p.isActive && p.variants.every(v => v.stock === 0)
+    const activeProducts = products.filter((p) => p.isPublished && p.isActive);
+    const draftProducts = products.filter((p) => !p.isPublished);
+    const outOfStockProducts = products.filter(
+      (p) => p.isActive && p.variants.every((v) => v.stock === 0),
     );
     const lowStockProducts = products
-      .filter(p => p.isActive && p.variants.some(v => v.stock > 0 && v.stock < 5))
+      .filter(
+        (p) => p.isActive && p.variants.some((v) => v.stock > 0 && v.stock < 5),
+      )
       .slice(0, 5)
-      .map(p => ({
+      .map((p) => ({
         id: p.id,
         name: p.name,
-        stock: Math.min(...p.variants.filter(v => v.stock > 0).map(v => v.stock)),
+        stock: Math.min(
+          ...p.variants.filter((v) => v.stock > 0).map((v) => v.stock),
+        ),
         image: p.images[0] || null,
       }));
 
@@ -394,27 +402,40 @@ export class StoreService {
       orderBy: { createdAt: 'desc' },
     });
 
-    const pendingOrders = ordersWithStoreProducts.filter(o => o.status === 'PENDING');
-    const paidOrders = ordersWithStoreProducts.filter(o => o.status === 'PAID');
-    const shippedOrders = ordersWithStoreProducts.filter(o => o.status === 'SHIPPED');
-    const completedOrders = ordersWithStoreProducts.filter(o => o.status === 'COMPLETED');
-    const cancelledOrders = ordersWithStoreProducts.filter(o => o.status === 'CANCELLED');
+    const pendingOrders = ordersWithStoreProducts.filter(
+      (o) => o.status === 'PENDING',
+    );
+    const paidOrders = ordersWithStoreProducts.filter(
+      (o) => o.status === 'PAID',
+    );
+    const shippedOrders = ordersWithStoreProducts.filter(
+      (o) => o.status === 'SHIPPED',
+    );
+    const completedOrders = ordersWithStoreProducts.filter(
+      (o) => o.status === 'COMPLETED',
+    );
+    const cancelledOrders = ordersWithStoreProducts.filter(
+      (o) => o.status === 'CANCELLED',
+    );
 
     // Calculate revenue (only from completed/paid orders)
-    const revenueOrders = ordersWithStoreProducts.filter(
-      o => ['PAID', 'SHIPPED', 'DELIVERED', 'COMPLETED'].includes(o.status)
+    const revenueOrders = ordersWithStoreProducts.filter((o) =>
+      ['PAID', 'SHIPPED', 'DELIVERED', 'COMPLETED'].includes(o.status),
     );
     const totalRevenue = revenueOrders.reduce(
-      (sum, o) => sum + o.items.reduce((s, i) => s + i.total, 0), 0
+      (sum, o) => sum + o.items.reduce((s, i) => s + i.total, 0),
+      0,
     );
     const thisMonthRevenue = revenueOrders
-      .filter(o => o.createdAt >= startOfMonth)
+      .filter((o) => o.createdAt >= startOfMonth)
       .reduce((sum, o) => sum + o.items.reduce((s, i) => s + i.total, 0), 0);
     const lastMonthRevenue = revenueOrders
-      .filter(o => o.createdAt >= startOfLastMonth && o.createdAt <= endOfLastMonth)
+      .filter(
+        (o) => o.createdAt >= startOfLastMonth && o.createdAt <= endOfLastMonth,
+      )
       .reduce((sum, o) => sum + o.items.reduce((s, i) => s + i.total, 0), 0);
     const todayRevenue = revenueOrders
-      .filter(o => o.createdAt >= startOfToday)
+      .filter((o) => o.createdAt >= startOfToday)
       .reduce((sum, o) => sum + o.items.reduce((s, i) => s + i.total, 0), 0);
 
     // Get reviews for store products
@@ -434,39 +455,53 @@ export class StoreService {
       orderBy: { createdAt: 'desc' },
     });
 
-    const unrepliedReviews = reviews.filter(r => !r.reply);
+    const unrepliedReviews = reviews.filter((r) => !r.reply);
     const totalReviews = reviews.length;
-    const averageRating = totalReviews > 0
-      ? reviews.reduce((sum, r) => sum + r.rating, 0) / totalReviews
-      : 0;
+    const averageRating =
+      totalReviews > 0
+        ? reviews.reduce((sum, r) => sum + r.rating, 0) / totalReviews
+        : 0;
 
     // Rating distribution
     const ratingDistribution = {
-      star1: reviews.filter(r => r.rating === 1).length,
-      star2: reviews.filter(r => r.rating === 2).length,
-      star3: reviews.filter(r => r.rating === 3).length,
-      star4: reviews.filter(r => r.rating === 4).length,
-      star5: reviews.filter(r => r.rating === 5).length,
+      star1: reviews.filter((r) => r.rating === 1).length,
+      star2: reviews.filter((r) => r.rating === 2).length,
+      star3: reviews.filter((r) => r.rating === 3).length,
+      star4: reviews.filter((r) => r.rating === 4).length,
+      star5: reviews.filter((r) => r.rating === 5).length,
     };
 
     // Generate Chart Data
     const monthlyRevenueData: { name: string; total: number }[] = [];
-    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-    
+    const monthNames = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
+    ];
+
     for (let i = 0; i < 12; i++) {
       const monthStart = new Date(now.getFullYear(), i, 1);
       const monthEnd = new Date(now.getFullYear(), i + 1, 0);
-      
+
       const monthRevenue = revenueOrders
-        .filter(o => o.createdAt >= monthStart && o.createdAt <= monthEnd)
+        .filter((o) => o.createdAt >= monthStart && o.createdAt <= monthEnd)
         .reduce((sum, o) => sum + o.items.reduce((s, i) => s + i.total, 0), 0);
-        
+
       monthlyRevenueData.push({ name: monthNames[i], total: monthRevenue });
     }
 
     const weeklyRevenueData: { name: string; total: number }[] = [];
-    const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-    
+    const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
     // Get last 7 days including today
     for (let i = 6; i >= 0; i--) {
       const date = new Date(now);
@@ -474,12 +509,15 @@ export class StoreService {
       date.setHours(0, 0, 0, 0);
       const dayEnd = new Date(date);
       dayEnd.setHours(23, 59, 59, 999);
-      
+
       const dayRevenue = revenueOrders
-        .filter(o => o.createdAt >= date && o.createdAt <= dayEnd)
+        .filter((o) => o.createdAt >= date && o.createdAt <= dayEnd)
         .reduce((sum, o) => sum + o.items.reduce((s, i) => s + i.total, 0), 0);
-        
-      weeklyRevenueData.push({ name: dayNames[date.getDay()], total: dayRevenue });
+
+      weeklyRevenueData.push({
+        name: dayNames[date.getDay()],
+        total: dayRevenue,
+      });
     }
 
     // Get vouchers and discounts count
@@ -498,19 +536,35 @@ export class StoreService {
       }),
     ]);
 
-    const activeVouchers = vouchers.filter(v => v.isActive && v.expiry > now);
-    const activeDiscounts = discounts.filter(d => d.isActive && d.endDate > now);
-    const activePromotions = promotions.filter(p => p.isActive);
+    const activeVouchers = vouchers.filter((v) => v.isActive && v.expiry > now);
+    const activeDiscounts = discounts.filter(
+      (d) => d.isActive && d.endDate > now,
+    );
+    const activePromotions = promotions.filter((p) => p.isActive);
 
     const expiringVouchers = vouchers
-      .filter(v => v.isActive && v.expiry > now && v.expiry < new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000))
+      .filter(
+        (v) =>
+          v.isActive &&
+          v.expiry > now &&
+          v.expiry < new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000),
+      )
       .slice(0, 3)
-      .map(v => ({ id: v.id, code: v.code, expiry: v.expiry.toISOString() }));
+      .map((v) => ({ id: v.id, code: v.code, expiry: v.expiry.toISOString() }));
 
     const expiringDiscounts = discounts
-      .filter(d => d.isActive && d.endDate > now && d.endDate < new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000))
+      .filter(
+        (d) =>
+          d.isActive &&
+          d.endDate > now &&
+          d.endDate < new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000),
+      )
       .slice(0, 3)
-      .map(d => ({ id: d.id, name: d.name, endDate: d.endDate.toISOString() }));
+      .map((d) => ({
+        id: d.id,
+        name: d.name,
+        endDate: d.endDate.toISOString(),
+      }));
 
     return {
       store,
@@ -545,13 +599,13 @@ export class StoreService {
       },
       alerts: {
         lowStockProducts,
-        pendingOrders: pendingOrders.slice(0, 5).map(o => ({
+        pendingOrders: pendingOrders.slice(0, 5).map((o) => ({
           id: o.id,
           orderNumber: o.orderNumber,
           totalAmount: o.items.reduce((s, i) => s + i.total, 0),
           createdAt: o.createdAt.toISOString(),
         })),
-        unrepliedReviews: unrepliedReviews.slice(0, 5).map(r => ({
+        unrepliedReviews: unrepliedReviews.slice(0, 5).map((r) => ({
           id: r.id,
           productName: r.product.name,
           rating: r.rating,
@@ -561,7 +615,7 @@ export class StoreService {
         expiringVouchers,
         expiringDiscounts,
       },
-      recentOrders: ordersWithStoreProducts.slice(0, 5).map(o => ({
+      recentOrders: ordersWithStoreProducts.slice(0, 5).map((o) => ({
         id: o.id,
         orderNumber: o.orderNumber,
         status: o.status,
@@ -569,12 +623,13 @@ export class StoreService {
         buyer: o.buyer,
         createdAt: o.createdAt.toISOString(),
       })),
-      recentReviews: reviews.slice(0, 5).map(r => ({
+      recentReviews: reviews.slice(0, 5).map((r) => ({
         id: r.id,
         rating: r.rating,
         comment: r.comment,
         productName: r.product.name,
-        authorName: `${r.author.firstName || ''} ${r.author.lastName || ''}`.trim(),
+        authorName:
+          `${r.author.firstName || ''} ${r.author.lastName || ''}`.trim(),
         hasReply: !!r.reply,
         createdAt: r.createdAt.toISOString(),
       })),
@@ -601,7 +656,13 @@ export class StoreService {
 
     const page = Number(query.page) || 1;
     const limit = Number(query.limit) || 10;
-    const { search, status, categoryId, sortBy = 'createdAt', sortOrder = 'desc' } = query;
+    const {
+      search,
+      status,
+      categoryId,
+      sortBy = 'createdAt',
+      sortOrder = 'desc',
+    } = query;
     const skip = (page - 1) * limit;
 
     const where: Prisma.ProductWhereInput = {
@@ -644,16 +705,22 @@ export class StoreService {
     ]);
 
     // Add computed fields
-    const productsWithStats = products.map(p => {
-      const activeVariants = p.variants.filter(v => v.isActive);
+    const productsWithStats = products.map((p) => {
+      const activeVariants = p.variants.filter((v) => v.isActive);
       const totalStock = activeVariants.reduce((sum, v) => sum + v.stock, 0);
-      const minPrice = activeVariants.length > 0 ? Math.min(...activeVariants.map(v => v.price)) : 0;
-      const maxPrice = activeVariants.length > 0 ? Math.max(...activeVariants.map(v => v.price)) : 0;
-      
+      const minPrice =
+        activeVariants.length > 0
+          ? Math.min(...activeVariants.map((v) => v.price))
+          : 0;
+      const maxPrice =
+        activeVariants.length > 0
+          ? Math.max(...activeVariants.map((v) => v.price))
+          : 0;
+
       let productStatus = 'active';
       if (!p.isPublished) productStatus = 'draft';
       else if (totalStock === 0) productStatus = 'out_of_stock';
-      
+
       return {
         ...p,
         totalStock,
@@ -666,7 +733,9 @@ export class StoreService {
     // Filter by out_of_stock status if needed
     let filteredProducts = productsWithStats;
     if (status === 'out_of_stock') {
-      filteredProducts = productsWithStats.filter(p => p.status === 'out_of_stock');
+      filteredProducts = productsWithStats.filter(
+        (p) => p.status === 'out_of_stock',
+      );
     }
 
     return {
@@ -692,7 +761,14 @@ export class StoreService {
 
     const page = Number(query.page) || 1;
     const limit = Number(query.limit) || 10;
-    const { search, status, dateFrom, dateTo, sortBy = 'createdAt', sortOrder = 'desc' } = query;
+    const {
+      search,
+      status,
+      dateFrom,
+      dateTo,
+      sortBy = 'createdAt',
+      sortOrder = 'desc',
+    } = query;
     const skip = (page - 1) * limit;
 
     const where: Prisma.OrderWhereInput = {
@@ -766,7 +842,7 @@ export class StoreService {
     ]);
 
     // Calculate store-specific totals
-    const ordersWithStoreTotals = orders.map(o => ({
+    const ordersWithStoreTotals = orders.map((o) => ({
       ...o,
       storeItemsTotal: o.items.reduce((sum, i) => sum + i.total, 0),
       itemsCount: o.items.reduce((sum, i) => sum + i.quantity, 0),
@@ -795,7 +871,13 @@ export class StoreService {
 
     const page = Number(query.page) || 1;
     const limit = Number(query.limit) || 10;
-    const { rating, hasReply, productId, sortBy = 'createdAt', sortOrder = 'desc' } = query;
+    const {
+      rating,
+      hasReply,
+      productId,
+      sortBy = 'createdAt',
+      sortOrder = 'desc',
+    } = query;
     const skip = (page - 1) * limit;
 
     const where: Prisma.ReviewWhereInput = {
@@ -945,7 +1027,9 @@ export class StoreService {
     });
 
     if (!product) {
-      throw new NotFoundException('Product not found or does not belong to your store.');
+      throw new NotFoundException(
+        'Product not found or does not belong to your store.',
+      );
     }
 
     return product;
@@ -969,7 +1053,9 @@ export class StoreService {
     });
 
     if (!product) {
-      throw new NotFoundException('Product not found or does not belong to your store.');
+      throw new NotFoundException(
+        'Product not found or does not belong to your store.',
+      );
     }
 
     return this.prisma.product.update({
@@ -1043,7 +1129,9 @@ export class StoreService {
     });
 
     if (!order) {
-      throw new NotFoundException('Order not found or does not contain your products.');
+      throw new NotFoundException(
+        'Order not found or does not contain your products.',
+      );
     }
 
     return order;
@@ -1067,7 +1155,9 @@ export class StoreService {
     });
 
     if (!review) {
-      throw new NotFoundException('Review not found or does not belong to your store products.');
+      throw new NotFoundException(
+        'Review not found or does not belong to your store products.',
+      );
     }
 
     return this.prisma.review.update({
@@ -1095,7 +1185,6 @@ export class StoreService {
     });
   }
 
-
   async updateOrderStatus(userId: number, orderId: number, status: string) {
     const store = await this.prisma.store.findUnique({
       where: { userId },
@@ -1121,12 +1210,16 @@ export class StoreService {
     });
 
     if (!order) {
-      throw new NotFoundException('Order not found or does not contain your products.');
+      throw new NotFoundException(
+        'Order not found or does not contain your products.',
+      );
     }
 
     // Since OrderStatus enum is imported, we should validate the status string
     if (!Object.values(OrderStatus).includes(status as OrderStatus)) {
-      throw new ConflictException(`Invalid status. Allowed: ${Object.values(OrderStatus).join(', ')}`);
+      throw new ConflictException(
+        `Invalid status. Allowed: ${Object.values(OrderStatus).join(', ')}`,
+      );
     }
 
     return this.prisma.order.update({

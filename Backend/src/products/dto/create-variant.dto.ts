@@ -39,7 +39,9 @@ export class CreateVariantDto {
   @Max(999999, { message: 'Stock must be less than 1 million' })
   stock: number;
 
-  @IsEnum(Condition, { message: 'Condition must be one of: NEW, LIKE_NEW, GOOD, FAIR, POOR' })
+  @IsEnum(Condition, {
+    message: 'Condition must be one of: NEW, LIKE_NEW, GOOD, FAIR, POOR',
+  })
   @IsNotEmpty()
   condition: Condition;
 
