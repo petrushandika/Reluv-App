@@ -92,7 +92,7 @@ export default function StoreOrdersPage() {
       type="store"
       sidebarItems={sidebarItems}
       actions={
-        <Button variant="outline" className="h-10 px-4 rounded-xl border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-50 transition-all font-bold text-[10px] uppercase tracking-widest border">
+        <Button variant="outline" className="h-10 px-4 rounded-xl border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-50 transition-all font-medium text-[10px] uppercase tracking-widest border">
           <Download className="mr-2 h-4 w-4" />
           Export Transaction Log
         </Button>
@@ -103,14 +103,14 @@ export default function StoreOrdersPage() {
           {stats.map((stat) => (
             <div key={stat.title} className="p-5 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 flex flex-col gap-4">
               <div className="flex items-center justify-between">
-                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{stat.title}</span>
+                <span className="text-[10px] font-medium text-slate-400 uppercase tracking-widest">{stat.title}</span>
                 <div className={`${stat.bg} p-2 rounded-lg border border-slate-100 dark:border-slate-800`}>
                   <stat.icon className={`h-4 w-4 ${stat.color}`} />
                 </div>
               </div>
               <div>
-                <h3 className="text-3xl font-black text-slate-900 dark:text-white tracking-tighter">{stat.value}</h3>
-                <p className="text-[10px] font-bold text-slate-400 uppercase mt-1 tracking-widest">{stat.description}</p>
+                <h3 className="text-3xl font-medium text-slate-900 dark:text-white tracking-tighter">{stat.value}</h3>
+                <p className="text-[10px] font-medium text-slate-400 uppercase mt-1 tracking-widest">{stat.description}</p>
               </div>
             </div>
           ))}

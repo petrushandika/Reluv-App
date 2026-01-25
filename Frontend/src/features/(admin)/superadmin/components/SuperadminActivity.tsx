@@ -33,7 +33,7 @@ export function SuperadminActivity() {
         </div>
       </div>
       <div className="flex items-center">
-        <div className="h-9 w-9 rounded-full bg-emerald-100 dark:bg-emerald-500/10 flex items-center justify-center text-emerald-600 dark:text-emerald-400 font-bold border border-emerald-200 dark:border-emerald-900/30 text-xs">
+        <div className="h-9 w-9 rounded-full bg-emerald-100 dark:bg-emerald-500/10 flex items-center justify-center text-emerald-600 dark:text-emerald-400 font-medium border border-emerald-200 dark:border-emerald-900/30 text-xs">
           Rp
         </div>
         <div className="ml-4 space-y-1">

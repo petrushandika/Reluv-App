@@ -36,27 +36,27 @@ export function DashboardShell({
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
   return (
-    <div className="flex h-screen w-full bg-white dark:bg-slate-950 overflow-hidden font-sans">
+    <div className="flex h-screen w-full bg-(--bg-primary) overflow-hidden font-sans transition-colors duration-300">
       {/* Sidebar Desktop - Fixed width, solid column */}
-      <aside className="hidden lg:flex flex-col w-[280px] border-r border-slate-200 dark:border-slate-800 bg-slate-950 shrink-0 h-full">
+      <aside className="hidden lg:flex flex-col w-[280px] border-r border-(--border-color) bg-(--bg-primary) shrink-0 h-full transition-colors duration-300">
         <DashboardSidebar items={sidebarItems} branding={branding} />
       </aside>
 
       {/* Main Container - Takes remaining space, manages its own scroll */}
-      <div className="flex-1 flex flex-col relative min-w-0 h-full bg-slate-50/40 dark:bg-slate-900/20">
+      <div className="flex-1 flex flex-col relative min-w-0 h-full bg-(--bg-secondary)/10">
         {/* Top Header - Sticky inside main container */}
-        <header className="h-16 shrink-0 bg-white dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-8 z-30">
+        <header className="h-16 shrink-0 bg-(--bg-primary) border-b border-(--border-color) flex items-center justify-between px-8 z-30 transition-colors duration-300">
           <div className="flex items-center gap-6">
             <Button
               variant="ghost"
               size="icon"
-              className="lg:hidden text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg"
+              className="lg:hidden text-slate-500 hover:bg-(--bg-secondary) rounded-lg"
               onClick={() => setIsMobileMenuOpen(true)}
             >
               <Menu className="h-5 w-5" />
             </Button>
             
-            <div className="hidden sm:flex items-center space-x-2 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
+            <div className="hidden sm:flex items-center space-x-2 text-[10px] font-medium text-slate-400 uppercase tracking-[0.2em]">
               <span>Portal</span>
               <ChevronRight className="h-3 w-3" />
               <span className="text-sky-500">{title}</span>
@@ -68,12 +68,12 @@ export function DashboardShell({
                <StoreSearch />
              </div>
 
-            <div className="flex items-center space-x-1 p-1 bg-slate-50 dark:bg-slate-900 rounded-full border border-slate-200 dark:border-slate-800 h-10">
-               <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full text-slate-500 hover:text-sky-500 hover:bg-white dark:hover:bg-slate-800 transition-all relative">
+            <div className="flex items-center space-x-1 p-1 bg-(--bg-secondary) rounded-full border border-(--border-color) h-10">
+               <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full text-slate-500 hover:text-sky-500 hover:bg-(--bg-primary) transition-all relative">
                 <Bell className="h-4 w-4" />
-                <span className="absolute top-2 right-2 h-1.5 w-1.5 bg-sky-500 rounded-full ring-2 ring-white dark:ring-slate-950" />
+                <span className="absolute top-2 right-2 h-1.5 w-1.5 bg-sky-500 rounded-full ring-2 ring-(--bg-primary)" />
               </Button>
-              <div className="h-4 w-px bg-slate-200 dark:bg-slate-800 mx-1" />
+              <div className="h-4 w-px bg-(--border-color) mx-1" />
               {type === "store" ? <StoreUserNav /> : <SuperadminUserNav />}
             </div>
           </div>
@@ -82,9 +82,9 @@ export function DashboardShell({
         {/* Scrollable Content Area */}
         <main className="flex-1 overflow-y-auto overflow-x-hidden p-8 custom-scrollbar">
           <div className="w-full max-w-[1600px] mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-500">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                 <div>
-                  <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight uppercase">
+                  <h1 className="text-3xl font-medium text-(--text-primary) tracking-tight uppercase">
                     {title}
                   </h1>
                 </div>
@@ -112,17 +112,17 @@ export function DashboardShell({
           <motion.div 
             initial={{ x: -280 }}
             animate={{ x: 0 }}
-            className="absolute left-0 top-0 w-[280px] h-full bg-slate-950 border-r border-slate-800 z-110"
+            className="absolute left-0 top-0 w-[280px] h-full bg-(--bg-primary) border-r border-(--border-color) z-110"
           >
              <div className="h-full flex flex-col">
-               <div className="h-20 flex items-center justify-between px-4 border-b border-slate-800 bg-slate-950">
+               <div className="h-20 flex items-center justify-between px-4 border-b border-(--border-color) bg-(--bg-primary)">
                  <div className="flex items-center gap-3">
-                   <div className="h-9 w-9 bg-sky-500 rounded-lg flex items-center justify-center border border-slate-800">
-                     <span className="text-white font-black text-xs">R</span>
+                   <div className="h-9 w-9 bg-sky-500 rounded-lg flex items-center justify-center border border-(--border-color)">
+                     <span className="text-white font-medium text-xs">R</span>
                    </div>
                    <div className="flex flex-col">
-                     <span className="text-lg font-black text-white uppercase tracking-tight leading-none">Reluv</span>
-                     <span className="text-[7px] font-black text-slate-600 uppercase tracking-[0.3em]">Control Hub</span>
+                     <span className="text-lg font-medium text-(--text-primary) uppercase tracking-tight leading-none">Reluv</span>
+                     <span className="text-[7px] font-medium text-slate-600 uppercase tracking-[0.3em]">Control Hub</span>
                    </div>
                  </div>
                  <Button variant="ghost" size="icon" onClick={() => setIsMobileMenuOpen(false)} className="text-slate-500 hover:text-white">

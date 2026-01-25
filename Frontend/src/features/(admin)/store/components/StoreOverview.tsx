@@ -35,7 +35,7 @@ export function StoreOverview() {
           tickLine={false}
           axisLine={false}
           dy={10}
-          fontWeight={600}
+          fontWeight={500}
         />
         <YAxis
           stroke="#94a3b8"
@@ -44,7 +44,7 @@ export function StoreOverview() {
           axisLine={false}
           tickFormatter={(value) => `Rp. ${(value / 1000)}k`}
           dx={-10}
-          fontWeight={600}
+          fontWeight={500}
         />
         <Tooltip 
           cursor={{fill: '#f1f5f9', opacity: 0.4}}
@@ -52,8 +52,8 @@ export function StoreOverview() {
             if (active && payload && payload.length) {
               return (
                 <div className="bg-white dark:bg-slate-900 p-3 border border-slate-200 dark:border-slate-800 rounded-xl shadow-none">
-                  <p className="text-[10px] uppercase tracking-widest text-slate-400 font-bold mb-1">{label}</p>
-                  <p className="text-lg font-bold text-sky-600 dark:text-sky-400">
+                  <p className="text-[10px] uppercase tracking-widest text-slate-400 font-medium mb-1">{label}</p>
+                  <p className="text-lg font-medium text-sky-600 dark:text-sky-400">
                     {`Rp. ${payload[0].value?.toLocaleString("id-ID")}`}
                   </p>
                 </div>

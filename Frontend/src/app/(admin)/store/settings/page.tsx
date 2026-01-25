@@ -147,7 +147,7 @@ export default function StoreSettingsPage() {
               <TabsTrigger 
                 key={tab.id}
                 value={tab.id} 
-                className="flex-1 md:flex-none px-6 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest data-[state=active]:bg-sky-500 data-[state=active]:text-white transition-all border border-transparent data-[state=active]:border-sky-400"
+                className="flex-1 md:flex-none px-6 py-2.5 rounded-xl text-[10px] font-medium uppercase tracking-widest data-[state=active]:bg-sky-500 data-[state=active]:text-white transition-all border border-transparent data-[state=active]:border-sky-400"
               >
                 {tab.label}
               </TabsTrigger>
@@ -163,35 +163,35 @@ export default function StoreSettingsPage() {
                       <StoreIcon className="w-5 h-5 text-sky-600" />
                     </div>
                     <div>
-                      <h3 className="text-sm font-black uppercase tracking-widest text-slate-900 dark:text-white leading-none">Global Identity</h3>
-                      <p className="text-[10px] font-bold text-slate-400 uppercase mt-1 tracking-tight">Your primary store pointers</p>
+                      <h3 className="text-sm font-medium uppercase tracking-widest text-slate-900 dark:text-white leading-none">Global Identity</h3>
+                      <p className="text-[10px] font-medium text-slate-400 uppercase mt-1 tracking-tight">Your primary store pointers</p>
                     </div>
                   </div>
                   
                   <div className="space-y-6">
                     <div className="space-y-2">
-                      <Label className="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">Official Name</Label>
+                      <Label className="text-[10px] font-medium uppercase tracking-widest text-slate-500 ml-1">Official Name</Label>
                       <Input 
                         value={name}
                         onChange={(e) => setName(e.target.value)}
-                        className="h-12 bg-slate-50 dark:bg-slate-950 border-slate-200 dark:border-slate-800 rounded-2xl focus:ring-sky-500/10 focus:border-sky-500 transition-all font-bold text-sm"
+                        className="h-12 bg-slate-50 dark:bg-slate-950 border-slate-200 dark:border-slate-800 rounded-2xl focus:ring-sky-500/10 focus:border-sky-500 transition-all font-medium text-sm"
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label className="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">Persistent Slug</Label>
+                      <Label className="text-[10px] font-medium uppercase tracking-widest text-slate-500 ml-1">Persistent Slug</Label>
                       <div className="relative">
                         <Globe className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
                         <Input 
                           value={slug}
                           onChange={(e) => setSlug(e.target.value)}
-                          className="pl-11 h-12 bg-slate-50 dark:bg-slate-950 border-slate-200 dark:border-slate-800 rounded-2xl focus:ring-sky-500/10 focus:border-sky-500 transition-all font-bold text-sm"
+                          className="pl-11 h-12 bg-slate-50 dark:bg-slate-950 border-slate-200 dark:border-slate-800 rounded-2xl focus:ring-sky-500/10 focus:border-sky-500 transition-all font-medium text-sm"
                         />
                       </div>
                     </div>
                   </div>
                 </div>
                 <div className="pt-4">
-                  <Button onClick={handleSaveGeneral} disabled={isSaving} className="w-full h-12 rounded-2xl bg-sky-500 hover:bg-sky-600 text-white border-none font-black text-[10px] uppercase tracking-widest shadow-none">
+                  <Button onClick={handleSaveGeneral} disabled={isSaving} className="w-full h-12 rounded-2xl bg-sky-500 hover:bg-sky-600 text-white border-none font-medium text-[10px] uppercase tracking-widest shadow-none">
                     {isSaving ? "Synchronizing..." : "Propagate Identity"}
                   </Button>
                 </div>
@@ -204,25 +204,25 @@ export default function StoreSettingsPage() {
                       <Clock className="w-5 h-5 text-sky-600" />
                     </div>
                     <div>
-                      <h3 className="text-sm font-black uppercase tracking-widest text-slate-900 dark:text-white leading-none">Efficiency Flow</h3>
-                      <p className="text-[10px] font-bold text-slate-400 uppercase mt-1 tracking-tight">Active operating schedule</p>
+                      <h3 className="text-sm font-medium uppercase tracking-widest text-slate-900 dark:text-white leading-none">Efficiency Flow</h3>
+                      <p className="text-[10px] font-medium text-slate-400 uppercase mt-1 tracking-tight">Active operating schedule</p>
                     </div>
                   </div>
                   
                   <div className="space-y-6">
                     <div className="space-y-2">
-                      <Label className="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">Operational Protocol</Label>
+                      <Label className="text-[10px] font-medium uppercase tracking-widest text-slate-500 ml-1">Operational Protocol</Label>
                       <Textarea 
                         value={operational}
                         onChange={(e) => setOperational(e.target.value)}
                         placeholder="E.g., Mon - Fri: 09:00 - 18:00"
-                        className="min-h-[148px] bg-slate-50 dark:bg-slate-950 border-slate-200 dark:border-slate-800 rounded-2xl focus:ring-sky-500/10 focus:border-sky-500 transition-all font-bold text-sm"
+                        className="min-h-[148px] bg-slate-50 dark:bg-slate-950 border-slate-200 dark:border-slate-800 rounded-2xl focus:ring-sky-500/10 focus:border-sky-500 transition-all font-medium text-sm"
                       />
                     </div>
                   </div>
                 </div>
                 <div className="pt-4">
-                  <Button onClick={handleSaveProfile} disabled={isSaving} className="w-full h-12 rounded-2xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white hover:bg-slate-50 font-black text-[10px] uppercase tracking-widest">
+                  <Button onClick={handleSaveProfile} disabled={isSaving} className="w-full h-12 rounded-2xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white hover:bg-slate-50 font-medium text-[10px] uppercase tracking-widest">
                     Save Operating Hours
                   </Button>
                 </div>
@@ -239,11 +239,11 @@ export default function StoreSettingsPage() {
                   ) : (
                     <div className="absolute inset-0 flex flex-col items-center justify-center">
                        <Camera className="w-8 h-8 text-slate-300 mb-2" />
-                       <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Upload System Banner</span>
+                       <span className="text-[10px] font-medium text-slate-400 uppercase tracking-widest">Upload System Banner</span>
                     </div>
                   )}
                   <div className="absolute top-4 right-4 z-20">
-                    <div className="bg-white/80 dark:bg-slate-950/80 backdrop-blur-md px-4 py-2 rounded-xl border border-white/20 text-[10px] font-black uppercase tracking-widest text-slate-900 dark:text-white">
+                    <div className="bg-white/80 dark:bg-slate-950/80 backdrop-blur-md px-4 py-2 rounded-xl border border-white/20 text-[10px] font-medium uppercase tracking-widest text-slate-900 dark:text-white">
                       Edit Banner
                     </div>
                   </div>
@@ -254,7 +254,7 @@ export default function StoreSettingsPage() {
                     <div className="h-40 w-40 rounded-[2.5rem] bg-white dark:bg-slate-900 border-[6px] border-white dark:border-slate-900 shadow-xl overflow-hidden relative">
                        <Avatar className="h-full w-full rounded-none">
                           <AvatarImage src={store?.profile?.avatar} className="object-cover" />
-                          <AvatarFallback className="text-3xl font-black bg-sky-500 text-white rounded-none">{store?.name[0]}</AvatarFallback>
+                          <AvatarFallback className="text-3xl font-medium bg-sky-500 text-white rounded-none">{store?.name[0]}</AvatarFallback>
                        </Avatar>
                        <div className="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center">
                           <input type="file" accept="image/*" className="absolute inset-0 opacity-0 cursor-pointer z-10" onChange={(e) => handleImageUpload(e, 'avatar')} disabled={isSaving} />
@@ -264,18 +264,18 @@ export default function StoreSettingsPage() {
                   </div>
                   
                   <div className="flex-1 space-y-2 pb-2">
-                    <Label className="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">Meta Description / Bio</Label>
+                    <Label className="text-[10px] font-medium uppercase tracking-widest text-slate-500 ml-1">Meta Description / Bio</Label>
                     <Textarea 
                       value={bio}
                       onChange={(e) => setBio(e.target.value)}
                       placeholder="High-level store summary..."
-                      className="min-h-[100px] bg-white dark:bg-slate-950 border-slate-200 dark:border-slate-800 rounded-2xl focus:ring-sky-500/10 focus:border-sky-500 transition-all font-bold text-sm"
+                      className="min-h-[100px] bg-white dark:bg-slate-950 border-slate-200 dark:border-slate-800 rounded-2xl focus:ring-sky-500/10 focus:border-sky-500 transition-all font-medium text-sm"
                     />
                   </div>
                </div>
                
                <div className="px-8 py-6 bg-slate-50/50 dark:bg-slate-950/50 border-t border-slate-200 dark:border-slate-800 flex justify-end">
-                 <Button onClick={handleSaveProfile} disabled={isSaving} className="h-12 px-10 rounded-2xl bg-sky-500 hover:bg-sky-600 font-black text-[10px] uppercase tracking-widest">
+                 <Button onClick={handleSaveProfile} disabled={isSaving} className="h-12 px-10 rounded-2xl bg-sky-500 hover:bg-sky-600 font-medium text-[10px] uppercase tracking-widest">
                    Propagate Appearance Changes
                  </Button>
                </div>
@@ -289,8 +289,8 @@ export default function StoreSettingsPage() {
                   <Bell className="w-5 h-5 text-sky-600" />
                 </div>
                 <div>
-                  <h3 className="text-sm font-black uppercase tracking-widest text-slate-900 dark:text-white leading-none">System Notification Hub</h3>
-                  <p className="text-[10px] font-bold text-slate-400 uppercase mt-1 tracking-tight">Manage event triggers and alerts</p>
+                  <h3 className="text-sm font-medium uppercase tracking-widest text-slate-900 dark:text-white leading-none">System Notification Hub</h3>
+                  <p className="text-[10px] font-medium text-slate-400 uppercase mt-1 tracking-tight">Manage event triggers and alerts</p>
                 </div>
               </div>
 
@@ -302,11 +302,11 @@ export default function StoreSettingsPage() {
                 ].map((item, i) => (
                   <div key={i} className="p-5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl flex flex-col justify-between hover:border-sky-500/50 transition-colors group">
                     <div>
-                      <h4 className="text-xs font-black text-slate-900 dark:text-white uppercase tracking-tight group-hover:text-sky-500 transition-colors">{item.title}</h4>
-                      <p className="text-[10px] font-bold text-slate-400 uppercase mt-1 tracking-widest">{item.desc}</p>
+                      <h4 className="text-xs font-medium text-slate-900 dark:text-white uppercase tracking-tight group-hover:text-sky-500 transition-colors">{item.title}</h4>
+                      <p className="text-[10px] font-medium text-slate-400 uppercase mt-1 tracking-widest">{item.desc}</p>
                     </div>
                     <div className="mt-6 flex justify-between items-center">
-                       <span className="text-[9px] font-black text-sky-500 uppercase tracking-[0.2em]">Active</span>
+                       <span className="text-[9px] font-medium text-sky-500 uppercase tracking-[0.2em]">Active</span>
                        <div className="h-6 w-10 bg-sky-500 rounded-full relative cursor-pointer border border-sky-400">
                           <div className="absolute right-1 top-1 h-3.5 w-3.5 bg-white rounded-full" />
                        </div>
@@ -324,16 +324,16 @@ export default function StoreSettingsPage() {
                   <ShieldCheck className="w-5 h-5 text-rose-600" />
                 </div>
                 <div>
-                  <h3 className="text-sm font-black uppercase tracking-widest text-slate-900 dark:text-white leading-none">Security Protocol</h3>
-                  <p className="text-[10px] font-bold text-slate-400 uppercase mt-1 tracking-tight">Data integrity and access control</p>
+                  <h3 className="text-sm font-medium uppercase tracking-widest text-slate-900 dark:text-white leading-none">Security Protocol</h3>
+                  <p className="text-[10px] font-medium text-slate-400 uppercase mt-1 tracking-tight">Data integrity and access control</p>
                 </div>
               </div>
 
               <div className="p-8 bg-rose-50 dark:bg-rose-500/5 rounded-3xl border border-rose-100 dark:border-rose-900/20 max-w-2xl">
                  <div className="flex flex-col gap-6">
                     <div>
-                      <h4 className="text-sm font-black text-rose-600 uppercase tracking-widest mb-2">Store Hibernation / Activation</h4>
-                      <p className="text-xs text-rose-500 font-bold leading-relaxed">
+                      <h4 className="text-sm font-medium text-rose-600 uppercase tracking-widest mb-2">Store Hibernation / Activation</h4>
+                      <p className="text-xs text-rose-500 font-medium leading-relaxed">
                         {store?.isActive 
                           ? "Hibernating your store will hide all public listings instantly. You can restore access at any time." 
                           : "Activate your store infrastructure to resume public sales and visibility."}
@@ -343,7 +343,7 @@ export default function StoreSettingsPage() {
                       onClick={handleToggleActive} 
                       disabled={isSaving}
                       variant="outline" 
-                      className="w-full md:w-fit h-12 px-10 rounded-2xl border-rose-200 dark:border-rose-900/50 text-rose-600 hover:bg-rose-600 hover:text-white transition-all font-black text-[10px] uppercase tracking-widest"
+                      className="w-full md:w-fit h-12 px-10 rounded-2xl border-rose-200 dark:border-rose-900/50 text-rose-600 hover:bg-rose-600 hover:text-white transition-all font-medium text-[10px] uppercase tracking-widest"
                     >
                       {store?.isActive ? "Execute Deactivation" : "Restore Store Access"}
                     </Button>

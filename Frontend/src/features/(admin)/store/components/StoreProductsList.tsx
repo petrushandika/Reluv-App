@@ -83,17 +83,17 @@ export function StoreProductsList() {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
           <Input 
             placeholder="Search products..." 
-            className="pl-9 h-10 bg-white dark:bg-slate-950 border-slate-200 dark:border-slate-800 focus:ring-sky-500/10 focus:border-sky-500 rounded-xl text-xs font-bold"
+            className="pl-9 h-10 bg-white dark:bg-slate-950 border-slate-200 dark:border-slate-800 focus:ring-sky-500/10 focus:border-sky-500 rounded-xl text-xs font-medium"
           />
         </div>
         <div className="flex items-center gap-2 w-full sm:w-auto">
-          <Button variant="outline" className="h-10 px-4 rounded-xl border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-[10px] font-black uppercase tracking-widest text-slate-500 hover:bg-slate-50 transition-all">
+          <Button variant="outline" className="h-10 px-4 rounded-xl border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-[10px] font-medium uppercase tracking-widest text-slate-500 hover:bg-slate-50 transition-all">
             <Filter className="mr-2 h-3.5 w-3.5" />
             Filters
             <ChevronDown className="ml-2 h-3.5 w-3.5" />
           </Button>
           <div className="h-6 w-px bg-slate-200 dark:bg-slate-800 mx-2 hidden sm:block" />
-          <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] hidden sm:block whitespace-nowrap">
+          <p className="text-[10px] font-medium text-slate-400 uppercase tracking-[0.2em] hidden sm:block whitespace-nowrap">
             {products.length} Products Found
           </p>
         </div>
@@ -103,11 +103,11 @@ export function StoreProductsList() {
         <Table>
           <TableHeader>
             <TableRow className="bg-slate-50/50 dark:bg-slate-950/50 border-b border-slate-200 dark:border-slate-800 hover:bg-transparent">
-              <TableHead className="py-5 pl-8 text-[11px] font-black uppercase tracking-widest text-slate-400">Product Portfolio</TableHead>
-              <TableHead className="text-[11px] font-black uppercase tracking-widest text-slate-400">Inventory</TableHead>
-              <TableHead className="text-[11px] font-black uppercase tracking-widest text-slate-400">Pricing</TableHead>
-              <TableHead className="text-[11px] font-black uppercase tracking-widest text-slate-400">Status</TableHead>
-              <TableHead className="text-right pr-8 text-[11px] font-black uppercase tracking-widest text-slate-400">Actions</TableHead>
+              <TableHead className="py-5 pl-8 text-[11px] font-medium uppercase tracking-widest text-slate-400">Product Portfolio</TableHead>
+              <TableHead className="text-[11px] font-medium uppercase tracking-widest text-slate-400">Inventory</TableHead>
+              <TableHead className="text-[11px] font-medium uppercase tracking-widest text-slate-400">Pricing</TableHead>
+              <TableHead className="text-[11px] font-medium uppercase tracking-widest text-slate-400">Status</TableHead>
+              <TableHead className="text-right pr-8 text-[11px] font-medium uppercase tracking-widest text-slate-400">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody className="divide-y divide-slate-100 dark:divide-slate-800">
@@ -126,17 +126,17 @@ export function StoreProductsList() {
                       />
                     </div>
                     <div className="flex flex-col gap-0.5 min-w-0">
-                      <span className="text-sm font-black text-slate-900 dark:text-white truncate max-w-[200px]">{product.name}</span>
-                      <span className="text-[10px] font-bold text-slate-400 uppercase tracking-tight">{product.category}</span>
+                      <span className="text-sm font-medium text-slate-900 dark:text-white truncate max-w-[200px]">{product.name}</span>
+                      <span className="text-[10px] font-medium text-slate-400 uppercase tracking-tight">{product.category}</span>
                     </div>
                   </div>
                 </TableCell>
                 <TableCell>
                   <div className="flex flex-col gap-1.5 w-24">
                     <div className="flex items-center justify-between">
-                      <span className="text-[10px] font-bold text-slate-400 uppercase">Stock</span>
+                      <span className="text-[10px] font-medium text-slate-400 uppercase">Stock</span>
                       <span className={cn(
-                        "text-[10px] font-black",
+                        "text-[10px] font-medium",
                         product.stock <= 2 ? "text-rose-500" : "text-slate-900 dark:text-white"
                       )}>{product.stock} Units</span>
                     </div>
@@ -154,15 +154,15 @@ export function StoreProductsList() {
                 </TableCell>
                 <TableCell>
                   <div className="flex flex-col">
-                    <span className="text-sm font-black text-slate-900 dark:text-white leading-none">
+                    <span className="text-sm font-medium text-slate-900 dark:text-white leading-none">
                       Rp {(product.price / 1000).toLocaleString()}k
                     </span>
-                    <span className="text-[10px] font-bold text-slate-400 uppercase mt-1 tracking-tighter">Net Price</span>
+                    <span className="text-[10px] font-medium text-slate-400 uppercase mt-1 tracking-tighter">Net Price</span>
                   </div>
                 </TableCell>
                 <TableCell>
                   <div className={cn(
-                    "inline-flex items-center px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase tracking-widest border border-slate-200 dark:border-slate-800",
+                    "inline-flex items-center justify-center w-24 px-2.5 py-0.5 rounded-full text-[9px] font-medium uppercase tracking-widest border border-slate-200 dark:border-slate-800",
                     product.status === "published" ? "text-emerald-500 bg-emerald-500/5" :
                     product.status === "draft" ? "text-slate-500 bg-slate-500/5" :
                     "text-rose-500 bg-rose-500/5"
@@ -170,12 +170,12 @@ export function StoreProductsList() {
                     {product.status}
                   </div>
                 </TableCell>
-                <TableCell className="pr-8">
+                <TableCell className="pr-8 text-right">
                    <div className="flex items-center justify-end gap-2">
-                      <Button variant="ghost" className="h-8 px-3 rounded-lg text-sky-600 hover:text-sky-700 hover:bg-sky-50 dark:hover:bg-sky-500/10 text-[10px] font-black uppercase tracking-widest transition-all">
+                      <Button variant="ghost" className="h-8 w-20 rounded-lg bg-sky-50 dark:bg-sky-500/10 text-sky-600 hover:text-sky-700 hover:bg-sky-100 dark:hover:bg-sky-500/20 text-[10px] font-medium uppercase tracking-widest transition-all">
                         Edit
                       </Button>
-                      <Button variant="ghost" className="h-8 px-3 rounded-lg text-rose-600 hover:text-rose-700 hover:bg-rose-50 dark:hover:bg-rose-500/10 text-[10px] font-black uppercase tracking-widest transition-all">
+                      <Button variant="ghost" className="h-8 w-20 rounded-lg bg-rose-50 dark:bg-rose-500/10 text-rose-600 hover:text-rose-700 hover:bg-rose-100 dark:hover:bg-rose-500/20 text-[10px] font-medium uppercase tracking-widest transition-all">
                         Delete
                       </Button>
                    </div>
@@ -187,12 +187,12 @@ export function StoreProductsList() {
       </div>
 
       <div className="px-8 py-4 bg-slate-50/50 dark:bg-slate-950/50 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
-        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Inventory Manifest v1.0.4</p>
+        <p className="text-[10px] font-medium text-slate-400 uppercase tracking-widest">Inventory Manifest v1.0.4</p>
         <div className="flex gap-2">
            <Button variant="outline" size="icon" className="h-8 w-8 border-slate-200 dark:border-slate-800 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-all">
              <ChevronLeft className="h-4 w-4 text-slate-500" />
            </Button>
-           <Button variant="outline" size="icon" className="h-8 w-8 border-slate-200 dark:border-slate-800 rounded-lg hover:bg-sky-50 dark:hover:bg-sky-500/10 transition-all border-sky-100 dark:border-sky-500/20">
+           <Button variant="outline" size="icon" className="h-8 w-8 rounded-lg hover:bg-sky-50 dark:hover:bg-sky-500/10 transition-all border-sky-100 dark:border-sky-500/20">
              <ChevronRight className="h-4 w-4 text-sky-500" />
            </Button>
         </div>

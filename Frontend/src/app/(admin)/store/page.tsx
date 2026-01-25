@@ -92,11 +92,11 @@ export default function StoreDashboardPage() {
       type="store"
       actions={
         <div className="flex items-center space-x-3">
-          <Button variant="outline" className="h-10 px-5 rounded-xl border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 font-bold text-xs uppercase tracking-widest hover:bg-white transition-all">
+          <Button variant="outline" className="h-10 px-5 rounded-xl border-slate-200 dark:border-slate-800 bg-(--bg-secondary) text-slate-600 dark:text-slate-400 font-medium text-xs uppercase tracking-widest hover:bg-(--bg-primary) transition-all">
             <Download className="mr-2 h-4 w-4" />
             Export Data
           </Button>
-          <Button className="h-10 px-5 rounded-xl bg-sky-500 hover:bg-sky-600 text-white font-bold text-xs uppercase tracking-widest transition-all active:scale-95 border-none">
+          <Button className="h-10 px-5 rounded-xl bg-sky-500 hover:bg-sky-600 text-white font-medium text-xs uppercase tracking-widest transition-all active:scale-95 border-none">
             <Plus className="mr-2 h-4 w-4" />
             New Product
           </Button>
@@ -126,18 +126,18 @@ export default function StoreDashboardPage() {
                     )}>
                       <stat.icon className="h-5 w-5" />
                     </div>
-                    <span className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">Live</span>
+                    <span className="text-[10px] font-medium text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">Live</span>
                   </div>
                   <div className="space-y-1">
-                    <p className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide">{stat.label}</p>
+                    <p className="text-sm font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wide">{stat.label}</p>
                     <div className="flex items-baseline space-x-2">
-                       <h3 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">{stat.value}</h3>
+                       <h3 className="text-3xl font-medium text-slate-900 dark:text-white tracking-tight">{stat.value}</h3>
                     </div>
                     <div className="flex items-center pt-2">
-                      <div className="flex items-center text-[10px] font-black text-emerald-500 bg-emerald-500/5 px-2 py-0.5 rounded-xl border border-emerald-500/10 uppercase tracking-widest">
+                      <div className="flex items-center text-[10px] font-medium text-emerald-500 bg-emerald-500/5 px-2 py-0.5 rounded-xl border border-emerald-500/10 uppercase tracking-widest">
                         {stat.trend}
                       </div>
-                      <span className="ml-2 text-[10px] font-black text-slate-400 uppercase tracking-widest">vs prev</span>
+                      <span className="ml-2 text-[10px] font-medium text-slate-400 uppercase tracking-widest">vs prev</span>
                     </div>
                   </div>
 
@@ -155,12 +155,12 @@ export default function StoreDashboardPage() {
           <Card className="lg:col-span-4 border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-none overflow-hidden">
             <CardHeader className="flex flex-row items-center justify-between px-8 py-6 border-b border-slate-200/50 dark:border-slate-800/50">
               <div>
-                <CardTitle className="text-lg font-black text-slate-900 dark:text-white tracking-tight uppercase">Revenue Analytics</CardTitle>
-                <CardDescription className="text-xs font-bold text-slate-400 uppercase tracking-widest">Performance Insights</CardDescription>
+                <CardTitle className="text-lg font-medium text-slate-900 dark:text-white tracking-tight uppercase">Revenue Analytics</CardTitle>
+                <CardDescription className="text-xs font-medium text-slate-400 uppercase tracking-widest">Performance Insights</CardDescription>
               </div>
               <div className="flex items-center p-1 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl">
-                 <button className="px-4 py-1.5 text-[10px] font-black uppercase tracking-widest bg-white dark:bg-slate-800 text-sky-500 shadow-sm rounded-lg border border-slate-200 dark:border-slate-700">Monthly</button>
-                 <button className="px-4 py-1.5 text-[10px] font-bold uppercase tracking-widest text-slate-400 hover:text-slate-600 transition-all">Weekly</button>
+                 <button className="px-4 py-1.5 text-[10px] font-medium uppercase tracking-widest bg-white dark:bg-slate-800 text-sky-500 shadow-sm rounded-lg border border-slate-200 dark:border-slate-700">Monthly</button>
+                 <button className="px-4 py-1.5 text-[10px] font-medium uppercase tracking-widest text-slate-400 hover:text-slate-600 transition-all">Weekly</button>
               </div>
             </CardHeader>
             <CardContent className="p-8">
@@ -174,8 +174,8 @@ export default function StoreDashboardPage() {
             <CardHeader className="px-8 py-6 border-b border-slate-200/50 dark:border-slate-800/50">
               <div className="flex items-center justify-between">
                 <div>
-                  <CardTitle className="text-lg font-black text-slate-900 dark:text-white tracking-tight uppercase">Recent Sales</CardTitle>
-                  <CardDescription className="text-xs font-bold text-slate-400 uppercase tracking-widest">Latest Transactions</CardDescription>
+                  <CardTitle className="text-lg font-medium text-slate-900 dark:text-white tracking-tight uppercase">Recent Sales</CardTitle>
+                  <CardDescription className="text-xs font-medium text-slate-400 uppercase tracking-widest">Latest Transactions</CardDescription>
                 </div>
                 <div className="h-10 w-10 rounded-xl bg-sky-50 dark:bg-sky-500/10 flex items-center justify-center border border-sky-100 dark:border-sky-900/30">
                   <TrendingUp className="h-5 w-5 text-sky-500" />
@@ -187,7 +187,7 @@ export default function StoreDashboardPage() {
                 <StoreRecentSales />
               </div>
               <div className="p-6 bg-slate-50/50 dark:bg-slate-950/50 border-t border-slate-200 dark:border-slate-800 flex items-center justify-center mt-auto">
-                <Button variant="ghost" className="w-full text-[10px] font-black uppercase tracking-[0.2em] text-sky-500 hover:text-sky-600 hover:bg-sky-500/5 group">
+                <Button variant="ghost" className="w-full h-11 bg-sky-50 dark:bg-sky-500/10 text-[10px] font-medium uppercase tracking-[0.2em] text-sky-500 hover:text-sky-600 hover:bg-sky-100 dark:hover:bg-sky-500/20 group rounded-xl transition-all">
                   View Full Transaction Log
                   <ChevronRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </Button>

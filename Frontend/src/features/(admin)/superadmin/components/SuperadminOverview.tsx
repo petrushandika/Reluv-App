@@ -15,29 +15,39 @@ export function SuperadminOverview() {
   return (
     <ResponsiveContainer width="100%" height={350}>
       <LineChart data={data}>
-        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e5e7eb" />
+        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="currentColor" className="text-slate-200 dark:text-slate-800" />
         <XAxis
           dataKey="name"
-          stroke="#888888"
-          fontSize={12}
+          stroke="#94a3b8"
+          fontSize={10}
           tickLine={false}
           axisLine={false}
+          dy={10}
         />
         <YAxis
-          stroke="#888888"
-          fontSize={12}
+          stroke="#94a3b8"
+          fontSize={10}
           tickLine={false}
           axisLine={false}
           tickFormatter={(value) => `Rp. ${value.toLocaleString("id-ID")}`}
+          dx={-10}
         />
         <Tooltip 
           content={({ active, payload }) => {
             if (active && payload && payload.length) {
               return (
-                <div className="bg-white dark:bg-gray-800 p-3 border rounded-lg shadow-lg border-slate-200 dark:border-slate-700">
-                  <p className="text-xs text-muted-foreground mb-1 font-medium">{payload[0].payload.name}</p>
-                  <p className="text-sm font-bold text-sky-600 dark:text-sky-400">{`GMV: Rp. ${payload[0].value.toLocaleString("id-ID")}`}</p>
-                  <p className="text-sm font-bold text-emerald-600 dark:text-emerald-400">{`Users: ${payload[1].value.toLocaleString("id-ID")}`}</p>
+                <div className="bg-(--bg-primary) p-4 border rounded-2xl shadow-2xl border-(--border-color) backdrop-blur-xl">
+                  <p className="text-[10px] text-slate-500 mb-2 font-medium uppercase tracking-widest">{payload[0].payload.name}</p>
+                  <div className="space-y-1.5">
+                    <p className="text-sm font-medium text-sky-500 flex items-center justify-between gap-4">
+                      <span className="text-slate-400 font-medium uppercase text-[9px]">GMV</span>
+                      {`Rp. ${payload[0].value.toLocaleString("id-ID")}`}
+                    </p>
+                    <p className="text-sm font-medium text-emerald-500 flex items-center justify-between gap-4">
+                      <span className="text-slate-400 font-medium uppercase text-[9px]">Users</span>
+                      {payload[1].value.toLocaleString("id-ID")}
+                    </p>
+                  </div>
                 </div>
               );
             }

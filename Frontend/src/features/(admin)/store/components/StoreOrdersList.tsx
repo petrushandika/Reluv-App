@@ -106,17 +106,17 @@ export function StoreOrdersList() {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
           <Input 
             placeholder="Search orders..." 
-            className="pl-9 h-10 bg-white dark:bg-slate-950 border-slate-200 dark:border-slate-800 focus:ring-sky-500/10 focus:border-sky-500 rounded-xl text-xs font-bold"
+            className="pl-9 h-10 bg-white dark:bg-slate-950 border-slate-200 dark:border-slate-800 focus:ring-sky-500/10 focus:border-sky-500 rounded-xl text-xs font-medium"
           />
         </div>
         <div className="flex items-center gap-2 w-full sm:w-auto">
-          <Button variant="outline" className="h-10 px-4 rounded-xl border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-[10px] font-black uppercase tracking-widest text-slate-500 hover:bg-slate-50 transition-all">
+          <Button variant="outline" className="h-10 px-4 rounded-xl border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-[10px] font-medium uppercase tracking-widest text-slate-500 hover:bg-slate-50 transition-all">
             <Filter className="mr-2 h-3.5 w-3.5" />
             Category
             <ChevronDown className="ml-2 h-3.5 w-3.5" />
           </Button>
           <div className="h-6 w-px bg-slate-200 dark:bg-slate-800 mx-2 hidden sm:block" />
-          <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] hidden sm:block whitespace-nowrap">
+          <p className="text-[10px] font-medium text-slate-400 uppercase tracking-[0.2em] hidden sm:block whitespace-nowrap">
             {orders.length} Records Found
           </p>
         </div>
@@ -126,11 +126,11 @@ export function StoreOrdersList() {
         <Table>
           <TableHeader>
             <TableRow className="bg-slate-50/50 dark:bg-slate-950/50 border-b border-slate-200 dark:border-slate-800 hover:bg-transparent">
-              <TableHead className="py-5 pl-8 text-[11px] font-black uppercase tracking-widest text-slate-400">Order ID</TableHead>
-              <TableHead className="text-[11px] font-black uppercase tracking-widest text-slate-400">Customer</TableHead>
-              <TableHead className="text-[11px] font-black uppercase tracking-widest text-slate-400">Value</TableHead>
-              <TableHead className="text-[11px] font-black uppercase tracking-widest text-slate-400">Lifecycle</TableHead>
-              <TableHead className="text-right pr-8 text-[11px] font-black uppercase tracking-widest text-slate-400">Actions</TableHead>
+              <TableHead className="py-5 pl-8 text-[11px] font-medium uppercase tracking-widest text-slate-400">Order ID</TableHead>
+              <TableHead className="text-[11px] font-medium uppercase tracking-widest text-slate-400">Customer</TableHead>
+              <TableHead className="text-[11px] font-medium uppercase tracking-widest text-slate-400">Value</TableHead>
+              <TableHead className="text-[11px] font-medium uppercase tracking-widest text-slate-400">Lifecycle</TableHead>
+              <TableHead className="text-right pr-8 text-[11px] font-medium uppercase tracking-widest text-slate-400">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody className="divide-y divide-slate-100 dark:divide-slate-800">
@@ -141,8 +141,8 @@ export function StoreOrdersList() {
               >
                 <TableCell className="py-5 pl-8">
                   <div className="flex flex-col gap-0.5">
-                    <span className="text-sm font-black text-slate-900 dark:text-white tracking-tight">{order.orderNumber}</span>
-                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-tight">
+                    <span className="text-sm font-medium text-slate-900 dark:text-white tracking-tight">{order.orderNumber}</span>
+                    <span className="text-[10px] font-medium text-slate-400 uppercase tracking-tight">
                       {new Date(order.createdAt).toLocaleDateString("en-US", { month: 'short', day: '2-digit', year: 'numeric' })}
                     </span>
                   </div>
@@ -153,33 +153,33 @@ export function StoreOrdersList() {
                       <User className="h-4 w-4 text-slate-500" />
                     </div>
                     <div className="flex flex-col min-w-0">
-                      <span className="text-sm font-bold text-slate-900 dark:text-white truncate max-w-[150px]">{order.customer.name}</span>
+                      <span className="text-sm font-medium text-slate-900 dark:text-white truncate max-w-[150px]">{order.customer.name}</span>
                       <span className="text-[10px] font-medium text-slate-400 truncate max-w-[150px]">{order.customer.email}</span>
                     </div>
                   </div>
                 </TableCell>
                 <TableCell>
                   <div className="flex flex-col">
-                    <span className="text-sm font-black text-slate-900 dark:text-white leading-none">
+                    <span className="text-sm font-medium text-slate-900 dark:text-white leading-none">
                       Rp {(order.totalAmount / 1000).toLocaleString()}k
                     </span>
-                    <span className="text-[10px] font-bold text-slate-400 uppercase mt-1 tracking-tighter">{order.itemCount} Items</span>
+                    <span className="text-[10px] font-medium text-slate-400 uppercase mt-1 tracking-tighter">{order.itemCount} Items</span>
                   </div>
                 </TableCell>
                 <TableCell>
                   <div className={cn(
-                    "inline-flex items-center px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase tracking-widest border border-slate-200 dark:border-slate-800",
+                    "inline-flex items-center justify-center w-24 px-2.5 py-0.5 rounded-full text-[9px] font-medium uppercase tracking-widest border border-slate-200 dark:border-slate-800",
                     getStatusStyle(order.status)
                   )}>
                     {order.status}
                   </div>
                 </TableCell>
-                <TableCell className="pr-8">
+                <TableCell className="pr-8 text-right">
                    <div className="flex items-center justify-end gap-2">
-                      <Button variant="ghost" className="h-8 px-3 rounded-lg text-sky-600 hover:text-sky-700 hover:bg-sky-50 dark:hover:bg-sky-500/10 text-[10px] font-black uppercase tracking-widest transition-all">
+                      <Button variant="ghost" className="h-8 w-20 rounded-lg bg-sky-50 dark:bg-sky-500/10 text-sky-600 hover:text-sky-700 hover:bg-sky-100 dark:hover:bg-sky-500/20 text-[10px] font-medium uppercase tracking-widest transition-all">
                         View
                       </Button>
-                      <Button variant="ghost" className="h-8 px-3 rounded-lg text-rose-600 hover:text-rose-700 hover:bg-rose-50 dark:hover:bg-rose-500/10 text-[10px] font-black uppercase tracking-widest transition-all">
+                      <Button variant="ghost" className="h-8 w-20 rounded-lg bg-rose-50 dark:bg-rose-500/10 text-rose-600 hover:text-rose-700 hover:bg-rose-100 dark:hover:bg-rose-500/20 text-[10px] font-medium uppercase tracking-widest transition-all">
                         Cancel
                       </Button>
                    </div>
@@ -191,7 +191,7 @@ export function StoreOrdersList() {
       </div>
 
       <div className="px-8 py-4 bg-slate-50/50 dark:bg-slate-950/50 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
-        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Transaction Feed Active</p>
+        <p className="text-[10px] font-medium text-slate-400 uppercase tracking-widest">Transaction Feed Active</p>
         <div className="flex gap-2">
            <Button variant="outline" size="icon" className="h-8 w-8 border-slate-200 dark:border-slate-800 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-all">
              <ChevronLeft className="h-4 w-4 text-slate-500" />

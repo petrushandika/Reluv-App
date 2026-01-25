@@ -81,12 +81,12 @@ export function StoreRecentSales() {
           className="flex items-center justify-between p-3 rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-900/50 transition-all border border-transparent hover:border-slate-200 dark:hover:border-slate-800 group"
         >
           <div className="flex items-center gap-4">
-            <Avatar className="h-10 w-10 border-2 border-slate-200 dark:border-slate-800 group-hover:scale-105 transition-transform">
+            <Avatar className="h-10 w-10 ring-2 ring-(--border-color) ring-offset-2 ring-offset-(--bg-primary) group-hover:ring-sky-500 transition-all duration-300">
               <AvatarImage src={sale.avatar} alt={sale.name} />
-              <AvatarFallback className="font-bold bg-slate-100 dark:bg-slate-800 text-slate-500">{sale.initials}</AvatarFallback>
+              <AvatarFallback className="font-medium bg-slate-100 dark:bg-slate-800 text-slate-500">{sale.initials}</AvatarFallback>
             </Avatar>
             <div className="space-y-1">
-              <p className="text-sm font-bold text-slate-900 dark:text-white leading-none group-hover:text-sky-600 dark:group-hover:text-sky-400 transition-colors">{sale.name}</p>
+              <p className="text-sm font-medium text-slate-900 dark:text-white leading-none group-hover:text-sky-600 dark:group-hover:text-sky-400 transition-colors">{sale.name}</p>
               <div className="flex items-center gap-2">
                 <p className="text-[10px] text-slate-500 font-medium truncate max-w-[120px]">{sale.email}</p>
                 <span className="text-[9px] text-slate-300 dark:text-slate-700">•</span>
@@ -95,7 +95,7 @@ export function StoreRecentSales() {
             </div>
           </div>
           <div className="text-right">
-            <div className="text-sm font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-500/10 px-2.5 py-1 rounded-lg border border-emerald-100 dark:border-emerald-900/30">
+            <div className="text-sm font-medium text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-500/10 px-2.5 py-1 rounded-lg border border-emerald-100 dark:border-emerald-900/30">
               +Rp. {sale.amount.toLocaleString("id-ID")}
             </div>
           </div>
