@@ -21,6 +21,7 @@ import { useCartStore } from "@/features/(main)/cart/store/cart.store";
 import { useWishlistStore } from "@/features/(main)/wishlist/store/wishlist.store";
 import ThemeToggle from "./ThemeToggle";
 import PromoMarquee from "@/shared/components/common/PromoMarquee";
+import { NotificationDropdown } from "@/features/(main)/notifications/components/NotificationDropdown";
 
 interface SubMenuSection {
   title: string;
@@ -700,13 +701,7 @@ const Navbar = () => {
                 </span>
               )}
             </Link>
-            <Link
-              href="/notifications"
-              prefetch={true}
-              aria-label="Notifications"
-            >
-              <Bell className="w-6 h-6 text-sky-600 hover:text-sky-700 dark:text-sky-400 dark:hover:text-sky-300 cursor-pointer transition-all duration-300 transform hover:scale-110" />
-            </Link>
+            <NotificationDropdown />
             <ThemeToggle />
             {isAuthenticated ? (
               <div
@@ -799,14 +794,7 @@ const Navbar = () => {
             )}
           </div>
           <div className="flex lg:hidden items-center space-x-4">
-            <Link
-              href="/notifications"
-              aria-label="Notifications"
-              className="relative"
-              onClick={() => setIsMobileMenuOpen(false)}
-            >
-              <Bell className="w-6 h-6 text-sky-600 hover:text-sky-700 dark:text-sky-400 dark:hover:text-sky-300 cursor-pointer transition-all duration-300 transform hover:scale-110" />
-            </Link>
+            <NotificationDropdown isMobile={true} onCloseMobile={() => setIsMobileMenuOpen(false)} />
             <div onClick={() => setIsMobileMenuOpen(false)}>
               <ThemeToggle />
             </div>
