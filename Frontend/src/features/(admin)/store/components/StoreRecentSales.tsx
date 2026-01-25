@@ -85,12 +85,12 @@ export function StoreRecentSales() {
               <AvatarImage src={sale.avatar} alt={sale.name} />
               <AvatarFallback className="font-medium bg-slate-100 dark:bg-slate-800 text-slate-500">{sale.initials}</AvatarFallback>
             </Avatar>
-            <div className="space-y-1">
-              <p className="text-sm font-medium text-slate-900 dark:text-white leading-none group-hover:text-sky-600 dark:group-hover:text-sky-400 transition-colors">{sale.name}</p>
+            <div className="space-y-1 min-w-0 flex-1">
+              <p className="text-sm font-medium text-slate-900 dark:text-white leading-none group-hover:text-sky-600 dark:group-hover:text-sky-400 transition-colors truncate">{sale.name}</p>
               <div className="flex items-center gap-2">
-                <p className="text-[10px] text-slate-500 font-medium truncate max-w-[120px]">{sale.email}</p>
-                <span className="text-[9px] text-slate-300 dark:text-slate-700">•</span>
-                <p className="text-[9px] text-slate-400 font-medium">{sale.time}</p>
+                <p className="text-[10px] text-slate-500 font-medium truncate hidden min-[400px]:block max-w-[80px] sm:max-w-[120px]">{sale.email}</p>
+                <span className="text-[9px] text-slate-300 dark:text-slate-700 hidden min-[400px]:block">•</span>
+                <p className="text-[9px] text-slate-400 font-medium whitespace-nowrap">{sale.time}</p>
               </div>
             </div>
           </div>

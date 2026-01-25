@@ -91,14 +91,14 @@ export default function StoreDashboardPage() {
       sidebarItems={sidebarItems}
       type="store"
       actions={
-        <div className="flex items-center space-x-3">
-          <Button variant="outline" className="h-10 px-5 rounded-xl border-slate-200 dark:border-slate-800 bg-(--bg-secondary) text-slate-600 dark:text-slate-400 font-medium text-xs uppercase tracking-widest hover:bg-(--bg-primary) transition-all">
-            <Download className="mr-2 h-4 w-4" />
-            Export Data
+        <div className="flex items-center gap-2 sm:gap-3 flex-wrap sm:flex-nowrap">
+          <Button variant="outline" className="h-9 sm:h-10 px-3 sm:px-5 rounded-xl border-slate-200 dark:border-slate-800 bg-(--bg-secondary) text-slate-600 dark:text-slate-400 font-medium text-[10px] sm:text-xs uppercase tracking-widest hover:bg-(--bg-primary) transition-all flex-1 sm:flex-none">
+            <Download className="mr-1.5 sm:mr-2 h-3.5 w-3.5 sm:h-4 sm:w-4" />
+            <span className="truncate">Export Data</span>
           </Button>
-          <Button className="h-10 px-5 rounded-xl bg-sky-500 hover:bg-sky-600 text-white font-medium text-xs uppercase tracking-widest transition-all active:scale-95 border-none">
-            <Plus className="mr-2 h-4 w-4" />
-            New Product
+          <Button className="h-9 sm:h-10 px-3 sm:px-5 rounded-xl bg-sky-500 hover:bg-sky-600 text-white font-medium text-[10px] sm:text-xs uppercase tracking-widest transition-all active:scale-95 border-none flex-1 sm:flex-none">
+            <Plus className="mr-1.5 sm:mr-2 h-3.5 w-3.5 sm:h-4 sm:w-4" />
+            <span className="truncate">New Product</span>
           </Button>
         </div>
       }
@@ -151,27 +151,27 @@ export default function StoreDashboardPage() {
           ))}
         </div>
 
-        <div className="grid gap-8 lg:grid-cols-7">
+        <div className="grid gap-6 sm:gap-8 lg:grid-cols-7">
           <Card className="lg:col-span-4 border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-none overflow-hidden">
-            <CardHeader className="flex flex-row items-center justify-between px-8 py-6 border-b border-slate-200/50 dark:border-slate-800/50">
+            <CardHeader className="flex flex-col xs:flex-row items-start xs:items-center justify-between px-4 sm:px-8 py-4 sm:py-6 border-b border-slate-200/50 dark:border-slate-800/50 gap-4">
               <div>
                 <CardTitle className="text-lg font-medium text-slate-900 dark:text-white tracking-tight uppercase">Revenue Analytics</CardTitle>
                 <CardDescription className="text-xs font-medium text-slate-400 uppercase tracking-widest">Performance Insights</CardDescription>
               </div>
-              <div className="flex items-center p-1 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl">
-                 <button className="px-4 py-1.5 text-[10px] font-medium uppercase tracking-widest bg-white dark:bg-slate-800 text-sky-500 shadow-sm rounded-lg border border-slate-200 dark:border-slate-700">Monthly</button>
-                 <button className="px-4 py-1.5 text-[10px] font-medium uppercase tracking-widest text-slate-400 hover:text-slate-600 transition-all">Weekly</button>
+              <div className="flex items-center p-1 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl self-end xs:self-auto">
+                 <button className="px-3 sm:px-4 py-1.5 text-[10px] font-medium uppercase tracking-widest bg-white dark:bg-slate-800 text-sky-500 shadow-sm rounded-lg border border-slate-200 dark:border-slate-700">Monthly</button>
+                 <button className="px-3 sm:px-4 py-1.5 text-[10px] font-medium uppercase tracking-widest text-slate-400 hover:text-slate-600 transition-all">Weekly</button>
               </div>
             </CardHeader>
-            <CardContent className="p-8">
-              <div className="h-[380px] w-full">
+            <CardContent className="p-4 sm:p-8">
+              <div className="h-[300px] sm:h-[380px] w-full">
                 <StoreOverview />
               </div>
             </CardContent>
           </Card>
 
           <Card className="lg:col-span-3 border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-none overflow-hidden flex flex-col">
-            <CardHeader className="px-8 py-6 border-b border-slate-200/50 dark:border-slate-800/50">
+            <CardHeader className="px-4 sm:px-8 py-4 sm:py-6 border-b border-slate-200/50 dark:border-slate-800/50">
               <div className="flex items-center justify-between">
                 <div>
                   <CardTitle className="text-lg font-medium text-slate-900 dark:text-white tracking-tight uppercase">Recent Sales</CardTitle>

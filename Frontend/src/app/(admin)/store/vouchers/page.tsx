@@ -91,14 +91,14 @@ export default function StoreVouchersPage() {
       type="store"
       sidebarItems={sidebarItems}
       actions={
-        <Button className="rounded-xl bg-sky-500 hover:bg-sky-600 text-white font-medium text-[10px] uppercase tracking-widest h-10 px-4 border-none transition-all active:scale-95">
-          <Plus className="mr-2 h-4 w-4" />
-          Create New Campaign
+        <Button className="rounded-xl bg-sky-500 hover:bg-sky-600 text-white font-medium text-[10px] uppercase tracking-widest h-9 sm:h-10 px-3 sm:px-4 border-none transition-all active:scale-95 w-full sm:w-auto">
+          <Plus className="mr-1.5 sm:mr-2 h-3.5 w-3.5 sm:h-4 sm:w-4" />
+          <span className="truncate">Create New Campaign</span>
         </Button>
       }
     >
       <div className="space-y-6">
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {stats.map((stat) => (
             <div key={stat.title} className="p-5 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 flex flex-col gap-4">
               <div className="flex items-center justify-between">

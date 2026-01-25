@@ -71,10 +71,10 @@ export default function SuperadminDashboardPage() {
         <h1 className="text-2xl font-medium text-(--text-primary)">Superadmin</h1>
       }
       actions={
-        <div className="flex items-center space-x-2">
-          <Button variant="outline" size="sm" className="bg-(--bg-secondary) border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-(--bg-primary) transition-all font-medium rounded-xl h-10 px-4">
-            <AlertTriangle className="mr-2 h-4 w-4" />
-            Maintenance Mode
+        <div className="flex items-center w-full sm:w-auto">
+          <Button variant="outline" size="sm" className="bg-(--bg-secondary) border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-(--bg-primary) transition-all font-medium rounded-xl h-9 sm:h-10 px-3 sm:px-4 text-[10px] sm:text-xs w-full sm:w-auto">
+            <AlertTriangle className="mr-1.5 sm:mr-2 h-3.5 w-3.5 sm:h-4 sm:w-4" />
+            <span className="truncate">Maintenance Mode</span>
           </Button>
         </div>
       }
@@ -135,28 +135,28 @@ export default function SuperadminDashboardPage() {
         <div className="grid gap-6 lg:grid-cols-7">
           {}
           <Card className="lg:col-span-4 border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 transition-all">
-            <CardHeader className="flex flex-row items-center justify-between pb-4 border-b border-slate-50 dark:border-slate-800/50">
+            <CardHeader className="flex flex-col xs:flex-row items-start xs:items-center justify-between px-4 sm:px-6 py-4 border-b border-slate-50 dark:border-slate-800/50 gap-4">
               <div className="space-y-1">
                 <CardTitle className="text-sm font-medium text-slate-900 dark:text-white uppercase tracking-widest">Platform Growth</CardTitle>
                 <CardDescription className="text-xs font-medium text-slate-400 uppercase tracking-tight">
                   Network-wide performance across all regions
                 </CardDescription>
               </div>
-              <div className="flex items-center space-x-1 bg-slate-100 dark:bg-slate-800 p-1 rounded-xl border border-slate-200 dark:border-slate-700">
+              <div className="flex items-center space-x-1 bg-slate-100 dark:bg-slate-800 p-1 rounded-xl border border-slate-200 dark:border-slate-700 self-end xs:self-auto">
                 <button className="px-3 py-1.5 text-[9px] font-medium uppercase tracking-widest bg-white dark:bg-slate-700 text-slate-900 dark:text-white rounded-lg border border-slate-200 dark:border-slate-600">All Regions</button>
                 <button className="px-3 py-1.5 text-[9px] font-medium uppercase tracking-widest text-slate-400 hover:text-slate-600 transition-colors">SEA</button>
               </div>
             </CardHeader>
-            <CardContent className="pt-6">
-              <div className="h-[350px] w-full">
+            <CardContent className="pt-6 p-4 sm:p-6">
+              <div className="h-[300px] sm:h-[350px] w-full">
                 <SuperadminOverview />
               </div>
             </CardContent>
           </Card>
 
           {}
-          <Card className="lg:col-span-3 border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 transition-all overflow-hidden">
-            <CardHeader className="pb-4 border-b border-slate-50 dark:border-slate-800/50">
+          <Card className="lg:col-span-3 border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 transition-all overflow-hidden flex flex-col">
+            <CardHeader className="px-4 sm:px-6 py-4 border-b border-slate-50 dark:border-slate-800/50">
               <div className="flex items-center justify-between">
                 <div className="space-y-1">
                   <CardTitle className="text-sm font-medium text-slate-900 dark:text-white uppercase tracking-widest">System Activity</CardTitle>

@@ -54,20 +54,20 @@ export default function StoreProductsPage() {
       sidebarItems={sidebarItems}
       type="store"
       actions={
-        <div className="flex items-center space-x-2">
-          <Button variant="outline" className="h-10 px-4 rounded-xl border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-50 transition-all font-medium text-[10px] uppercase tracking-widest border">
-            <Download className="mr-2 h-4 w-4" />
-            Export Portfolio
+        <div className="flex items-center gap-2 sm:gap-3 flex-wrap sm:flex-nowrap">
+          <Button variant="outline" className="h-9 sm:h-10 px-3 sm:px-4 rounded-xl border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-50 transition-all font-medium text-[10px] uppercase tracking-widest border flex-1 sm:flex-none">
+            <Download className="mr-1.5 sm:mr-2 h-3.5 w-3.5 sm:h-4 sm:w-4" />
+            <span className="truncate">Export Portfolio</span>
           </Button>
-          <Button className="bg-sky-500 hover:bg-sky-600 text-white transition-all active:scale-95 border-none font-medium text-[10px] uppercase tracking-widest h-10 px-4 rounded-xl">
-            <Plus className="mr-2 h-4 w-4" />
-            Add New Product
+          <Button className="bg-sky-500 hover:bg-sky-600 text-white transition-all active:scale-95 border-none font-medium text-[10px] uppercase tracking-widest h-9 sm:h-10 px-3 sm:px-4 rounded-xl flex-1 sm:flex-none">
+            <Plus className="mr-1.5 sm:mr-2 h-3.5 w-3.5 sm:h-4 sm:w-4" />
+            <span className="truncate">Add New Product</span>
           </Button>
         </div>
       }
     >
       <div className="space-y-6">
-        <div className="grid gap-4 md:grid-cols-3">
+        <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
           <div className="p-5 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 flex items-center justify-between group">
             <div>
               <p className="text-[10px] font-medium text-slate-400 uppercase tracking-[0.2em] mb-1">Total Products</p>

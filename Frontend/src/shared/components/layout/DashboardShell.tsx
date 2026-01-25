@@ -45,50 +45,50 @@ export function DashboardShell({
       {/* Main Container - Takes remaining space, manages its own scroll */}
       <div className="flex-1 flex flex-col relative min-w-0 h-full bg-(--bg-secondary)/10">
         {/* Top Header - Sticky inside main container */}
-        <header className="h-16 shrink-0 bg-(--bg-primary) border-b border-(--border-color) flex items-center justify-between px-8 z-30 transition-colors duration-300">
-          <div className="flex items-center gap-6">
+        <header className="h-16 shrink-0 bg-(--bg-primary) border-b border-(--border-color) flex items-center justify-between px-4 sm:px-8 z-30 transition-colors duration-300">
+          <div className="flex items-center gap-2 sm:gap-6">
             <Button
               variant="ghost"
               size="icon"
-              className="lg:hidden text-slate-500 hover:bg-(--bg-secondary) rounded-lg"
+              className="lg:hidden text-slate-500 hover:bg-(--bg-secondary) rounded-lg h-9 w-9"
               onClick={() => setIsMobileMenuOpen(true)}
             >
               <Menu className="h-5 w-5" />
             </Button>
             
-            <div className="hidden sm:flex items-center space-x-2 text-[10px] font-medium text-slate-400 uppercase tracking-[0.2em]">
-              <span>Portal</span>
-              <ChevronRight className="h-3 w-3" />
-              <span className="text-sky-500">{title}</span>
+            <div className="hidden xs:flex items-center space-x-2 text-[10px] font-medium text-slate-400 uppercase tracking-[0.2em]">
+              <span className="hidden sm:inline">Portal</span>
+              <ChevronRight className="h-3 w-3 hidden sm:inline" />
+              <span className="text-sky-500 truncate max-w-[100px] sm:max-w-none">{title}</span>
             </div>
           </div>
 
-          <div className="flex items-center gap-4">
-             <div className="hidden md:flex items-center gap-2">
+          <div className="flex items-center gap-2 sm:gap-4">
+             <div className="hidden lg:flex items-center gap-2">
                <StoreSearch />
              </div>
 
-            <div className="flex items-center space-x-1 p-1 bg-(--bg-secondary) rounded-full border border-(--border-color) h-10">
-               <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full text-slate-500 hover:text-sky-500 hover:bg-(--bg-primary) transition-all relative">
-                <Bell className="h-4 w-4" />
-                <span className="absolute top-2 right-2 h-1.5 w-1.5 bg-sky-500 rounded-full ring-2 ring-(--bg-primary)" />
+            <div className="flex items-center space-x-1 p-1 bg-(--bg-secondary) rounded-full border border-(--border-color) h-9 sm:h-10">
+               <Button variant="ghost" size="icon" className="h-7 w-7 sm:h-8 sm:w-8 rounded-full text-slate-500 hover:text-sky-500 hover:bg-(--bg-primary) transition-all relative">
+                <Bell className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                <span className="absolute top-1.5 right-1.5 sm:top-2 sm:right-2 h-1.5 w-1.5 bg-sky-500 rounded-full ring-2 ring-(--bg-primary)" />
               </Button>
-              <div className="h-4 w-px bg-(--border-color) mx-1" />
+              <div className="h-4 w-px bg-(--border-color) mx-0.5 sm:mx-1" />
               {type === "store" ? <StoreUserNav /> : <SuperadminUserNav />}
             </div>
           </div>
         </header>
 
         {/* Scrollable Content Area */}
-        <main className="flex-1 overflow-y-auto overflow-x-hidden p-8 custom-scrollbar">
-          <div className="w-full max-w-[1600px] mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-500">
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <main className="flex-1 overflow-y-auto overflow-x-hidden p-4 sm:p-8 custom-scrollbar">
+          <div className="w-full max-w-[1600px] mx-auto space-y-6 sm:space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-500">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-6">
                 <div>
-                  <h1 className="text-3xl font-medium text-(--text-primary) tracking-tight uppercase">
+                  <h1 className="text-xl sm:text-3xl font-medium text-(--text-primary) tracking-tight uppercase">
                     {title}
                   </h1>
                 </div>
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
                   {actions}
                 </div>
             </div>
