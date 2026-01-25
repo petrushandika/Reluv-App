@@ -31,9 +31,10 @@ import { toast } from "sonner"
 
 interface StoreProductsListProps {
   refreshKey?: number;
+  onDataChange?: () => void;
 }
 
-export function StoreProductsList({ refreshKey }: StoreProductsListProps) {
+export function StoreProductsList({ refreshKey, onDataChange }: StoreProductsListProps) {
   const [selectedProduct, setSelectedProduct] = useState<any>(null)
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
@@ -78,12 +79,17 @@ export function StoreProductsList({ refreshKey }: StoreProductsListProps) {
     setIsDeleteModalOpen(true)
   }
 
+  const handleToggleStatus = (product: StoreProduct) => {
+    setSelectedProduct(product)
+    setIsStatusModalOpen(true)
+  }
+
   const confirmDelete = async () => {
     if (!selectedProduct) return
     try {
       await deleteStoreProduct(selectedProduct.id)
       toast.success("Product deleted successfully")
-      fetchProducts()
+      onDataChange?.()
     } catch (error: any) {
       toast.error(error.message || "Failed to delete product")
     } finally {
@@ -91,17 +97,12 @@ export function StoreProductsList({ refreshKey }: StoreProductsListProps) {
     }
   }
 
-  const handleToggleStatus = (product: StoreProduct) => {
-    setSelectedProduct(product)
-    setIsStatusModalOpen(true)
-  }
-
   const confirmStatusToggle = async () => {
     if (!selectedProduct) return
     try {
       await toggleProductStatus(selectedProduct.id)
       toast.success(selectedProduct.status === 'active' ? "Product deactivated" : "Product activated")
-      fetchProducts()
+      onDataChange?.()
     } catch (error: any) {
       toast.error("Failed to update status")
     } finally {
@@ -284,9 +285,10 @@ export function StoreProductsList({ refreshKey }: StoreProductsListProps) {
       <ProductModal 
         isOpen={isEditModalOpen} 
         onClose={(refresh) => {
-          setIsEditModalOpen(true)
-          if (refresh) fetchProducts()
           setIsEditModalOpen(false)
+          if (refresh) {
+            onDataChange?.()
+          }
         }} 
         product={selectedProduct}
         mode="edit"

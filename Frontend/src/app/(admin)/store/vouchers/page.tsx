@@ -74,11 +74,15 @@ export default function StoreVouchersPage() {
       }
     }
     fetchStats()
-  }, [])
+  }, [refreshKey])
+
+  const handleDataChange = () => {
+    setRefreshKey(prev => prev + 1)
+  }
 
   const handleModalClose = (refresh?: boolean) => {
     setIsCreateModalOpen(false)
-    if (refresh) setRefreshKey(prev => prev + 1)
+    if (refresh) handleDataChange()
   }
 
   const stats = [
@@ -155,7 +159,7 @@ export default function StoreVouchersPage() {
           )}
         </div>
 
-        <StoreVouchersList refreshKey={refreshKey} />
+        <StoreVouchersList refreshKey={refreshKey} onDataChange={handleDataChange} />
       </div>
 
       <VoucherModal 

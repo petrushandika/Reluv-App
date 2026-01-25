@@ -72,14 +72,16 @@ export default function StoreProductsPage() {
       }
     }
     fetchStats()
-  }, [])
+  }, [refreshKey])
+
+  const handleDataChange = () => {
+    setRefreshKey(prev => prev + 1)
+  }
 
   const handleModalClose = (refresh?: boolean) => {
     setIsCreateModalOpen(false)
     if (refresh) {
-      setRefreshKey(prev => prev + 1)
-      // Also refresh dashboard stats
-      // fetchStats() // Ideally we would lift fetchStats out or use React Query, but refreshing list is main priority
+      handleDataChange()
     }
   }
 
@@ -145,7 +147,7 @@ export default function StoreProductsPage() {
           )}
         </div>
 
-        <StoreProductsList refreshKey={refreshKey} />
+        <StoreProductsList refreshKey={refreshKey} onDataChange={handleDataChange} />
       </div>
 
       <ProductModal 

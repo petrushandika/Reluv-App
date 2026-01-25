@@ -33,9 +33,10 @@ import { Skeleton } from "@/shared/components/ui/skeleton"
 
 interface StoreVouchersListProps {
   refreshKey?: number;
+  onDataChange?: () => void;
 }
 
-export function StoreVouchersList({ refreshKey }: StoreVouchersListProps) {
+export function StoreVouchersList({ refreshKey, onDataChange }: StoreVouchersListProps) {
   const [selectedVoucher, setSelectedVoucher] = useState<any>(null)
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
@@ -79,7 +80,7 @@ export function StoreVouchersList({ refreshKey }: StoreVouchersListProps) {
     try {
       await updateStoreVoucher(selectedVoucher.id, { isActive: !selectedVoucher.isActive })
       toast.success(selectedVoucher.isActive ? "Campaign disabled" : "Campaign activated")
-      fetchVouchers()
+      onDataChange?.()
     } catch (error: any) {
       toast.error(error.message || "Failed to update status")
     } finally {
@@ -92,13 +93,14 @@ export function StoreVouchersList({ refreshKey }: StoreVouchersListProps) {
     try {
       await deleteStoreVoucher(selectedVoucher.id)
       toast.success("Voucher deleted successfully")
-      fetchVouchers()
+      onDataChange?.()
     } catch (error: any) {
       toast.error(error.message || "Failed to delete voucher")
     } finally {
       setIsDeleteModalOpen(false)
     }
   }
+
   return (
     <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden">
       {/* Integrated Search & Filter Header */}
@@ -248,13 +250,13 @@ export function StoreVouchersList({ refreshKey }: StoreVouchersListProps) {
         isOpen={isEditModalOpen}
         onClose={(refresh) => {
           setIsEditModalOpen(false)
-          if (refresh) fetchVouchers()
+          if (refresh) onDataChange?.()
         }}
         voucher={selectedVoucher}
         mode="edit"
       />
-
-      <DeleteConfirmModal
+      
+      <DeleteConfirmModal 
         isOpen={isDeleteModalOpen}
         onClose={() => setIsDeleteModalOpen(false)}
         onConfirm={confirmDelete}
@@ -262,7 +264,7 @@ export function StoreVouchersList({ refreshKey }: StoreVouchersListProps) {
         description="Are you sure you want to delete this voucher? This will immediately disable the reward for all users."
         itemName={selectedVoucher?.name}
       />
-
+      
       <StatusConfirmModal
         isOpen={isStatusModalOpen}
         onClose={() => setIsStatusModalOpen(false)}

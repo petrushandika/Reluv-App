@@ -58,6 +58,7 @@ import { handleApiError } from "@/shared/utils/handleApiError"
 export default function StoreOrdersPage() {
   const [data, setData] = useState<DashboardAnalytics | null>(null)
   const [isLoading, setIsLoading] = useState(true)
+  const [refreshKey, setRefreshKey] = useState(0)
 
   useEffect(() => {
     const fetchStats = async () => {
@@ -72,7 +73,11 @@ export default function StoreOrdersPage() {
       }
     }
     fetchStats()
-  }, [])
+  }, [refreshKey])
+
+  const handleDataChange = () => {
+    setRefreshKey(prev => prev + 1)
+  }
 
   const stats = [
     {
@@ -145,7 +150,7 @@ export default function StoreOrdersPage() {
           )}
         </div>
 
-        <StoreOrdersList />
+        <StoreOrdersList refreshKey={refreshKey} onDataChange={handleDataChange} />
       </div>
     </DashboardShell>
   )

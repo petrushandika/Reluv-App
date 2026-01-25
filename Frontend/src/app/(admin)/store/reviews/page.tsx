@@ -57,6 +57,8 @@ export default function StoreReviewsPage() {
   const [data, setData] = useState<DashboardAnalytics | null>(null)
   const [isLoading, setIsLoading] = useState(true)
 
+  const [refreshKey, setRefreshKey] = useState(0)
+
   useEffect(() => {
     const fetchStats = async () => {
       try {
@@ -70,7 +72,11 @@ export default function StoreReviewsPage() {
       }
     }
     fetchStats()
-  }, [])
+  }, [refreshKey])
+
+  const handleDataChange = () => {
+    setRefreshKey(prev => prev + 1)
+  }
 
   const stats = [
     {
@@ -137,7 +143,7 @@ export default function StoreReviewsPage() {
           )}
         </div>
 
-        <StoreReviewsList />
+        <StoreReviewsList refreshKey={refreshKey} onDataChange={handleDataChange} />
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
            <div className="p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl">

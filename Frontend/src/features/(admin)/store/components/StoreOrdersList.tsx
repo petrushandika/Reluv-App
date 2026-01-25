@@ -37,8 +37,15 @@ import { getStoreOrders, updateOrderStatus, StoreOrder } from "../api/storeApi"
 import { Skeleton } from "@/shared/components/ui/skeleton"
 import { toast } from "sonner"
 
-export function StoreOrdersList() {
+interface StoreOrdersListProps {
+  refreshKey?: number;
+  onDataChange?: () => void;
+}
+
+export function StoreOrdersList({ refreshKey, onDataChange }: StoreOrdersListProps) {
   const [selectedOrder, setSelectedOrder] = useState<any>(null)
+  
+  // ... state variables ... (no change) ...
   const [isManifestOpen, setIsManifestOpen] = useState(false)
   const [isCancelModalOpen, setIsCancelModalOpen] = useState(false)
   const [orders, setOrders] = useState<StoreOrder[]>([])
@@ -71,7 +78,7 @@ export function StoreOrdersList() {
       fetchOrders()
     }, 500)
     return () => clearTimeout(timer)
-  }, [search, page, statusFilter])
+  }, [search, page, statusFilter, refreshKey])
 
   const handleView = (order: any) => {
     setSelectedOrder(order)
@@ -88,7 +95,7 @@ export function StoreOrdersList() {
     try {
       await updateOrderStatus(selectedOrder.id, "CANCELLED")
       toast.success("Order cancelled successfully")
-      fetchOrders()
+      onDataChange?.()
     } catch (error: any) {
       toast.error(error.message || "Failed to cancel order")
     } finally {

@@ -31,7 +31,12 @@ import { toast } from "sonner"
 import { getStoreReviews, deleteStoreReview, StoreReview } from "../api/storeApi"
 import { Skeleton } from "@/shared/components/ui/skeleton"
 
-export function StoreReviewsList() {
+interface StoreReviewsListProps {
+  refreshKey?: number;
+  onDataChange?: () => void;
+}
+
+export function StoreReviewsList({ refreshKey, onDataChange }: StoreReviewsListProps) {
   const [selectedReview, setSelectedReview] = useState<any>(null)
   const [isReplyModalOpen, setIsReplyModalOpen] = useState(false)
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
@@ -63,7 +68,7 @@ export function StoreReviewsList() {
       fetchReviews()
     }, 500)
     return () => clearTimeout(timer)
-  }, [search, page])
+  }, [search, page, refreshKey])
 
   const handleReply = (review: any) => {
     setSelectedReview(review)
@@ -80,7 +85,7 @@ export function StoreReviewsList() {
     try {
       await deleteStoreReview(selectedReview.id)
       toast.success("Review deleted successfully")
-      fetchReviews()
+      onDataChange?.()
     } catch (error: any) {
       toast.error(error.message || "Failed to delete review")
     } finally {

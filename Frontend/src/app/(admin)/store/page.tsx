@@ -95,6 +95,7 @@ export default function StoreDashboardPage() {
   const [revenueView, setRevenueView] = useState<"weekly" | "monthly">("weekly")
   const [data, setData] = useState<DashboardAnalytics | null>(null)
   const [isLoading, setIsLoading] = useState(true)
+  const [refreshKey, setRefreshKey] = useState(0)
 
   useEffect(() => {
     const fetchDashboardData = async () => {
@@ -110,7 +111,7 @@ export default function StoreDashboardPage() {
     }
 
     fetchDashboardData()
-  }, [])
+  }, [refreshKey])
 
   if (isLoading) {
     return (
@@ -299,8 +300,7 @@ export default function StoreDashboardPage() {
         onClose={(refresh) => {
           setIsProductModalOpen(false)
           if (refresh) {
-            // Re-fetch dashboard data
-            getDashboardAnalytics().then(setData).catch(console.error)
+            setRefreshKey(prev => prev + 1)
           }
         }} 
         mode="create" 
