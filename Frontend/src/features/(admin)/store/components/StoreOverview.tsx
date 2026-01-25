@@ -2,7 +2,7 @@
 
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip, CartesianGrid } from "recharts"
 
-const data = [
+const monthlyData = [
   { name: "Jan", total: 1200 },
   { name: "Feb", total: 2100 },
   { name: "Mar", total: 1800 },
@@ -17,7 +17,22 @@ const data = [
   { name: "Dec", total: 4200 },
 ]
 
-export function StoreOverview() {
+const weeklyData = [
+  { name: "Mon", total: 450 },
+  { name: "Tue", total: 820 },
+  { name: "Wed", total: 610 },
+  { name: "Thu", total: 940 },
+  { name: "Fri", total: 1200 },
+  { name: "Sat", total: 1500 },
+  { name: "Sun", total: 1100 },
+]
+
+interface StoreOverviewProps {
+  view?: "weekly" | "monthly"
+}
+
+export function StoreOverview({ view = "monthly" }: StoreOverviewProps) {
+  const data = view === "weekly" ? weeklyData : monthlyData
   return (
     <ResponsiveContainer width="100%" height={350}>
       <BarChart data={data}>
@@ -27,7 +42,12 @@ export function StoreOverview() {
             <stop offset="100%" stopColor="#0284c7" stopOpacity={0.8}/>
           </linearGradient>
         </defs>
-        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" opacity={0.5} />
+        <CartesianGrid 
+          strokeDasharray="3 3" 
+          vertical={false} 
+          stroke="#94a3b8" 
+          opacity={0.3} 
+        />
         <XAxis
           dataKey="name"
           stroke="#94a3b8"

@@ -88,6 +88,7 @@ const itemVariants = {
 
 export default function StoreDashboardPage() {
   const [isProductModalOpen, setIsProductModalOpen] = useState(false)
+  const [revenueView, setRevenueView] = useState<"weekly" | "monthly">("weekly")
 
   return (
     <DashboardShell
@@ -169,13 +170,33 @@ export default function StoreDashboardPage() {
                 <CardDescription className="text-xs font-medium text-slate-400 uppercase tracking-widest">Performance Insights</CardDescription>
               </div>
               <div className="flex items-center p-1 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl self-end xs:self-auto">
-                 <button className="px-3 sm:px-4 py-1.5 text-[10px] font-medium uppercase tracking-widest bg-white dark:bg-slate-800 text-sky-500 shadow-sm rounded-lg border border-slate-200 dark:border-slate-700">Monthly</button>
-                 <button className="px-3 sm:px-4 py-1.5 text-[10px] font-medium uppercase tracking-widest text-slate-400 hover:text-slate-600 transition-all">Weekly</button>
+                 <button 
+                   onClick={() => setRevenueView("weekly")}
+                   className={cn(
+                     "px-3 sm:px-4 py-1.5 text-[10px] font-medium uppercase tracking-widest transition-all rounded-lg",
+                     revenueView === "weekly" 
+                       ? "bg-white dark:bg-slate-800 text-sky-500 shadow-sm border border-slate-200 dark:border-slate-700" 
+                       : "text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 border border-transparent"
+                   )}
+                 >
+                   Weekly
+                 </button>
+                 <button 
+                   onClick={() => setRevenueView("monthly")}
+                   className={cn(
+                     "px-3 sm:px-4 py-1.5 text-[10px] font-medium uppercase tracking-widest transition-all rounded-lg ml-1",
+                     revenueView === "monthly" 
+                       ? "bg-white dark:bg-slate-800 text-sky-500 shadow-sm border border-slate-200 dark:border-slate-700" 
+                       : "text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 border border-transparent"
+                   )}
+                 >
+                   Monthly
+                 </button>
               </div>
             </CardHeader>
             <CardContent className="p-4 sm:p-8">
               <div className="h-[300px] sm:h-[380px] w-full">
-                <StoreOverview />
+                <StoreOverview view={revenueView} />
               </div>
             </CardContent>
           </Card>
