@@ -49,28 +49,50 @@ const sidebarItems = [
   },
 ]
 
+import { useEffect, useState } from "react"
+import { getDashboardAnalytics, DashboardAnalytics } from "@/features/(admin)/store/api/storeApi"
+import { Skeleton } from "@/shared/components/ui/skeleton"
+
 export default function StoreReviewsPage() {
+  const [data, setData] = useState<DashboardAnalytics | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        setIsLoading(true)
+        const response = await getDashboardAnalytics()
+        setData(response)
+      } catch (error) {
+        console.error("Failed to fetch review stats:", error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    fetchStats()
+  }, [])
+
   const stats = [
     {
       title: "Store Rating",
-      value: "4.8",
-      description: "412 Reviews",
+      value: data?.stats.averageRating.toFixed(1) || "0.0",
+      description: `${data?.stats.totalReviews || 0} Reviews`,
       icon: Star,
       color: "text-amber-500",
       bg: "bg-amber-50 dark:bg-amber-500/5",
     },
     {
-      title: "Response Rate",
-      value: "94%",
-      description: "Active Replies",
+      title: "Active Feed",
+      value: data?.stats.totalReviews.toString() || "0",
+      description: "Lifetime total",
       icon: UserCheck,
       color: "text-emerald-500",
       bg: "bg-emerald-50 dark:bg-emerald-500/5",
     },
     {
-      title: "Pending",
-      value: "12",
-      description: "Need Action",
+      title: "Unreplied",
+      value: data?.stats.unrepliedReviews.toString() || "0",
+      description: "Needs response",
       icon: Clock,
       color: "text-sky-500",
       bg: "bg-sky-50 dark:bg-sky-500/5",
@@ -93,20 +115,26 @@ export default function StoreReviewsPage() {
     >
       <div className="space-y-6">
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {stats.map((stat) => (
-            <div key={stat.title} className="p-5 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 flex flex-col gap-4">
-              <div className="flex items-center justify-between">
-                <span className="text-[10px] font-medium text-slate-400 uppercase tracking-widest">{stat.title}</span>
-                <div className={`${stat.bg} p-2 rounded-lg border border-slate-100 dark:border-slate-800`}>
-                  <stat.icon className={`h-4 w-4 ${stat.color}`} />
+          {isLoading ? (
+            [...Array(4)].map((_, i) => (
+              <Skeleton key={i} className="h-32 rounded-xl" />
+            ))
+          ) : (
+            stats.map((stat) => (
+              <div key={stat.title} className="p-5 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 flex flex-col gap-4">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-medium text-slate-400 uppercase tracking-widest">{stat.title}</span>
+                  <div className={`${stat.bg} p-2 rounded-lg border border-slate-100 dark:border-slate-800`}>
+                    <stat.icon className={`h-4 w-4 ${stat.color}`} />
+                  </div>
+                </div>
+                <div>
+                  <h3 className="text-3xl font-medium text-slate-900 dark:text-white tracking-tighter">{stat.value}</h3>
+                  <p className="text-[10px] font-medium text-slate-400 uppercase mt-1 tracking-widest">{stat.description}</p>
                 </div>
               </div>
-              <div>
-                <h3 className="text-3xl font-medium text-slate-900 dark:text-white tracking-tighter">{stat.value}</h3>
-                <p className="text-[10px] font-medium text-slate-400 uppercase mt-1 tracking-widest">{stat.description}</p>
-              </div>
-            </div>
-          ))}
+            ))
+          )}
         </div>
 
         <StoreReviewsList />
@@ -116,20 +144,24 @@ export default function StoreReviewsPage() {
              <h4 className="text-[10px] font-medium uppercase tracking-[0.2em] text-slate-400 mb-6">Rating Distribution</h4>
              <div className="space-y-4">
                {[
-                 { star: 5, percentage: 85 },
-                 { star: 4, percentage: 10 },
-                 { star: 3, percentage: 3 },
-                 { star: 2, percentage: 1 },
-                 { star: 1, percentage: 1 },
-               ].map((bar) => (
-                 <div key={bar.star} className="flex items-center gap-3">
-                   <span className="text-[10px] font-medium text-slate-500 w-4">{bar.star}</span>
-                   <div className="flex-1 h-1.5 bg-slate-50 dark:bg-slate-950 rounded-full overflow-hidden border border-slate-100 dark:border-slate-800">
-                     <div className="h-full bg-amber-400" style={{ width: `${bar.percentage}%` }} />
-                   </div>
-                   <span className="text-[10px] font-medium text-slate-400 w-8 text-right">{bar.percentage}%</span>
-                 </div>
-               ))}
+                 { star: 5, count: data?.ratingDistribution.star5 || 0 },
+                 { star: 4, count: data?.ratingDistribution.star4 || 0 },
+                 { star: 3, count: data?.ratingDistribution.star3 || 0 },
+                 { star: 2, count: data?.ratingDistribution.star2 || 0 },
+                 { star: 1, count: data?.ratingDistribution.star1 || 0 },
+               ].map((bar) => {
+                 const total = data?.stats.totalReviews || 1;
+                 const percentage = Math.round((bar.count / total) * 100);
+                 return (
+                  <div key={bar.star} className="flex items-center gap-3">
+                    <span className="text-[10px] font-medium text-slate-500 w-4">{bar.star}</span>
+                    <div className="flex-1 h-1.5 bg-slate-50 dark:bg-slate-950 rounded-full overflow-hidden border border-slate-100 dark:border-slate-800">
+                      <div className="h-full bg-amber-400" style={{ width: `${percentage}%` }} />
+                    </div>
+                    <span className="text-[10px] font-medium text-slate-400 w-8 text-right">{percentage}%</span>
+                  </div>
+                 )
+               })}
              </div>
            </div>
 

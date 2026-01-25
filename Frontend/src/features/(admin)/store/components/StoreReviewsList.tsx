@@ -28,58 +28,43 @@ import { useState } from "react"
 import { ReviewReplyModal } from "./modals/ReviewReplyModal"
 import { DeleteConfirmModal } from "./modals/DeleteConfirmModal"
 
-const mockReviews = [
-  {
-    id: 1,
-    rating: 5,
-    comment: "Produknya sangat bagus, kualitas premium dan pengiriman sangat cepat. Recommended seller!",
-    createdAt: "2024-01-15T10:00:00Z",
-    author: {
-      firstName: "Budi",
-      lastName: "Santoso",
-    },
-    product: {
-      name: "Vintage Denim Jacket",
-      images: ["https://ikoverk.com/wp-content/uploads/2025/04/5187871.webp"]
-    },
-    reply: "Terima kasih Kak Budi! Semoga awet jaketnya ya.",
-  },
-  {
-    id: 2,
-    rating: 4,
-    comment: "Bahan enak dipakai, cuma warnanya sedikit lebih gelap dari foto. Tapi oke lah.",
-    createdAt: "2024-01-14T15:30:00Z",
-    author: {
-      firstName: "Siti",
-      lastName: "Aminah",
-    },
-    product: {
-      name: "Classic White Tee",
-      images: ["https://ikoverk.com/wp-content/uploads/2025/04/5187871.webp"]
-    },
-    reply: null,
-  },
-  {
-    id: 3,
-    rating: 5,
-    comment: "Sangat puas dengan pelayanannya. Seller sangat informatif.",
-    createdAt: "2024-01-12T09:15:00Z",
-    author: {
-      firstName: "Andi",
-      lastName: "Wijaya",
-    },
-    product: {
-      name: "Slim Fit Chinos",
-      images: ["https://ikoverk.com/wp-content/uploads/2025/04/5187871.webp"]
-    },
-    reply: "Terima kasih banyak atas feedbacknya Kak Andi!",
-  }
-]
+import { useEffect } from "react"
+import { getStoreReviews, StoreReview } from "../api/storeApi"
+import { Skeleton } from "@/shared/components/ui/skeleton"
 
 export function StoreReviewsList() {
   const [selectedReview, setSelectedReview] = useState<any>(null)
   const [isReplyModalOpen, setIsReplyModalOpen] = useState(false)
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
+  const [reviews, setReviews] = useState<StoreReview[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [search, setSearch] = useState("")
+  const [page, setPage] = useState(1)
+  const [meta, setMeta] = useState<any>(null)
+
+  const fetchReviews = async () => {
+    try {
+      setIsLoading(true)
+      const response = await getStoreReviews({
+        search,
+        page,
+        limit: 10
+      })
+      setReviews(response.data)
+      setMeta(response.meta)
+    } catch (error) {
+      console.error("Failed to fetch reviews:", error)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      fetchReviews()
+    }, 500)
+    return () => clearTimeout(timer)
+  }, [search, page])
 
   const handleReply = (review: any) => {
     setSelectedReview(review)
@@ -119,6 +104,11 @@ export function StoreReviewsList() {
         <div className="relative w-full sm:w-96">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
           <Input 
+            value={search}
+            onChange={(e) => {
+              setSearch(e.target.value)
+              setPage(1)
+            }}
             placeholder="Search reviews or customers..." 
             className="pl-9 h-10 bg-white dark:bg-slate-950 border-slate-200 dark:border-slate-800 focus:ring-sky-500/10 focus:border-sky-500 rounded-xl text-xs font-medium"
           />
@@ -131,7 +121,7 @@ export function StoreReviewsList() {
           </Button>
           <div className="h-6 w-px bg-slate-200 dark:bg-slate-800 mx-2 hidden sm:block" />
           <p className="text-[10px] font-medium text-slate-400 uppercase tracking-[0.2em] hidden sm:block whitespace-nowrap">
-            All Star Feed
+            {meta?.total || 0} Records Found
           </p>
         </div>
       </div>
@@ -148,7 +138,36 @@ export function StoreReviewsList() {
             </TableRow>
           </TableHeader>
           <TableBody className="divide-y divide-slate-100 dark:divide-slate-800">
-            {mockReviews.map((review) => (
+            {isLoading ? (
+               [...Array(3)].map((_, i) => (
+                <TableRow key={i}>
+                  <TableCell className="pl-8 py-5">
+                    <div className="flex items-center gap-4">
+                      <Skeleton className="h-12 w-12 rounded-xl" />
+                      <div className="space-y-1">
+                        <Skeleton className="h-4 w-24" />
+                        <Skeleton className="h-3 w-16" />
+                      </div>
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-2">
+                      <Skeleton className="h-8 w-8 rounded-full" />
+                      <Skeleton className="h-4 w-20" />
+                    </div>
+                  </TableCell>
+                  <TableCell><Skeleton className="h-4 w-40" /></TableCell>
+                  <TableCell><Skeleton className="h-6 w-24 rounded-full" /></TableCell>
+                  <TableCell className="pr-8 text-right"><Skeleton className="h-8 w-40 ml-auto" /></TableCell>
+                </TableRow>
+               ))
+            ) : reviews.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={5} className="h-32 text-center text-slate-500 uppercase text-[10px] tracking-widest font-medium">
+                  No feedback received yet
+                </TableCell>
+              </TableRow>
+            ) : reviews.map((review) => (
               <TableRow 
                 key={review.id} 
                 className="group hover:bg-slate-50/50 dark:hover:bg-slate-800/20 transition-all duration-200 border-none"
@@ -157,7 +176,7 @@ export function StoreReviewsList() {
                   <div className="flex items-start space-x-3">
                     <div className="relative h-12 w-12 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shrink-0 overflow-hidden">
                       <Image 
-                        src={review.product.images[0]} 
+                        src={review.product.images[0] || "https://ikoverk.com/wp-content/uploads/2025/04/5187871.webp"} 
                         alt={review.product.name}
                         fill
                         className="object-cover"
@@ -174,8 +193,12 @@ export function StoreReviewsList() {
                 </TableCell>
                 <TableCell>
                   <div className="flex items-center space-x-2">
-                    <div className="h-8 w-8 rounded-full bg-sky-50 dark:bg-sky-500/10 border border-sky-100 dark:border-sky-900/30 flex items-center justify-center text-[10px] font-medium text-sky-600">
-                      {review.author.firstName[0]}{review.author.lastName[0]}
+                    <div className="h-8 w-8 rounded-full bg-sky-50 dark:bg-sky-500/10 border border-sky-100 dark:border-sky-900/30 flex items-center justify-center text-[10px] font-medium text-sky-600 overflow-hidden">
+                       {review.author.profile?.avatar ? (
+                         <img src={review.author.profile.avatar} className="h-full w-full object-cover" />
+                       ) : (
+                         `${review.author.firstName[0]}${review.author.lastName[0]}`
+                       )}
                     </div>
                     <span className="text-sm font-medium text-slate-900 dark:text-white truncate">
                       {review.author.firstName} {review.author.lastName}
@@ -220,12 +243,26 @@ export function StoreReviewsList() {
       </div>
 
       <div className="px-8 py-4 bg-slate-50/50 dark:bg-slate-950/50 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
-        <p className="text-[10px] font-medium text-slate-400 uppercase tracking-widest">Sentiment Analytics Active</p>
+        <p className="text-[10px] font-medium text-slate-400 uppercase tracking-widest">
+          Showing {reviews.length} of {meta?.total || 0} reviews
+        </p>
         <div className="flex gap-2">
-           <Button variant="outline" size="icon" className="h-8 w-8 border-slate-200 dark:border-slate-800 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-all">
+           <Button 
+             variant="outline" 
+             size="icon" 
+             disabled={page === 1}
+             onClick={() => setPage(page - 1)}
+             className="h-8 w-8 border-slate-200 dark:border-slate-800 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-all disabled:opacity-50"
+           >
              <ChevronLeft className="h-4 w-4 text-slate-500" />
            </Button>
-           <Button variant="outline" size="icon" className="h-8 w-8 border-slate-200 dark:border-slate-800 rounded-lg hover:bg-sky-50 dark:hover:bg-sky-500/10 transition-all">
+           <Button 
+             variant="outline" 
+             size="icon" 
+             disabled={page >= (meta?.totalPages || 1)}
+             onClick={() => setPage(page + 1)}
+             className="h-8 w-8 rounded-lg hover:bg-sky-50 dark:hover:bg-sky-500/10 transition-all border-sky-100 dark:border-sky-500/20 disabled:opacity-50"
+           >
              <ChevronRight className="h-4 w-4 text-sky-500" />
            </Button>
         </div>

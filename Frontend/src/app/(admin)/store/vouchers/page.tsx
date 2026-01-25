@@ -51,37 +51,59 @@ const sidebarItems = [
   },
 ]
 
+import { useEffect } from "react"
+import { getDashboardAnalytics, DashboardAnalytics } from "@/features/(admin)/store/api/storeApi"
+import { Skeleton } from "@/shared/components/ui/skeleton"
+
 export default function StoreVouchersPage() {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
+  const [data, setData] = useState<DashboardAnalytics | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        setIsLoading(true)
+        const response = await getDashboardAnalytics()
+        setData(response)
+      } catch (error) {
+        console.error("Failed to fetch voucher stats:", error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    fetchStats()
+  }, [])
+
   const stats = [
     {
       title: "Active Vouchers",
-      value: "8",
+      value: data?.stats.activeVouchers.toString() || "0",
       description: "Live promos",
       icon: Ticket,
       color: "text-sky-500",
       bg: "bg-sky-50 dark:bg-sky-500/5",
     },
     {
-      title: "Redemptions",
-      value: "412",
-      description: "+12.5% Month",
+      title: "Total Vouchers",
+      value: data?.stats.totalVouchers.toString() || "0",
+      description: "Campaign pool",
       icon: UserCheck,
       color: "text-emerald-500",
       bg: "bg-emerald-50 dark:bg-emerald-500/5",
     },
     {
-      title: "Conversion",
-      value: "6.8%",
-      description: "Attribution",
+      title: "Active Discounts",
+      value: data?.stats.activeDiscounts.toString() || "0",
+      description: "Auto-apply",
       icon: TrendingUp,
       color: "text-sky-600",
       bg: "bg-sky-50 dark:bg-sky-600/5",
     },
     {
-      title: "Expiring",
-      value: "2",
-      description: "Within 48h",
+      title: "Active Promotions",
+      value: data?.stats.activePromotions.toString() || "0",
+      description: "Bundle deals",
       icon: AlertCircle,
       color: "text-amber-500",
       bg: "bg-amber-50 dark:bg-amber-500/5",
@@ -105,20 +127,26 @@ export default function StoreVouchersPage() {
     >
       <div className="space-y-6">
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {stats.map((stat) => (
-            <div key={stat.title} className="p-5 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 flex flex-col gap-4">
-              <div className="flex items-center justify-between">
-                <span className="text-[10px] font-medium text-slate-400 uppercase tracking-widest">{stat.title}</span>
-                <div className={`${stat.bg} p-2 rounded-lg border border-slate-100 dark:border-slate-800`}>
-                  <stat.icon className={`h-4 w-4 ${stat.color}`} />
+          {isLoading ? (
+            [...Array(4)].map((_, i) => (
+              <Skeleton key={i} className="h-32 rounded-xl" />
+            ))
+          ) : (
+            stats.map((stat) => (
+              <div key={stat.title} className="p-5 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 flex flex-col gap-4">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-medium text-slate-400 uppercase tracking-widest">{stat.title}</span>
+                  <div className={`${stat.bg} p-2 rounded-lg border border-slate-100 dark:border-slate-800`}>
+                    <stat.icon className={`h-4 w-4 ${stat.color}`} />
+                  </div>
+                </div>
+                <div>
+                  <h3 className="text-3xl font-medium text-slate-900 dark:text-white tracking-tighter">{stat.value}</h3>
+                  <p className="text-[10px] font-medium text-slate-400 uppercase mt-1 tracking-widest">{stat.description}</p>
                 </div>
               </div>
-              <div>
-                <h3 className="text-3xl font-medium text-slate-900 dark:text-white tracking-tighter">{stat.value}</h3>
-                <p className="text-[10px] font-medium text-slate-400 uppercase mt-1 tracking-widest">{stat.description}</p>
-              </div>
-            </div>
-          ))}
+            ))
+          )}
         </div>
 
         <StoreVouchersList />

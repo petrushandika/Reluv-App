@@ -25,43 +25,32 @@ import { useState } from "react"
 import { VoucherModal } from "./modals/VoucherModal"
 import { DeleteConfirmModal } from "./modals/DeleteConfirmModal"
 
-const mockVouchers = [
-  {
-    id: 1,
-    name: "New Year Sale",
-    code: "NY2024",
-    type: "PERCENTAGE",
-    value: 15,
-    usageCount: 45,
-    usageLimit: 100,
-    isActive: true,
-  },
-  {
-    id: 2,
-    name: "Welcome Bonus",
-    code: "WELCOME10",
-    type: "FIXED_AMOUNT",
-    value: 10000,
-    usageCount: 128,
-    usageLimit: 500,
-    isActive: true,
-  },
-  {
-    id: 3,
-    name: "Flash Sale Friday",
-    code: "FLASHFRIDAY",
-    type: "PERCENTAGE",
-    value: 20,
-    usageCount: 200,
-    usageLimit: 200,
-    isActive: false,
-  },
-]
+import { useEffect } from "react"
+import { getStoreVouchers, StoreVoucher } from "../api/storeApi"
+import { Skeleton } from "@/shared/components/ui/skeleton"
 
 export function StoreVouchersList() {
   const [selectedVoucher, setSelectedVoucher] = useState<any>(null)
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
+  const [vouchers, setVouchers] = useState<StoreVoucher[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+
+  const fetchVouchers = async () => {
+    try {
+      setIsLoading(true)
+      const data = await getStoreVouchers()
+      setVouchers(data)
+    } catch (error) {
+      console.error("Failed to fetch vouchers:", error)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    fetchVouchers()
+  }, [])
 
   const handleEdit = (voucher: any) => {
     setSelectedVoucher(voucher)
@@ -96,7 +85,7 @@ export function StoreVouchersList() {
           </Button>
           <div className="h-6 w-px bg-slate-200 dark:bg-slate-800 mx-2 hidden sm:block" />
           <p className="text-[10px] font-medium text-slate-400 uppercase tracking-[0.2em] hidden sm:block whitespace-nowrap">
-            {mockVouchers.length} Rewards Active
+            {vouchers.length} Rewards Active
           </p>
         </div>
       </div>
@@ -113,7 +102,31 @@ export function StoreVouchersList() {
             </TableRow>
           </TableHeader>
           <TableBody className="divide-y divide-slate-100 dark:divide-slate-800">
-            {mockVouchers.map((voucher) => (
+            {isLoading ? (
+              [...Array(3)].map((_, i) => (
+                <TableRow key={i}>
+                  <TableCell className="pl-8 py-5">
+                    <div className="flex items-center gap-4">
+                      <Skeleton className="h-10 w-10 rounded-xl" />
+                      <div className="space-y-1">
+                        <Skeleton className="h-4 w-24" />
+                        <Skeleton className="h-3 w-16" />
+                      </div>
+                    </div>
+                  </TableCell>
+                  <TableCell><Skeleton className="h-4 w-20" /></TableCell>
+                  <TableCell><Skeleton className="h-6 w-32 rounded-full" /></TableCell>
+                  <TableCell><Skeleton className="h-6 w-24 rounded-full" /></TableCell>
+                  <TableCell className="pr-8 text-right"><Skeleton className="h-8 w-40 ml-auto" /></TableCell>
+                </TableRow>
+              ))
+            ) : vouchers.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={5} className="h-32 text-center text-slate-500 uppercase text-[10px] tracking-widest font-medium">
+                  No active campaigns
+                </TableCell>
+              </TableRow>
+            ) : vouchers.map((voucher) => (
               <TableRow 
                 key={voucher.id} 
                 className="group hover:bg-slate-50/50 dark:hover:bg-slate-800/20 transition-all duration-200 border-none"
@@ -141,12 +154,12 @@ export function StoreVouchersList() {
                   <div className="flex flex-col gap-1.5 w-32">
                     <div className="flex items-center justify-between">
                       <span className="text-[10px] font-medium text-slate-400 uppercase">Usage</span>
-                      <span className="text-[10px] font-medium text-slate-900 dark:text-white">{voucher.usageCount} / {voucher.usageLimit || "∞"}</span>
+                      <span className="text-[10px] font-medium text-slate-900 dark:text-white">{voucher._count.usages} / {voucher.usageLimit || "∞"}</span>
                     </div>
                     <div className="h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
                       <motion.div 
                         initial={{ width: 0 }}
-                        animate={{ width: voucher.usageLimit ? `${(voucher.usageCount / voucher.usageLimit) * 100}%` : "10%" }}
+                        animate={{ width: voucher.usageLimit ? `${(voucher._count.usages / voucher.usageLimit) * 100}%` : "10%" }}
                         className="h-full bg-sky-500 rounded-full"
                       />
                     </div>

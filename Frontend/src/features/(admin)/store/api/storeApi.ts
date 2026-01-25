@@ -83,6 +83,13 @@ export interface DashboardAnalytics {
     monthlyRevenue: Array<{ name: string; total: number }>;
     weeklyRevenue: Array<{ name: string; total: number }>;
   };
+  ratingDistribution: {
+    star1: number;
+    star2: number;
+    star3: number;
+    star4: number;
+    star5: number;
+  };
 }
 
 export interface StoreProduct {
@@ -158,6 +165,25 @@ export interface StoreOrder {
   itemsCount: number;
 }
 
+export interface StoreVoucher {
+  id: number;
+  name: string;
+  code: string;
+  type: "PERCENTAGE" | "FIXED_AMOUNT";
+  value: number;
+  minSpend?: number;
+  maxDiscount?: number;
+  expiry: string;
+  usageLimit?: number;
+  isActive: boolean;
+  storeId: number;
+  createdAt: string;
+  updatedAt: string;
+  _count: {
+    usages: number;
+  };
+}
+
 export interface StoreProductsResponse {
   data: StoreProduct[];
   meta: {
@@ -170,6 +196,35 @@ export interface StoreProductsResponse {
 
 export interface StoreOrdersResponse {
   data: StoreOrder[];
+  meta: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+  };
+}
+
+export interface StoreReview {
+  id: number;
+  rating: number;
+  comment: string;
+  createdAt: string;
+  author: {
+    firstName: string;
+    lastName: string;
+    profile?: {
+      avatar?: string;
+    }
+  };
+  product: {
+    name: string;
+    images: string[];
+  };
+  reply?: string;
+}
+
+export interface StoreReviewsResponse {
+  data: StoreReview[];
   meta: {
     total: number;
     page: number;
@@ -195,6 +250,16 @@ export const getStoreProducts = async (params?: any): Promise<StoreProductsRespo
 
 export const getStoreOrders = async (params?: any): Promise<StoreOrdersResponse> => {
   const response = await api.get("/store/orders", { params });
+  return response.data;
+};
+
+export const getStoreVouchers = async (): Promise<StoreVoucher[]> => {
+  const response = await api.get("/store/vouchers");
+  return response.data;
+};
+
+export const getStoreReviews = async (params?: any): Promise<StoreReviewsResponse> => {
+  const response = await api.get("/store/reviews", { params });
   return response.data;
 };
 

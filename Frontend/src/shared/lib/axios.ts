@@ -40,7 +40,10 @@ api.interceptors.response.use(
         if ("meta" in response.data) {
           return {
             ...response,
-            data: extractedData,
+            data: {
+              data: extractedData,
+              meta: response.data.meta,
+            },
           };
         }
         return {
