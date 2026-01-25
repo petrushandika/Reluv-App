@@ -24,16 +24,18 @@ import { motion } from "framer-motion"
 import { useState } from "react"
 import { VoucherModal } from "./modals/VoucherModal"
 import { DeleteConfirmModal } from "./modals/DeleteConfirmModal"
+import { StatusConfirmModal } from "./modals/StatusConfirmModal"
 
 import { useEffect } from "react"
 import { toast } from "sonner"
-import { getStoreVouchers, deleteStoreVoucher, StoreVoucher } from "../api/storeApi"
+import { getStoreVouchers, deleteStoreVoucher, updateStoreVoucher, StoreVoucher } from "../api/storeApi"
 import { Skeleton } from "@/shared/components/ui/skeleton"
 
 export function StoreVouchersList() {
   const [selectedVoucher, setSelectedVoucher] = useState<any>(null)
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
+  const [isStatusModalOpen, setIsStatusModalOpen] = useState(false)
   const [vouchers, setVouchers] = useState<StoreVoucher[]>([])
   const [isLoading, setIsLoading] = useState(true)
 
@@ -61,6 +63,24 @@ export function StoreVouchersList() {
   const handleDelete = (voucher: any) => {
     setSelectedVoucher(voucher)
     setIsDeleteModalOpen(true)
+  }
+
+  const handleToggleStatus = (voucher: any) => {
+    setSelectedVoucher(voucher)
+    setIsStatusModalOpen(true)
+  }
+
+  const confirmStatusToggle = async () => {
+    if (!selectedVoucher) return
+    try {
+      await updateStoreVoucher(selectedVoucher.id, { isActive: !selectedVoucher.isActive })
+      toast.success(selectedVoucher.isActive ? "Campaign disabled" : "Campaign activated")
+      fetchVouchers()
+    } catch (error: any) {
+      toast.error(error.message || "Failed to update status")
+    } finally {
+      setIsStatusModalOpen(false)
+    }
   }
 
   const confirmDelete = async () => {
@@ -175,12 +195,14 @@ export function StoreVouchersList() {
                   </div>
                 </TableCell>
                 <TableCell>
-                  <div className={cn(
-                    "inline-flex items-center justify-center w-24 px-2.5 py-0.5 rounded-full text-[9px] font-medium uppercase tracking-widest border border-slate-200 dark:border-slate-800",
+                  <button 
+                    onClick={() => handleToggleStatus(voucher)}
+                    className={cn(
+                    "inline-flex items-center justify-center w-24 px-2.5 py-0.5 rounded-full text-[9px] font-medium uppercase tracking-widest border border-slate-200 dark:border-slate-800 transition-all hover:opacity-80",
                     voucher.isActive ? "text-emerald-500 bg-emerald-500/5" : "text-rose-500 bg-rose-500/5"
                   )}>
                     {voucher.isActive ? "Active" : "Disabled"}
-                  </div>
+                  </button>
                 </TableCell>
                 <TableCell className="pr-8 text-right">
                     <div className="flex items-center justify-end gap-2">
@@ -235,6 +257,18 @@ export function StoreVouchersList() {
         title="Burn Campaign"
         description="Are you sure you want to delete this voucher? This will immediately disable the reward for all users."
         itemName={selectedVoucher?.name}
+      />
+
+      <StatusConfirmModal
+        isOpen={isStatusModalOpen}
+        onClose={() => setIsStatusModalOpen(false)}
+        onConfirm={confirmStatusToggle}
+        title={selectedVoucher?.isActive ? "Disable Campaign" : "Activate Campaign"}
+        description={selectedVoucher?.isActive 
+          ? "This will temporarily stop this promotion. Users won't be able to apply this voucher code until explicitly re-enabled." 
+          : "This campaign will go live immediately. Ensure budget allocation is confirmed."}
+        itemName={selectedVoucher?.name}
+        currentStatus={selectedVoucher?.isActive ? 'active' : 'inactive'}
       />
     </div>
   )

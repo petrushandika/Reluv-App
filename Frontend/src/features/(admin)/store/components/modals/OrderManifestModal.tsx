@@ -24,20 +24,13 @@ export function OrderManifestModal({ isOpen, onClose, order }: OrderManifestModa
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className="sm:max-w-[600px] border-none bg-white dark:bg-slate-900 p-0 overflow-hidden rounded-2xl shadow-2xl flex flex-col max-h-[95vh] sm:max-h-[90vh]">
-        <DialogHeader className="p-6 sm:p-8 pb-0 shrink-0">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="h-10 w-10 rounded-xl bg-sky-500/10 flex items-center justify-center border border-sky-500/20">
-              <ShoppingBag className="h-5 w-5 text-sky-500" />
-            </div>
-            <div>
+        <DialogHeader className="flex flex-col gap-2 text-center sm:text-left px-6 pt-8 pb-0 sm:px-8 sm:pt-10 sm:pb-0 shrink-0">
               <DialogTitle className="text-lg sm:text-xl font-semibold text-slate-900 dark:text-white uppercase tracking-tight">
                 Manifest: {order.orderNumber}
               </DialogTitle>
               <DialogDescription className="text-[10px] font-medium text-slate-400 uppercase tracking-widest mt-1">
                 Transaction finalized on {new Date(order.createdAt).toLocaleDateString()}
               </DialogDescription>
-            </div>
-          </div>
         </DialogHeader>
 
         <div className="flex-1 overflow-y-auto custom-scrollbar">
@@ -101,7 +94,7 @@ export function OrderManifestModal({ isOpen, onClose, order }: OrderManifestModa
         </div>
 
         <div className="p-6 sm:p-8 pt-0 flex justify-end shrink-0">
-           <button onClick={onClose} className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors h-10 sm:h-12 flex items-center">
+           <button onClick={onClose} className="text-[10px] font-bold uppercase tracking-[0.2em] text-sky-600 hover:text-sky-700 transition-colors h-10 sm:h-12 flex items-center">
               Close Manifest
            </button>
         </div>

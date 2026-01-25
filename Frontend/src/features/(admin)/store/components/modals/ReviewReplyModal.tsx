@@ -59,20 +59,13 @@ export function ReviewReplyModal({ isOpen, onClose, review }: ReviewReplyModalPr
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className="sm:max-w-[550px] border-none bg-white dark:bg-slate-900 p-0 overflow-hidden rounded-2xl shadow-2xl flex flex-col max-h-[95vh] sm:max-h-[90vh]">
-        <DialogHeader className="p-6 sm:p-8 pb-0 shrink-0">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="h-10 w-10 rounded-xl bg-amber-500/10 flex items-center justify-center border border-amber-500/20">
-              <MessageSquare className="h-5 w-5 text-amber-500" />
-            </div>
-            <div>
+        <DialogHeader className="flex flex-col gap-2 text-center sm:text-left px-6 pt-8 pb-0 sm:px-8 sm:pt-10 sm:pb-0 shrink-0">
               <DialogTitle className="text-lg sm:text-xl font-semibold text-slate-900 dark:text-white uppercase tracking-tight">
                 {review.reply ? "Modify Response" : "Send Feedback Response"}
               </DialogTitle>
               <DialogDescription className="text-[10px] font-medium text-slate-400 uppercase tracking-widest mt-1">
                 Engaging with {review.author?.firstName}
               </DialogDescription>
-            </div>
-          </div>
         </DialogHeader>
 
         <div className="flex-1 overflow-y-auto custom-scrollbar">
@@ -109,13 +102,13 @@ export function ReviewReplyModal({ isOpen, onClose, review }: ReviewReplyModalPr
         </div>
 
         <DialogFooter className="p-6 sm:p-8 bg-slate-50 dark:bg-slate-950/50 border-t border-slate-100 dark:border-slate-800 flex flex-row items-center justify-between gap-3 shrink-0">
-          <Button variant="ghost" onClick={() => onClose()} className="rounded-xl px-4 sm:px-6 h-11 sm:h-12 text-[10px] sm:text-[11px] font-bold uppercase tracking-widest text-slate-500 flex-1 sm:flex-none">
+          <Button variant="ghost" onClick={() => onClose()} className="rounded-xl px-4 sm:px-6 h-11 sm:h-12 text-[10px] sm:text-[11px] font-bold uppercase tracking-widest border border-sky-100 dark:border-sky-900/30 text-sky-600 hover:text-sky-700 hover:bg-sky-50 dark:hover:bg-sky-500/10 transition-all flex-1 sm:flex-none">
             Cancel
           </Button>
           <Button 
             onClick={handleSubmit} 
             disabled={isSaving}
-            className="rounded-xl px-6 sm:px-8 h-11 sm:h-12 bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 hover:bg-black dark:hover:bg-white transition-all active:scale-95 text-[10px] sm:text-[11px] font-bold uppercase tracking-widest border-none shadow-xl shadow-black/10 flex-1 sm:flex-none"
+            className="rounded-xl px-6 sm:px-8 h-11 sm:h-12 bg-sky-500 hover:bg-sky-600 text-white shadow-lg shadow-sky-500/20 text-[10px] sm:text-[11px] font-bold uppercase tracking-widest transition-all active:scale-95 border-none flex-1 sm:flex-none"
           >
             {isSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : review.reply ? "Update" : "Publish"}
           </Button>

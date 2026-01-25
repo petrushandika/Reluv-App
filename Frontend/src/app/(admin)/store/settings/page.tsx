@@ -270,9 +270,9 @@ export default function StoreSettingsPage() {
                
                <div className="p-8 -mt-20 relative z-30 flex flex-col md:flex-row gap-8 items-end">
                   <div className="relative group">
-                    <div className="h-40 w-40 rounded-[2.5rem] bg-white dark:bg-slate-900 border-[6px] border-white dark:border-slate-900 shadow-xl overflow-hidden relative">
+                    <div className="h-40 w-40 rounded-full bg-white dark:bg-slate-900 border-[6px] border-white dark:border-slate-900 shadow-xl overflow-hidden relative">
                        <Avatar className="h-full w-full rounded-none">
-                          <AvatarImage src={store?.profile?.avatar} className="object-cover" />
+                          <AvatarImage src={store?.profile?.avatar || "https://ui-avatars.com/api/?name=" + (store?.name || "Store")} className="object-cover" />
                           <AvatarFallback className="text-3xl font-medium bg-sky-500 text-white rounded-none">{store?.name[0]}</AvatarFallback>
                        </Avatar>
                        <div className="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center">
@@ -294,7 +294,7 @@ export default function StoreSettingsPage() {
                </div>
                
                <div className="px-8 py-6 bg-slate-50/50 dark:bg-slate-950/50 border-t border-slate-200 dark:border-slate-800 flex justify-end">
-                 <Button onClick={handleSaveProfile} disabled={isSaving} className="h-12 px-10 rounded-2xl bg-sky-500 hover:bg-sky-600 font-medium text-[10px] uppercase tracking-widest">
+                 <Button onClick={handleSaveProfile} disabled={isSaving} className="h-12 px-10 rounded-2xl bg-sky-500 hover:bg-sky-600 font-medium text-[10px] uppercase tracking-widest text-white shadow-lg shadow-sky-500/20 border-none">
                    Propagate Appearance Changes
                  </Button>
                </div>

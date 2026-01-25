@@ -13,7 +13,7 @@ import { Button } from "@/shared/components/ui/button"
 import { Input } from "@/shared/components/ui/input"
 import { Label } from "@/shared/components/ui/label"
 import { Select } from "@/shared/components/ui/select"
-import { Ticket, Percent, Banknote } from "lucide-react"
+import { Ticket, Percent, Banknote, ChevronUp, ChevronDown } from "lucide-react"
 
 import { useState, useEffect } from "react"
 import { createStoreVoucher, updateStoreVoucher } from "../../api/storeApi"
@@ -88,20 +88,13 @@ export function VoucherModal({ isOpen, onClose, voucher, mode }: VoucherModalPro
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className="sm:max-w-[500px] border-none bg-white dark:bg-slate-900 p-0 overflow-hidden rounded-2xl shadow-2xl flex flex-col max-h-[95vh] sm:max-h-[90vh]">
-        <DialogHeader className="p-6 sm:p-8 pb-0 shrink-0">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="h-10 w-10 rounded-xl bg-indigo-500/10 flex items-center justify-center border border-indigo-500/20">
-              <Ticket className="h-5 w-5 text-indigo-500" />
-            </div>
-            <div>
+        <DialogHeader className="flex flex-col gap-2 text-center sm:text-left px-6 pt-8 pb-0 sm:px-8 sm:pt-10 sm:pb-0 shrink-0">
               <DialogTitle className="text-lg sm:text-xl font-semibold text-slate-900 dark:text-white uppercase tracking-tight">
                 {mode === "create" ? "Create Promo" : "Adjust Campaign"}
               </DialogTitle>
               <DialogDescription className="text-[10px] font-medium text-slate-400 uppercase tracking-widest mt-1">
                 Configure promotional reward
               </DialogDescription>
-            </div>
-          </div>
         </DialogHeader>
 
         <div className="flex-1 overflow-y-auto custom-scrollbar">
@@ -131,14 +124,20 @@ export function VoucherModal({ isOpen, onClose, voucher, mode }: VoucherModalPro
                 </div>
                 <div className="space-y-2">
                   <Label className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Type</Label>
-                  <select 
-                    value={formData.type}
-                    onChange={(e) => setFormData(prev => ({ ...prev, type: e.target.value as any }))}
-                    className="w-full h-11 sm:h-12 border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50 rounded-xl px-4 text-sm focus:ring-indigo-500/20 focus:border-indigo-500 outline-none appearance-none"
-                  >
-                    <option value="PERCENTAGE">Percentage (%)</option>
-                    <option value="FIXED_AMOUNT">Fixed Amount (IDR)</option>
-                  </select>
+                  <div className="relative">
+                    <select 
+                      value={formData.type}
+                      onChange={(e) => setFormData(prev => ({ ...prev, type: e.target.value as any }))}
+                      className="w-full h-11 sm:h-12 border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50 rounded-xl px-4 pr-10 text-sm focus:ring-indigo-500/20 focus:border-indigo-500 outline-none appearance-none"
+                    >
+                      <option value="PERCENTAGE">Percentage (%)</option>
+                      <option value="FIXED_AMOUNT">Fixed Amount (IDR)</option>
+                    </select>
+                    <div className="absolute right-3 top-1/2 -translate-y-1/2 flex flex-col pointer-events-none text-slate-400">
+                      <ChevronUp className="h-3 w-3 -mb-0.5" />
+                      <ChevronDown className="h-3 w-3 -mt-0.5" />
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -185,14 +184,14 @@ export function VoucherModal({ isOpen, onClose, voucher, mode }: VoucherModalPro
         </div>
 
         <DialogFooter className="p-6 sm:p-8 bg-slate-50 dark:bg-slate-950/50 border-t border-slate-100 dark:border-slate-800 flex flex-row items-center justify-between gap-3 shrink-0">
-          <Button variant="ghost" onClick={() => onClose()} className="rounded-xl px-4 sm:px-6 h-11 sm:h-12 text-[10px] sm:text-[11px] font-bold uppercase tracking-widest text-slate-500 flex-1 sm:flex-none">
+          <Button variant="ghost" onClick={() => onClose()} className="rounded-xl px-4 sm:px-6 h-11 sm:h-12 text-[10px] sm:text-[11px] font-bold uppercase tracking-widest border border-sky-100 dark:border-sky-900/30 text-sky-600 hover:text-sky-700 hover:bg-sky-50 dark:hover:bg-sky-500/10 transition-all flex-1 sm:flex-none">
             Hold
           </Button>
           <Button 
             form="voucher-form"
             type="submit"
             disabled={isSaving}
-            className="rounded-xl px-6 sm:px-8 h-11 sm:h-12 bg-indigo-500 hover:bg-indigo-600 text-white shadow-lg shadow-indigo-500/20 text-[10px] sm:text-[11px] font-bold uppercase tracking-widest transition-all flex-1 sm:flex-none"
+            className="rounded-xl px-6 sm:px-8 h-11 sm:h-12 bg-sky-500 hover:bg-sky-600 text-white shadow-lg shadow-sky-500/20 text-[10px] sm:text-[11px] font-bold uppercase tracking-widest transition-all flex-1 sm:flex-none"
           >
             {isSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : mode === "create" ? "Launch" : "Save Changes"}
           </Button>

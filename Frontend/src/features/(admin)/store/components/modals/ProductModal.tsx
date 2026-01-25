@@ -14,7 +14,7 @@ import { Input } from "@/shared/components/ui/input"
 import { Label } from "@/shared/components/ui/label"
 import { Select } from "@/shared/components/ui/select"
 import { Textarea } from "@/shared/components/ui/textarea"
-import { Plus } from "lucide-react"
+import { Plus, ChevronDown, ChevronUp } from "lucide-react"
 
 import { useState, useEffect } from "react"
 import { createStoreProduct, updateStoreProduct, uploadImage } from "../../api/storeApi"
@@ -115,15 +115,13 @@ export function ProductModal({ isOpen, onClose, product, mode }: ProductModalPro
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className="sm:max-w-[600px] border-none bg-white dark:bg-slate-900 p-0 overflow-hidden rounded-2xl shadow-2xl flex flex-col max-h-[95vh] sm:max-h-[90vh]">
-        <DialogHeader className="p-6 sm:p-8 pb-0 shrink-0">
-            <div>
+        <DialogHeader className="flex flex-col gap-2 text-center sm:text-left px-6 pt-8 pb-0 sm:px-8 sm:pt-10 sm:pb-0 shrink-0">
               <DialogTitle className="text-lg sm:text-xl font-semibold text-slate-900 dark:text-white uppercase tracking-tight">
                 {mode === "create" ? "Add New Asset" : "Modify Inventory"}
               </DialogTitle>
               <DialogDescription className="text-[10px] font-medium text-slate-400 uppercase tracking-widest mt-1">
                 {mode === "create" ? "Register a new product" : `Editing ID: #${product?.id}`}
               </DialogDescription>
-            </div>
         </DialogHeader>
 
         <div className="flex-1 overflow-y-auto custom-scrollbar">
@@ -142,28 +140,40 @@ export function ProductModal({ isOpen, onClose, product, mode }: ProductModalPro
 
               <div className="space-y-2">
                 <Label className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Category</Label>
-                <select 
-                  value={formData.categoryId}
-                  onChange={(e) => setFormData(prev => ({ ...prev, categoryId: Number(e.target.value) }))}
-                  className="w-full h-11 sm:h-12 border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50 rounded-xl px-4 text-sm focus:ring-sky-500 focus:border-sky-500 outline-none appearance-none"
-                >
-                  <option value={1}>Clothing</option>
-                  <option value={2}>Footwear</option>
-                  <option value={3}>Accessories</option>
-                  <option value={4}>Electronics</option>
-                </select>
+                <div className="relative">
+                  <select 
+                    value={formData.categoryId}
+                    onChange={(e) => setFormData(prev => ({ ...prev, categoryId: Number(e.target.value) }))}
+                    className="w-full h-11 sm:h-12 border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50 rounded-xl px-4 pr-10 text-sm focus:ring-sky-500 focus:border-sky-500 outline-none appearance-none"
+                  >
+                    <option value={1}>Clothing</option>
+                    <option value={2}>Footwear</option>
+                    <option value={3}>Accessories</option>
+                    <option value={4}>Electronics</option>
+                  </select>
+                  <div className="absolute right-3 top-1/2 -translate-y-1/2 flex flex-col pointer-events-none text-slate-400">
+                    <ChevronUp className="h-3 w-3 -mb-0.5" />
+                    <ChevronDown className="h-3 w-3 -mt-0.5" />
+                  </div>
+                </div>
               </div>
 
               <div className="space-y-2">
                 <Label className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Condition</Label>
-                <select 
-                  className="w-full h-11 sm:h-12 border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50 rounded-xl px-4 text-sm focus:ring-sky-500 focus:border-sky-500 outline-none appearance-none"
-                >
-                  <option value="New">New</option>
-                  <option value="Like New">Like New</option>
-                  <option value="Good">Good</option>
-                  <option value="Fair">Fair</option>
-                </select>
+                <div className="relative">
+                  <select 
+                    className="w-full h-11 sm:h-12 border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50 rounded-xl px-4 pr-10 text-sm focus:ring-sky-500 focus:border-sky-500 outline-none appearance-none"
+                  >
+                    <option value="New">New</option>
+                    <option value="Like New">Like New</option>
+                    <option value="Good">Good</option>
+                    <option value="Fair">Fair</option>
+                  </select>
+                  <div className="absolute right-3 top-1/2 -translate-y-1/2 flex flex-col pointer-events-none text-slate-400">
+                    <ChevronUp className="h-3 w-3 -mb-0.5" />
+                    <ChevronDown className="h-3 w-3 -mt-0.5" />
+                  </div>
+                </div>
               </div>
 
               <div className="space-y-2">
@@ -239,7 +249,7 @@ export function ProductModal({ isOpen, onClose, product, mode }: ProductModalPro
         </div>
 
         <DialogFooter className="p-6 sm:p-8 bg-slate-50 dark:bg-slate-950/50 border-t border-slate-100 dark:border-slate-800 flex flex-row items-center justify-between gap-3 shrink-0">
-          <Button variant="ghost" onClick={() => onClose()} className="rounded-xl px-4 sm:px-6 h-11 sm:h-12 text-[10px] sm:text-[11px] font-bold uppercase tracking-widest text-slate-500 flex-1 sm:flex-none">
+          <Button variant="ghost" onClick={() => onClose()} className="rounded-xl px-4 sm:px-6 h-11 sm:h-12 text-[10px] sm:text-[11px] font-bold uppercase tracking-widest border border-sky-100 dark:border-sky-900/30 text-sky-600 hover:text-sky-700 hover:bg-sky-50 dark:hover:bg-sky-500/10 transition-all flex-1 sm:flex-none">
             Cancel
           </Button>
           <Button 
