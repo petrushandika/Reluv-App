@@ -21,6 +21,9 @@ import {
 } from "lucide-react"
 import { cn } from "@/shared/lib/utils"
 import { motion } from "framer-motion"
+import { useState } from "react"
+import { VoucherModal } from "./modals/VoucherModal"
+import { DeleteConfirmModal } from "./modals/DeleteConfirmModal"
 
 const mockVouchers = [
   {
@@ -56,6 +59,24 @@ const mockVouchers = [
 ]
 
 export function StoreVouchersList() {
+  const [selectedVoucher, setSelectedVoucher] = useState<any>(null)
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false)
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
+
+  const handleEdit = (voucher: any) => {
+    setSelectedVoucher(voucher)
+    setIsEditModalOpen(true)
+  }
+
+  const handleDelete = (voucher: any) => {
+    setSelectedVoucher(voucher)
+    setIsDeleteModalOpen(true)
+  }
+
+  const confirmDelete = () => {
+    console.log("Deleting voucher:", selectedVoucher?.id)
+    setIsDeleteModalOpen(false)
+  }
   return (
     <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden">
       {/* Integrated Search & Filter Header */}
@@ -140,14 +161,22 @@ export function StoreVouchersList() {
                   </div>
                 </TableCell>
                 <TableCell className="pr-8 text-right">
-                   <div className="flex items-center justify-end gap-2">
-                      <Button variant="ghost" className="h-8 w-20 rounded-lg bg-sky-50 dark:bg-sky-500/10 text-sky-600 hover:text-sky-700 hover:bg-sky-100 dark:hover:bg-sky-500/20 text-[10px] font-medium uppercase tracking-widest transition-all">
-                        Edit
-                      </Button>
-                      <Button variant="ghost" className="h-8 w-20 rounded-lg bg-rose-50 dark:bg-rose-500/10 text-rose-600 hover:text-rose-700 hover:bg-rose-100 dark:hover:bg-rose-500/20 text-[10px] font-medium uppercase tracking-widest transition-all">
-                        Delete
-                      </Button>
-                   </div>
+                    <div className="flex items-center justify-end gap-2">
+                       <Button 
+                         variant="ghost" 
+                         onClick={() => handleEdit(voucher)}
+                         className="h-8 w-16 sm:w-20 rounded-lg bg-sky-50 dark:bg-sky-500/10 text-sky-600 hover:text-sky-700 hover:bg-sky-100 dark:hover:bg-sky-500/20 text-[10px] font-medium uppercase tracking-widest transition-all"
+                       >
+                         Edit
+                       </Button>
+                       <Button 
+                         variant="ghost" 
+                         onClick={() => handleDelete(voucher)}
+                         className="h-8 w-16 sm:w-20 rounded-lg bg-rose-50 dark:bg-rose-500/10 text-rose-600 hover:text-rose-700 hover:bg-rose-100 dark:hover:bg-rose-500/20 text-[10px] font-medium uppercase tracking-widest transition-all"
+                       >
+                         Delete
+                       </Button>
+                    </div>
                 </TableCell>
               </TableRow>
             ))}
@@ -166,6 +195,22 @@ export function StoreVouchersList() {
            </Button>
         </div>
       </div>
+
+      <VoucherModal
+        isOpen={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+        voucher={selectedVoucher}
+        mode="edit"
+      />
+
+      <DeleteConfirmModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        onConfirm={confirmDelete}
+        title="Burn Campaign"
+        description="Are you sure you want to delete this voucher? This will immediately disable the reward for all users."
+        itemName={selectedVoucher?.name}
+      />
     </div>
   )
 }

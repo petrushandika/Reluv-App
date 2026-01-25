@@ -15,6 +15,8 @@ import {
 } from "lucide-react"
 import { Button } from "@/shared/components/ui/button"
 import { StoreVouchersList } from "@/features/(admin)/store/components/StoreVouchersList"
+import { useState } from "react"
+import { VoucherModal } from "@/features/(admin)/store/components/modals/VoucherModal"
 
 const sidebarItems = [
   {
@@ -50,6 +52,7 @@ const sidebarItems = [
 ]
 
 export default function StoreVouchersPage() {
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
   const stats = [
     {
       title: "Active Vouchers",
@@ -91,7 +94,10 @@ export default function StoreVouchersPage() {
       type="store"
       sidebarItems={sidebarItems}
       actions={
-        <Button className="rounded-xl bg-sky-500 hover:bg-sky-600 text-white font-medium text-[10px] uppercase tracking-widest h-9 sm:h-10 px-3 sm:px-4 border-none transition-all active:scale-95 w-full sm:w-auto">
+        <Button 
+          onClick={() => setIsCreateModalOpen(true)}
+          className="rounded-xl bg-sky-500 hover:bg-sky-600 text-white font-medium text-[10px] uppercase tracking-widest h-9 sm:h-10 px-3 sm:px-4 border-none transition-all active:scale-95 w-full sm:w-auto"
+        >
           <Plus className="mr-1.5 sm:mr-2 h-3.5 w-3.5 sm:h-4 sm:w-4" />
           <span className="truncate">Create New Campaign</span>
         </Button>
@@ -117,6 +123,12 @@ export default function StoreVouchersPage() {
 
         <StoreVouchersList />
       </div>
+
+      <VoucherModal 
+        isOpen={isCreateModalOpen} 
+        onClose={() => setIsCreateModalOpen(false)} 
+        mode="create" 
+      />
     </DashboardShell>
   )
 }

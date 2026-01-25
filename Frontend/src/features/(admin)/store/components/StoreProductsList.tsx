@@ -20,6 +20,9 @@ import {
 } from "lucide-react"
 import { cn } from "@/shared/lib/utils"
 import { motion } from "framer-motion"
+import { useState } from "react"
+import { ProductModal } from "./modals/ProductModal"
+import { DeleteConfirmModal } from "./modals/DeleteConfirmModal"
 
 const products = [
   {
@@ -75,6 +78,24 @@ const products = [
 ]
 
 export function StoreProductsList() {
+  const [selectedProduct, setSelectedProduct] = useState<any>(null)
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false)
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
+
+  const handleEdit = (product: any) => {
+    setSelectedProduct(product)
+    setIsEditModalOpen(true)
+  }
+
+  const handleDelete = (product: any) => {
+    setSelectedProduct(product)
+    setIsDeleteModalOpen(true)
+  }
+
+  const confirmDelete = () => {
+    console.log("Deleting product:", selectedProduct?.id)
+    setIsDeleteModalOpen(false)
+  }
   return (
     <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden">
       {/* Integrated Search & Filter Header */}
@@ -171,14 +192,22 @@ export function StoreProductsList() {
                   </div>
                 </TableCell>
                 <TableCell className="pr-8 text-right">
-                   <div className="flex items-center justify-end gap-2">
-                      <Button variant="ghost" className="h-8 w-20 rounded-lg bg-sky-50 dark:bg-sky-500/10 text-sky-600 hover:text-sky-700 hover:bg-sky-100 dark:hover:bg-sky-500/20 text-[10px] font-medium uppercase tracking-widest transition-all">
-                        Edit
-                      </Button>
-                      <Button variant="ghost" className="h-8 w-20 rounded-lg bg-rose-50 dark:bg-rose-500/10 text-rose-600 hover:text-rose-700 hover:bg-rose-100 dark:hover:bg-rose-500/20 text-[10px] font-medium uppercase tracking-widest transition-all">
-                        Delete
-                      </Button>
-                   </div>
+                    <div className="flex items-center justify-end gap-2">
+                       <Button 
+                         variant="ghost" 
+                         onClick={() => handleEdit(product)}
+                         className="h-8 w-16 sm:w-20 rounded-lg bg-sky-50 dark:bg-sky-500/10 text-sky-600 hover:text-sky-700 hover:bg-sky-100 dark:hover:bg-sky-500/20 text-[10px] font-medium uppercase tracking-widest transition-all"
+                       >
+                         Edit
+                       </Button>
+                       <Button 
+                         variant="ghost" 
+                         onClick={() => handleDelete(product)}
+                         className="h-8 w-16 sm:w-20 rounded-lg bg-rose-50 dark:bg-rose-500/10 text-rose-600 hover:text-rose-700 hover:bg-rose-100 dark:hover:bg-rose-500/20 text-[10px] font-medium uppercase tracking-widest transition-all"
+                       >
+                         Delete
+                       </Button>
+                    </div>
                 </TableCell>
               </TableRow>
             ))}
@@ -197,6 +226,22 @@ export function StoreProductsList() {
            </Button>
         </div>
       </div>
+
+      <ProductModal 
+        isOpen={isEditModalOpen} 
+        onClose={() => setIsEditModalOpen(false)} 
+        product={selectedProduct}
+        mode="edit"
+      />
+
+      <DeleteConfirmModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        onConfirm={confirmDelete}
+        title="Confirm Purge"
+        description="Are you sure you want to delete this product? This action is irreversible."
+        itemName={selectedProduct?.name}
+      />
     </div>
   )
 }

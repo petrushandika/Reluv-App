@@ -24,6 +24,9 @@ import {
 import { cn } from "@/shared/lib/utils"
 import Image from "next/image"
 import { motion } from "framer-motion"
+import { useState } from "react"
+import { ReviewReplyModal } from "./modals/ReviewReplyModal"
+import { DeleteConfirmModal } from "./modals/DeleteConfirmModal"
 
 const mockReviews = [
   {
@@ -74,6 +77,25 @@ const mockReviews = [
 ]
 
 export function StoreReviewsList() {
+  const [selectedReview, setSelectedReview] = useState<any>(null)
+  const [isReplyModalOpen, setIsReplyModalOpen] = useState(false)
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
+
+  const handleReply = (review: any) => {
+    setSelectedReview(review)
+    setIsReplyModalOpen(true)
+  }
+
+  const handleDelete = (review: any) => {
+    setSelectedReview(review)
+    setIsDeleteModalOpen(true)
+  }
+
+  const confirmDelete = () => {
+    console.log("Deleting review:", selectedReview?.id)
+    setIsDeleteModalOpen(false)
+  }
+
   const renderStars = (rating: number) => {
     return (
       <div className="flex items-center space-x-0.5">
@@ -174,14 +196,22 @@ export function StoreReviewsList() {
                   </div>
                 </TableCell>
                 <TableCell className="pr-8 text-right">
-                   <div className="flex items-center justify-end gap-2">
-                      <Button variant="ghost" className="h-8 w-20 rounded-lg bg-sky-50 dark:bg-sky-500/10 text-sky-600 hover:text-sky-700 hover:bg-sky-100 dark:hover:bg-sky-500/20 text-[10px] font-medium uppercase tracking-widest transition-all">
-                        {review.reply ? "Edit" : "Reply"}
-                      </Button>
-                      <Button variant="ghost" className="h-8 w-20 rounded-lg bg-rose-50 dark:bg-rose-500/10 text-rose-600 hover:text-rose-700 hover:bg-rose-100 dark:hover:bg-rose-500/20 text-[10px] font-medium uppercase tracking-widest transition-all">
-                        Delete
-                      </Button>
-                   </div>
+                    <div className="flex items-center justify-end gap-2">
+                       <Button 
+                         variant="ghost" 
+                         onClick={() => handleReply(review)}
+                         className="h-8 w-16 sm:w-20 rounded-lg bg-sky-50 dark:bg-sky-500/10 text-sky-600 hover:text-sky-700 hover:bg-sky-100 dark:hover:bg-sky-500/20 text-[10px] font-medium uppercase tracking-widest transition-all"
+                       >
+                         {review.reply ? "Edit" : "Reply"}
+                       </Button>
+                       <Button 
+                         variant="ghost" 
+                         onClick={() => handleDelete(review)}
+                         className="h-8 w-16 sm:w-20 rounded-lg bg-rose-50 dark:bg-rose-500/10 text-rose-600 hover:text-rose-700 hover:bg-rose-100 dark:hover:bg-rose-500/20 text-[10px] font-medium uppercase tracking-widest transition-all"
+                       >
+                         Delete
+                       </Button>
+                    </div>
                 </TableCell>
               </TableRow>
             ))}
@@ -200,6 +230,21 @@ export function StoreReviewsList() {
            </Button>
         </div>
       </div>
+
+      <ReviewReplyModal
+        isOpen={isReplyModalOpen}
+        onClose={() => setIsReplyModalOpen(false)}
+        review={selectedReview}
+      />
+
+      <DeleteConfirmModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        onConfirm={confirmDelete}
+        title="Sanitize Content"
+        description="Are you sure you want to delete this customer review? This will remove their feedback from your public profile."
+        itemName={selectedReview ? `Review by ${selectedReview.author.firstName}` : undefined}
+      />
     </div>
   )
 }

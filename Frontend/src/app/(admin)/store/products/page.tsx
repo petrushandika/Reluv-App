@@ -3,6 +3,8 @@
 import { Button } from "@/shared/components/ui/button"
 import { DashboardShell } from "@/shared/components/layout/DashboardShell"
 import { StoreProductsList } from "@/features/(admin)/store/components/StoreProductsList"
+import { useState } from "react"
+import { ProductModal } from "@/features/(admin)/store/components/modals/ProductModal"
 import { 
   Plus, 
   Download,
@@ -48,6 +50,8 @@ const sidebarItems = [
 ]
 
 export default function StoreProductsPage() {
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
+
   return (
     <DashboardShell 
       title="Product Inventory" 
@@ -59,7 +63,10 @@ export default function StoreProductsPage() {
             <Download className="mr-1.5 sm:mr-2 h-3.5 w-3.5 sm:h-4 sm:w-4" />
             <span className="truncate">Export Portfolio</span>
           </Button>
-          <Button className="bg-sky-500 hover:bg-sky-600 text-white transition-all active:scale-95 border-none font-medium text-[10px] uppercase tracking-widest h-9 sm:h-10 px-3 sm:px-4 rounded-xl flex-1 sm:flex-none">
+          <Button 
+            onClick={() => setIsCreateModalOpen(true)}
+            className="bg-sky-500 hover:bg-sky-600 text-white transition-all active:scale-95 border-none font-medium text-[10px] uppercase tracking-widest h-9 sm:h-10 px-3 sm:px-4 flex-1 sm:flex-none"
+          >
             <Plus className="mr-1.5 sm:mr-2 h-3.5 w-3.5 sm:h-4 sm:w-4" />
             <span className="truncate">Add New Product</span>
           </Button>
@@ -99,6 +106,12 @@ export default function StoreProductsPage() {
 
         <StoreProductsList />
       </div>
+
+      <ProductModal 
+        isOpen={isCreateModalOpen} 
+        onClose={() => setIsCreateModalOpen(false)} 
+        mode="create" 
+      />
     </DashboardShell>
   )
 }

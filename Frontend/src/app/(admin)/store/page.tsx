@@ -28,6 +28,8 @@ import {
 } from "lucide-react"
 import { motion } from "framer-motion"
 import { cn } from "@/shared/lib/utils"
+import { useState } from "react"
+import { ProductModal } from "@/features/(admin)/store/components/modals/ProductModal"
 
 const sidebarItems = [
   {
@@ -85,6 +87,8 @@ const itemVariants = {
 }
 
 export default function StoreDashboardPage() {
+  const [isProductModalOpen, setIsProductModalOpen] = useState(false)
+
   return (
     <DashboardShell
       title="Dashboard"
@@ -92,11 +96,17 @@ export default function StoreDashboardPage() {
       type="store"
       actions={
         <div className="flex items-center gap-2 sm:gap-3 flex-wrap sm:flex-nowrap">
-          <Button variant="outline" className="h-9 sm:h-10 px-3 sm:px-5 rounded-xl border-slate-200 dark:border-slate-800 bg-(--bg-secondary) text-slate-600 dark:text-slate-400 font-medium text-[10px] sm:text-xs uppercase tracking-widest hover:bg-(--bg-primary) transition-all flex-1 sm:flex-none">
+          <Button 
+            variant="outline" 
+            className="h-9 sm:h-10 px-3 sm:px-4 rounded-xl border-slate-200 dark:border-slate-800 bg-(--bg-secondary) text-slate-600 dark:text-slate-400 font-medium text-[10px] uppercase tracking-widest hover:bg-(--bg-primary) transition-all flex-1 sm:flex-none"
+          >
             <Download className="mr-1.5 sm:mr-2 h-3.5 w-3.5 sm:h-4 sm:w-4" />
             <span className="truncate">Export Data</span>
           </Button>
-          <Button className="h-9 sm:h-10 px-3 sm:px-5 rounded-xl bg-sky-500 hover:bg-sky-600 text-white font-medium text-[10px] sm:text-xs uppercase tracking-widest transition-all active:scale-95 border-none flex-1 sm:flex-none">
+          <Button 
+            onClick={() => setIsProductModalOpen(true)}
+            className="h-9 sm:h-10 px-3 sm:px-4 rounded-xl bg-sky-500 hover:bg-sky-600 text-white font-medium text-[10px] uppercase tracking-widest transition-all active:scale-95 border-none flex-1 sm:flex-none"
+          >
             <Plus className="mr-1.5 sm:mr-2 h-3.5 w-3.5 sm:h-4 sm:w-4" />
             <span className="truncate">New Product</span>
           </Button>
@@ -196,6 +206,12 @@ export default function StoreDashboardPage() {
           </Card>
         </div>
       </div>
+
+      <ProductModal 
+        isOpen={isProductModalOpen} 
+        onClose={() => setIsProductModalOpen(false)} 
+        mode="create" 
+      />
     </DashboardShell>
   )
 }

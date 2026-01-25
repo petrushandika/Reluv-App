@@ -22,6 +22,9 @@ import {
 } from "lucide-react"
 import { cn } from "@/shared/lib/utils"
 import { motion } from "framer-motion"
+import { useState } from "react"
+import { OrderManifestModal } from "./modals/OrderManifestModal"
+import { DeleteConfirmModal } from "./modals/DeleteConfirmModal"
 
 const orders = [
   {
@@ -87,6 +90,24 @@ const orders = [
 ]
 
 export function StoreOrdersList() {
+  const [selectedOrder, setSelectedOrder] = useState<any>(null)
+  const [isManifestOpen, setIsManifestOpen] = useState(false)
+  const [isCancelModalOpen, setIsCancelModalOpen] = useState(false)
+
+  const handleView = (order: any) => {
+    setSelectedOrder(order)
+    setIsManifestOpen(true)
+  }
+
+  const handleCancelAction = (order: any) => {
+    setSelectedOrder(order)
+    setIsCancelModalOpen(true)
+  }
+
+  const confirmCancel = () => {
+    console.log("Cancelling order:", selectedOrder?.id)
+    setIsCancelModalOpen(false)
+  }
   const getStatusStyle = (status: string) => {
     switch (status) {
       case "PENDING": return "text-amber-500 bg-amber-500/5"
@@ -175,14 +196,22 @@ export function StoreOrdersList() {
                   </div>
                 </TableCell>
                 <TableCell className="pr-8 text-right">
-                   <div className="flex items-center justify-end gap-2">
-                      <Button variant="ghost" className="h-8 w-20 rounded-lg bg-sky-50 dark:bg-sky-500/10 text-sky-600 hover:text-sky-700 hover:bg-sky-100 dark:hover:bg-sky-500/20 text-[10px] font-medium uppercase tracking-widest transition-all">
-                        View
-                      </Button>
-                      <Button variant="ghost" className="h-8 w-20 rounded-lg bg-rose-50 dark:bg-rose-500/10 text-rose-600 hover:text-rose-700 hover:bg-rose-100 dark:hover:bg-rose-500/20 text-[10px] font-medium uppercase tracking-widest transition-all">
-                        Cancel
-                      </Button>
-                   </div>
+                    <div className="flex items-center justify-end gap-2">
+                       <Button 
+                         variant="ghost" 
+                         onClick={() => handleView(order)}
+                         className="h-8 w-16 sm:w-20 rounded-lg bg-sky-50 dark:bg-sky-500/10 text-sky-600 hover:text-sky-700 hover:bg-sky-100 dark:hover:bg-sky-500/20 text-[10px] font-medium uppercase tracking-widest transition-all"
+                       >
+                         View
+                       </Button>
+                       <Button 
+                         variant="ghost" 
+                         onClick={() => handleCancelAction(order)}
+                         className="h-8 w-16 sm:w-20 rounded-lg bg-rose-50 dark:bg-rose-500/10 text-rose-600 hover:text-rose-700 hover:bg-rose-100 dark:hover:bg-rose-500/20 text-[10px] font-medium uppercase tracking-widest transition-all"
+                       >
+                         Cancel
+                       </Button>
+                    </div>
                 </TableCell>
               </TableRow>
             ))}
@@ -201,6 +230,21 @@ export function StoreOrdersList() {
            </Button>
         </div>
       </div>
+
+      <OrderManifestModal
+        isOpen={isManifestOpen}
+        onClose={() => setIsManifestOpen(false)}
+        order={selectedOrder}
+      />
+
+      <DeleteConfirmModal
+        isOpen={isCancelModalOpen}
+        onClose={() => setIsCancelModalOpen(false)}
+        onConfirm={confirmCancel}
+        title="Abort Transaction"
+        description="Are you sure you want to cancel this order? This will authorize an immediate refund to the customer."
+        itemName={selectedOrder?.orderNumber}
+      />
     </div>
   )
 }
