@@ -12,42 +12,74 @@ Tahap ini melibatkan identifikasi masalah yang ada di pasar preloved saat ini se
 
 ### 3.2.1. Analisis Masalah
 
-Berdasarkan pengamatan, pasar preloved saat ini masih didominasi oleh metode penjualan yang terfragmentasi melalui media sosial, yang seringkali tidak efisien dan kurang aman. Masalah utama meliputi:
-
-- Sulitnya pembeli dalam memvalidasi keaslian dan kondisi barang.
-- Kurangnya sistem pembayaran yang aman dan otomatis (seringkali manual transfer).
-- Sulitnya pelacakan pengiriman barang yang terstandarisasi.
-- Rendahnya visibilitas produk di mesin pencari.
+Untuk mengatasi masalah pada pasar preloved yang masih didominasi oleh metode penjualan terfragmentasi melalui media sosial dibutuhkan pembuatan website marketplace yang dapat memfasilitasi transaksi jual beli barang preloved secara digital dengan sistem pembayaran yang aman melalui payment gateway, melakukan validasi dan verifikasi produk serta penjual untuk memastikan keaslian dan kondisi barang, menyediakan sistem pelacakan pengiriman yang terstandarisasi melalui integrasi dengan layanan logistik, dan pemasaran yang memberikan informasi detail produk secara luas melalui digital dengan optimasi SEO, dengan adanya website marketplace ini diharapkan dapat membantu kegiatan jual beli barang preloved serta pengelolaan transaksi agar lebih efisien, aman, dan terpercaya bagi penjual dan pembeli.
 
 ### 3.2.2. Analisis Kebutuhan Software dan Hardware
 
-Untuk menunjang pembangunan aplikasi Reluv, dibutuhkan spesifikasi sebagai berikut:
+Ditahap ini dilakukan analisis berupa kebutuhan yang menunjang dalam pembuatan aplikasi website Reluv, dalam membuat website dibutuhkan perangkat keras (Hardware), perangkat lunak (Software), bahasa pemrograman, dan vendor sebagai berikut:
 
-#### 1. Perangkat Keras (Hardware)
+1. **Perangkat Keras (Hardware)**
 
-- **Processor**: Intel® Core™ i7-12650H 2.3GHz (atau setara).
-- **RAM**: 16 GB.
-- **Storage**: SSD minimal 256 GB.
+─ Device			: MSI GF63 Thin 12UC
+─ Processor		: Intel® Core™ i7-12650H 2.3GHz
+─ RAM			: 16 GB
+─ Storage		: SSD minimal 256 GB
 
-#### 2. Perangkat Lunak (Software)
+2. **Perangkat Lunak (Software)**
 
-- **Editor**: Visual Studio Code sebagai editor kode program utama.
-- **Runtime Environment**: Node.js (v20+) untuk menjalankan Next.js dan NestJS.
-- **Database Management**: Prisma Studio untuk mengelola database PostgreSQL.
-- **Testing Tool**: Postman untuk pengujian API dan Google Chrome untuk pengujian antarmuka.
-- **Operating System**: Windows 11 Home.
+─ **Visual Studio Code**
+Aplikasi yang berguna untuk menulis code program
 
-#### 3. Stack Teknologi
+─ **Node.js**
+Runtime environment untuk menjalankan aplikasi Next.js dan NestJS
 
-- **Backend Framework**: NestJS (TypeScript) untuk logika bisnis dan RESTful API.
-- **Frontend Framework**: Next.js (TypeScript, Tailwind CSS) untuk antarmuka pengguna yang responsif.
-- **Database & ORM**: PostgreSQL dengan Prisma ORM untuk manajemen data relasional.
+─ **Prisma Studio**
+Aplikasi untuk mengelola database PostgreSQL secara visual
 
-#### 4. Vendor API
+─ **Postman**
+Untuk mencoba REST API NestJS
 
-- **Logistic API**: Biteship untuk integrasi kurir dan pelacakan.
-- **Payment Gateway**: Midtrans untuk sistem pembayaran otomatis.
-- **Cloud Storage**: Cloudinary untuk penyimpanan aset gambar produk secara online.
+─ **Web Browser Google Chrome**
+Untuk menjalankan testing aplikasi website
+
+─ **Sistem Operasi**
+Windows 11 Home
+
+3. **Bahasa Pemrograman Backend**
+
+─ **NestJS (Framework TypeScript)**
+Framework untuk membangun aplikasi backend dengan arsitektur modular
+
+─ **TypeScript**
+Bahasa pemrograman yang digunakan untuk development
+
+─ **Prisma ORM**
+Object-Relational Mapping untuk mengelola database PostgreSQL
+
+4. **Bahasa Pemrograman Frontend**
+
+─ **Next.js (Framework React)**
+Framework React untuk membangun aplikasi web dengan Server-Side Rendering
+
+─ **React 19**
+Library JavaScript untuk membangun user interface
+
+─ **TypeScript**
+Bahasa pemrograman yang digunakan untuk development
+
+─ **Tailwind CSS 4**
+Framework CSS untuk styling aplikasi
+
+5. **Vendor**
+
+─ **Biteship**
+Provider API kurir untuk integrasi pengiriman dan pelacakan barang
+
+─ **Midtrans**
+Provider Payment Gateway untuk sistem pembayaran
+
+─ **Cloudinary**
+Provider penyimpanan secara cloud untuk gambar produk
 
 ## 3.3. Perancangan Website
 
@@ -59,7 +91,15 @@ Struktur navigasi yang digunakan adalah **Struktur Navigasi Composite (Campuran)
 
 #### 3.3.1.1. Struktur Navigasi Role Superadmin
 
-Struktur navigasi pada role Superadmin menunjukkan pemetaan halaman yang dapat diakses oleh superadmin untuk mengelola seluruh platform Reluv. Setelah melakukan login dengan kredensial administratif, superadmin akan dialihkan ke halaman Dashboard yang menampilkan chart statistik pendapatan platform dan rekapan penjualan bulanan dalam bentuk visualisasi data menggunakan library Recharts. Dari halaman Dashboard, superadmin dapat mengakses halaman Products yang berfungsi untuk mengelola seluruh katalog produk di platform, termasuk menambahkan produk baru, mengedit informasi produk yang sudah ada, menghapus produk yang tidak sesuai, serta mempublikasikan atau menonaktifkan produk dari semua toko yang terdaftar. Selain itu, terdapat halaman Orders yang berfungsi untuk memonitoring seluruh riwayat transaksi yang terjadi di platform, melihat detail setiap pesanan, melakukan input nomor resi pengiriman jika diperlukan, serta mengupdate status transaksi. Halaman Manage User memungkinkan superadmin untuk mengatur seluruh akun pengguna yang terdaftar di platform, termasuk melihat daftar pengguna, mengedit informasi pengguna, mengaktifkan atau menonaktifkan akun pengguna untuk menjaga keamanan komunitas, serta menghapus akun yang melanggar ketentuan. Terakhir, terdapat halaman Profile yang berguna untuk memperbarui detail informasi akun superadmin yang sedang digunakan. Gambar struktur navigasi Superadmin dapat dilihat pada Gambar 3.1.
+Struktur navigasi pada role Superadmin menunjukkan pemetaan halaman yang dapat diakses oleh superadmin untuk mengelola seluruh platform Reluv. Setelah melakukan login dengan kredensial administratif, superadmin akan dialihkan ke halaman Dashboard yang menampilkan chart statistik pendapatan platform dan rekapan penjualan bulanan dalam bentuk visualisasi data menggunakan library Recharts.
+
+Dari halaman Dashboard, superadmin dapat mengakses halaman Products yang berfungsi untuk mengelola seluruh katalog produk di platform. Halaman ini memungkinkan superadmin untuk menambahkan produk baru, mengedit informasi produk yang sudah ada, menghapus produk yang tidak sesuai, serta mempublikasikan atau menonaktifkan produk dari semua toko yang terdaftar.
+
+Selain itu, terdapat halaman Orders yang berfungsi untuk memonitoring seluruh riwayat transaksi yang terjadi di platform. Superadmin dapat melihat detail setiap pesanan, melakukan input nomor resi pengiriman jika diperlukan, serta mengupdate status transaksi.
+
+Halaman Manage User memungkinkan superadmin untuk mengatur seluruh akun pengguna yang terdaftar di platform. Superadmin dapat melihat daftar pengguna, mengedit informasi pengguna, mengaktifkan atau menonaktifkan akun pengguna untuk menjaga keamanan komunitas, serta menghapus akun yang melanggar ketentuan.
+
+Terakhir, terdapat halaman Profile yang berguna untuk memperbarui detail informasi akun superadmin yang sedang digunakan. Gambar struktur navigasi Superadmin dapat dilihat pada Gambar 3.1.
 
 **Gambar 3.1 Struktur Navigasi Superadmin**
 
@@ -93,7 +133,17 @@ graph TD
 
 #### 3.3.1.2. Struktur Navigasi Role Store (Penjual)
 
-Struktur navigasi pada role Store (Penjual) memiliki pemetaan yang berbeda dari struktur navigasi Superadmin, karena fokus pada pengelolaan toko dan produk milik penjual sendiri. Setelah melakukan login dengan kredensial penjual, penjual akan dialihkan ke halaman Dashboard Store yang menampilkan statistik penjualan toko, pendapatan yang diperoleh, produk terlaris, serta grafik penjualan bulanan untuk membantu penjual menganalisis performa tokonya. Dari halaman Dashboard, penjual dapat mengakses halaman Products yang berfungsi untuk mengelola produk-produk di tokonya sendiri, termasuk menambahkan produk baru dengan form upload gambar ke Cloudinary, mengedit informasi produk yang sudah ada, menghapus produk, serta mengelola varian produk seperti ukuran, warna, dan kondisi barang. Halaman Orders memungkinkan penjual untuk memonitoring pesanan yang masuk ke tokonya, memproses pesanan yang telah dibayar, melakukan input nomor resi pengiriman setelah barang dikirim, serta mengupdate status pengiriman. Halaman Reviews berfungsi untuk melihat review yang diberikan pembeli terhadap produk-produk di toko, serta memberikan balasan atau respons terhadap review tersebut untuk meningkatkan interaksi dengan pembeli. Halaman Vouchers memungkinkan penjual untuk membuat voucher diskon toko, mengedit voucher yang sudah ada, serta menghapus voucher yang sudah tidak berlaku, yang dapat digunakan pembeli saat melakukan checkout. Terakhir, halaman Settings berguna untuk mengelola profil toko, mengubah informasi kontak, mengatur alamat toko, serta melakukan pengaturan lainnya terkait konfigurasi toko. Gambar struktur navigasi Store (Penjual) dapat dilihat pada Gambar 3.2.
+Struktur navigasi pada role Store (Penjual) memiliki pemetaan yang berbeda dari struktur navigasi Superadmin, karena fokus pada pengelolaan toko dan produk milik penjual sendiri. Setelah melakukan login dengan kredensial penjual, penjual akan dialihkan ke halaman Dashboard Store yang menampilkan statistik penjualan toko, pendapatan yang diperoleh, produk terlaris, serta grafik penjualan bulanan untuk membantu penjual menganalisis performa tokonya.
+
+Dari halaman Dashboard, penjual dapat mengakses halaman Products yang berfungsi untuk mengelola produk-produk di tokonya sendiri. Halaman ini memungkinkan penjual untuk menambahkan produk baru dengan form upload gambar ke Cloudinary, mengedit informasi produk yang sudah ada, menghapus produk, serta mengelola varian produk seperti ukuran, warna, dan kondisi barang.
+
+Halaman Orders memungkinkan penjual untuk memonitoring pesanan yang masuk ke tokonya. Penjual dapat memproses pesanan yang telah dibayar, melakukan input nomor resi pengiriman setelah barang dikirim, serta mengupdate status pengiriman.
+
+Halaman Reviews berfungsi untuk melihat review yang diberikan pembeli terhadap produk-produk di toko. Penjual dapat memberikan balasan atau respons terhadap review tersebut untuk meningkatkan interaksi dengan pembeli.
+
+Halaman Vouchers memungkinkan penjual untuk membuat voucher diskon toko, mengedit voucher yang sudah ada, serta menghapus voucher yang sudah tidak berlaku. Voucher yang dibuat dapat digunakan pembeli saat melakukan checkout.
+
+Terakhir, halaman Settings berguna untuk mengelola profil toko, mengubah informasi kontak, mengatur alamat toko, serta melakukan pengaturan lainnya terkait konfigurasi toko. Gambar struktur navigasi Store (Penjual) dapat dilihat pada Gambar 3.2.
 
 **Gambar 3.2 Struktur Navigasi Store (Penjual)**
 
@@ -137,7 +187,19 @@ graph TD
 
 #### 3.3.1.3. Struktur Navigasi Role User (Pembeli)
 
-Struktur navigasi pada role User (Pembeli) dirancang untuk memberikan pengalaman belanja yang mudah dan intuitif. Setelah login atau sebagai pengunjung, pembeli akan diarahkan ke halaman Homepage yang menampilkan katalog produk preloved, banner promo, dan fitur pencarian untuk menemukan produk yang diinginkan. Pembeli dapat melakukan browsing produk berdasarkan kategori melalui halaman Kategori yang menyediakan filter berdasarkan kategori utama seperti Women (Wanita), Men (Pria), dan Kids (Anak-anak). Setelah menemukan produk yang menarik, pembeli dapat mengakses halaman Product Detail yang menampilkan informasi lengkap produk termasuk multiple images, deskripsi produk, varian produk (ukuran, warna, kondisi), review dari pembeli lain, serta informasi toko penjual. Dari halaman Product Detail, pembeli dapat menambahkan produk ke Cart (keranjang) atau ke Wishlist (daftar keinginan) untuk dibeli nanti. Halaman Cart berfungsi sebagai penampungan produk sementara sebelum melakukan checkout, dimana pembeli dapat mengubah jumlah item, menghapus item, atau melanjutkan ke proses checkout. Setelah pembeli sudah memilih produk yang ingin dibeli dan melanjutkan ke halaman Checkout, pembeli wajib untuk mengisi atau memilih alamat pengiriman, memilih jasa kurir yang tersedia melalui integrasi Biteship, memilih metode pembayaran, serta menggunakan voucher atau diskon jika tersedia. Setelah mengisi formulir dengan benar, pembeli dapat melakukan pembayaran melalui payment gateway Midtrans dengan nominal yang sesuai dengan total yang tertera. Setelah melakukan transaksi, pembeli dapat memeriksa status pembelian pada halaman Orders, dimana terdapat beberapa status yang tersedia yaitu PENDING (menunggu pembayaran), PAID (sudah dibayar), SHIPPED (sedang dikirim), DELIVERED (sudah diterima), dan COMPLETED (selesai), dengan fitur pelacakan pengiriman real-time melalui integrasi Biteship. Halaman Wishlist menampilkan semua produk yang telah disimpan pembeli untuk dibeli nanti, dimana pembeli dapat menghapus item dari wishlist atau menambahkan item ke keranjang. Halaman Profile memungkinkan pembeli untuk memperbarui informasi data diri, mengelola alamat pengiriman, melihat riwayat transaksi, serta mengakses fitur-fitur lainnya terkait akun. Terakhir, halaman Sell memungkinkan pembeli untuk memulai proses menjual produk dengan membuat toko baru atau mengakses dashboard toko jika sudah memiliki toko. Gambar struktur navigasi User (Pembeli) dapat dilihat pada Gambar 3.3.
+Struktur navigasi pada role User (Pembeli) dirancang untuk memberikan pengalaman belanja yang mudah dan intuitif. Setelah login atau sebagai pengunjung, pembeli akan diarahkan ke halaman Homepage yang menampilkan katalog produk preloved, banner promo, dan fitur pencarian untuk menemukan produk yang diinginkan.
+
+Pembeli dapat melakukan browsing produk berdasarkan kategori melalui halaman Kategori yang menyediakan filter berdasarkan kategori utama seperti Women (Wanita), Men (Pria), dan Kids (Anak-anak). Setelah menemukan produk yang menarik, pembeli dapat mengakses halaman Product Detail yang menampilkan informasi lengkap produk termasuk multiple images, deskripsi produk, varian produk (ukuran, warna, kondisi), review dari pembeli lain, serta informasi toko penjual.
+
+Dari halaman Product Detail, pembeli dapat menambahkan produk ke Cart (keranjang) atau ke Wishlist (daftar keinginan) untuk dibeli nanti. Halaman Cart berfungsi sebagai penampungan produk sementara sebelum melakukan checkout, dimana pembeli dapat mengubah jumlah item, menghapus item, atau melanjutkan ke proses checkout.
+
+Setelah pembeli sudah memilih produk yang ingin dibeli dan melanjutkan ke halaman Checkout, pembeli wajib untuk mengisi atau memilih alamat pengiriman, memilih jasa kurir yang tersedia melalui integrasi Biteship, memilih metode pembayaran, serta menggunakan voucher atau diskon jika tersedia. Setelah mengisi formulir dengan benar, pembeli dapat melakukan pembayaran melalui payment gateway Midtrans dengan nominal yang sesuai dengan total yang tertera.
+
+Setelah melakukan transaksi, pembeli dapat memeriksa status pembelian pada halaman Orders. Halaman ini menampilkan beberapa status yang tersedia yaitu PENDING (menunggu pembayaran), PAID (sudah dibayar), SHIPPED (sedang dikirim), DELIVERED (sudah diterima), dan COMPLETED (selesai), dengan fitur pelacakan pengiriman real-time melalui integrasi Biteship.
+
+Halaman Wishlist menampilkan semua produk yang telah disimpan pembeli untuk dibeli nanti, dimana pembeli dapat menghapus item dari wishlist atau menambahkan item ke keranjang. Halaman Profile memungkinkan pembeli untuk memperbarui informasi data diri, mengelola alamat pengiriman, melihat riwayat transaksi, serta mengakses fitur-fitur lainnya terkait akun.
+
+Terakhir, halaman Sell memungkinkan pembeli untuk memulai proses menjual produk dengan membuat toko baru atau mengakses dashboard toko jika sudah memiliki toko. Gambar struktur navigasi User (Pembeli) dapat dilihat pada Gambar 3.3.
 
 **Gambar 3.3 Struktur Navigasi User (Pembeli)**
 
@@ -589,21 +651,21 @@ Tabel users berfungsi untuk menyimpan data akun pengguna untuk login di website 
 | Nama Field | Tipe Data | Panjang | Keterangan |
 | :--- | :--- | :--- | :--- |
 | id | Integer | - | Primary Key (Autoincrement) |
-| email | Varchar | 255 | Email unik untuk identitas akun, NOT NULL |
-| password | Varchar | 255 | Hash kata sandi untuk keamanan, NULL (untuk OAuth) |
-| phone | Varchar | 20 | Nomor telepon pengguna, NULL |
-| role | Enum | - | Peran pengguna (USER, ADMIN, STORE), Default: USER |
-| isActive | Boolean | - | Kontrol aktivitas akun, Default: true |
-| googleId | Varchar | 255 | ID untuk autentikasi Google OAuth, NULL, UNIQUE |
-| facebookId | Varchar | 255 | ID untuk autentikasi Facebook OAuth, NULL, UNIQUE |
-| isVerified | Boolean | - | Status verifikasi email, Default: false |
-| verificationToken | Varchar | 255 | Token untuk verifikasi email, NULL |
-| verificationTokenExpiry | Timestamp | - | Waktu kadaluarsa token verifikasi, NULL |
-| firstName | Varchar | 100 | Nama depan pengguna, NULL |
-| lastName | Varchar | 100 | Nama belakang pengguna, NULL |
-| birth | Date | - | Tanggal lahir pengguna, NULL |
-| createdAt | Timestamp | - | Waktu pembuatan akun, Default: now() |
-| updatedAt | Timestamp | - | Waktu terakhir update, Auto update |
+| email | Varchar | 255 | NOT NULL |
+| password | Varchar | 255 | NULL |
+| phone | Varchar | 20 | NULL |
+| role | Enum | - | (USER, ADMIN, STORE) |
+| isActive | Boolean | - | Default: true |
+| googleId | Varchar | 255 | NULL, UNIQUE |
+| facebookId | Varchar | 255 | NULL, UNIQUE |
+| isVerified | Boolean | - | Default: false |
+| verificationToken | Varchar | 255 | NULL |
+| verificationTokenExpiry | Timestamp | - | NULL |
+| firstName | Varchar | 100 | NULL |
+| lastName | Varchar | 100 | NULL |
+| birth | Date | - | NULL |
+| createdAt | Timestamp | - | Default: now() |
+| updatedAt | Timestamp | - | Auto update |
 
 #### b) Tabel Store
 
@@ -614,17 +676,17 @@ Tabel store berfungsi untuk menyimpan data toko atau lapak yang dimiliki oleh pe
 | Nama Field | Tipe Data | Panjang | Keterangan |
 | :--- | :--- | :--- | :--- |
 | id | Integer | - | Primary Key (Autoincrement) |
-| name | Varchar | 255 | Nama Toko / Lapak, NOT NULL |
-| slug | Varchar | 255 | URL identifier unik toko, NOT NULL, UNIQUE |
-| userId | Integer | - | Foreign Key ke tabel Users (One-to-One), NOT NULL, UNIQUE |
-| isVerified | Boolean | - | Status validasi toko oleh admin, Default: false |
-| isActive | Boolean | - | Status aktivitas toko, Default: true |
-| totalProducts | Integer | - | Jumlah total produk di toko, Default: 0 |
-| totalSales | Integer | - | Jumlah total penjualan, Default: 0 |
-| rating | Real | - | Rating toko berdasarkan review, NULL |
-| locationId | Integer | - | Foreign Key ke tabel Location, NULL, UNIQUE |
-| createdAt | Timestamp | - | Waktu pembuatan toko, Default: now() |
-| updatedAt | Timestamp | - | Waktu terakhir update, Auto update |
+| name | Varchar | 255 | NOT NULL |
+| slug | Varchar | 255 | NOT NULL, UNIQUE |
+| userId | Integer | - | NOT NULL, UNIQUE |
+| isVerified | Boolean | - | Default: false |
+| isActive | Boolean | - | Default: true |
+| totalProducts | Integer | - | Default: 0 |
+| totalSales | Integer | - | Default: 0 |
+| rating | Real | - | NULL |
+| locationId | Integer | - | NULL, UNIQUE |
+| createdAt | Timestamp | - | Default: now() |
+| updatedAt | Timestamp | - | Auto update |
 
 #### c) Tabel Products
 
@@ -635,19 +697,19 @@ Tabel products berfungsi untuk menyimpan informasi umum produk barang preloved y
 | Nama Field | Tipe Data | Panjang | Keterangan |
 | :--- | :--- | :--- | :--- |
 | id | Integer | - | Primary Key (Autoincrement) |
-| name | Varchar | 255 | Nama produk barang preloved, NOT NULL |
-| slug | Varchar | 255 | URL identitas produk untuk SEO, NOT NULL, UNIQUE |
-| description | Text | - | Deskripsi lengkap produk, NULL |
-| images | Array | - | Array URL gambar produk (JSON), NULL |
-| sellerId | Integer | - | Foreign Key ke tabel Users, NOT NULL |
-| storeId | Integer | - | Foreign Key ke tabel Store, NOT NULL |
-| categoryId | Integer | - | Foreign Key ke tabel Category, NOT NULL |
-| isPublished | Boolean | - | Status publikasi produk, Default: false |
-| isActive | Boolean | - | Status aktivitas produk, Default: true |
-| isPreloved | Boolean | - | Flag produk preloved, Default: true |
-| viewCount | Integer | - | Jumlah view produk, Default: 0 |
-| createdAt | Timestamp | - | Waktu pembuatan produk, Default: now() |
-| updatedAt | Timestamp | - | Waktu terakhir update, Auto update |
+| name | Varchar | 255 | NOT NULL |
+| slug | Varchar | 255 | NOT NULL, UNIQUE |
+| description | Text | - | NULL |
+| images | Array | - | NULL |
+| sellerId | Integer | - | NOT NULL |
+| storeId | Integer | - | NOT NULL |
+| categoryId | Integer | - | NOT NULL |
+| isPublished | Boolean | - | Default: false |
+| isActive | Boolean | - | Default: true |
+| isPreloved | Boolean | - | Default: true |
+| viewCount | Integer | - | Default: 0 |
+| createdAt | Timestamp | - | Default: now() |
+| updatedAt | Timestamp | - | Auto update |
 
 #### d) Tabel Variants
 
@@ -658,23 +720,23 @@ Tabel variants berfungsi untuk menyimpan data varian produk yang dipisahkan dari
 | Nama Field | Tipe Data | Panjang | Keterangan |
 | :--- | :--- | :--- | :--- |
 | id | Integer | - | Primary Key (Autoincrement) |
-| productId | Integer | - | Foreign Key ke tabel Product, NOT NULL |
-| sku | Varchar | 100 | Stock Keeping Unit (unik), NOT NULL, UNIQUE |
-| price | Integer | - | Harga satuan barang, NOT NULL |
-| compareAtPrice | Integer | - | Harga perbandingan (opsional), NULL |
-| stock | Integer | - | Stok yang tersedia, Default: 0 |
-| condition | Enum | - | Kondisi barang (NEW, LIKE_NEW, GOOD, FAIR, POOR), NOT NULL |
-| conditionNote | Text | - | Catatan kondisi barang, NULL |
-| weight | Integer | - | Berat produk (gram), NULL |
-| length | Integer | - | Panjang produk (cm), NULL |
-| width | Integer | - | Lebar produk (cm), NULL |
-| height | Integer | - | Tinggi produk (cm), NULL |
-| color | Varchar | 50 | Warna produk, NULL |
-| size | Varchar | 20 | Ukuran produk, NULL |
-| image | Varchar | 255 | URL gambar varian, NULL |
-| isActive | Boolean | - | Status aktivitas varian, Default: true |
-| createdAt | Timestamp | - | Waktu pembuatan varian, Default: now() |
-| updatedAt | Timestamp | - | Waktu terakhir update, Auto update |
+| productId | Integer | - | NOT NULL |
+| sku | Varchar | 100 | NOT NULL, UNIQUE |
+| price | Integer | - | NOT NULL |
+| compareAtPrice | Integer | - | NULL |
+| stock | Integer | - | Default: 0 |
+| condition | Enum | - | (NEW, LIKE_NEW, GOOD, FAIR, POOR) |
+| conditionNote | Text | - | NULL |
+| weight | Integer | - | NULL |
+| length | Integer | - | NULL |
+| width | Integer | - | NULL |
+| height | Integer | - | NULL |
+| color | Varchar | 50 | NULL |
+| size | Varchar | 20 | NULL |
+| image | Varchar | 255 | NULL |
+| isActive | Boolean | - | Default: true |
+| createdAt | Timestamp | - | Default: now() |
+| updatedAt | Timestamp | - | Auto update |
 
 #### e) Tabel Orders
 
@@ -685,19 +747,19 @@ Tabel orders berfungsi untuk mencatat seluruh alur transaksi mulai dari pembuata
 | Nama Field | Tipe Data | Panjang | Keterangan |
 | :--- | :--- | :--- | :--- |
 | id | Integer | - | Primary Key (Autoincrement) |
-| orderNumber | Varchar | 50 | Nomor unik transaksi (Invoice), NOT NULL, UNIQUE |
-| totalAmount | Integer | - | Total biaya transaksi, NOT NULL |
-| itemsAmount | Integer | - | Total harga item, NOT NULL |
-| shippingCost | Integer | - | Biaya pengiriman, Default: 0 |
-| discountAmount | Integer | - | Total diskon yang diterapkan, Default: 0 |
-| status | Enum | - | Status (PENDING, PAID, SHIPPED, DELIVERED, COMPLETED, CANCELLED, REFUNDED), NOT NULL |
-| buyerId | Integer | - | Foreign Key ke tabel Users, NOT NULL |
-| locationId | Integer | - | Foreign Key ke tabel Location, NOT NULL |
-| voucherId | Integer | - | Foreign Key ke tabel Voucher (opsional), NULL |
-| discountId | Integer | - | Foreign Key ke tabel Discount (opsional), NULL |
-| notes | Text | - | Catatan pesanan, NULL |
-| createdAt | Timestamp | - | Waktu pembuatan order, Default: now() |
-| updatedAt | Timestamp | - | Waktu terakhir update, Auto update |
+| orderNumber | Varchar | 50 | NOT NULL, UNIQUE |
+| totalAmount | Integer | - | NOT NULL |
+| itemsAmount | Integer | - | NOT NULL |
+| shippingCost | Integer | - | Default: 0 |
+| discountAmount | Integer | - | Default: 0 |
+| status | Enum | - | (PENDING, PAID, SHIPPED, DELIVERED, COMPLETED, CANCELLED, REFUNDED) |
+| buyerId | Integer | - | NOT NULL |
+| locationId | Integer | - | NOT NULL |
+| voucherId | Integer | - | NULL |
+| discountId | Integer | - | NULL |
+| notes | Text | - | NULL |
+| createdAt | Timestamp | - | Default: now() |
+| updatedAt | Timestamp | - | Auto update |
 
 #### f) Tabel OrderItems
 
@@ -708,12 +770,12 @@ Tabel order_items berfungsi untuk menyimpan detail item yang dibeli dalam setiap
 | Nama Field | Tipe Data | Panjang | Keterangan |
 | :--- | :--- | :--- | :--- |
 | id | Integer | - | Primary Key (Autoincrement) |
-| orderId | Integer | - | Foreign Key ke tabel Order, NOT NULL |
-| variantId | Integer | - | Foreign Key ke tabel Variant, NOT NULL |
-| quantity | Integer | - | Jumlah item yang dibeli, NOT NULL |
-| price | Integer | - | Harga per item saat pembelian, NOT NULL |
-| total | Integer | - | Total harga (quantity × price), NOT NULL |
-| discountAmount | Integer | - | Diskon yang diterapkan pada item, Default: 0 |
+| orderId | Integer | - | NOT NULL |
+| variantId | Integer | - | NOT NULL |
+| quantity | Integer | - | NOT NULL |
+| price | Integer | - | NOT NULL |
+| total | Integer | - | NOT NULL |
+| discountAmount | Integer | - | Default: 0 |
 
 #### g) Tabel Payments
 
@@ -724,22 +786,22 @@ Tabel payments berfungsi untuk mencatat seluruh alur transaksi keuangan mulai da
 | Nama Field | Tipe Data | Panjang | Keterangan |
 | :--- | :--- | :--- | :--- |
 | id | Integer | - | Primary Key (Autoincrement) |
-| orderId | Integer | - | Foreign Key ke tabel Order (One-to-One), NOT NULL, UNIQUE |
-| method | Varchar | 50 | Metode pembayaran, NULL |
-| amount | Integer | - | Jumlah pembayaran, NOT NULL |
-| status | Enum | - | Status (PENDING, PAID, FAILED, REFUNDED, EXPIRED, CANCELLED), NOT NULL |
-| snap_token | Varchar | 255 | Token dari Midtrans Snap, NULL |
-| snap_redirect_url | Varchar | 500 | URL redirect Midtrans, NULL |
-| midtrans_order_id | Varchar | 100 | Order ID dari Midtrans, NULL |
-| midtrans_tx_id | Varchar | 100 | Transaction ID dari Midtrans, NULL |
-| midtrans_payment_type | Varchar | 50 | Tipe pembayaran Midtrans, NULL |
-| midtrans_va_number | Varchar | 50 | Nomor Virtual Account, NULL |
-| midtrans_bank | Varchar | 50 | Bank untuk pembayaran, NULL |
-| midtrans_tx_status | Varchar | 50 | Status transaksi dari Midtrans, NULL |
-| paidAt | Timestamp | - | Waktu pembayaran berhasil, NULL |
-| expiresAt | Timestamp | - | Waktu kadaluarsa pembayaran, NULL |
-| createdAt | Timestamp | - | Waktu pembuatan payment, Default: now() |
-| updatedAt | Timestamp | - | Waktu terakhir update, Auto update |
+| orderId | Integer | - | NOT NULL, UNIQUE |
+| method | Varchar | 50 | NULL |
+| amount | Integer | - | NOT NULL |
+| status | Enum | - | (PENDING, PAID, FAILED, REFUNDED, EXPIRED, CANCELLED) |
+| snap_token | Varchar | 255 | NULL |
+| snap_redirect_url | Varchar | 500 | NULL |
+| midtrans_order_id | Varchar | 100 | NULL |
+| midtrans_tx_id | Varchar | 100 | NULL |
+| midtrans_payment_type | Varchar | 50 | NULL |
+| midtrans_va_number | Varchar | 50 | NULL |
+| midtrans_bank | Varchar | 50 | NULL |
+| midtrans_tx_status | Varchar | 50 | NULL |
+| paidAt | Timestamp | - | NULL |
+| expiresAt | Timestamp | - | NULL |
+| createdAt | Timestamp | - | Default: now() |
+| updatedAt | Timestamp | - | Auto update |
 
 #### h) Tabel Shipments
 
@@ -750,22 +812,22 @@ Tabel shipments berfungsi untuk mengelola informasi logistik dan pelacakan baran
 | Nama Field | Tipe Data | Panjang | Keterangan |
 | :--- | :--- | :--- | :--- |
 | id | Integer | - | Primary Key (Autoincrement) |
-| orderId | Integer | - | Foreign Key ke tabel Order (One-to-One), NOT NULL, UNIQUE |
-| courier | Varchar | 50 | Ekspedisi (JNE, TIKI, POS, dll), NULL |
-| service | Varchar | 100 | Layanan kurir, NULL |
-| trackingNumber | Varchar | 100 | Nomor resi pengiriman, NULL |
-| status | Enum | - | Status (AWAITING_PICKUP, PICKED_UP, IN_TRANSIT, DELIVERED, RETURNED, CANCELLED), NOT NULL |
-| biteship_order_id | Varchar | 100 | Order ID dari Biteship, NULL |
-| biteship_courier_code | Varchar | 50 | Kode kurir Biteship, NULL |
-| biteship_service_code | Varchar | 50 | Kode layanan Biteship, NULL |
-| estimatedDays | Varchar | 20 | Estimasi hari pengiriman, NULL |
-| shippingCost | Integer | - | Biaya ongkos kirim, NOT NULL |
-| insuranceCost | Integer | - | Biaya asuransi, Default: 0 |
-| trackingHistory | Json | - | Riwayat tracking pengiriman (JSON Array), NULL |
-| shippedAt | Timestamp | - | Waktu barang dikirim, NULL |
-| deliveredAt | Timestamp | - | Waktu barang diterima, NULL |
-| createdAt | Timestamp | - | Waktu pembuatan shipment, Default: now() |
-| updatedAt | Timestamp | - | Waktu terakhir update, Auto update |
+| orderId | Integer | - | NOT NULL, UNIQUE |
+| courier | Varchar | 50 | NULL |
+| service | Varchar | 100 | NULL |
+| trackingNumber | Varchar | 100 | NULL |
+| status | Enum | - | (AWAITING_PICKUP, PICKED_UP, IN_TRANSIT, DELIVERED, RETURNED, CANCELLED) |
+| biteship_order_id | Varchar | 100 | NULL |
+| biteship_courier_code | Varchar | 50 | NULL |
+| biteship_service_code | Varchar | 50 | NULL |
+| estimatedDays | Varchar | 20 | NULL |
+| shippingCost | Integer | - | NOT NULL |
+| insuranceCost | Integer | - | Default: 0 |
+| trackingHistory | Json | - | NULL |
+| shippedAt | Timestamp | - | NULL |
+| deliveredAt | Timestamp | - | NULL |
+| createdAt | Timestamp | - | Default: now() |
+| updatedAt | Timestamp | - | Auto update |
 
 ### 3.3.4. Perancangan Antarmuka
 
@@ -785,111 +847,211 @@ Meliputi perancangan homepage yang interaktif dengan katalog produk, banner prom
 
 ## 3.4. Implementasi Sistem
 
-Pada tahap ini, rancangan teknis diwujudkan ke dalam bentuk fungsionalitas aplikasi.
+Pada tahapan ini, pengimplementasian website Reluv menggunakan beberapa perangkat lunak yaitu Visual Studio Code, Postman, Prisma Studio, serta beberapa bahasa pemrograman seperti Next.js, React, TypeScript, Tailwind CSS, NestJS, dan PostgreSQL.
 
 ### 3.4.1. Pembuatan Database
 
-Database diimplementasikan menggunakan **PostgreSQL**. Skema didefinisikan secara deklaratif di dalam file `schema.prisma`. Pengembang melakukan sinkronisasi dengan menjalankan perintah migrasi `npx prisma migrate dev`, yang secara otomatis membuat tabel dan relasi sesuai spesifikasi.
+Website Reluv adalah aplikasi website dengan fitur transaksi e-commerce marketplace, maka dibutuhkan sebuah database untuk menyimpan data pengguna, data transaksi, data produk, data toko, serta data-data pendukung lainnya. Pada pembuatan database pada website Reluv menggunakan bahasa pemrograman TypeScript dengan Prisma ORM dan database PostgreSQL.
+
+Sebelum pembuatan database diperlukan aplikasi PostgreSQL yang terinstall pada device lokal atau menggunakan database cloud seperti Railway atau Supabase. Untuk pengembangan lokal, database PostgreSQL dapat diakses melalui Prisma Studio dengan menjalankan perintah `npx prisma studio` pada terminal Visual Studio Code. Tahap ini dapat dilihat pada gambar 3.7.
+
+Gambar 3.7 Tampilan Prisma Studio
+
+Setelah database PostgreSQL siap, selanjutnya adalah pembuatan database untuk website. Database dibuat dengan nama yang sesuai dengan konfigurasi di file `.env` dan pembuatan tabel dilakukan melalui Prisma migrations. Cara mengakses database adalah dengan menggunakan Prisma Studio atau melalui aplikasi database client seperti DBeaver atau pgAdmin. Tampilan Prisma Studio dapat dilihat pada gambar 3.8.
+
+Gambar 3.8 Tampilan Panel Prisma Studio
+
+Setelah membuat database, selanjutnya adalah pembuatan tabel melalui Prisma migrations. Terdapat beberapa tabel utama yang digunakan pada website ini, yaitu tabel users dapat dilihat pada gambar 3.9, tabel store pada gambar 3.10, tabel products pada gambar 3.11, tabel variants pada gambar 3.12, tabel orders pada gambar 3.13, tabel order_items pada gambar 3.14, tabel payments pada gambar 3.15, dan tabel shipments pada gambar 3.16.
+
+Gambar 3.9 Struktur Tabel Users
+
+Gambar 3.10 Struktur Tabel Store
+
+Gambar 3.11 Struktur Tabel Products
+
+Gambar 3.12 Struktur Tabel Variants
+
+Gambar 3.13 Struktur Tabel Orders
+
+Gambar 3.14 Struktur Tabel OrderItems
+
+Gambar 3.15 Struktur Tabel Payments
+
+Gambar 3.16 Struktur Tabel Shipments
 
 ### 3.4.2. Perancangan Antarmuka (Hasil Implementasi)
 
-Bagian ini menunjukkan hasil akhir dari pengkodean antarmuka menggunakan Next.js dan Tailwind CSS.
+Perancangan antarmuka atau design user interface pada website Reluv adalah salah satu tahapan untuk mengembangkan website agar lebih mudah digunakan dan menarik secara visual. Perancangan antarmuka berfungsi sebagai gambaran tampilan pembuatan sebuah website yang telah diimplementasikan menggunakan Next.js dan Tailwind CSS. Dalam tahapan ini, perancangan antarmuka dibagi menjadi 3 yaitu perancangan antarmuka pada role superadmin, perancangan antarmuka pada role store (penjual), dan perancangan antarmuka pada role user (pembeli).
 
-#### 3.4.2.1. Tampilan Homepage Sebelum Login
+#### 3.4.2.1. Perancangan Antarmuka Superadmin
 
-Pengunjung dapat menelusuri katalog produk dan melihat penawaran terbaru tanpa harus masuk ke dalam sistem.
+1. **Login**
 
-#### 3.4.2.2. Tampilan Login
+Halaman login terdiri dari 2 input kolom, yaitu kolom email dan password, terdapat link menuju sign up dan lupa password. Jika akun yang dimasukkan adalah akun dengan role user atau store, maka akan diarahkan ke halaman homepage, dan jika akun yang dimasukkan adalah akun dengan role superadmin, maka akan diarahkan ke halaman dashboard superadmin. Tampilan login dapat dilihat pada gambar 3.8.
 
-Satu halaman login terpusat yang secara otomatis mengarahkan admin ke dashboard administratif dan user ke halaman utama berdasarkan peran akun.
+2. **Dashboard Superadmin**
 
-#### 3.4.2.3. Tampilan Dashboard Superadmin
+Halaman dashboard superadmin menampilkan visualisasi data statistik penjualan dalam bentuk chart menggunakan library Recharts, total saldo atau pendapatan platform secara keseluruhan, jumlah pengguna terdaftar, jumlah toko aktif, dan jumlah produk yang dipublikasikan. Dashboard ini memberikan gambaran menyeluruh tentang performa platform Reluv. Tampilan dashboard superadmin dapat dilihat pada gambar 3.9.
 
-Menampilkan visualisasi data statistik penjualan dalam bentuk chart (menggunakan library seperti Recharts) dan total saldo/pendapatan platform secara keseluruhan.
+3. **Products Superadmin**
 
-#### 3.4.2.4. Tampilan Products Superadmin
+Halaman products superadmin merupakan pusat kontrol bagi superadmin untuk mengelola seluruh produk di platform. Halaman ini mencakup form upload gambar ke Cloudinary, pengaturan detail spesifikasi produk, filter dan pencarian produk berdasarkan kategori, nama produk, atau toko. Superadmin dapat menambah, mengedit, menghapus, atau mempublikasikan produk dari semua toko yang terdaftar di platform. Tampilan products superadmin dapat dilihat pada gambar 3.10.
 
-Pusat kontrol bagi superadmin untuk mengelola seluruh produk di platform, mencakup form upload gambar ke Cloudinary dan pengaturan detail spesifikasi produk. Superadmin dapat menambah, mengedit, menghapus, atau mempublikasikan produk dari semua toko.
+4. **Orders Superadmin**
 
-#### 3.4.2.5. Tampilan Orders Superadmin
+Halaman orders superadmin digunakan untuk monitoring seluruh arus pesanan masuk, pemrosesan pembayaran, dan pengiriman barang di seluruh platform. Superadmin dapat melihat semua transaksi dengan filter berdasarkan status pesanan, tanggal, atau toko. Superadmin juga dapat melakukan input nomor resi pengiriman jika diperlukan dan melihat detail lengkap setiap pesanan. Tampilan orders superadmin dapat dilihat pada gambar 3.11.
 
-Halaman untuk monitoring seluruh arus pesanan masuk, pemrosesan pembayaran, dan pengiriman barang di seluruh platform. Superadmin dapat melihat semua transaksi dan melakukan input nomor resi jika diperlukan.
+5. **Manage User Superadmin**
 
-#### 3.4.2.6. Tampilan Manage User Superadmin
+Halaman manage user superadmin menampilkan daftar seluruh pengguna yang terdaftar di platform, memberikan kontrol penuh bagi superadmin untuk menjaga keamanan komunitas. Superadmin dapat melihat informasi detail setiap pengguna, mengaktifkan, menonaktifkan, atau menghapus akun pengguna. Halaman ini juga dilengkapi dengan fitur pencarian dan filter berdasarkan role pengguna atau status akun. Tampilan manage user superadmin dapat dilihat pada gambar 3.12.
 
-Daftar seluruh pengguna yang terdaftar, memberikan kontrol penuh bagi superadmin untuk menjaga keamanan komunitas. Superadmin dapat mengaktifkan, menonaktifkan, atau menghapus akun pengguna.
+6. **Profile Superadmin**
 
-#### 3.4.2.7. Tampilan Profile Superadmin
+Halaman profile superadmin merupakan halaman khusus untuk memperbarui informasi identitas superadmin yang sedang bertugas. Superadmin dapat mengubah nama, email, password, dan informasi kontak lainnya. Tampilan profile superadmin dapat dilihat pada gambar 3.13.
 
-Halaman khusus untuk memperbarui informasi identitas superadmin yang sedang bertugas.
+#### 3.4.2.2. Perancangan Antarmuka Store (Penjual)
 
-#### 3.4.2.8. Tampilan Dashboard Store
+1. **Login**
 
-Menampilkan statistik penjualan toko, pendapatan, produk terlaris, dan grafik penjualan bulanan untuk penjual.
+Halaman login untuk penjual menggunakan halaman login yang sama dengan pengguna lainnya. Jika akun yang dimasukkan adalah akun dengan role store, maka akan diarahkan ke halaman dashboard store setelah login berhasil. Tampilan login dapat dilihat pada gambar 3.8.
 
-#### 3.4.2.9. Tampilan Products Store
+2. **Dashboard Store**
 
-Halaman manajemen produk untuk penjual, mencakup form upload gambar ke Cloudinary, pengaturan detail spesifikasi produk, dan kelola varian produk. Penjual hanya dapat mengelola produk dari tokonya sendiri.
+Halaman dashboard store menampilkan statistik penjualan toko, pendapatan, produk terlaris, dan grafik penjualan bulanan untuk penjual. Dashboard ini memberikan gambaran tentang performa toko, jumlah produk yang terjual, rating toko, dan review dari pembeli. Tampilan dashboard store dapat dilihat pada gambar 3.14.
 
-#### 3.4.2.10. Tampilan Orders Store
+3. **Products Store**
 
-Halaman untuk monitoring pesanan masuk ke toko, pemrosesan pesanan, dan input nomor resi pengiriman. Penjual hanya dapat melihat dan mengelola pesanan yang ditujukan ke tokonya.
+Halaman products store merupakan halaman manajemen produk untuk penjual, mencakup form upload gambar ke Cloudinary, pengaturan detail spesifikasi produk, dan kelola varian produk seperti ukuran, warna, kondisi, dan harga. Penjual hanya dapat mengelola produk dari tokonya sendiri. Halaman ini dilengkapi dengan fitur untuk menambah, mengedit, menghapus, dan mengatur status publikasi produk. Tampilan products store dapat dilihat pada gambar 3.15.
 
-#### 3.4.2.11. Tampilan Reviews Store
+4. **Orders Store**
 
-Halaman untuk melihat dan membalas review produk dari pembeli. Penjual dapat merespons setiap review yang diberikan kepada produknya.
+Halaman orders store digunakan untuk monitoring pesanan masuk ke toko, pemrosesan pesanan, dan input nomor resi pengiriman. Penjual hanya dapat melihat dan mengelola pesanan yang ditujukan ke tokonya. Halaman ini menampilkan daftar pesanan dengan filter berdasarkan status pesanan dan dilengkapi dengan fitur untuk mengupdate status pesanan dan input nomor resi melalui integrasi Biteship. Tampilan orders store dapat dilihat pada gambar 3.16.
 
-#### 3.4.2.12. Tampilan Vouchers Store
+5. **Reviews Store**
 
-Halaman untuk membuat, mengedit, dan menghapus voucher toko yang dapat digunakan pembeli saat checkout.
+Halaman reviews store digunakan untuk melihat dan membalas review produk dari pembeli. Penjual dapat melihat semua review yang diberikan kepada produknya, merespons setiap review, dan melihat rating keseluruhan toko. Halaman ini membantu penjual untuk berinteraksi dengan pembeli dan meningkatkan kualitas layanan. Tampilan reviews store dapat dilihat pada gambar 3.17.
 
-#### 3.4.2.13. Tampilan Settings Store
+6. **Vouchers Store**
 
-Halaman pengaturan toko untuk mengelola profil toko, informasi kontak, dan alamat toko.
+Halaman vouchers store digunakan untuk membuat, mengedit, dan menghapus voucher toko yang dapat digunakan pembeli saat checkout. Penjual dapat mengatur nominal diskon, minimum pembelian, masa berlaku voucher, dan jumlah voucher yang tersedia. Tampilan vouchers store dapat dilihat pada gambar 3.18.
 
-#### 3.4.2.14. Tampilan Register User
+7. **Settings Store**
 
-Proses pembuatan akun baru bagi pembeli yang dilengkapi dengan sistem verifikasi email otomatis melalui Nodemailer. Pengguna dapat mendaftar menggunakan email/password atau melalui OAuth (Google, Facebook).
+Halaman settings store merupakan halaman pengaturan toko untuk mengelola profil toko, informasi kontak, alamat toko, banner toko, dan deskripsi toko. Penjual dapat mengubah informasi toko, mengupload gambar banner dan logo toko, serta mengatur informasi operasional toko. Tampilan settings store dapat dilihat pada gambar 3.19.
 
-#### 3.4.2.15. Tampilan Homepage Setelah Login
+#### 3.4.2.3. Perancangan Antarmuka User (Pembeli)
 
-Pengguna yang sudah login mendapatkan akses tambahan seperti fitur "Tambah ke Keranjang", "Tambah ke Wishlist", dan akses ke menu akun pribadi. Homepage menampilkan rekomendasi produk berdasarkan riwayat browsing dan preferensi pengguna.
+1. **Homepage Sebelum Login**
 
-#### 3.4.2.16. Tampilan Product Detail
+Halaman homepage sebelum login menampilkan katalog produk preloved yang tersedia di platform. Pengunjung dapat menelusuri katalog produk, melihat penawaran terbaru, melakukan pencarian produk, dan melihat detail produk tanpa harus masuk ke dalam sistem. Halaman ini juga menampilkan banner promo dan kategori produk yang tersedia. Tampilan homepage sebelum login dapat dilihat pada gambar 3.20.
 
-Halaman detail produk yang menampilkan informasi lengkap produk, multiple images, varian produk (ukuran, warna, kondisi), review dari pembeli lain, dan informasi toko penjual. Pengguna dapat menambahkan produk ke keranjang atau wishlist dari halaman ini.
+2. **Register User**
 
-#### 3.4.2.17. Tampilan Cart
+Halaman register user merupakan proses pembuatan akun baru bagi pembeli yang dilengkapi dengan sistem verifikasi email otomatis melalui Nodemailer. Halaman ini terdiri dari form registrasi dengan input nama, email, password, dan konfirmasi password. Pengguna dapat mendaftar menggunakan email dan password atau melalui OAuth dengan Google dan Facebook. Setelah registrasi berhasil, pengguna akan menerima email verifikasi untuk mengaktifkan akun. Tampilan register user dapat dilihat pada gambar 3.21.
 
-Halaman keranjang belanja yang menampilkan semua produk yang telah ditambahkan pengguna. Pengguna dapat mengubah jumlah item, menghapus item, atau melanjutkan ke proses checkout.
+3. **Login**
 
-#### 3.4.2.18. Tampilan Checkout
+Halaman login untuk pembeli menggunakan halaman login yang sama dengan pengguna lainnya. Jika akun yang dimasukkan adalah akun dengan role user, maka akan diarahkan ke halaman homepage setelah login berhasil. Tampilan login dapat dilihat pada gambar 3.8.
 
-Proses checkout yang terintegrasi dengan Midtrans, memungkinkan pengguna memilih alamat pengiriman, metode pembayaran, kurir, dan menggunakan voucher atau diskon. Halaman ini juga menampilkan ringkasan pesanan dan total pembayaran.
+4. **Homepage Setelah Login**
 
-#### 3.4.2.19. Tampilan Profile User
+Halaman homepage setelah login memberikan akses tambahan kepada pengguna yang sudah login seperti fitur "Tambah ke Keranjang", "Tambah ke Wishlist", dan akses ke menu akun pribadi. Homepage menampilkan rekomendasi produk berdasarkan riwayat browsing dan preferensi pengguna, katalog produk terbaru, produk terlaris, dan banner promo. Tampilan homepage setelah login dapat dilihat pada gambar 3.22.
 
-Pengguna dapat memperbarui informasi data diri, alamat pengiriman, dan informasi detail profil lainnya secara mandiri. Halaman ini juga menampilkan ringkasan aktivitas pengguna.
+5. **Product Detail**
 
-#### 3.4.2.20. Tampilan Orders User
+Halaman product detail menampilkan informasi lengkap produk, multiple images dengan fitur zoom, varian produk seperti ukuran, warna, dan kondisi, review dari pembeli lain, rating produk, dan informasi toko penjual. Pengguna dapat menambahkan produk ke keranjang atau wishlist dari halaman ini, melihat produk serupa, dan berinteraksi dengan penjual melalui fitur chat jika tersedia. Tampilan product detail dapat dilihat pada gambar 3.23.
 
-Menampilkan riwayat belanja lengkap dengan fitur pelacakan status pengiriman Biteship yang diperbarui secara real-time. Pengguna dapat melihat detail setiap pesanan, status pembayaran, dan nomor resi pengiriman.
+6. **Cart**
 
-#### 3.4.2.21. Tampilan Wishlist
+Halaman cart menampilkan semua produk yang telah ditambahkan pengguna ke keranjang belanja. Pengguna dapat mengubah jumlah item, menghapus item, melihat subtotal, dan melanjutkan ke proses checkout. Halaman ini juga menampilkan rekomendasi produk terkait dan voucher yang dapat digunakan. Tampilan cart dapat dilihat pada gambar 3.24.
 
-Halaman yang menampilkan semua produk yang telah disimpan pengguna untuk dibeli nanti. Pengguna dapat menghapus item dari wishlist atau menambahkan item ke keranjang.
+7. **Checkout**
 
-#### 3.4.2.22. Tampilan Sell
+Halaman checkout merupakan proses checkout yang terintegrasi dengan Midtrans untuk pembayaran dan Biteship untuk pengiriman. Halaman ini memungkinkan pengguna memilih alamat pengiriman dengan integrasi peta menggunakan Leaflet, memilih metode pembayaran, memilih kurir dan layanan pengiriman, serta menggunakan voucher atau diskon yang tersedia. Halaman ini juga menampilkan ringkasan pesanan, total pembayaran, dan estimasi waktu pengiriman. Tampilan checkout dapat dilihat pada gambar 3.25.
 
-Halaman untuk memulai proses menjual produk. Pengguna dapat membuat toko baru atau mengakses dashboard toko jika sudah memiliki toko.
+8. **Profile User**
+
+Halaman profile user memungkinkan pengguna untuk memperbarui informasi data diri, alamat pengiriman, dan informasi detail profil lainnya secara mandiri. Halaman ini juga menampilkan ringkasan aktivitas pengguna, jumlah pesanan, dan wishlist. Pengguna dapat mengubah foto profil, nama, email, nomor telepon, dan menambahkan atau mengedit alamat pengiriman. Tampilan profile user dapat dilihat pada gambar 3.26.
+
+9. **Orders User**
+
+Halaman orders user menampilkan riwayat belanja lengkap dengan fitur pelacakan status pengiriman Biteship yang diperbarui secara real-time. Pengguna dapat melihat detail setiap pesanan, status pembayaran, nomor resi pengiriman, dan riwayat tracking pengiriman. Halaman ini juga dilengkapi dengan filter berdasarkan status pesanan dan fitur untuk melakukan konfirmasi penerimaan barang. Tampilan orders user dapat dilihat pada gambar 3.27.
+
+10. **Wishlist**
+
+Halaman wishlist menampilkan semua produk yang telah disimpan pengguna untuk dibeli nanti. Pengguna dapat menghapus item dari wishlist, menambahkan item ke keranjang, atau melihat detail produk. Halaman ini membantu pengguna untuk menyimpan produk favorit dan memudahkan proses pembelian di kemudian hari. Tampilan wishlist dapat dilihat pada gambar 3.28.
+
+11. **Sell**
+
+Halaman sell merupakan halaman untuk memulai proses menjual produk. Pengguna dapat membuat toko baru dengan mengisi form pendaftaran toko atau mengakses dashboard toko jika sudah memiliki toko. Halaman ini memberikan informasi tentang cara menjadi penjual di platform Reluv dan langkah-langkah yang perlu dilakukan. Tampilan sell dapat dilihat pada gambar 3.29.
 
 ### 3.4.3. Hosting Database
 
-Untuk lingkungan produksi, database PostgreSQL dideploy menggunakan layanan cloud seperti **Railway** atau **Supabase**, menjamin aksesibilitas dan integritas data yang tinggi secara online. Database menggunakan koneksi SSL untuk keamanan dan dilengkapi dengan backup otomatis untuk mencegah kehilangan data.
+Pembuatan database pada aplikasi website Reluv menggunakan metode RESTful API, metode ini mengizinkan penggunanya untuk membuat database secara terpisah dengan website. Untuk mendeploy database secara online, website ini menggunakan provider dari Railway atau Supabase untuk menjadikan database Reluv menjadi online, berikut adalah tahapan hosting:
+
+1. Login menggunakan akun Railway atau Supabase untuk mengakses panel, setelah panel terlihat, maka selanjutnya adalah membuat project baru dengan nama reluv-database. Tampilan panel Railway dapat dilihat pada gambar 3.30.
+
+Gambar 3.30 Panel Railway
+
+2. Setelah project berhasil dibuat maka selanjutnya adalah membuat database PostgreSQL baru pada panel Railway atau Supabase. Tampilan pembuatan database PostgreSQL dapat dilihat pada gambar 3.31.
+
+Gambar 3.31 Membuat Database PostgreSQL
+
+3. Selanjutnya adalah pengaturan environment variables pada panel Railway atau Supabase. Environment variables berisi data sistem berupa database URL, secret code, vendor API keys, dan yang lainnya. Environment variables pada panel hosting harus disamakan dengan environment variables pada project database website Reluv. Pembuatan environment variables dapat dilihat pada gambar 3.32.
+
+Gambar 3.32 Menambahkan Environment Variables
+
+4. Tahap selanjutnya adalah mengupload project database ke dalam panel Railway menggunakan perintah git atau melalui GitHub integration. Ketikkan `railway login` pada terminal Visual Studio Code, lalu ketikkan `railway init`, `railway link`, `git add .`, `git commit -am "deploy database"`, dan `git push`. Atau dapat menggunakan GitHub integration dengan menghubungkan repository GitHub ke Railway.
+
+5. Selanjutnya adalah menjalankan perintah `npx prisma migrate deploy` untuk membuat tabel pada PostgreSQL menggunakan CLI yang sudah tersedia pada Railway atau melalui terminal. Gambar CLI pada Railway dapat dilihat pada gambar 3.33.
+
+Gambar 3.33 Menjalankan Perintah Migrate Pada CLI Railway
+
+6. Setelah selesai migrate tabel, selanjutnya adalah mengecek apakah API-nya sudah ter-hosting dengan benar menggunakan aplikasi Postman. Tampilan aplikasi Postman dapat dilihat pada gambar 3.34, dan uji coba untuk mendapatkan data products dapat dilihat pada gambar 3.35.
+
+Gambar 3.34 Tampilan Awal Aplikasi Postman
+
+Gambar 3.35 Uji Coba Test API Products
 
 ### 3.4.4. Hosting Website
 
-Aplikasi frontend dideploy pada platform **Vercel** yang sangat teroptimasi untuk framework Next.js dengan dukungan SSR dan ISR (Incremental Static Regeneration), sementara backend dideploy pada server Node.js yang mendukung ekosistem NestJS, seperti **Railway** atau **Render**, dengan kemampuan auto-scaling untuk menangani beban traffic yang tinggi.
+Agar aplikasi website Reluv dapat diakses secara online maka website ini harus di-hosting terlebih dahulu. Tahap hosting pada website Reluv menggunakan provider dari Vercel untuk frontend dan Railway atau Render untuk backend, berikut adalah cara untuk menghosting aplikasi website:
+
+#### 3.4.4.1. Hosting Frontend (Vercel)
+
+1. Buka website provider hostingan dengan url https://vercel.com/ lalu login ke dalam dashboard Vercel. Tampilan dashboard Vercel dapat dilihat pada gambar 3.36.
+
+Gambar 3.36 Tampilan Dashboard Vercel
+
+2. Pilih menu "Add New Project" pada dashboard Vercel dan pilih repository GitHub yang berisi project frontend Reluv. Tampilan import project dapat dilihat pada gambar 3.37.
+
+Gambar 3.37 Tampilan Import Project
+
+3. Konfigurasi environment variables untuk frontend seperti API URL backend, Cloudinary keys, dan lainnya. Setelah konfigurasi selesai, klik "Deploy" untuk memulai proses deployment. Gambar konfigurasi environment variables dapat dilihat pada gambar 3.38.
+
+Gambar 3.38 Konfigurasi Environment Variables
+
+4. Setelah proses deployment selesai, Vercel akan memberikan URL untuk mengakses website. Tampilan website Reluv yang sudah di-hosting dapat dilihat pada gambar 3.39.
+
+Gambar 3.39 Website Reluv Frontend Setelah Dihosting
+
+#### 3.4.4.2. Hosting Backend (Railway/Render)
+
+1. Buka website provider hostingan dengan url https://railway.app/ atau https://render.com/ lalu login ke dalam dashboard. Tampilan dashboard Railway dapat dilihat pada gambar 3.40.
+
+Gambar 3.40 Tampilan Dashboard Railway
+
+2. Pilih menu "New Project" dan pilih "Deploy from GitHub repo" untuk menghubungkan repository GitHub yang berisi project backend Reluv. Tampilan deploy dari GitHub dapat dilihat pada gambar 3.41.
+
+Gambar 3.41 Tampilan Deploy dari GitHub
+
+3. Konfigurasi environment variables untuk backend seperti database URL, JWT secret, Midtrans keys, Biteship keys, Cloudinary keys, dan lainnya. Setelah konfigurasi selesai, Railway atau Render akan otomatis melakukan build dan deploy. Gambar konfigurasi environment variables dapat dilihat pada gambar 3.42.
+
+Gambar 3.42 Konfigurasi Environment Variables Backend
+
+4. Setelah proses deployment selesai, Railway atau Render akan memberikan URL untuk mengakses API backend. Tampilan API backend yang sudah di-hosting dapat dilihat pada gambar 3.43.
+
+Gambar 3.43 API Backend Reluv Setelah Dihosting
 
 ## 3.5. Uji Coba Website
 
@@ -897,15 +1059,115 @@ Tahap pengujian dilakukan untuk memverifikasi bahwa aplikasi bebas dari bug dan 
 
 ### 3.5.1. Uji Coba Black Box
 
-Pengujian dilakukan pada seluruh fungsi utama sistem untuk memastikan hasil yang dikeluarkan sistem sesuai dengan input yang diharapkan fungsionalitasnya. Fungsi-fungsi yang diuji meliputi:
+Black box testing adalah salah satu metode uji coba sederhana untuk menemukan bug pada aplikasi website dengan cara menguji coba fitur satu persatu dan merangkumnya dalam sebuah tabel. Pengujian menggunakan black box untuk tampilan superadmin dapat dilihat pada Tabel 3.9, untuk tampilan store (penjual) pada Tabel 3.10, dan untuk tampilan user (pembeli) pada Tabel 3.11.
 
-1. **Autentikasi**: Login, Registrasi, Verifikasi Email, Reset Password
-2. **Manajemen Produk**: Tambah, Edit, Hapus, Upload Gambar
-3. **Transaksi**: Tambah ke Keranjang, Checkout, Pembayaran, Tracking
-4. **Manajemen User**: Update Profil, Kelola Alamat, Riwayat Transaksi
-5. **Manajemen Toko**: Buat Toko, Kelola Produk Toko, Monitor Penjualan
+**Tabel 3.9 Tabel Uji Coba Tampilan Superadmin**
 
-Setiap fungsi diuji dengan berbagai skenario, termasuk input valid, input tidak valid, dan edge cases untuk memastikan sistem dapat menangani berbagai kondisi dengan baik.
+| NO | Uji Coba | Hasil Yang Diharapkan | Keterangan | Status |
+| :--- | :--- | :--- | :--- | :--- |
+| 1 | Login | Halaman akan menuju ke halaman dashboard superadmin | Berjalan dengan baik | Sukses |
+| 2 | Halaman Dashboard | Menampilkan halaman dashboard dengan chart statistik dan data platform | Berjalan dengan baik | Sukses |
+| 3 | Halaman Products | Menampilkan daftar produk yang tersedia dari semua toko | Berjalan dengan baik | Sukses |
+| 4 | Tambah Produk | Menambahkan data produk baru ke platform | Berjalan dengan baik | Sukses |
+| 5 | Edit Produk | Mengubah data produk yang sudah ada | Berjalan dengan baik | Sukses |
+| 6 | Hapus Produk | Menghapus data produk dari platform | Berjalan dengan baik | Sukses |
+| 7 | Publish/Unpublish Produk | Mengubah status publikasi produk | Berjalan dengan baik | Sukses |
+| 8 | Filter Produk | Menampilkan produk sesuai filter yang dipilih | Berjalan dengan baik | Sukses |
+| 9 | Pencarian Produk | Menampilkan produk sesuai kata kunci pencarian | Berjalan dengan baik | Sukses |
+| 10 | Halaman Orders | Menampilkan semua daftar transaksi | Berjalan dengan baik | Sukses |
+| 11 | Filter Orders | Menampilkan transaksi sesuai filter status atau tanggal | Berjalan dengan baik | Sukses |
+| 12 | Input Nomor Resi | Data resi akan terisi seperti yang dimasukkan oleh superadmin | Berjalan dengan baik | Sukses |
+| 13 | Update Status Order | Mengubah status transaksi sesuai kebutuhan | Berjalan dengan baik | Sukses |
+| 14 | Halaman Manage User | Menampilkan semua daftar akun yang terdaftar | Berjalan dengan baik | Sukses |
+| 15 | Filter User | Menampilkan user sesuai filter role atau status | Berjalan dengan baik | Sukses |
+| 16 | Pencarian User | Menampilkan user sesuai kata kunci pencarian | Berjalan dengan baik | Sukses |
+| 17 | Aktifkan User | Mengaktifkan akun user yang dinonaktifkan | Berjalan dengan baik | Sukses |
+| 18 | Nonaktifkan User | Menonaktifkan akun user | Berjalan dengan baik | Sukses |
+| 19 | Hapus User | Menghapus akun user dari platform | Berjalan dengan baik | Sukses |
+| 20 | Halaman Profile | Menampilkan data detail akun superadmin yang sedang digunakan | Berjalan dengan baik | Sukses |
+| 21 | Ubah Data Profile | Mengubah data akun superadmin yang sedang digunakan | Berjalan dengan baik | Sukses |
+| 22 | Sign Out | Mengeluarkan akun dan mengarahkan ke halaman login | Berjalan dengan baik | Sukses |
+
+Pada uji coba black box di atas dapat disimpulkan bahwa halaman dan fungsi akun superadmin pada website Reluv dapat dijalankan dengan baik tanpa error maupun bug, setelah di-hosting.
+
+**Tabel 3.10 Tabel Uji Coba Tampilan Store (Penjual)**
+
+| NO | Uji Coba | Hasil Yang Diharapkan | Keterangan | Status |
+| :--- | :--- | :--- | :--- | :--- |
+| 1 | Login | Halaman akan menuju ke halaman dashboard store | Berjalan dengan baik | Sukses |
+| 2 | Halaman Dashboard Store | Menampilkan statistik penjualan toko, pendapatan, dan grafik | Berjalan dengan baik | Sukses |
+| 3 | Halaman Products | Menampilkan daftar produk yang tersedia di toko sendiri | Berjalan dengan baik | Sukses |
+| 4 | Tambah Produk | Menambahkan data produk baru ke toko dengan upload gambar | Berjalan dengan baik | Sukses |
+| 5 | Edit Produk | Mengubah data produk yang sudah ada | Berjalan dengan baik | Sukses |
+| 6 | Hapus Produk | Menghapus data produk dari toko | Berjalan dengan baik | Sukses |
+| 7 | Kelola Varian Produk | Menambahkan, mengedit, atau menghapus varian produk | Berjalan dengan baik | Sukses |
+| 8 | Upload Gambar Produk | Gambar produk berhasil diupload ke Cloudinary | Berjalan dengan baik | Sukses |
+| 9 | Halaman Orders | Menampilkan pesanan yang masuk ke toko | Berjalan dengan baik | Sukses |
+| 10 | Filter Orders | Menampilkan pesanan sesuai filter status | Berjalan dengan baik | Sukses |
+| 11 | Proses Pesanan | Mengupdate status pesanan menjadi sedang diproses | Berjalan dengan baik | Sukses |
+| 12 | Input Nomor Resi | Data resi akan terisi dan terintegrasi dengan Biteship | Berjalan dengan baik | Sukses |
+| 13 | Update Status Pengiriman | Mengubah status pengiriman pesanan | Berjalan dengan baik | Sukses |
+| 14 | Halaman Reviews | Menampilkan review yang diberikan pembeli | Berjalan dengan baik | Sukses |
+| 15 | Balas Review | Memberikan respons terhadap review pembeli | Berjalan dengan baik | Sukses |
+| 16 | Halaman Vouchers | Menampilkan daftar voucher toko | Berjalan dengan baik | Sukses |
+| 17 | Buat Voucher | Menambahkan voucher diskon baru | Berjalan dengan baik | Sukses |
+| 18 | Edit Voucher | Mengubah data voucher yang sudah ada | Berjalan dengan baik | Sukses |
+| 19 | Hapus Voucher | Menghapus voucher yang sudah tidak berlaku | Berjalan dengan baik | Sukses |
+| 20 | Halaman Settings | Menampilkan pengaturan toko | Berjalan dengan baik | Sukses |
+| 21 | Ubah Profil Toko | Mengubah informasi profil toko | Berjalan dengan baik | Sukses |
+| 22 | Upload Banner Toko | Banner toko berhasil diupload | Berjalan dengan baik | Sukses |
+| 23 | Ubah Alamat Toko | Mengubah alamat toko | Berjalan dengan baik | Sukses |
+| 24 | Sign Out | Mengeluarkan akun dan mengarahkan ke halaman login | Berjalan dengan baik | Sukses |
+
+Pada uji coba black box di atas dapat disimpulkan bahwa halaman dan fungsi akun store (penjual) pada website Reluv dapat dijalankan dengan baik tanpa error maupun bug, setelah di-hosting.
+
+**Tabel 3.11 Tabel Uji Coba Tampilan User (Pembeli)**
+
+| NO | Uji Coba | Hasil Yang Diharapkan | Keterangan | Status |
+| :--- | :--- | :--- | :--- | :--- |
+| 1 | Halaman Homepage Sebelum Login | Menampilkan informasi produk, kategori, dan tidak bisa membeli | Berjalan dengan baik | Sukses |
+| 2 | Halaman Register | Menampilkan input nama, email, dan password | Berjalan dengan baik | Sukses |
+| 3 | Register dengan Email | Menambah akun dan mengirimkan link verifikasi akun ke email | Berjalan dengan baik | Sukses |
+| 4 | Register dengan Google | Membuat akun melalui OAuth Google | Berjalan dengan baik | Sukses |
+| 5 | Register dengan Facebook | Membuat akun melalui OAuth Facebook | Berjalan dengan baik | Sukses |
+| 6 | Verifikasi Email | Link verifikasi berfungsi dan akun terverifikasi | Berjalan dengan baik | Sukses |
+| 7 | Halaman Login | Menampilkan input email dan password | Berjalan dengan baik | Sukses |
+| 8 | Login | Jika akun sudah diverifikasi, input benar, akan diarahkan ke homepage | Berjalan dengan baik | Sukses |
+| 9 | Login dengan Google | Login melalui OAuth Google | Berjalan dengan baik | Sukses |
+| 10 | Login dengan Facebook | Login melalui OAuth Facebook | Berjalan dengan baik | Sukses |
+| 11 | Halaman Homepage Setelah Login | Menampilkan produk dengan fitur tambah ke keranjang dan wishlist | Berjalan dengan baik | Sukses |
+| 12 | Pencarian Produk | Menampilkan produk sesuai kata kunci pencarian | Berjalan dengan baik | Sukses |
+| 13 | Filter Produk | Menampilkan produk sesuai filter kategori, harga, kondisi | Berjalan dengan baik | Sukses |
+| 14 | Halaman Product Detail | Menampilkan informasi lengkap produk, varian, dan review | Berjalan dengan baik | Sukses |
+| 15 | Tambah ke Keranjang | Produk berhasil ditambahkan ke keranjang | Berjalan dengan baik | Sukses |
+| 16 | Tambah ke Wishlist | Produk berhasil ditambahkan ke wishlist | Berjalan dengan baik | Sukses |
+| 17 | Halaman Cart | Menampilkan produk yang ada di keranjang | Berjalan dengan baik | Sukses |
+| 18 | Ubah Jumlah Item | Jumlah item di keranjang berhasil diubah | Berjalan dengan baik | Sukses |
+| 19 | Hapus Item dari Keranjang | Item berhasil dihapus dari keranjang | Berjalan dengan baik | Sukses |
+| 20 | Checkout | Menu keranjang harus terisi, mengarahkan ke halaman checkout | Berjalan dengan baik | Sukses |
+| 21 | Pilih Alamat Pengiriman | Alamat pengiriman berhasil dipilih atau ditambahkan | Berjalan dengan baik | Sukses |
+| 22 | Pilih Kurir | Kurir dan layanan pengiriman berhasil dipilih melalui Biteship | Berjalan dengan baik | Sukses |
+| 23 | Gunakan Voucher | Voucher berhasil diterapkan pada checkout | Berjalan dengan baik | Sukses |
+| 24 | Proses Pembayaran | Tombol bayar menampilkan detail pembayaran Midtrans | Berjalan dengan baik | Sukses |
+| 25 | Pembayaran Midtrans | Pembayaran berhasil dilakukan melalui Midtrans | Berjalan dengan baik | Sukses |
+| 26 | Halaman Orders | Menampilkan daftar transaksi sesuai akun yang digunakan | Berjalan dengan baik | Sukses |
+| 27 | Filter Orders | Menampilkan transaksi sesuai filter status | Berjalan dengan baik | Sukses |
+| 28 | Detail Order | Menampilkan detail lengkap pesanan termasuk produk yang dibeli | Berjalan dengan baik | Sukses |
+| 29 | Tracking Pengiriman | Menampilkan tracking pengiriman real-time melalui Biteship | Berjalan dengan baik | Sukses |
+| 30 | Konfirmasi Penerimaan | Status order berubah menjadi completed setelah konfirmasi | Berjalan dengan baik | Sukses |
+| 31 | Halaman Wishlist | Menampilkan produk yang disimpan di wishlist | Berjalan dengan baik | Sukses |
+| 32 | Hapus dari Wishlist | Item berhasil dihapus dari wishlist | Berjalan dengan baik | Sukses |
+| 33 | Tambah dari Wishlist ke Keranjang | Produk dari wishlist berhasil ditambahkan ke keranjang | Berjalan dengan baik | Sukses |
+| 34 | Halaman Profile | Menampilkan data akun pengguna yang sedang digunakan | Berjalan dengan baik | Sukses |
+| 35 | Ubah Data Profile | Mengubah data akun pengguna sesuai yang diinginkan | Berjalan dengan baik | Sukses |
+| 36 | Kelola Alamat | Menambahkan, mengedit, atau menghapus alamat pengiriman | Berjalan dengan baik | Sukses |
+| 37 | Upload Foto Profil | Foto profil berhasil diupload | Berjalan dengan baik | Sukses |
+| 38 | Berikan Review | Review dan rating berhasil diberikan pada produk | Berjalan dengan baik | Sukses |
+| 39 | Halaman Sell | Menampilkan informasi cara menjadi penjual | Berjalan dengan baik | Sukses |
+| 40 | Buat Toko | Form pendaftaran toko berhasil diisi dan toko dibuat | Berjalan dengan baik | Sukses |
+| 41 | Sign Out | Mengeluarkan akun dan mengarahkan ke halaman login | Berjalan dengan baik | Sukses |
+
+Pada uji coba black box di atas dapat disimpulkan bahwa halaman dan fungsi akun user (pembeli) pada website Reluv dapat dijalankan dengan baik tanpa error maupun bug, setelah di-hosting.
 
 ### 3.5.2. Uji Coba Web Browser
 
