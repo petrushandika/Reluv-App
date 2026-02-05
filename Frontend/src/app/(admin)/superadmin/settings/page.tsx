@@ -18,7 +18,6 @@ import {
   Database,
   Bell,
   AlertTriangle,
-  Save,
   RefreshCw
 } from "lucide-react"
 import { superadminSidebarItems } from "@/features/(admin)/superadmin/constants/sidebarItems"
@@ -193,17 +192,7 @@ export default function SuperadminSettingsPage() {
                   disabled={isSaving}
                   className="w-full sm:w-auto bg-sky-600 hover:bg-sky-700 text-white rounded-xl font-bold text-xs uppercase tracking-widest h-11 px-6"
                 >
-                  {isSaving ? (
-                    <>
-                      <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
-                      Saving...
-                    </>
-                  ) : (
-                    <>
-                      <Save className="mr-2 h-4 w-4" />
-                      Save Changes
-                    </>
-                  )}
+                  {isSaving ? "Saving..." : "Save Changes"}
                 </Button>
               </CardContent>
             </Card>
@@ -274,17 +263,7 @@ export default function SuperadminSettingsPage() {
                   disabled={isSaving}
                   className="w-full sm:w-auto bg-sky-600 hover:bg-sky-700 text-white rounded-xl font-bold text-xs uppercase tracking-widest h-11 px-6"
                 >
-                  {isSaving ? (
-                    <>
-                      <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
-                      Saving...
-                    </>
-                  ) : (
-                    <>
-                      <Save className="mr-2 h-4 w-4" />
-                      Save Changes
-                    </>
-                  )}
+                  {isSaving ? "Saving..." : "Save Changes"}
                 </Button>
               </CardContent>
             </Card>
@@ -368,17 +347,7 @@ export default function SuperadminSettingsPage() {
                   disabled={isSaving}
                   className="w-full sm:w-auto bg-sky-600 hover:bg-sky-700 text-white rounded-xl font-bold text-xs uppercase tracking-widest h-11 px-6"
                 >
-                  {isSaving ? (
-                    <>
-                      <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
-                      Saving...
-                    </>
-                  ) : (
-                    <>
-                      <Save className="mr-2 h-4 w-4" />
-                      Save Changes
-                    </>
-                  )}
+                  {isSaving ? "Saving..." : "Save Changes"}
                 </Button>
               </CardContent>
             </Card>
@@ -449,17 +418,7 @@ export default function SuperadminSettingsPage() {
                   disabled={isSaving}
                   className="w-full sm:w-auto bg-sky-600 hover:bg-sky-700 text-white rounded-xl font-bold text-xs uppercase tracking-widest h-11 px-6"
                 >
-                  {isSaving ? (
-                    <>
-                      <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
-                      Saving...
-                    </>
-                  ) : (
-                    <>
-                      <Save className="mr-2 h-4 w-4" />
-                      Save Changes
-                    </>
-                  )}
+                  {isSaving ? "Saving..." : "Save Changes"}
                 </Button>
               </CardContent>
             </Card>
@@ -519,17 +478,7 @@ export default function SuperadminSettingsPage() {
                   disabled={isSaving}
                   className="w-full sm:w-auto bg-sky-600 hover:bg-sky-700 text-white rounded-xl font-bold text-xs uppercase tracking-widest h-11 px-6"
                 >
-                  {isSaving ? (
-                    <>
-                      <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
-                      Saving...
-                    </>
-                  ) : (
-                    <>
-                      <Save className="mr-2 h-4 w-4" />
-                      Save Changes
-                    </>
-                  )}
+                  {isSaving ? "Saving..." : "Save Changes"}
                 </Button>
               </CardContent>
             </Card>

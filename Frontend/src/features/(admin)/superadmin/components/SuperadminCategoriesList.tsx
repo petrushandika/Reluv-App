@@ -12,21 +12,10 @@ import { Badge } from "@/shared/components/ui/badge"
 import { Button } from "@/shared/components/ui/button"
 import { 
   Tag,
-  Package,
   ChevronRight,
-  MoreVertical,
-  Edit,
-  Trash2,
-  Plus
 } from "lucide-react"
 import { CategoryListItem } from "../api/superadminApi"
 import { useState, ReactElement } from "react"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/shared/components/ui/dropdown-menu"
 
 interface SuperadminCategoriesListProps {
   categories: CategoryListItem[]
@@ -95,12 +84,9 @@ export function SuperadminCategoriesList({
           </TableCell>
           <TableCell>
             {category.parentCategory ? (
-              <div className="flex items-center space-x-2">
-                <Tag className="h-3.5 w-3.5 text-slate-400" />
-                <span className="text-xs font-bold text-slate-700 dark:text-slate-300 truncate">
-                  {category.parentCategory.name}
-                </span>
-              </div>
+              <span className="text-xs font-bold text-slate-700 dark:text-slate-300 truncate">
+                {category.parentCategory.name}
+              </span>
             ) : (
               <Badge 
                 variant="outline" 
@@ -111,20 +97,14 @@ export function SuperadminCategoriesList({
             )}
           </TableCell>
           <TableCell>
-            <div className="flex items-center space-x-2">
-              <Package className="h-3.5 w-3.5 text-slate-400" />
-              <span className="text-xs font-bold text-slate-700 dark:text-slate-300">
-                {productCount}
-              </span>
-            </div>
+            <span className="text-xs font-bold text-slate-700 dark:text-slate-300">
+              {productCount}
+            </span>
           </TableCell>
           <TableCell>
-            <div className="flex items-center space-x-2">
-              <Tag className="h-3.5 w-3.5 text-slate-400" />
-              <span className="text-xs font-bold text-slate-700 dark:text-slate-300">
-                {childCount}
-              </span>
-            </div>
+            <span className="text-xs font-bold text-slate-700 dark:text-slate-300">
+              {childCount}
+            </span>
           </TableCell>
           <TableCell>
             <span className="text-xs font-bold text-slate-700 dark:text-slate-300">
@@ -136,40 +116,29 @@ export function SuperadminCategoriesList({
             </span>
           </TableCell>
           <TableCell className="text-right pr-6">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-8 w-8 text-slate-500 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800"
-                >
-                  <MoreVertical className="h-4 w-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-48 rounded-xl border-slate-200 dark:border-slate-800">
-                <DropdownMenuItem 
-                  className="flex items-center gap-2 cursor-pointer rounded-lg"
-                  onClick={() => onEdit?.(category)}
-                >
-                  <Edit className="h-4 w-4" />
-                  <span className="text-xs font-medium">Edit Category</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem 
-                  className="flex items-center gap-2 cursor-pointer rounded-lg text-sky-600"
-                  onClick={() => onAddSubcategory?.(category.id)}
-                >
-                  <Plus className="h-4 w-4" />
-                  <span className="text-xs font-medium">Add Subcategory</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem 
-                  className="flex items-center gap-2 cursor-pointer rounded-lg text-rose-600"
-                  onClick={() => onDelete?.(category.id)}
-                >
-                  <Trash2 className="h-4 w-4" />
-                  <span className="text-xs font-medium">Delete</span>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <div className="flex items-center justify-end gap-2">
+              <Button 
+                variant="ghost" 
+                onClick={() => onEdit?.(category)}
+                className="h-8 w-16 sm:w-20 rounded-lg bg-sky-50 dark:bg-sky-500/10 text-sky-600 hover:text-sky-700 hover:bg-sky-100 dark:hover:bg-sky-500/20 text-[10px] font-medium uppercase tracking-widest transition-all"
+              >
+                Edit
+              </Button>
+              <Button 
+                variant="ghost" 
+                onClick={() => onAddSubcategory?.(category.id)}
+                className="h-8 w-16 sm:w-20 rounded-lg bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 hover:text-emerald-700 hover:bg-emerald-100 dark:hover:bg-emerald-500/20 text-[10px] font-medium uppercase tracking-widest transition-all"
+              >
+                Add Sub
+              </Button>
+              <Button 
+                variant="ghost" 
+                onClick={() => onDelete?.(category.id)}
+                className="h-8 w-16 sm:w-20 rounded-lg bg-rose-50 dark:bg-rose-500/10 text-rose-600 hover:text-rose-700 hover:bg-rose-100 dark:hover:bg-rose-500/20 text-[10px] font-medium uppercase tracking-widest transition-all"
+              >
+                Delete
+              </Button>
+            </div>
           </TableCell>
         </TableRow>
         {hasChildren && isExpanded && category.childCategories?.map((child) => 

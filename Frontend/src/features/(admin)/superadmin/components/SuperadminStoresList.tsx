@@ -11,25 +11,10 @@ import {
 import { Badge } from "@/shared/components/ui/badge"
 import { Button } from "@/shared/components/ui/button"
 import { 
-  Eye, 
   Store,
-  User,
-  Package,
-  ShoppingBag,
-  Star,
-  CheckCircle2,
-  XCircle,
-  MoreVertical,
-  ExternalLink
 } from "lucide-react"
 import { StoreListItem } from "../api/superadminApi"
 import { useState } from "react"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/shared/components/ui/dropdown-menu"
 
 interface SuperadminStoresListProps {
   stores: StoreListItem[]
@@ -138,111 +123,87 @@ export function SuperadminStoresList({ stores, onStatusChange }: SuperadminStore
                   </div>
                 </TableCell>
                 <TableCell>
-                  <div className="flex items-center space-x-2">
-                    <User className="h-3.5 w-3.5 text-slate-400" />
-                    <div className="flex flex-col min-w-0">
-                      <span className="text-xs font-bold text-slate-700 dark:text-slate-300 truncate">
-                        {store.user?.firstName && store.user?.lastName
-                          ? `${store.user.firstName} ${store.user.lastName}`
-                          : store.user?.email || "N/A"}
+                  <div className="flex flex-col min-w-0">
+                    <span className="text-xs font-bold text-slate-700 dark:text-slate-300 truncate">
+                      {store.user?.firstName && store.user?.lastName
+                        ? `${store.user.firstName} ${store.user.lastName}`
+                        : store.user?.email || "N/A"}
+                    </span>
+                    {store.user?.email && (
+                      <span className="text-[10px] text-slate-400 truncate">
+                        {store.user.email}
                       </span>
-                      {store.user?.email && (
-                        <span className="text-[10px] text-slate-400 truncate">
-                          {store.user.email}
-                        </span>
-                      )}
-                    </div>
+                    )}
                   </div>
                 </TableCell>
                 <TableCell>
-                  <div className="flex items-center space-x-2">
-                    <Package className="h-3.5 w-3.5 text-slate-400" />
-                    <span className="text-xs font-bold text-slate-700 dark:text-slate-300">
-                      {store.totalProducts}
-                    </span>
-                  </div>
+                  <span className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                    {store.totalProducts}
+                  </span>
                 </TableCell>
                 <TableCell>
-                  <div className="flex items-center space-x-2">
-                    <ShoppingBag className="h-3.5 w-3.5 text-slate-400" />
-                    <span className="text-xs font-bold text-slate-700 dark:text-slate-300">
-                      {store.totalSales}
-                    </span>
-                  </div>
+                  <span className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                    {store.totalSales}
+                  </span>
                 </TableCell>
                 <TableCell>
-                  <div className="flex items-center space-x-2">
-                    <Star className="h-3.5 w-3.5 text-amber-500 fill-amber-500" />
-                    <span className="text-xs font-bold text-slate-700 dark:text-slate-300">
-                      {store.rating ? store.rating.toFixed(1) : "N/A"}
-                    </span>
-                  </div>
+                  <span className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                    {store.rating ? store.rating.toFixed(1) : "N/A"}
+                  </span>
                 </TableCell>
                 <TableCell>
                   {getStatusBadge(store.isActive, store.isVerified)}
                 </TableCell>
                 <TableCell className="text-right pr-6">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-8 w-8 text-slate-500 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800"
+                  <div className="flex items-center justify-end gap-2">
+                    <Button 
+                      variant="ghost" 
+                      onClick={() => window.open(`/store/${store.slug}`, "_blank")}
+                      className="h-8 w-16 sm:w-20 rounded-lg bg-sky-50 dark:bg-sky-500/10 text-sky-600 hover:text-sky-700 hover:bg-sky-100 dark:hover:bg-sky-500/20 text-[10px] font-medium uppercase tracking-widest transition-all"
+                    >
+                      View
+                    </Button>
+                    {!store.isVerified && (
+                      <Button 
+                        variant="ghost" 
+                        onClick={() => handleStatusChange(store.id, { isVerified: true })}
                         disabled={loadingStoreId === store.id}
+                        className="h-8 w-16 sm:w-20 rounded-lg bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 hover:text-emerald-700 hover:bg-emerald-100 dark:hover:bg-emerald-500/20 text-[10px] font-medium uppercase tracking-widest transition-all"
                       >
-                        <MoreVertical className="h-4 w-4" />
+                        Verify
                       </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="w-48 rounded-xl border-slate-200 dark:border-slate-800">
-                      <DropdownMenuItem 
-                        className="flex items-center gap-2 cursor-pointer rounded-lg"
-                        onClick={() => window.open(`/store/${store.slug}`, "_blank")}
+                    )}
+                    {store.isVerified && (
+                      <Button 
+                        variant="ghost" 
+                        onClick={() => handleStatusChange(store.id, { isVerified: false })}
+                        disabled={loadingStoreId === store.id}
+                        className="h-8 w-16 sm:w-20 rounded-lg bg-amber-50 dark:bg-amber-500/10 text-amber-600 hover:text-amber-700 hover:bg-amber-100 dark:hover:bg-amber-500/20 text-[10px] font-medium uppercase tracking-widest transition-all"
                       >
-                        <Eye className="h-4 w-4" />
-                        <span className="text-xs font-medium">View Store</span>
-                      </DropdownMenuItem>
-                      {!store.isVerified && (
-                        <DropdownMenuItem 
-                          className="flex items-center gap-2 cursor-pointer rounded-lg text-emerald-600"
-                          onClick={() => handleStatusChange(store.id, { isVerified: true })}
-                          disabled={loadingStoreId === store.id}
-                        >
-                          <CheckCircle2 className="h-4 w-4" />
-                          <span className="text-xs font-medium">Verify Store</span>
-                        </DropdownMenuItem>
-                      )}
-                      {store.isVerified && (
-                        <DropdownMenuItem 
-                          className="flex items-center gap-2 cursor-pointer rounded-lg text-amber-600"
-                          onClick={() => handleStatusChange(store.id, { isVerified: false })}
-                          disabled={loadingStoreId === store.id}
-                        >
-                          <XCircle className="h-4 w-4" />
-                          <span className="text-xs font-medium">Unverify Store</span>
-                        </DropdownMenuItem>
-                      )}
-                      {store.isActive && (
-                        <DropdownMenuItem 
-                          className="flex items-center gap-2 cursor-pointer rounded-lg text-rose-600"
-                          onClick={() => handleStatusChange(store.id, { isActive: false })}
-                          disabled={loadingStoreId === store.id}
-                        >
-                          <XCircle className="h-4 w-4" />
-                          <span className="text-xs font-medium">Deactivate</span>
-                        </DropdownMenuItem>
-                      )}
-                      {!store.isActive && (
-                        <DropdownMenuItem 
-                          className="flex items-center gap-2 cursor-pointer rounded-lg text-emerald-600"
-                          onClick={() => handleStatusChange(store.id, { isActive: true })}
-                          disabled={loadingStoreId === store.id}
-                        >
-                          <CheckCircle2 className="h-4 w-4" />
-                          <span className="text-xs font-medium">Activate</span>
-                        </DropdownMenuItem>
-                      )}
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+                        Unverify
+                      </Button>
+                    )}
+                    {store.isActive && (
+                      <Button 
+                        variant="ghost" 
+                        onClick={() => handleStatusChange(store.id, { isActive: false })}
+                        disabled={loadingStoreId === store.id}
+                        className="h-8 w-16 sm:w-20 rounded-lg bg-rose-50 dark:bg-rose-500/10 text-rose-600 hover:text-rose-700 hover:bg-rose-100 dark:hover:bg-rose-500/20 text-[10px] font-medium uppercase tracking-widest transition-all"
+                      >
+                        Deactivate
+                      </Button>
+                    )}
+                    {!store.isActive && (
+                      <Button 
+                        variant="ghost" 
+                        onClick={() => handleStatusChange(store.id, { isActive: true })}
+                        disabled={loadingStoreId === store.id}
+                        className="h-8 w-16 sm:w-20 rounded-lg bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 hover:text-emerald-700 hover:bg-emerald-100 dark:hover:bg-emerald-500/20 text-[10px] font-medium uppercase tracking-widest transition-all"
+                      >
+                        Activate
+                      </Button>
+                    )}
+                  </div>
                 </TableCell>
               </TableRow>
             ))

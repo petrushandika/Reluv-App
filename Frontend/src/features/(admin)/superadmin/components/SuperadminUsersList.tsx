@@ -11,25 +11,10 @@ import {
 import { Badge } from "@/shared/components/ui/badge"
 import { Button } from "@/shared/components/ui/button"
 import { 
-  Eye, 
   User,
-  Store,
-  Mail,
-  Phone,
-  CheckCircle2,
-  XCircle,
-  MoreVertical,
-  Shield,
-  UserCheck
 } from "lucide-react"
 import { UserListItem } from "../api/superadminApi"
 import { useState } from "react"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/shared/components/ui/dropdown-menu"
 
 interface SuperadminUsersListProps {
   users: UserListItem[]
@@ -173,19 +158,13 @@ export function SuperadminUsersList({ users, onStatusChange }: SuperadminUsersLi
                 </TableCell>
                 <TableCell>
                   <div className="flex flex-col space-y-1 min-w-0">
-                    <div className="flex items-center space-x-2">
-                      <Mail className="h-3.5 w-3.5 text-slate-400 shrink-0" />
-                      <span className="text-xs font-bold text-slate-700 dark:text-slate-300 truncate">
-                        {user.email}
-                      </span>
-                    </div>
+                    <span className="text-xs font-bold text-slate-700 dark:text-slate-300 truncate">
+                      {user.email}
+                    </span>
                     {user.phone && (
-                      <div className="flex items-center space-x-2">
-                        <Phone className="h-3.5 w-3.5 text-slate-400 shrink-0" />
-                        <span className="text-xs font-bold text-slate-700 dark:text-slate-300 truncate">
-                          {user.phone}
-                        </span>
-                      </div>
+                      <span className="text-[10px] text-slate-400 truncate">
+                        {user.phone}
+                      </span>
                     )}
                   </div>
                 </TableCell>
@@ -194,16 +173,13 @@ export function SuperadminUsersList({ users, onStatusChange }: SuperadminUsersLi
                 </TableCell>
                 <TableCell>
                   {user.store ? (
-                    <div className="flex items-center space-x-2">
-                      <Store className="h-3.5 w-3.5 text-sky-500" />
-                      <div className="flex flex-col min-w-0">
-                        <span className="text-xs font-bold text-slate-700 dark:text-slate-300 truncate">
-                          {user.store.name}
-                        </span>
-                        <span className="text-[10px] text-slate-400 truncate">
-                          /{user.store.slug}
-                        </span>
-                      </div>
+                    <div className="flex flex-col min-w-0">
+                      <span className="text-xs font-bold text-slate-700 dark:text-slate-300 truncate">
+                        {user.store.name}
+                      </span>
+                      <span className="text-[10px] text-slate-400 truncate">
+                        /{user.store.slug}
+                      </span>
                     </div>
                   ) : (
                     <span className="text-xs font-bold text-slate-400">No store</span>
@@ -222,77 +198,65 @@ export function SuperadminUsersList({ users, onStatusChange }: SuperadminUsersLi
                   </span>
                 </TableCell>
                 <TableCell className="text-right pr-6">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-8 w-8 text-slate-500 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800"
+                  <div className="flex items-center justify-end gap-2">
+                    <Button 
+                      variant="ghost" 
+                      onClick={() => window.open(`/profile/${user.id}`, "_blank")}
+                      className="h-8 w-16 sm:w-20 rounded-lg bg-sky-50 dark:bg-sky-500/10 text-sky-600 hover:text-sky-700 hover:bg-sky-100 dark:hover:bg-sky-500/20 text-[10px] font-medium uppercase tracking-widest transition-all"
+                    >
+                      View
+                    </Button>
+                    {!user.isVerified && (
+                      <Button 
+                        variant="ghost" 
+                        onClick={() => handleStatusChange(user.id, { isVerified: true })}
                         disabled={loadingUserId === user.id}
+                        className="h-8 w-16 sm:w-20 rounded-lg bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 hover:text-emerald-700 hover:bg-emerald-100 dark:hover:bg-emerald-500/20 text-[10px] font-medium uppercase tracking-widest transition-all"
                       >
-                        <MoreVertical className="h-4 w-4" />
+                        Verify
                       </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="w-48 rounded-xl border-slate-200 dark:border-slate-800">
-                      <DropdownMenuItem 
-                        className="flex items-center gap-2 cursor-pointer rounded-lg"
-                        onClick={() => window.open(`/profile/${user.id}`, "_blank")}
+                    )}
+                    {user.isVerified && (
+                      <Button 
+                        variant="ghost" 
+                        onClick={() => handleStatusChange(user.id, { isVerified: false })}
+                        disabled={loadingUserId === user.id}
+                        className="h-8 w-16 sm:w-20 rounded-lg bg-amber-50 dark:bg-amber-500/10 text-amber-600 hover:text-amber-700 hover:bg-amber-100 dark:hover:bg-amber-500/20 text-[10px] font-medium uppercase tracking-widest transition-all"
                       >
-                        <Eye className="h-4 w-4" />
-                        <span className="text-xs font-medium">View Profile</span>
-                      </DropdownMenuItem>
-                      {!user.isVerified && (
-                        <DropdownMenuItem 
-                          className="flex items-center gap-2 cursor-pointer rounded-lg text-emerald-600"
-                          onClick={() => handleStatusChange(user.id, { isVerified: true })}
-                          disabled={loadingUserId === user.id}
-                        >
-                          <CheckCircle2 className="h-4 w-4" />
-                          <span className="text-xs font-medium">Verify User</span>
-                        </DropdownMenuItem>
-                      )}
-                      {user.isVerified && (
-                        <DropdownMenuItem 
-                          className="flex items-center gap-2 cursor-pointer rounded-lg text-amber-600"
-                          onClick={() => handleStatusChange(user.id, { isVerified: false })}
-                          disabled={loadingUserId === user.id}
-                        >
-                          <XCircle className="h-4 w-4" />
-                          <span className="text-xs font-medium">Unverify User</span>
-                        </DropdownMenuItem>
-                      )}
-                      {user.isActive && (
-                        <DropdownMenuItem 
-                          className="flex items-center gap-2 cursor-pointer rounded-lg text-rose-600"
-                          onClick={() => handleStatusChange(user.id, { isActive: false })}
-                          disabled={loadingUserId === user.id}
-                        >
-                          <XCircle className="h-4 w-4" />
-                          <span className="text-xs font-medium">Deactivate</span>
-                        </DropdownMenuItem>
-                      )}
-                      {!user.isActive && (
-                        <DropdownMenuItem 
-                          className="flex items-center gap-2 cursor-pointer rounded-lg text-emerald-600"
-                          onClick={() => handleStatusChange(user.id, { isActive: true })}
-                          disabled={loadingUserId === user.id}
-                        >
-                          <CheckCircle2 className="h-4 w-4" />
-                          <span className="text-xs font-medium">Activate</span>
-                        </DropdownMenuItem>
-                      )}
-                      {user.role !== "ADMIN" && (
-                        <DropdownMenuItem 
-                          className="flex items-center gap-2 cursor-pointer rounded-lg text-violet-600"
-                          onClick={() => handleStatusChange(user.id, { role: "ADMIN" })}
-                          disabled={loadingUserId === user.id}
-                        >
-                          <Shield className="h-4 w-4" />
-                          <span className="text-xs font-medium">Make Admin</span>
-                        </DropdownMenuItem>
-                      )}
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+                        Unverify
+                      </Button>
+                    )}
+                    {user.isActive && (
+                      <Button 
+                        variant="ghost" 
+                        onClick={() => handleStatusChange(user.id, { isActive: false })}
+                        disabled={loadingUserId === user.id}
+                        className="h-8 w-16 sm:w-20 rounded-lg bg-rose-50 dark:bg-rose-500/10 text-rose-600 hover:text-rose-700 hover:bg-rose-100 dark:hover:bg-rose-500/20 text-[10px] font-medium uppercase tracking-widest transition-all"
+                      >
+                        Deactivate
+                      </Button>
+                    )}
+                    {!user.isActive && (
+                      <Button 
+                        variant="ghost" 
+                        onClick={() => handleStatusChange(user.id, { isActive: true })}
+                        disabled={loadingUserId === user.id}
+                        className="h-8 w-16 sm:w-20 rounded-lg bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 hover:text-emerald-700 hover:bg-emerald-100 dark:hover:bg-emerald-500/20 text-[10px] font-medium uppercase tracking-widest transition-all"
+                      >
+                        Activate
+                      </Button>
+                    )}
+                    {user.role !== "ADMIN" && (
+                      <Button 
+                        variant="ghost" 
+                        onClick={() => handleStatusChange(user.id, { role: "ADMIN" })}
+                        disabled={loadingUserId === user.id}
+                        className="h-8 w-16 sm:w-20 rounded-lg bg-violet-50 dark:bg-violet-500/10 text-violet-600 hover:text-violet-700 hover:bg-violet-100 dark:hover:bg-violet-500/20 text-[10px] font-medium uppercase tracking-widest transition-all"
+                      >
+                        Make Admin
+                      </Button>
+                    )}
+                  </div>
                 </TableCell>
               </TableRow>
             ))

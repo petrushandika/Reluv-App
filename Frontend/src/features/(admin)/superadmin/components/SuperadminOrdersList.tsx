@@ -10,14 +10,7 @@ import {
 } from "@/shared/components/ui/table"
 import { Badge } from "@/shared/components/ui/badge"
 import { Button } from "@/shared/components/ui/button"
-import { 
-  Eye, 
-  User,
-  ShoppingBag,
-  MoreVertical,
-  Store,
-  ExternalLink
-} from "lucide-react"
+import { cn } from "@/shared/lib/utils"
 
 const orders = [
   {
@@ -81,16 +74,10 @@ export function SuperadminOrdersList() {
                 <span className="text-xs font-bold text-slate-900 dark:text-white">#{order.orderNumber}</span>
               </TableCell>
               <TableCell>
-                <div className="flex items-center space-x-2">
-                  <User className="h-3.5 w-3.5 text-slate-400" />
-                  <span className="text-xs font-bold text-slate-700 dark:text-slate-300">{order.customer}</span>
-                </div>
+                <span className="text-xs font-bold text-slate-700 dark:text-slate-300">{order.customer}</span>
               </TableCell>
               <TableCell>
-                <div className="flex items-center space-x-2">
-                  <Store className="h-3.5 w-3.5 text-sky-500" />
-                  <span className="text-xs font-bold text-slate-700 dark:text-slate-300">{order.store}</span>
-                </div>
+                <span className="text-xs font-bold text-slate-700 dark:text-slate-300">{order.store}</span>
               </TableCell>
               <TableCell className="font-bold text-xs text-slate-900 dark:text-white">
                 Rp. {order.totalAmount.toLocaleString("id-ID")}
@@ -107,12 +94,12 @@ export function SuperadminOrdersList() {
                 </Badge>
               </TableCell>
               <TableCell className="text-right pr-6">
-                <div className="flex items-center justify-end space-x-2">
-                  <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-400 hover:text-sky-600 rounded-xl border border-transparent hover:border-sky-100 dark:hover:border-sky-900/30">
-                    <Eye className="h-4 w-4" />
-                  </Button>
-                  <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-400 hover:text-slate-600 rounded-xl">
-                    <MoreVertical className="h-4 w-4" />
+                <div className="flex items-center justify-end gap-2">
+                  <Button 
+                    variant="ghost" 
+                    className="h-8 w-16 sm:w-20 rounded-lg bg-sky-50 dark:bg-sky-500/10 text-sky-600 hover:text-sky-700 hover:bg-sky-100 dark:hover:bg-sky-500/20 text-[10px] font-medium uppercase tracking-widest transition-all"
+                  >
+                    View
                   </Button>
                 </div>
               </TableCell>
@@ -122,8 +109,4 @@ export function SuperadminOrdersList() {
       </Table>
     </div>
   )
-}
-
-function cn(...classes: any[]) {
-  return classes.filter(Boolean).join(" ");
 }
