@@ -99,7 +99,7 @@ export function SuperadminOrdersList() {
                 <Badge 
                   variant="outline" 
                   className={cn(
-                    "font-bold text-[9px] uppercase tracking-widest px-2 py-0.5 border-2 rounded-full",
+                    "font-bold text-[9px] uppercase tracking-[0.2em] px-2 py-1 rounded-full",
                     getStatusColor(order.status)
                   )}
                 >

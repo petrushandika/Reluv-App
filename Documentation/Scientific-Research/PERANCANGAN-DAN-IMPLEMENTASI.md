@@ -2,7 +2,7 @@
 
 ## 3.1. Gambaran Umum Aplikasi
 
-Reluv adalah platform e-commerce pasar barang bekas (preloved) yang dirancang sebagai marketplace C2C (Consumer-to-Consumer) terpusat di Indonesia. Aplikasi ini bertujuan untuk menyediakan ekosistem digital yang modern, tepercaya, dan efisien bagi komunitas penjual dan pembeli barang preloved. 
+Reluv adalah platform e-commerce pasar barang bekas (preloved) yang dirancang sebagai marketplace C2C (Consumer-to-Consumer) terpusat di Indonesia. Aplikasi ini bertujuan untuk menyediakan ekosistem digital yang modern, tepercaya, dan efisien bagi komunitas penjual dan pembeli barang preloved.
 
 Dengan mengimplementasikan teknologi Server-Side Rendering (SSR) melalui framework Next.js dan NestJS, platform ini menawarkan performa tinggi, visibilitas SEO yang optimal, serta keamanan transaksi yang terintegrasi dengan payment gateway Midtrans dan sistem logistik Biteship.
 
@@ -20,10 +20,10 @@ Ditahap ini dilakukan analisis berupa kebutuhan yang menunjang dalam pembuatan a
 
 1. **Perangkat Keras (Hardware)**
 
-─ Device			: MSI GF63 Thin 12UC
-─ Processor		: Intel® Core™ i7-12650H 2.3GHz
-─ RAM			: 16 GB
-─ Storage		: SSD minimal 256 GB
+─ Device : MSI GF63 Thin 12UC
+─ Processor : Intel® Core™ i7-12650H 2.3GHz
+─ RAM : 16 GB
+─ Storage : SSD minimal 256 GB
 
 2. **Perangkat Lunak (Software)**
 
@@ -110,19 +110,19 @@ graph TD
     B --> D[Orders]
     B --> E[Manage User]
     B --> F[Profile]
-    
+
     C --> C1[Tambah Produk]
     C --> C2[Edit Produk]
     C --> C3[Hapus Produk]
-    
+
     D --> D1[Lihat Transaksi]
     D --> D2[Input Resi]
     D --> D3[Update Status]
-    
+
     E --> E1[Lihat User]
     E --> E2[Edit User]
     E --> E3[Nonaktifkan User]
-    
+
     style A fill:#ffffff,stroke:#333,stroke-width:2px
     style B fill:#ffffff,stroke:#333,stroke-width:2px
     style C fill:#ffffff,stroke:#333,stroke-width:2px
@@ -155,27 +155,27 @@ graph TD
     B --> E[Reviews]
     B --> F[Vouchers]
     B --> G[Settings]
-    
+
     C --> C1[Tambah Produk]
     C --> C2[Edit Produk]
     C --> C3[Hapus Produk]
     C --> C4[Kelola Variant]
-    
+
     D --> D1[Pesanan Masuk]
     D --> D2[Proses Pesanan]
     D --> D3[Input Resi]
-    
+
     E --> E1[Lihat Review]
     E --> E2[Balas Review]
-    
+
     F --> F1[Buat Voucher]
     F --> F2[Edit Voucher]
     F --> F3[Hapus Voucher]
-    
+
     G --> G1[Profil Toko]
     G --> G2[Alamat Toko]
     G --> G3[Pengaturan]
-    
+
     style A fill:#ffffff,stroke:#333,stroke-width:2px
     style B fill:#ffffff,stroke:#333,stroke-width:2px
     style C fill:#ffffff,stroke:#333,stroke-width:2px
@@ -211,35 +211,35 @@ graph TD
     A --> E[Wishlist]
     A --> F[Profile]
     A --> G[Sell]
-    
+
     B --> B1[Women]
     B --> B2[Men]
     B --> B3[Kids]
     B1 --> C
     B2 --> C
     B3 --> C
-    
+
     C --> C1[Tambah ke Cart]
     C --> C2[Tambah ke Wishlist]
     C --> C3[Lihat Review]
     C --> C4[Lihat Toko]
-    
+
     C1 --> D
     C2 --> E
-    
+
     D --> H[Checkout]
     H --> I[Orders]
-    
+
     F --> F1[Profil Saya]
     F --> F2[Alamat]
     F --> F3[Orders]
     F --> F4[Products Saya]
     F --> F5[Reviews]
     F --> F6[Vouchers]
-    
+
     G --> G1[Buat Toko]
     G1 --> Store[Store Dashboard]
-    
+
     style A fill:#ffffff,stroke:#333,stroke-width:2px
     style B fill:#ffffff,stroke:#333,stroke-width:2px
     style C fill:#ffffff,stroke:#333,stroke-width:2px
@@ -265,81 +265,139 @@ Pada aktor Store (Penjual), interaksi yang dapat dilakukan adalah login untuk me
 
 Pada aktor User (Pembeli), interaksi yang dapat dilakukan adalah registrasi untuk membuat akun baru dengan verifikasi email, login untuk mengakses sistem, mengelola profil untuk memperbarui informasi data diri dan alamat pengiriman, browse produk untuk melihat katalog produk, melakukan pencarian produk berdasarkan kata kunci, menambahkan produk ke keranjang, melakukan checkout yang memerlukan validasi kredensial dan dapat menggunakan voucher jika tersedia, melakukan pembayaran melalui integrasi dengan Payment Gateway Midtrans, melakukan tracking pesanan melalui integrasi dengan Shipping API Biteship, memberikan review produk setelah melakukan pembelian, serta membuat toko untuk memulai proses menjual produk.
 
-Rancangan Use Case Diagram sistem Reluv dapat dilihat pada Gambar 3.4.
+Rancangan Use Case Diagram sistem Reluv dibagi menjadi tiga diagram terpisah untuk memudahkan pemahaman, yaitu Use Case Diagram untuk User (Pembeli) pada Gambar 3.4a, Use Case Diagram untuk Store (Penjual) pada Gambar 3.4b, dan Use Case Diagram untuk Superadmin pada Gambar 3.4c.
 
-**Gambar 3.4 Use Case Diagram Sistem Reluv**
+**Gambar 3.4a Use Case Diagram User (Pembeli)**
 
 ```mermaid
 graph TB
-    subgraph Actors[" "]
-        direction TB
-        User((👤 User<br/>Pembeli))
-        Store((🏪 Store<br/>Penjual))
-        Superadmin((👤 Superadmin))
-        Payment((💳 Payment Gateway<br/>Midtrans))
-        Shipping((🚚 Shipping API<br/>Biteship))
-    end
-    
     subgraph System["Sistem Reluv"]
         direction TB
-        UC1((Registrasi))
-        UC2((Login))
-        UC3((Kelola Profil))
-        UC4((Browse Produk))
-        UC5((Pencarian Produk))
+        UC1((Melihat Produk))
+        UC2((Mengubah Profil))
+        UC3((Membeli))
+        UC4((Login))
+        UC5((Registrasi))
         UC6((Tambah ke Keranjang))
-        UC7((Checkout))
-        UC8((Pembayaran))
-        UC9((Tracking Pesanan))
-        UC10((Review Produk))
-        UC11((Kelola Produk))
-        UC12((Kelola Toko))
-        UC13((Kelola Kategori))
-        UC14((Kelola User))
-        UC15((Monitor Transaksi))
-        UC16((Validasi Kredensial))
-        UC17((Gunakan Voucher))
-        UC18((Upload Gambar))
-        UC19((Buat Toko))
+        UC7((Membayar))
+        UC8((Tracking Pesanan))
+        UC9((Review Produk))
+        UC10((Buat Toko))
+        UC11((Validasi Email))
+        UC12((Validasi Kredensial))
+        UC13((Gunakan Voucher))
+        UC14((Bank Transfer))
+        UC15((E-Wallet))
+        UC16((Credit Card))
     end
     
+    User((👤 User<br/>Pembeli))
+    Payment((💳 Payment Gateway<br/>Midtrans))
+    Shipping((🚚 Shipping API<br/>Biteship))
+
     User ---|melakukan| UC1
     User ---|melakukan| UC2
     User ---|melakukan| UC3
     User ---|melakukan| UC4
     User ---|melakukan| UC5
-    User ---|melakukan| UC6
-    User ---|melakukan| UC7
-    User ---|melakukan| UC8
-    User ---|melakukan| UC9
-    User ---|melakukan| UC10
-    User ---|melakukan| UC19
-    
-    Store ---|melakukan| UC2
-    Store ---|melakukan| UC11
-    Store ---|melakukan| UC12
-    Store ---|melakukan| UC15
-    
-    Superadmin ---|melakukan| UC2
-    Superadmin ---|melakukan| UC13
-    Superadmin ---|melakukan| UC14
-    Superadmin ---|melakukan| UC15
-    
-    UC2 -.->|<<include>>| UC16
-    UC7 -.->|<<include>>| UC6
-    UC7 -.->|<<include>>| UC16
-    UC7 -.->|<<extend>>| UC17
-    UC11 -.->|<<include>>| UC18
-    UC12 -.->|<<include>>| UC18
-    
-    UC8 ---|integrasi| Payment
-    UC9 ---|integrasi| Shipping
-    
+
+    UC3 -.->|<<include>>| UC6
+    UC3 -.->|<<include>>| UC4
+    UC4 -.->|<<include>>| UC12
+    UC5 -.->|<<include>>| UC11
+    UC3 -.->|<<include>>| UC7
+    UC7 -.->|<<extend>>| UC13
+    UC7 -.->|<<extend>>| UC14
+    UC7 -.->|<<extend>>| UC15
+    UC7 -.->|<<extend>>| UC16
+
+    UC7 ---|integrasi| Payment
+    UC8 ---|integrasi| Shipping
+
     style User fill:#ffffff,stroke:#333,stroke-width:2px
-    style Store fill:#ffffff,stroke:#333,stroke-width:2px
-    style Superadmin fill:#ffffff,stroke:#333,stroke-width:2px
     style Payment fill:#ffffff,stroke:#333,stroke-width:2px
     style Shipping fill:#ffffff,stroke:#333,stroke-width:2px
+    style System fill:#f9f9f9,stroke:#333,stroke-width:2px
+```
+
+**Gambar 3.4b Use Case Diagram Store (Penjual)**
+
+```mermaid
+graph TB
+    subgraph System["Sistem Reluv"]
+        direction TB
+        UC1((Mengelola Produk))
+        UC2((Mengelola Toko))
+        UC3((Monitor Transaksi))
+        UC4((Login))
+        UC5((Mengubah Profil))
+        UC6((Tambah Produk))
+        UC7((Ubah Produk))
+        UC8((Hapus Produk))
+        UC9((Upload Gambar))
+        UC10((Validasi Kredensial))
+    end
+    
+    Store((🏪 Store<br/>Penjual))
+
+    Store ---|melakukan| UC1
+    Store ---|melakukan| UC2
+    Store ---|melakukan| UC3
+    Store ---|melakukan| UC4
+    Store ---|melakukan| UC5
+
+    UC1 -.->|<<extend>>| UC6
+    UC1 -.->|<<extend>>| UC7
+    UC1 -.->|<<extend>>| UC8
+    UC1 -.->|<<include>>| UC9
+    UC2 -.->|<<include>>| UC9
+    UC4 -.->|<<include>>| UC10
+
+    style Store fill:#ffffff,stroke:#333,stroke-width:2px
+    style System fill:#f9f9f9,stroke:#333,stroke-width:2px
+```
+
+**Gambar 3.4c Use Case Diagram Superadmin**
+
+```mermaid
+graph TB
+    subgraph System["Sistem Reluv"]
+        direction TB
+        UC1((Mengelola Produk))
+        UC2((Mengelola Kategori))
+        UC3((Mengelola User))
+        UC4((Monitor Transaksi))
+        UC5((Login))
+        UC6((Mengubah Profil))
+        UC7((Tambah))
+        UC8((Ubah))
+        UC9((Hapus))
+        UC10((Aktifkan User))
+        UC11((Nonaktifkan User))
+        UC12((Validasi Kredensial))
+    end
+    
+    Superadmin((👤 Superadmin))
+
+    Superadmin ---|melakukan| UC1
+    Superadmin ---|melakukan| UC2
+    Superadmin ---|melakukan| UC3
+    Superadmin ---|melakukan| UC4
+    Superadmin ---|melakukan| UC5
+    Superadmin ---|melakukan| UC6
+
+    UC1 -.->|<<extend>>| UC7
+    UC1 -.->|<<extend>>| UC8
+    UC1 -.->|<<extend>>| UC9
+    UC2 -.->|<<extend>>| UC7
+    UC2 -.->|<<extend>>| UC8
+    UC2 -.->|<<extend>>| UC9
+    UC3 -.->|<<extend>>| UC10
+    UC3 -.->|<<extend>>| UC11
+    UC5 -.->|<<include>>| UC12
+
+    style Superadmin fill:#ffffff,stroke:#333,stroke-width:2px
+    style System fill:#f9f9f9,stroke:#333,stroke-width:2px
 ```
 
 #### 3.3.2.2. Activity Diagram
@@ -359,46 +417,46 @@ flowchart TD
     Register --> Verify[Verifikasi Email]
     Verify --> Login
     Login -->|Ya| Browse[Browse Produk]
-    
+
     Browse --> Search[Pencarian Produk]
     Search --> Select[Pilih Produk]
     Select --> Detail[Lihat Detail Produk]
-    
+
     Detail --> AddCart{Tambah ke<br/>Keranjang?}
     AddCart -->|Ya| Cart[Keranjang]
     AddCart -->|Tidak| Browse
-    
+
     Cart --> Checkout[Checkout]
     Checkout --> Address{Alamat<br/>Pengiriman?}
     Address -->|Tidak| AddAddress[Tambah Alamat]
     AddAddress --> Address
     Address -->|Ya| SelectCourier[Pilih Kurir]
-    
+
     SelectCourier --> Payment[Proses Pembayaran]
     Payment --> Midtrans{Payment<br/>Gateway}
     Midtrans -->|Berhasil| CreateOrder[Create Order]
     Midtrans -->|Gagal| Payment
-    
+
     CreateOrder --> Fork1[Fork]
     Fork1 --> Notify[Notifikasi ke Penjual]
     Fork1 --> UpdateStock[Update Stok Produk]
-    
+
     Notify --> Join1[Join]
     UpdateStock --> Join1
     Join1 --> Process[Penjual Proses Order]
-    
+
     Process --> Ship[Pengiriman]
     Ship --> Track[Tracking Pengiriman]
     Track --> Deliver{Barang<br/>Diterima?}
-    
+
     Deliver -->|Ya| Fork2[Fork]
     Fork2 --> Review[Review Produk]
     Fork2 --> UpdateStatus[Update Status Order]
-    
+
     Review --> Join2[Join]
     UpdateStatus --> Join2
     Join2 --> Complete([⚫⭕ Selesai])
-    
+
     style Start fill:#000000,stroke:#000000,stroke-width:4px,color:#ffffff
     style Complete fill:#000000,stroke:#000000,stroke-width:4px,color:#ffffff
     style Login fill:#ffffff,stroke:#333,stroke-width:2px
@@ -436,7 +494,7 @@ classDiagram
         +DateTime createdAt
         +DateTime updatedAt
     }
-    
+
     class UserProfile {
         +Int id
         +String avatar
@@ -444,7 +502,7 @@ classDiagram
         +Int userId
         +Gender gender
     }
-    
+
     class Store {
         +Int id
         +String name
@@ -455,7 +513,7 @@ classDiagram
         +Float rating
         +Int userId
     }
-    
+
     class Product {
         +Int id
         +String name
@@ -467,7 +525,7 @@ classDiagram
         +Int categoryId
         +Int storeId
     }
-    
+
     class Variant {
         +Int id
         +Int productId
@@ -480,14 +538,14 @@ classDiagram
         +Int width
         +Int height
     }
-    
+
     class Category {
         +Int id
         +String name
         +String slug
         +Int parentId
     }
-    
+
     class Order {
         +Int id
         +String orderNumber
@@ -498,7 +556,7 @@ classDiagram
         +Int locationId
         +DateTime createdAt
     }
-    
+
     class OrderItem {
         +Int id
         +Int orderId
@@ -507,7 +565,7 @@ classDiagram
         +Int price
         +Int total
     }
-    
+
     class Payment {
         +Int id
         +String method
@@ -517,7 +575,7 @@ classDiagram
         +String midtrans_tx_id
         +Int orderId
     }
-    
+
     class Shipment {
         +Int id
         +String courier
@@ -527,19 +585,19 @@ classDiagram
         +Int shippingCost
         +Int orderId
     }
-    
+
     class Cart {
         +Int id
         +Int userId
     }
-    
+
     class CartItem {
         +Int id
         +Int cartId
         +Int variantId
         +Int quantity
     }
-    
+
     class Review {
         +Int id
         +Int rating
@@ -549,7 +607,7 @@ classDiagram
         +Int authorId
         +Int orderId
     }
-    
+
     class Location {
         +Int id
         +String label
@@ -558,30 +616,30 @@ classDiagram
         +String province
         +Int userId
     }
-    
+
     User ||--|| UserProfile : "1:1"
     User ||--o| Store : "1:0..1"
     User ||--o{ Order : "1:N"
     User ||--|| Cart : "1:1"
     User ||--o{ Review : "1:N"
     User ||--o{ Location : "1:N"
-    
+
     Store ||--o{ Product : "1:N"
-    
+
     Product ||--o{ Variant : "1:N"
     Product }o--|| Category : "N:1"
     Product ||--o{ Review : "1:N"
-    
+
     Category ||--o{ Category : "1:N (self)"
-    
+
     Order ||--o{ OrderItem : "1:N"
     Order ||--|| Payment : "1:1"
     Order ||--|| Shipment : "1:1"
     Order }o--|| User : "N:1"
     Order }o--|| Location : "N:1"
-    
+
     OrderItem }o--|| Variant : "N:1"
-    
+
     Cart ||--o{ CartItem : "1:N"
     CartItem }o--|| Variant : "N:1"
 ```
@@ -602,7 +660,7 @@ erDiagram
     User ||--o{ Location : "has"
     User ||--o{ Wishlist : "has"
     User ||--o{ Notification : "receives"
-    
+
     Store ||--|| StoreProfile : "has"
     Store ||--o{ Product : "contains"
     Store ||--o{ Discount : "has"
@@ -610,7 +668,7 @@ erDiagram
     Store ||--o{ Promotion : "has"
     Store ||--o{ Badge : "has"
     Store ||--o| Location : "located_at"
-    
+
     Product ||--o{ Variant : "has"
     Product }o--|| Category : "belongs_to"
     Product ||--o{ Review : "has"
@@ -619,11 +677,11 @@ erDiagram
     Product ||--o{ OrderItem : "ordered_as"
     Product ||--o{ Discount : "has"
     Product ||--o{ Promotion : "included_in"
-    
+
     Category ||--o{ Category : "parent-child"
     Category ||--o{ Product : "contains"
     Category ||--o{ Discount : "has"
-    
+
     Order ||--o{ OrderItem : "contains"
     Order ||--|| Payment : "has"
     Order ||--|| Shipment : "has"
@@ -631,12 +689,12 @@ erDiagram
     Order ||--o{ Review : "generates"
     Order ||--o| VoucherUsage : "uses"
     Order ||--o| Discount : "applies"
-    
+
     Variant ||--o{ CartItem : "added_to"
     Variant ||--o{ OrderItem : "ordered_as"
-    
+
     Cart ||--o{ CartItem : "contains"
-    
+
     Voucher ||--o{ VoucherUsage : "used_in"
 ```
 
@@ -648,24 +706,24 @@ Tabel users berfungsi untuk menyimpan data akun pengguna untuk login di website 
 
 **Tabel 3.1 Struktur Tabel Users**
 
-| Nama Field | Tipe Data | Panjang | Keterangan |
-| :--- | :--- | :--- | :--- |
-| id | Integer | - | Primary Key (Autoincrement) |
-| email | Varchar | 255 | NOT NULL |
-| password | Varchar | 255 | NULL |
-| phone | Varchar | 20 | NULL |
-| role | Enum | - | (USER, ADMIN, STORE) |
-| isActive | Boolean | - | Default: true |
-| googleId | Varchar | 255 | NULL, UNIQUE |
-| facebookId | Varchar | 255 | NULL, UNIQUE |
-| isVerified | Boolean | - | Default: false |
-| verificationToken | Varchar | 255 | NULL |
-| verificationTokenExpiry | Timestamp | - | NULL |
-| firstName | Varchar | 100 | NULL |
-| lastName | Varchar | 100 | NULL |
-| birth | Date | - | NULL |
-| createdAt | Timestamp | - | Default: now() |
-| updatedAt | Timestamp | - | Auto update |
+| Nama Field              | Tipe Data | Panjang | Keterangan                  |
+| :---------------------- | :-------- | :------ | :-------------------------- |
+| id                      | Integer   | -       | Primary Key (Autoincrement) |
+| email                   | Varchar   | 255     | NOT NULL                    |
+| password                | Varchar   | 255     | NULL                        |
+| phone                   | Varchar   | 20      | NULL                        |
+| role                    | Enum      | -       | (USER, ADMIN, STORE)        |
+| isActive                | Boolean   | -       | Default: true               |
+| googleId                | Varchar   | 255     | NULL, UNIQUE                |
+| facebookId              | Varchar   | 255     | NULL, UNIQUE                |
+| isVerified              | Boolean   | -       | Default: false              |
+| verificationToken       | Varchar   | 255     | NULL                        |
+| verificationTokenExpiry | Timestamp | -       | NULL                        |
+| firstName               | Varchar   | 100     | NULL                        |
+| lastName                | Varchar   | 100     | NULL                        |
+| birth                   | Date      | -       | NULL                        |
+| createdAt               | Timestamp | -       | Default: now()              |
+| updatedAt               | Timestamp | -       | Auto update                 |
 
 #### b) Tabel Store
 
@@ -673,20 +731,20 @@ Tabel store berfungsi untuk menyimpan data toko atau lapak yang dimiliki oleh pe
 
 **Tabel 3.2 Struktur Tabel Store**
 
-| Nama Field | Tipe Data | Panjang | Keterangan |
-| :--- | :--- | :--- | :--- |
-| id | Integer | - | Primary Key (Autoincrement) |
-| name | Varchar | 255 | NOT NULL |
-| slug | Varchar | 255 | NOT NULL, UNIQUE |
-| userId | Integer | - | NOT NULL, UNIQUE |
-| isVerified | Boolean | - | Default: false |
-| isActive | Boolean | - | Default: true |
-| totalProducts | Integer | - | Default: 0 |
-| totalSales | Integer | - | Default: 0 |
-| rating | Real | - | NULL |
-| locationId | Integer | - | NULL, UNIQUE |
-| createdAt | Timestamp | - | Default: now() |
-| updatedAt | Timestamp | - | Auto update |
+| Nama Field    | Tipe Data | Panjang | Keterangan                  |
+| :------------ | :-------- | :------ | :-------------------------- |
+| id            | Integer   | -       | Primary Key (Autoincrement) |
+| name          | Varchar   | 255     | NOT NULL                    |
+| slug          | Varchar   | 255     | NOT NULL, UNIQUE            |
+| userId        | Integer   | -       | NOT NULL, UNIQUE            |
+| isVerified    | Boolean   | -       | Default: false              |
+| isActive      | Boolean   | -       | Default: true               |
+| totalProducts | Integer   | -       | Default: 0                  |
+| totalSales    | Integer   | -       | Default: 0                  |
+| rating        | Real      | -       | NULL                        |
+| locationId    | Integer   | -       | NULL, UNIQUE                |
+| createdAt     | Timestamp | -       | Default: now()              |
+| updatedAt     | Timestamp | -       | Auto update                 |
 
 #### c) Tabel Products
 
@@ -694,22 +752,22 @@ Tabel products berfungsi untuk menyimpan informasi umum produk barang preloved y
 
 **Tabel 3.3 Struktur Tabel Products**
 
-| Nama Field | Tipe Data | Panjang | Keterangan |
-| :--- | :--- | :--- | :--- |
-| id | Integer | - | Primary Key (Autoincrement) |
-| name | Varchar | 255 | NOT NULL |
-| slug | Varchar | 255 | NOT NULL, UNIQUE |
-| description | Text | - | NULL |
-| images | Array | - | NULL |
-| sellerId | Integer | - | NOT NULL |
-| storeId | Integer | - | NOT NULL |
-| categoryId | Integer | - | NOT NULL |
-| isPublished | Boolean | - | Default: false |
-| isActive | Boolean | - | Default: true |
-| isPreloved | Boolean | - | Default: true |
-| viewCount | Integer | - | Default: 0 |
-| createdAt | Timestamp | - | Default: now() |
-| updatedAt | Timestamp | - | Auto update |
+| Nama Field  | Tipe Data | Panjang | Keterangan                  |
+| :---------- | :-------- | :------ | :-------------------------- |
+| id          | Integer   | -       | Primary Key (Autoincrement) |
+| name        | Varchar   | 255     | NOT NULL                    |
+| slug        | Varchar   | 255     | NOT NULL, UNIQUE            |
+| description | Text      | -       | NULL                        |
+| images      | Array     | -       | NULL                        |
+| sellerId    | Integer   | -       | NOT NULL                    |
+| storeId     | Integer   | -       | NOT NULL                    |
+| categoryId  | Integer   | -       | NOT NULL                    |
+| isPublished | Boolean   | -       | Default: false              |
+| isActive    | Boolean   | -       | Default: true               |
+| isPreloved  | Boolean   | -       | Default: true               |
+| viewCount   | Integer   | -       | Default: 0                  |
+| createdAt   | Timestamp | -       | Default: now()              |
+| updatedAt   | Timestamp | -       | Auto update                 |
 
 #### d) Tabel Variants
 
@@ -717,26 +775,26 @@ Tabel variants berfungsi untuk menyimpan data varian produk yang dipisahkan dari
 
 **Tabel 3.4 Struktur Tabel Variants**
 
-| Nama Field | Tipe Data | Panjang | Keterangan |
-| :--- | :--- | :--- | :--- |
-| id | Integer | - | Primary Key (Autoincrement) |
-| productId | Integer | - | NOT NULL |
-| sku | Varchar | 100 | NOT NULL, UNIQUE |
-| price | Integer | - | NOT NULL |
-| compareAtPrice | Integer | - | NULL |
-| stock | Integer | - | Default: 0 |
-| condition | Enum | - | (NEW, LIKE_NEW, GOOD, FAIR, POOR) |
-| conditionNote | Text | - | NULL |
-| weight | Integer | - | NULL |
-| length | Integer | - | NULL |
-| width | Integer | - | NULL |
-| height | Integer | - | NULL |
-| color | Varchar | 50 | NULL |
-| size | Varchar | 20 | NULL |
-| image | Varchar | 255 | NULL |
-| isActive | Boolean | - | Default: true |
-| createdAt | Timestamp | - | Default: now() |
-| updatedAt | Timestamp | - | Auto update |
+| Nama Field     | Tipe Data | Panjang | Keterangan                        |
+| :------------- | :-------- | :------ | :-------------------------------- |
+| id             | Integer   | -       | Primary Key (Autoincrement)       |
+| productId      | Integer   | -       | NOT NULL                          |
+| sku            | Varchar   | 100     | NOT NULL, UNIQUE                  |
+| price          | Integer   | -       | NOT NULL                          |
+| compareAtPrice | Integer   | -       | NULL                              |
+| stock          | Integer   | -       | Default: 0                        |
+| condition      | Enum      | -       | (NEW, LIKE_NEW, GOOD, FAIR, POOR) |
+| conditionNote  | Text      | -       | NULL                              |
+| weight         | Integer   | -       | NULL                              |
+| length         | Integer   | -       | NULL                              |
+| width          | Integer   | -       | NULL                              |
+| height         | Integer   | -       | NULL                              |
+| color          | Varchar   | 50      | NULL                              |
+| size           | Varchar   | 20      | NULL                              |
+| image          | Varchar   | 255     | NULL                              |
+| isActive       | Boolean   | -       | Default: true                     |
+| createdAt      | Timestamp | -       | Default: now()                    |
+| updatedAt      | Timestamp | -       | Auto update                       |
 
 #### e) Tabel Orders
 
@@ -744,22 +802,22 @@ Tabel orders berfungsi untuk mencatat seluruh alur transaksi mulai dari pembuata
 
 **Tabel 3.5 Struktur Tabel Orders**
 
-| Nama Field | Tipe Data | Panjang | Keterangan |
-| :--- | :--- | :--- | :--- |
-| id | Integer | - | Primary Key (Autoincrement) |
-| orderNumber | Varchar | 50 | NOT NULL, UNIQUE |
-| totalAmount | Integer | - | NOT NULL |
-| itemsAmount | Integer | - | NOT NULL |
-| shippingCost | Integer | - | Default: 0 |
-| discountAmount | Integer | - | Default: 0 |
-| status | Enum | - | (PENDING, PAID, SHIPPED, DELIVERED, COMPLETED, CANCELLED, REFUNDED) |
-| buyerId | Integer | - | NOT NULL |
-| locationId | Integer | - | NOT NULL |
-| voucherId | Integer | - | NULL |
-| discountId | Integer | - | NULL |
-| notes | Text | - | NULL |
-| createdAt | Timestamp | - | Default: now() |
-| updatedAt | Timestamp | - | Auto update |
+| Nama Field     | Tipe Data | Panjang | Keterangan                                                          |
+| :------------- | :-------- | :------ | :------------------------------------------------------------------ |
+| id             | Integer   | -       | Primary Key (Autoincrement)                                         |
+| orderNumber    | Varchar   | 50      | NOT NULL, UNIQUE                                                    |
+| totalAmount    | Integer   | -       | NOT NULL                                                            |
+| itemsAmount    | Integer   | -       | NOT NULL                                                            |
+| shippingCost   | Integer   | -       | Default: 0                                                          |
+| discountAmount | Integer   | -       | Default: 0                                                          |
+| status         | Enum      | -       | (PENDING, PAID, SHIPPED, DELIVERED, COMPLETED, CANCELLED, REFUNDED) |
+| buyerId        | Integer   | -       | NOT NULL                                                            |
+| locationId     | Integer   | -       | NOT NULL                                                            |
+| voucherId      | Integer   | -       | NULL                                                                |
+| discountId     | Integer   | -       | NULL                                                                |
+| notes          | Text      | -       | NULL                                                                |
+| createdAt      | Timestamp | -       | Default: now()                                                      |
+| updatedAt      | Timestamp | -       | Auto update                                                         |
 
 #### f) Tabel OrderItems
 
@@ -767,15 +825,15 @@ Tabel order_items berfungsi untuk menyimpan detail item yang dibeli dalam setiap
 
 **Tabel 3.6 Struktur Tabel OrderItems**
 
-| Nama Field | Tipe Data | Panjang | Keterangan |
-| :--- | :--- | :--- | :--- |
-| id | Integer | - | Primary Key (Autoincrement) |
-| orderId | Integer | - | NOT NULL |
-| variantId | Integer | - | NOT NULL |
-| quantity | Integer | - | NOT NULL |
-| price | Integer | - | NOT NULL |
-| total | Integer | - | NOT NULL |
-| discountAmount | Integer | - | Default: 0 |
+| Nama Field     | Tipe Data | Panjang | Keterangan                  |
+| :------------- | :-------- | :------ | :-------------------------- |
+| id             | Integer   | -       | Primary Key (Autoincrement) |
+| orderId        | Integer   | -       | NOT NULL                    |
+| variantId      | Integer   | -       | NOT NULL                    |
+| quantity       | Integer   | -       | NOT NULL                    |
+| price          | Integer   | -       | NOT NULL                    |
+| total          | Integer   | -       | NOT NULL                    |
+| discountAmount | Integer   | -       | Default: 0                  |
 
 #### g) Tabel Payments
 
@@ -783,25 +841,25 @@ Tabel payments berfungsi untuk mencatat seluruh alur transaksi keuangan mulai da
 
 **Tabel 3.7 Struktur Tabel Payments**
 
-| Nama Field | Tipe Data | Panjang | Keterangan |
-| :--- | :--- | :--- | :--- |
-| id | Integer | - | Primary Key (Autoincrement) |
-| orderId | Integer | - | NOT NULL, UNIQUE |
-| method | Varchar | 50 | NULL |
-| amount | Integer | - | NOT NULL |
-| status | Enum | - | (PENDING, PAID, FAILED, REFUNDED, EXPIRED, CANCELLED) |
-| snap_token | Varchar | 255 | NULL |
-| snap_redirect_url | Varchar | 500 | NULL |
-| midtrans_order_id | Varchar | 100 | NULL |
-| midtrans_tx_id | Varchar | 100 | NULL |
-| midtrans_payment_type | Varchar | 50 | NULL |
-| midtrans_va_number | Varchar | 50 | NULL |
-| midtrans_bank | Varchar | 50 | NULL |
-| midtrans_tx_status | Varchar | 50 | NULL |
-| paidAt | Timestamp | - | NULL |
-| expiresAt | Timestamp | - | NULL |
-| createdAt | Timestamp | - | Default: now() |
-| updatedAt | Timestamp | - | Auto update |
+| Nama Field            | Tipe Data | Panjang | Keterangan                                            |
+| :-------------------- | :-------- | :------ | :---------------------------------------------------- |
+| id                    | Integer   | -       | Primary Key (Autoincrement)                           |
+| orderId               | Integer   | -       | NOT NULL, UNIQUE                                      |
+| method                | Varchar   | 50      | NULL                                                  |
+| amount                | Integer   | -       | NOT NULL                                              |
+| status                | Enum      | -       | (PENDING, PAID, FAILED, REFUNDED, EXPIRED, CANCELLED) |
+| snap_token            | Varchar   | 255     | NULL                                                  |
+| snap_redirect_url     | Varchar   | 500     | NULL                                                  |
+| midtrans_order_id     | Varchar   | 100     | NULL                                                  |
+| midtrans_tx_id        | Varchar   | 100     | NULL                                                  |
+| midtrans_payment_type | Varchar   | 50      | NULL                                                  |
+| midtrans_va_number    | Varchar   | 50      | NULL                                                  |
+| midtrans_bank         | Varchar   | 50      | NULL                                                  |
+| midtrans_tx_status    | Varchar   | 50      | NULL                                                  |
+| paidAt                | Timestamp | -       | NULL                                                  |
+| expiresAt             | Timestamp | -       | NULL                                                  |
+| createdAt             | Timestamp | -       | Default: now()                                        |
+| updatedAt             | Timestamp | -       | Auto update                                           |
 
 #### h) Tabel Shipments
 
@@ -809,25 +867,25 @@ Tabel shipments berfungsi untuk mengelola informasi logistik dan pelacakan baran
 
 **Tabel 3.8 Struktur Tabel Shipments**
 
-| Nama Field | Tipe Data | Panjang | Keterangan |
-| :--- | :--- | :--- | :--- |
-| id | Integer | - | Primary Key (Autoincrement) |
-| orderId | Integer | - | NOT NULL, UNIQUE |
-| courier | Varchar | 50 | NULL |
-| service | Varchar | 100 | NULL |
-| trackingNumber | Varchar | 100 | NULL |
-| status | Enum | - | (AWAITING_PICKUP, PICKED_UP, IN_TRANSIT, DELIVERED, RETURNED, CANCELLED) |
-| biteship_order_id | Varchar | 100 | NULL |
-| biteship_courier_code | Varchar | 50 | NULL |
-| biteship_service_code | Varchar | 50 | NULL |
-| estimatedDays | Varchar | 20 | NULL |
-| shippingCost | Integer | - | NOT NULL |
-| insuranceCost | Integer | - | Default: 0 |
-| trackingHistory | Json | - | NULL |
-| shippedAt | Timestamp | - | NULL |
-| deliveredAt | Timestamp | - | NULL |
-| createdAt | Timestamp | - | Default: now() |
-| updatedAt | Timestamp | - | Auto update |
+| Nama Field            | Tipe Data | Panjang | Keterangan                                                               |
+| :-------------------- | :-------- | :------ | :----------------------------------------------------------------------- |
+| id                    | Integer   | -       | Primary Key (Autoincrement)                                              |
+| orderId               | Integer   | -       | NOT NULL, UNIQUE                                                         |
+| courier               | Varchar   | 50      | NULL                                                                     |
+| service               | Varchar   | 100     | NULL                                                                     |
+| trackingNumber        | Varchar   | 100     | NULL                                                                     |
+| status                | Enum      | -       | (AWAITING_PICKUP, PICKED_UP, IN_TRANSIT, DELIVERED, RETURNED, CANCELLED) |
+| biteship_order_id     | Varchar   | 100     | NULL                                                                     |
+| biteship_courier_code | Varchar   | 50      | NULL                                                                     |
+| biteship_service_code | Varchar   | 50      | NULL                                                                     |
+| estimatedDays         | Varchar   | 20      | NULL                                                                     |
+| shippingCost          | Integer   | -       | NOT NULL                                                                 |
+| insuranceCost         | Integer   | -       | Default: 0                                                               |
+| trackingHistory       | Json      | -       | NULL                                                                     |
+| shippedAt             | Timestamp | -       | NULL                                                                     |
+| deliveredAt           | Timestamp | -       | NULL                                                                     |
+| createdAt             | Timestamp | -       | Default: now()                                                           |
+| updatedAt             | Timestamp | -       | Auto update                                                              |
 
 ### 3.3.4. Perancangan Antarmuka
 
@@ -1063,117 +1121,118 @@ Black box testing adalah salah satu metode uji coba sederhana untuk menemukan bu
 
 **Tabel 3.9 Tabel Uji Coba Tampilan Superadmin**
 
-| NO | Uji Coba | Hasil Yang Diharapkan | Keterangan | Status |
-| :--- | :--- | :--- | :--- | :--- |
-| 1 | Login | Halaman akan menuju ke halaman dashboard superadmin | Berjalan dengan baik | Sukses |
-| 2 | Halaman Dashboard | Menampilkan halaman dashboard dengan chart statistik dan data platform | Berjalan dengan baik | Sukses |
-| 3 | Halaman Products | Menampilkan daftar produk yang tersedia dari semua toko | Berjalan dengan baik | Sukses |
-| 4 | Tambah Produk | Menambahkan data produk baru ke platform | Berjalan dengan baik | Sukses |
-| 5 | Edit Produk | Mengubah data produk yang sudah ada | Berjalan dengan baik | Sukses |
-| 6 | Hapus Produk | Menghapus data produk dari platform | Berjalan dengan baik | Sukses |
-| 7 | Publish/Unpublish Produk | Mengubah status publikasi produk | Berjalan dengan baik | Sukses |
-| 8 | Filter Produk | Menampilkan produk sesuai filter yang dipilih | Berjalan dengan baik | Sukses |
-| 9 | Pencarian Produk | Menampilkan produk sesuai kata kunci pencarian | Berjalan dengan baik | Sukses |
-| 10 | Halaman Orders | Menampilkan semua daftar transaksi | Berjalan dengan baik | Sukses |
-| 11 | Filter Orders | Menampilkan transaksi sesuai filter status atau tanggal | Berjalan dengan baik | Sukses |
-| 12 | Input Nomor Resi | Data resi akan terisi seperti yang dimasukkan oleh superadmin | Berjalan dengan baik | Sukses |
-| 13 | Update Status Order | Mengubah status transaksi sesuai kebutuhan | Berjalan dengan baik | Sukses |
-| 14 | Halaman Manage User | Menampilkan semua daftar akun yang terdaftar | Berjalan dengan baik | Sukses |
-| 15 | Filter User | Menampilkan user sesuai filter role atau status | Berjalan dengan baik | Sukses |
-| 16 | Pencarian User | Menampilkan user sesuai kata kunci pencarian | Berjalan dengan baik | Sukses |
-| 17 | Aktifkan User | Mengaktifkan akun user yang dinonaktifkan | Berjalan dengan baik | Sukses |
-| 18 | Nonaktifkan User | Menonaktifkan akun user | Berjalan dengan baik | Sukses |
-| 19 | Hapus User | Menghapus akun user dari platform | Berjalan dengan baik | Sukses |
-| 20 | Halaman Profile | Menampilkan data detail akun superadmin yang sedang digunakan | Berjalan dengan baik | Sukses |
-| 21 | Ubah Data Profile | Mengubah data akun superadmin yang sedang digunakan | Berjalan dengan baik | Sukses |
-| 22 | Sign Out | Mengeluarkan akun dan mengarahkan ke halaman login | Berjalan dengan baik | Sukses |
+| NO  | Uji Coba                 | Hasil Yang Diharapkan                                                  | Keterangan           | Status |
+| :-- | :----------------------- | :--------------------------------------------------------------------- | :------------------- | :----- |
+| 1   | Login                    | Halaman akan menuju ke halaman dashboard superadmin                    | Berjalan dengan baik | Sukses |
+| 2   | Halaman Dashboard        | Menampilkan halaman dashboard dengan chart statistik dan data platform | Berjalan dengan baik | Sukses |
+| 3   | Halaman Products         | Menampilkan daftar produk yang tersedia dari semua toko                | Berjalan dengan baik | Sukses |
+| 4   | Tambah Produk            | Menambahkan data produk baru ke platform                               | Berjalan dengan baik | Sukses |
+| 5   | Edit Produk              | Mengubah data produk yang sudah ada                                    | Berjalan dengan baik | Sukses |
+| 6   | Hapus Produk             | Menghapus data produk dari platform                                    | Berjalan dengan baik | Sukses |
+| 7   | Publish/Unpublish Produk | Mengubah status publikasi produk                                       | Berjalan dengan baik | Sukses |
+| 8   | Filter Produk            | Menampilkan produk sesuai filter yang dipilih                          | Berjalan dengan baik | Sukses |
+| 9   | Pencarian Produk         | Menampilkan produk sesuai kata kunci pencarian                         | Berjalan dengan baik | Sukses |
+| 10  | Halaman Orders           | Menampilkan semua daftar transaksi                                     | Berjalan dengan baik | Sukses |
+| 11  | Filter Orders            | Menampilkan transaksi sesuai filter status atau tanggal                | Berjalan dengan baik | Sukses |
+| 12  | Input Nomor Resi         | Data resi akan terisi seperti yang dimasukkan oleh superadmin          | Berjalan dengan baik | Sukses |
+| 13  | Update Status Order      | Mengubah status transaksi sesuai kebutuhan                             | Berjalan dengan baik | Sukses |
+| 14  | Halaman Manage User      | Menampilkan semua daftar akun yang terdaftar                           | Berjalan dengan baik | Sukses |
+| 15  | Filter User              | Menampilkan user sesuai filter role atau status                        | Berjalan dengan baik | Sukses |
+| 16  | Pencarian User           | Menampilkan user sesuai kata kunci pencarian                           | Berjalan dengan baik | Sukses |
+| 17  | Aktifkan User            | Mengaktifkan akun user yang dinonaktifkan                              | Berjalan dengan baik | Sukses |
+| 18  | Nonaktifkan User         | Menonaktifkan akun user                                                | Berjalan dengan baik | Sukses |
+| 19  | Hapus User               | Menghapus akun user dari platform                                      | Berjalan dengan baik | Sukses |
+| 20  | Halaman Profile          | Menampilkan data detail akun superadmin yang sedang digunakan          | Berjalan dengan baik | Sukses |
+| 21  | Ubah Data Profile        | Mengubah data akun superadmin yang sedang digunakan                    | Berjalan dengan baik | Sukses |
+| 22  | Sign Out                 | Mengeluarkan akun dan mengarahkan ke halaman login                     | Berjalan dengan baik | Sukses |
 
 Pada uji coba black box di atas dapat disimpulkan bahwa halaman dan fungsi akun superadmin pada website Reluv dapat dijalankan dengan baik tanpa error maupun bug, setelah di-hosting.
 
 **Tabel 3.10 Tabel Uji Coba Tampilan Store (Penjual)**
 
-| NO | Uji Coba | Hasil Yang Diharapkan | Keterangan | Status |
-| :--- | :--- | :--- | :--- | :--- |
-| 1 | Login | Halaman akan menuju ke halaman dashboard store | Berjalan dengan baik | Sukses |
-| 2 | Halaman Dashboard Store | Menampilkan statistik penjualan toko, pendapatan, dan grafik | Berjalan dengan baik | Sukses |
-| 3 | Halaman Products | Menampilkan daftar produk yang tersedia di toko sendiri | Berjalan dengan baik | Sukses |
-| 4 | Tambah Produk | Menambahkan data produk baru ke toko dengan upload gambar | Berjalan dengan baik | Sukses |
-| 5 | Edit Produk | Mengubah data produk yang sudah ada | Berjalan dengan baik | Sukses |
-| 6 | Hapus Produk | Menghapus data produk dari toko | Berjalan dengan baik | Sukses |
-| 7 | Kelola Varian Produk | Menambahkan, mengedit, atau menghapus varian produk | Berjalan dengan baik | Sukses |
-| 8 | Upload Gambar Produk | Gambar produk berhasil diupload ke Cloudinary | Berjalan dengan baik | Sukses |
-| 9 | Halaman Orders | Menampilkan pesanan yang masuk ke toko | Berjalan dengan baik | Sukses |
-| 10 | Filter Orders | Menampilkan pesanan sesuai filter status | Berjalan dengan baik | Sukses |
-| 11 | Proses Pesanan | Mengupdate status pesanan menjadi sedang diproses | Berjalan dengan baik | Sukses |
-| 12 | Input Nomor Resi | Data resi akan terisi dan terintegrasi dengan Biteship | Berjalan dengan baik | Sukses |
-| 13 | Update Status Pengiriman | Mengubah status pengiriman pesanan | Berjalan dengan baik | Sukses |
-| 14 | Halaman Reviews | Menampilkan review yang diberikan pembeli | Berjalan dengan baik | Sukses |
-| 15 | Balas Review | Memberikan respons terhadap review pembeli | Berjalan dengan baik | Sukses |
-| 16 | Halaman Vouchers | Menampilkan daftar voucher toko | Berjalan dengan baik | Sukses |
-| 17 | Buat Voucher | Menambahkan voucher diskon baru | Berjalan dengan baik | Sukses |
-| 18 | Edit Voucher | Mengubah data voucher yang sudah ada | Berjalan dengan baik | Sukses |
-| 19 | Hapus Voucher | Menghapus voucher yang sudah tidak berlaku | Berjalan dengan baik | Sukses |
-| 20 | Halaman Settings | Menampilkan pengaturan toko | Berjalan dengan baik | Sukses |
-| 21 | Ubah Profil Toko | Mengubah informasi profil toko | Berjalan dengan baik | Sukses |
-| 22 | Upload Banner Toko | Banner toko berhasil diupload | Berjalan dengan baik | Sukses |
-| 23 | Ubah Alamat Toko | Mengubah alamat toko | Berjalan dengan baik | Sukses |
-| 24 | Sign Out | Mengeluarkan akun dan mengarahkan ke halaman login | Berjalan dengan baik | Sukses |
+| NO  | Uji Coba                 | Hasil Yang Diharapkan                                        | Keterangan           | Status |
+| :-- | :----------------------- | :----------------------------------------------------------- | :------------------- | :----- |
+| 1   | Login                    | Halaman akan menuju ke halaman dashboard store               | Berjalan dengan baik | Sukses |
+| 2   | Halaman Dashboard Store  | Menampilkan statistik penjualan toko, pendapatan, dan grafik | Berjalan dengan baik | Sukses |
+| 3   | Halaman Products         | Menampilkan daftar produk yang tersedia di toko sendiri      | Berjalan dengan baik | Sukses |
+| 4   | Tambah Produk            | Menambahkan data produk baru ke toko dengan upload gambar    | Berjalan dengan baik | Sukses |
+| 5   | Edit Produk              | Mengubah data produk yang sudah ada                          | Berjalan dengan baik | Sukses |
+| 6   | Hapus Produk             | Menghapus data produk dari toko                              | Berjalan dengan baik | Sukses |
+| 7   | Kelola Varian Produk     | Menambahkan, mengedit, atau menghapus varian produk          | Berjalan dengan baik | Sukses |
+| 8   | Upload Gambar Produk     | Gambar produk berhasil diupload ke Cloudinary                | Berjalan dengan baik | Sukses |
+| 9   | Halaman Orders           | Menampilkan pesanan yang masuk ke toko                       | Berjalan dengan baik | Sukses |
+| 10  | Filter Orders            | Menampilkan pesanan sesuai filter status                     | Berjalan dengan baik | Sukses |
+| 11  | Proses Pesanan           | Mengupdate status pesanan menjadi sedang diproses            | Berjalan dengan baik | Sukses |
+| 12  | Input Nomor Resi         | Data resi akan terisi dan terintegrasi dengan Biteship       | Berjalan dengan baik | Sukses |
+| 13  | Update Status Pengiriman | Mengubah status pengiriman pesanan                           | Berjalan dengan baik | Sukses |
+| 14  | Halaman Reviews          | Menampilkan review yang diberikan pembeli                    | Berjalan dengan baik | Sukses |
+| 15  | Balas Review             | Memberikan respons terhadap review pembeli                   | Berjalan dengan baik | Sukses |
+| 16  | Halaman Vouchers         | Menampilkan daftar voucher toko                              | Berjalan dengan baik | Sukses |
+| 17  | Buat Voucher             | Menambahkan voucher diskon baru                              | Berjalan dengan baik | Sukses |
+| 18  | Edit Voucher             | Mengubah data voucher yang sudah ada                         | Berjalan dengan baik | Sukses |
+| 19  | Hapus Voucher            | Menghapus voucher yang sudah tidak berlaku                   | Berjalan dengan baik | Sukses |
+| 20  | Halaman Settings         | Menampilkan pengaturan toko                                  | Berjalan dengan baik | Sukses |
+| 21  | Ubah Profil Toko         | Mengubah informasi profil toko                               | Berjalan dengan baik | Sukses |
+| 22  | Upload Banner Toko       | Banner toko berhasil diupload                                | Berjalan dengan baik | Sukses |
+| 23  | Ubah Alamat Toko         | Mengubah alamat toko                                         | Berjalan dengan baik | Sukses |
+| 24  | Sign Out                 | Mengeluarkan akun dan mengarahkan ke halaman login           | Berjalan dengan baik | Sukses |
 
 Pada uji coba black box di atas dapat disimpulkan bahwa halaman dan fungsi akun store (penjual) pada website Reluv dapat dijalankan dengan baik tanpa error maupun bug, setelah di-hosting.
 
 **Tabel 3.11 Tabel Uji Coba Tampilan User (Pembeli)**
 
-| NO | Uji Coba | Hasil Yang Diharapkan | Keterangan | Status |
-| :--- | :--- | :--- | :--- | :--- |
-| 1 | Halaman Homepage Sebelum Login | Menampilkan informasi produk, kategori, dan tidak bisa membeli | Berjalan dengan baik | Sukses |
-| 2 | Halaman Register | Menampilkan input nama, email, dan password | Berjalan dengan baik | Sukses |
-| 3 | Register dengan Email | Menambah akun dan mengirimkan link verifikasi akun ke email | Berjalan dengan baik | Sukses |
-| 4 | Register dengan Google | Membuat akun melalui OAuth Google | Berjalan dengan baik | Sukses |
-| 5 | Register dengan Facebook | Membuat akun melalui OAuth Facebook | Berjalan dengan baik | Sukses |
-| 6 | Verifikasi Email | Link verifikasi berfungsi dan akun terverifikasi | Berjalan dengan baik | Sukses |
-| 7 | Halaman Login | Menampilkan input email dan password | Berjalan dengan baik | Sukses |
-| 8 | Login | Jika akun sudah diverifikasi, input benar, akan diarahkan ke homepage | Berjalan dengan baik | Sukses |
-| 9 | Login dengan Google | Login melalui OAuth Google | Berjalan dengan baik | Sukses |
-| 10 | Login dengan Facebook | Login melalui OAuth Facebook | Berjalan dengan baik | Sukses |
-| 11 | Halaman Homepage Setelah Login | Menampilkan produk dengan fitur tambah ke keranjang dan wishlist | Berjalan dengan baik | Sukses |
-| 12 | Pencarian Produk | Menampilkan produk sesuai kata kunci pencarian | Berjalan dengan baik | Sukses |
-| 13 | Filter Produk | Menampilkan produk sesuai filter kategori, harga, kondisi | Berjalan dengan baik | Sukses |
-| 14 | Halaman Product Detail | Menampilkan informasi lengkap produk, varian, dan review | Berjalan dengan baik | Sukses |
-| 15 | Tambah ke Keranjang | Produk berhasil ditambahkan ke keranjang | Berjalan dengan baik | Sukses |
-| 16 | Tambah ke Wishlist | Produk berhasil ditambahkan ke wishlist | Berjalan dengan baik | Sukses |
-| 17 | Halaman Cart | Menampilkan produk yang ada di keranjang | Berjalan dengan baik | Sukses |
-| 18 | Ubah Jumlah Item | Jumlah item di keranjang berhasil diubah | Berjalan dengan baik | Sukses |
-| 19 | Hapus Item dari Keranjang | Item berhasil dihapus dari keranjang | Berjalan dengan baik | Sukses |
-| 20 | Checkout | Menu keranjang harus terisi, mengarahkan ke halaman checkout | Berjalan dengan baik | Sukses |
-| 21 | Pilih Alamat Pengiriman | Alamat pengiriman berhasil dipilih atau ditambahkan | Berjalan dengan baik | Sukses |
-| 22 | Pilih Kurir | Kurir dan layanan pengiriman berhasil dipilih melalui Biteship | Berjalan dengan baik | Sukses |
-| 23 | Gunakan Voucher | Voucher berhasil diterapkan pada checkout | Berjalan dengan baik | Sukses |
-| 24 | Proses Pembayaran | Tombol bayar menampilkan detail pembayaran Midtrans | Berjalan dengan baik | Sukses |
-| 25 | Pembayaran Midtrans | Pembayaran berhasil dilakukan melalui Midtrans | Berjalan dengan baik | Sukses |
-| 26 | Halaman Orders | Menampilkan daftar transaksi sesuai akun yang digunakan | Berjalan dengan baik | Sukses |
-| 27 | Filter Orders | Menampilkan transaksi sesuai filter status | Berjalan dengan baik | Sukses |
-| 28 | Detail Order | Menampilkan detail lengkap pesanan termasuk produk yang dibeli | Berjalan dengan baik | Sukses |
-| 29 | Tracking Pengiriman | Menampilkan tracking pengiriman real-time melalui Biteship | Berjalan dengan baik | Sukses |
-| 30 | Konfirmasi Penerimaan | Status order berubah menjadi completed setelah konfirmasi | Berjalan dengan baik | Sukses |
-| 31 | Halaman Wishlist | Menampilkan produk yang disimpan di wishlist | Berjalan dengan baik | Sukses |
-| 32 | Hapus dari Wishlist | Item berhasil dihapus dari wishlist | Berjalan dengan baik | Sukses |
-| 33 | Tambah dari Wishlist ke Keranjang | Produk dari wishlist berhasil ditambahkan ke keranjang | Berjalan dengan baik | Sukses |
-| 34 | Halaman Profile | Menampilkan data akun pengguna yang sedang digunakan | Berjalan dengan baik | Sukses |
-| 35 | Ubah Data Profile | Mengubah data akun pengguna sesuai yang diinginkan | Berjalan dengan baik | Sukses |
-| 36 | Kelola Alamat | Menambahkan, mengedit, atau menghapus alamat pengiriman | Berjalan dengan baik | Sukses |
-| 37 | Upload Foto Profil | Foto profil berhasil diupload | Berjalan dengan baik | Sukses |
-| 38 | Berikan Review | Review dan rating berhasil diberikan pada produk | Berjalan dengan baik | Sukses |
-| 39 | Halaman Sell | Menampilkan informasi cara menjadi penjual | Berjalan dengan baik | Sukses |
-| 40 | Buat Toko | Form pendaftaran toko berhasil diisi dan toko dibuat | Berjalan dengan baik | Sukses |
-| 41 | Sign Out | Mengeluarkan akun dan mengarahkan ke halaman login | Berjalan dengan baik | Sukses |
+| NO  | Uji Coba                          | Hasil Yang Diharapkan                                                 | Keterangan           | Status |
+| :-- | :-------------------------------- | :-------------------------------------------------------------------- | :------------------- | :----- |
+| 1   | Halaman Homepage Sebelum Login    | Menampilkan informasi produk, kategori, dan tidak bisa membeli        | Berjalan dengan baik | Sukses |
+| 2   | Halaman Register                  | Menampilkan input nama, email, dan password                           | Berjalan dengan baik | Sukses |
+| 3   | Register dengan Email             | Menambah akun dan mengirimkan link verifikasi akun ke email           | Berjalan dengan baik | Sukses |
+| 4   | Register dengan Google            | Membuat akun melalui OAuth Google                                     | Berjalan dengan baik | Sukses |
+| 5   | Register dengan Facebook          | Membuat akun melalui OAuth Facebook                                   | Berjalan dengan baik | Sukses |
+| 6   | Verifikasi Email                  | Link verifikasi berfungsi dan akun terverifikasi                      | Berjalan dengan baik | Sukses |
+| 7   | Halaman Login                     | Menampilkan input email dan password                                  | Berjalan dengan baik | Sukses |
+| 8   | Login                             | Jika akun sudah diverifikasi, input benar, akan diarahkan ke homepage | Berjalan dengan baik | Sukses |
+| 9   | Login dengan Google               | Login melalui OAuth Google                                            | Berjalan dengan baik | Sukses |
+| 10  | Login dengan Facebook             | Login melalui OAuth Facebook                                          | Berjalan dengan baik | Sukses |
+| 11  | Halaman Homepage Setelah Login    | Menampilkan produk dengan fitur tambah ke keranjang dan wishlist      | Berjalan dengan baik | Sukses |
+| 12  | Pencarian Produk                  | Menampilkan produk sesuai kata kunci pencarian                        | Berjalan dengan baik | Sukses |
+| 13  | Filter Produk                     | Menampilkan produk sesuai filter kategori, harga, kondisi             | Berjalan dengan baik | Sukses |
+| 14  | Halaman Product Detail            | Menampilkan informasi lengkap produk, varian, dan review              | Berjalan dengan baik | Sukses |
+| 15  | Tambah ke Keranjang               | Produk berhasil ditambahkan ke keranjang                              | Berjalan dengan baik | Sukses |
+| 16  | Tambah ke Wishlist                | Produk berhasil ditambahkan ke wishlist                               | Berjalan dengan baik | Sukses |
+| 17  | Halaman Cart                      | Menampilkan produk yang ada di keranjang                              | Berjalan dengan baik | Sukses |
+| 18  | Ubah Jumlah Item                  | Jumlah item di keranjang berhasil diubah                              | Berjalan dengan baik | Sukses |
+| 19  | Hapus Item dari Keranjang         | Item berhasil dihapus dari keranjang                                  | Berjalan dengan baik | Sukses |
+| 20  | Checkout                          | Menu keranjang harus terisi, mengarahkan ke halaman checkout          | Berjalan dengan baik | Sukses |
+| 21  | Pilih Alamat Pengiriman           | Alamat pengiriman berhasil dipilih atau ditambahkan                   | Berjalan dengan baik | Sukses |
+| 22  | Pilih Kurir                       | Kurir dan layanan pengiriman berhasil dipilih melalui Biteship        | Berjalan dengan baik | Sukses |
+| 23  | Gunakan Voucher                   | Voucher berhasil diterapkan pada checkout                             | Berjalan dengan baik | Sukses |
+| 24  | Proses Pembayaran                 | Tombol bayar menampilkan detail pembayaran Midtrans                   | Berjalan dengan baik | Sukses |
+| 25  | Pembayaran Midtrans               | Pembayaran berhasil dilakukan melalui Midtrans                        | Berjalan dengan baik | Sukses |
+| 26  | Halaman Orders                    | Menampilkan daftar transaksi sesuai akun yang digunakan               | Berjalan dengan baik | Sukses |
+| 27  | Filter Orders                     | Menampilkan transaksi sesuai filter status                            | Berjalan dengan baik | Sukses |
+| 28  | Detail Order                      | Menampilkan detail lengkap pesanan termasuk produk yang dibeli        | Berjalan dengan baik | Sukses |
+| 29  | Tracking Pengiriman               | Menampilkan tracking pengiriman real-time melalui Biteship            | Berjalan dengan baik | Sukses |
+| 30  | Konfirmasi Penerimaan             | Status order berubah menjadi completed setelah konfirmasi             | Berjalan dengan baik | Sukses |
+| 31  | Halaman Wishlist                  | Menampilkan produk yang disimpan di wishlist                          | Berjalan dengan baik | Sukses |
+| 32  | Hapus dari Wishlist               | Item berhasil dihapus dari wishlist                                   | Berjalan dengan baik | Sukses |
+| 33  | Tambah dari Wishlist ke Keranjang | Produk dari wishlist berhasil ditambahkan ke keranjang                | Berjalan dengan baik | Sukses |
+| 34  | Halaman Profile                   | Menampilkan data akun pengguna yang sedang digunakan                  | Berjalan dengan baik | Sukses |
+| 35  | Ubah Data Profile                 | Mengubah data akun pengguna sesuai yang diinginkan                    | Berjalan dengan baik | Sukses |
+| 36  | Kelola Alamat                     | Menambahkan, mengedit, atau menghapus alamat pengiriman               | Berjalan dengan baik | Sukses |
+| 37  | Upload Foto Profil                | Foto profil berhasil diupload                                         | Berjalan dengan baik | Sukses |
+| 38  | Berikan Review                    | Review dan rating berhasil diberikan pada produk                      | Berjalan dengan baik | Sukses |
+| 39  | Halaman Sell                      | Menampilkan informasi cara menjadi penjual                            | Berjalan dengan baik | Sukses |
+| 40  | Buat Toko                         | Form pendaftaran toko berhasil diisi dan toko dibuat                  | Berjalan dengan baik | Sukses |
+| 41  | Sign Out                          | Mengeluarkan akun dan mengarahkan ke halaman login                    | Berjalan dengan baik | Sukses |
 
 Pada uji coba black box di atas dapat disimpulkan bahwa halaman dan fungsi akun user (pembeli) pada website Reluv dapat dijalankan dengan baik tanpa error maupun bug, setelah di-hosting.
 
 ### 3.5.2. Uji Coba Web Browser
 
-Pengujian performa dan responsivitas dilakukan di berbagai browser (Chrome, Firefox, Edge, Safari) menggunakan Google Lighthouse untuk mencapai skor optimal pada aspek Performance, SEO, dan Accessibility. 
+Pengujian performa dan responsivitas dilakukan di berbagai browser (Chrome, Firefox, Edge, Safari) menggunakan Google Lighthouse untuk mencapai skor optimal pada aspek Performance, SEO, dan Accessibility.
 
 Pengujian juga mencakup:
+
 - **Responsivitas**: Pengujian pada berbagai ukuran layar (mobile, tablet, desktop)
 - **Kompatibilitas**: Pengujian pada berbagai versi browser
 - **Performance**: Pengukuran waktu muat halaman, First Contentful Paint (FCP), Largest Contentful Paint (LCP)

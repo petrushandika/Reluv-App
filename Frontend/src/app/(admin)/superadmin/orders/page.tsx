@@ -2,58 +2,28 @@
 
 import { DashboardShell } from "@/shared/components/layout/DashboardShell"
 import { 
-  LayoutDashboard, 
-  Store, 
-  Package, 
-  Users, 
-  Settings,
-  ShoppingCart,
   Search,
   Filter,
   Download,
   DollarSign,
+  ShoppingCart,
   TrendingUp,
   AlertCircle
 } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/ui/card"
 import { Button } from "@/shared/components/ui/button"
-import { Input } from "@/shared/components/ui/input"
 import { SuperadminOrdersList } from "@/features/(admin)/superadmin/components/SuperadminOrdersList"
-
-const sidebarItems = [
-  {
-    label: "Dashboard",
-    href: "/superadmin",
-    icon: LayoutDashboard,
-  },
-  {
-    label: "Stores",
-    href: "/superadmin/stores",
-    icon: Store,
-  },
-  {
-    label: "Products",
-    href: "/superadmin/products",
-    icon: Package,
-  },
-  {
-    label: "Users",
-    href: "/superadmin/users",
-    icon: Users,
-  },
-  {
-    label: "Orders",
-    href: "/superadmin/orders",
-    icon: ShoppingCart,
-  },
-  {
-    label: "Settings",
-    href: "/superadmin/settings",
-    icon: Settings,
-  },
-]
+import { superadminSidebarItems } from "@/features/(admin)/superadmin/constants/sidebarItems"
+import { useState } from "react"
 
 export default function SuperadminOrdersPage() {
+  const [searchQuery, setSearchQuery] = useState("")
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault()
+    // TODO: Implement search functionality
+  }
+
   const stats = [
     {
       title: "Global GMV",
@@ -87,26 +57,34 @@ export default function SuperadminOrdersPage() {
       value: "+18.4%",
       description: "Compared to last month",
       icon: TrendingUp,
-      color: "text-indigo-600",
-      bg: "bg-indigo-50 dark:bg-indigo-500/10",
-      border: "border-indigo-100 dark:border-indigo-900/30",
+      color: "text-violet-600",
+      bg: "bg-violet-50 dark:bg-violet-500/10",
+      border: "border-violet-100 dark:border-violet-900/30",
     },
   ]
 
   return (
     <DashboardShell
-      title="Global Orders"
+      title="Orders"
       type="superadmin"
-      sidebarItems={sidebarItems}
+      sidebarItems={superadminSidebarItems}
+      branding={
+        <h1 className="text-2xl font-medium text-slate-900 dark:text-white">Superadmin</h1>
+      }
       actions={
-        <Button variant="outline" className="rounded-xl border-slate-200 dark:border-slate-800 font-bold text-xs uppercase tracking-widest h-10 px-4">
-          <Download className="mr-2 h-4 w-4" />
-          Platform Report
-        </Button>
+        <div className="flex items-center gap-2 sm:gap-3 flex-wrap sm:flex-nowrap">
+          <Button 
+            variant="outline" 
+            className="rounded-xl border-slate-200 dark:border-slate-800 font-bold text-xs uppercase tracking-widest h-10 px-4 hover:bg-slate-50 dark:hover:bg-slate-900 transition-all border"
+          >
+            <Download className="mr-2 h-4 w-4" />
+            Export Data
+          </Button>
+        </div>
       }
     >
       <div className="space-y-6">
-        {}
+        {/* Stats Cards */}
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           {stats.map((stat) => (
             <Card key={stat.title} className="border-slate-200 dark:border-slate-800 shadow-none rounded-2xl group overflow-hidden">
@@ -126,29 +104,30 @@ export default function SuperadminOrdersPage() {
           ))}
         </div>
 
-        {}
+        {/* Search and Filter */}
         <div className="flex flex-col md:flex-row gap-4 items-center justify-between p-5 bg-slate-50/50 dark:bg-slate-900/50 rounded-2xl border border-slate-200 dark:border-slate-800">
-          <div className="relative w-full md:w-96">
+          <form onSubmit={handleSearch} className="relative w-full md:w-96">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
-            <Input 
+            <input 
+              type="text"
               placeholder="Search by order ID, customer, or store..." 
-              className="pl-11 h-11 bg-white dark:bg-slate-950 border-slate-200 dark:border-slate-800 rounded-xl text-sm font-medium focus:ring-sky-500/20 focus:border-sky-500 transition-all border"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pl-11 h-11 rounded-xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 transition-all text-sm font-medium"
             />
-          </div>
+          </form>
           <div className="flex items-center space-x-3 w-full md:w-auto">
-            <Button variant="outline" className="flex-1 md:flex-none h-11 px-5 rounded-xl border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 font-bold text-xs uppercase tracking-widest hover:bg-slate-50 dark:hover:bg-slate-900 transition-all border">
+            <Button 
+              variant="outline" 
+              className="flex-1 md:flex-none h-11 px-5 rounded-xl border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 font-bold text-xs uppercase tracking-widest hover:bg-slate-50 dark:hover:bg-slate-900 transition-all border"
+            >
               <Filter className="mr-2 h-4 w-4" />
-              Store Filter
+              Filter
             </Button>
-            <div className="h-11 w-px bg-slate-200 dark:bg-slate-800 hidden md:block" />
-            <div className="flex-1 md:flex-none flex flex-col items-end">
-              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Global Status</span>
-              <span className="text-xs font-bold text-slate-900 dark:text-white">Real-time Feed</span>
-            </div>
           </div>
         </div>
 
-        {}
+        {/* Orders List */}
         <SuperadminOrdersList />
       </div>
     </DashboardShell>

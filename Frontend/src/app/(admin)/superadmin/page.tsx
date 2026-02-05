@@ -12,60 +12,18 @@ import { DashboardShell } from "@/shared/components/layout/DashboardShell"
 import { SuperadminOverview } from "@/features/(admin)/superadmin/components/SuperadminOverview"
 import { SuperadminActivity } from "@/features/(admin)/superadmin/components/SuperadminActivity"
 import { 
-  ShieldAlert, 
-  Users, 
-  Store, 
   Activity, 
-  LayoutDashboard, 
-  Tag, 
-  BarChart3, 
-  Settings2,
-  AlertTriangle
+  AlertTriangle,
+  Store,
+  Users
 } from "lucide-react"
-
-const sidebarItems = [
-  {
-    label: "Platform Overview",
-    href: "/superadmin",
-    icon: LayoutDashboard,
-  },
-  {
-    label: "Store Management",
-    href: "/superadmin/stores",
-    icon: Store,
-  },
-  {
-    label: "User base",
-    href: "/superadmin/users",
-    icon: Users,
-  },
-  {
-    label: "Product Moderation",
-    href: "/superadmin/products",
-    icon: ShieldAlert,
-  },
-  {
-    label: "Global Categories",
-    href: "/superadmin/categories",
-    icon: Tag,
-  },
-  {
-    label: "Analytics",
-    href: "/superadmin/analytics",
-    icon: BarChart3,
-  },
-  {
-    label: "System Settings",
-    href: "/superadmin/settings",
-    icon: Settings2,
-  },
-]
+import { superadminSidebarItems } from "@/features/(admin)/superadmin/constants/sidebarItems"
 
 export default function SuperadminDashboardPage() {
   return (
     <DashboardShell 
-      title="Platform Overview" 
-      sidebarItems={sidebarItems}
+      title="Overview" 
+      sidebarItems={superadminSidebarItems}
       type="superadmin"
       branding={
         <h1 className="text-2xl font-medium text-(--text-primary)">Superadmin</h1>

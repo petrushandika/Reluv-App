@@ -39,6 +39,7 @@ import {
   getVouchers,
   type Voucher,
 } from "@/features/(main)/checkout/api/checkoutApi";
+import { PrivateRoute } from "@/shared/components/guards/RouteGuards";
 
 const checkoutFormSchema = z.object({
   firstName: z
@@ -1356,7 +1357,7 @@ const Checkout = () => {
   const isLoading = isFetchingCart || !hasCheckedCart;
 
   return (
-    <>
+    <PrivateRoute>
       {isLoading && (
         <div className="fixed inset-0 bg-white/90 dark:bg-gray-900/90 backdrop-blur-md z-50 flex items-center justify-center">
           <Spinner size="lg" fullScreen={false} />
@@ -2282,7 +2283,7 @@ const Checkout = () => {
           </div>
         </div>
       )}
-    </>
+    </PrivateRoute>
   );
 };
 
