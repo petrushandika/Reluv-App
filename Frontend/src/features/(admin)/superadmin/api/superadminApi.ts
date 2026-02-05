@@ -47,14 +47,10 @@ export const getStores = async (
   return response.data;
 };
 
-// TODO: Backend needs to add admin endpoint: PATCH /store/admin/:id
-// This endpoint should allow admin to update store status (isActive, isVerified)
 export const updateStoreStatus = async (
   storeId: number,
   data: { isActive?: boolean; isVerified?: boolean }
 ): Promise<StoreListItem> => {
-  // Temporary: Using admin endpoint (needs to be implemented in backend)
-  // Expected endpoint: PATCH /store/admin/:id
   const response = await api.patch<StoreListItem>(`/store/admin/${storeId}`, data);
   return response.data;
 };
@@ -98,25 +94,17 @@ export interface QueryUsersParams {
   isVerified?: boolean;
 }
 
-// TODO: Backend needs to add admin endpoint: GET /users/admin
-// This endpoint should allow admin to list all users with pagination and filters
 export const getUsers = async (
   params?: QueryUsersParams
 ): Promise<UsersResponse> => {
-  // Temporary: Using admin endpoint (needs to be implemented in backend)
-  // Expected endpoint: GET /users/admin?page=1&limit=10&search=...
   const response = await api.get<UsersResponse>("/users/admin", { params });
   return response.data;
 };
 
-// TODO: Backend needs to add admin endpoint: PATCH /users/admin/:id
-// This endpoint should allow admin to update user status (isActive, isVerified, role)
 export const updateUserStatus = async (
   userId: number,
   data: { isActive?: boolean; isVerified?: boolean; role?: "USER" | "ADMIN" | "STORE" }
 ): Promise<UserListItem> => {
-  // Temporary: Using admin endpoint (needs to be implemented in backend)
-  // Expected endpoint: PATCH /users/admin/:id
   const response = await api.patch<UserListItem>(`/users/admin/${userId}`, data);
   return response.data;
 };

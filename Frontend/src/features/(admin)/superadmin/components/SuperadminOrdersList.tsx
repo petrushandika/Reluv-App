@@ -11,6 +11,8 @@ import {
 import { Badge } from "@/shared/components/ui/badge"
 import { Button } from "@/shared/components/ui/button"
 import { cn } from "@/shared/lib/utils"
+import { useState } from "react"
+import { OrderViewModal } from "./modals/OrderViewModal"
 
 const orders = [
   {
@@ -43,6 +45,14 @@ const orders = [
 ]
 
 export function SuperadminOrdersList() {
+  const [selectedOrder, setSelectedOrder] = useState<typeof orders[0] | null>(null)
+  const [isViewModalOpen, setIsViewModalOpen] = useState(false)
+
+  const handleView = (order: typeof orders[0]) => {
+    setSelectedOrder(order)
+    setIsViewModalOpen(true)
+  }
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case "PENDING": return "text-amber-600 border-amber-100 bg-amber-50 dark:bg-amber-500/10 dark:border-amber-900/30";
@@ -97,6 +107,7 @@ export function SuperadminOrdersList() {
                 <div className="flex items-center justify-end gap-2">
                   <Button 
                     variant="ghost" 
+                    onClick={() => handleView(order)}
                     className="h-8 w-16 sm:w-20 rounded-lg bg-sky-50 dark:bg-sky-500/10 text-sky-600 hover:text-sky-700 hover:bg-sky-100 dark:hover:bg-sky-500/20 text-[10px] font-medium uppercase tracking-widest transition-all"
                   >
                     View
@@ -107,6 +118,15 @@ export function SuperadminOrdersList() {
           ))}
         </TableBody>
       </Table>
+
+      <OrderViewModal
+        isOpen={isViewModalOpen}
+        onClose={() => {
+          setIsViewModalOpen(false)
+          setSelectedOrder(null)
+        }}
+        order={selectedOrder}
+      />
     </div>
   )
 }

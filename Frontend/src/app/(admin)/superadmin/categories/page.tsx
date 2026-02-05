@@ -20,15 +20,23 @@ import {
   createCategory, 
   updateCategory, 
   deleteCategory,
-  CategoryListItem 
+  CategoryListItem,
+  CreateCategoryDto,
+  UpdateCategoryDto
 } from "@/features/(admin)/superadmin/api/superadminApi"
 import { Skeleton } from "@/shared/components/ui/skeleton"
 import { superadminSidebarItems } from "@/features/(admin)/superadmin/constants/sidebarItems"
+import { CategoryModal } from "@/features/(admin)/superadmin/components/modals/CategoryModal"
+import { toast } from "sonner"
 
 export default function SuperadminCategoriesPage() {
   const [categories, setCategories] = useState<CategoryListItem[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState("")
+  const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false)
+  const [selectedCategory, setSelectedCategory] = useState<CategoryListItem | null>(null)
+  const [modalMode, setModalMode] = useState<"create" | "edit" | "addSubcategory">("create")
+  const [parentIdForSubcategory, setParentIdForSubcategory] = useState<number | undefined>(undefined)
 
   const fetchCategories = async () => {
     try {
@@ -48,31 +56,53 @@ export default function SuperadminCategoriesPage() {
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
-    // TODO: Implement search functionality
   }
 
   const handleEdit = (category: CategoryListItem) => {
-    // TODO: Open edit modal
-    console.log("Edit category:", category)
+    setSelectedCategory(category)
+    setModalMode("edit")
+    setIsCategoryModalOpen(true)
   }
 
   const handleDelete = async (categoryId: number) => {
-    if (confirm("Are you sure you want to delete this category?")) {
-      try {
-        await deleteCategory(categoryId)
-        await fetchCategories()
-      } catch (error) {
-        console.error("Failed to delete category:", error)
-      }
+    try {
+      await deleteCategory(categoryId)
+      toast.success("Category deleted successfully")
+      await fetchCategories()
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || "Failed to delete category")
     }
   }
 
   const handleAddSubcategory = (parentId: number) => {
-    // TODO: Open add subcategory modal
-    console.log("Add subcategory to:", parentId)
+    setParentIdForSubcategory(parentId)
+    setSelectedCategory(null)
+    setModalMode("addSubcategory")
+    setIsCategoryModalOpen(true)
   }
 
-  // Calculate stats
+  const handleCreateCategory = () => {
+    setSelectedCategory(null)
+    setParentIdForSubcategory(undefined)
+    setModalMode("create")
+    setIsCategoryModalOpen(true)
+  }
+
+  const handleSaveCategory = async (data: CreateCategoryDto | UpdateCategoryDto) => {
+    try {
+      if (modalMode === "edit" && "id" in data) {
+        await updateCategory(data.id, data)
+        toast.success("Category updated successfully")
+      } else {
+        await createCategory(data as CreateCategoryDto)
+        toast.success(modalMode === "addSubcategory" ? "Subcategory created successfully" : "Category created successfully")
+      }
+      await fetchCategories()
+    } catch (error: any) {
+      throw error
+    }
+  }
+
   const stats = {
     total: categories.length,
     root: categories.filter(c => !c.parentId).length,
@@ -92,6 +122,7 @@ export default function SuperadminCategoriesPage() {
         <div className="flex items-center gap-2 sm:gap-3 flex-wrap sm:flex-nowrap">
           <Button 
             variant="outline" 
+            onClick={handleCreateCategory}
             className="rounded-xl border-slate-200 dark:border-slate-800 font-bold text-xs uppercase tracking-widest h-10 px-4 hover:bg-slate-50 dark:hover:bg-slate-900 transition-all border"
           >
             <Plus className="mr-2 h-4 w-4" />
@@ -108,7 +139,6 @@ export default function SuperadminCategoriesPage() {
       }
     >
       <div className="space-y-6">
-        {/* Stats Cards */}
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           <Card className="border-slate-200 dark:border-slate-800 shadow-none rounded-2xl group overflow-hidden">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -169,7 +199,6 @@ export default function SuperadminCategoriesPage() {
           </Card>
         </div>
 
-        {/* Search and Filter */}
         <div className="flex flex-col md:flex-row gap-4 items-center justify-between p-5 bg-slate-50/50 dark:bg-slate-900/50 rounded-2xl border border-slate-200 dark:border-slate-800">
           <form onSubmit={handleSearch} className="relative w-full md:w-96">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
@@ -192,7 +221,6 @@ export default function SuperadminCategoriesPage() {
           </div>
         </div>
 
-        {/* Categories List */}
         {isLoading ? (
           <div className="space-y-4">
             <Skeleton className="h-64 w-full rounded-2xl" />
@@ -207,6 +235,22 @@ export default function SuperadminCategoriesPage() {
           />
         )}
       </div>
+
+      <CategoryModal
+        isOpen={isCategoryModalOpen}
+        onClose={(refresh) => {
+          setIsCategoryModalOpen(false)
+          setSelectedCategory(null)
+          setParentIdForSubcategory(undefined)
+          if (refresh) {
+            fetchCategories()
+          }
+        }}
+        category={selectedCategory}
+        parentId={parentIdForSubcategory}
+        mode={modalMode}
+        onSave={handleSaveCategory}
+      />
     </DashboardShell>
   )
 }

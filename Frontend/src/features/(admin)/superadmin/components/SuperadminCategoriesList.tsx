@@ -16,6 +16,7 @@ import {
 } from "lucide-react"
 import { CategoryListItem } from "../api/superadminApi"
 import { useState, ReactElement } from "react"
+import { DeleteConfirmModal } from "./modals/DeleteConfirmModal"
 
 interface SuperadminCategoriesListProps {
   categories: CategoryListItem[]
@@ -31,6 +32,20 @@ export function SuperadminCategoriesList({
   onAddSubcategory 
 }: SuperadminCategoriesListProps) {
   const [expandedCategories, setExpandedCategories] = useState<Set<number>>(new Set())
+  const [selectedCategory, setSelectedCategory] = useState<CategoryListItem | null>(null)
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
+
+  const handleDeleteClick = (category: CategoryListItem) => {
+    setSelectedCategory(category)
+    setIsDeleteModalOpen(true)
+  }
+
+  const confirmDelete = async () => {
+    if (!selectedCategory) return
+    await onDelete?.(selectedCategory.id)
+    setIsDeleteModalOpen(false)
+    setSelectedCategory(null)
+  }
 
   const toggleExpand = (categoryId: number) => {
     const newExpanded = new Set(expandedCategories)
@@ -133,7 +148,7 @@ export function SuperadminCategoriesList({
               </Button>
               <Button 
                 variant="ghost" 
-                onClick={() => onDelete?.(category.id)}
+                onClick={() => handleDeleteClick(category)}
                 className="h-8 w-16 sm:w-20 rounded-lg bg-rose-50 dark:bg-rose-500/10 text-rose-600 hover:text-rose-700 hover:bg-rose-100 dark:hover:bg-rose-500/20 text-[10px] font-medium uppercase tracking-widest transition-all"
               >
                 Delete
@@ -148,7 +163,6 @@ export function SuperadminCategoriesList({
     )
   }
 
-  // Filter hanya root categories untuk display utama
   const rootCategories = categories.filter(cat => !cat.parentId)
 
   return (
@@ -181,6 +195,18 @@ export function SuperadminCategoriesList({
           )}
         </TableBody>
       </Table>
+
+      <DeleteConfirmModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => {
+          setIsDeleteModalOpen(false)
+          setSelectedCategory(null)
+        }}
+        onConfirm={confirmDelete}
+        title="Delete Category"
+        description="Are you sure you want to delete this category? This action cannot be undone and will also delete all subcategories."
+        itemName={selectedCategory?.name}
+      />
     </div>
   )
 }

@@ -27,35 +27,29 @@ export default function SuperadminSettingsPage() {
   const [isSaving, setIsSaving] = useState(false)
   const [activeTab, setActiveTab] = useState("general")
 
-  // General Settings
   const [platformName, setPlatformName] = useState("Reluv")
   const [maintenanceMode, setMaintenanceMode] = useState(false)
   const [allowRegistration, setAllowRegistration] = useState(true)
 
-  // Security Settings
   const [requireEmailVerification, setRequireEmailVerification] = useState(true)
   const [sessionTimeout, setSessionTimeout] = useState("24")
   const [maxLoginAttempts, setMaxLoginAttempts] = useState("5")
 
-  // Email Settings
   const [smtpHost, setSmtpHost] = useState("")
   const [smtpPort, setSmtpPort] = useState("587")
   const [smtpUser, setSmtpUser] = useState("")
   const [smtpFrom, setSmtpFrom] = useState("")
 
-  // Payment Settings
   const [midtransServerKey, setMidtransServerKey] = useState("")
   const [midtransClientKey, setMidtransClientKey] = useState("")
   const [paymentEnabled, setPaymentEnabled] = useState(true)
 
-  // Shipping Settings
   const [biteshipApiKey, setBiteshipApiKey] = useState("")
   const [defaultShippingProvider, setDefaultShippingProvider] = useState("jne")
 
   const handleSave = async (section: string) => {
     setIsSaving(true)
     try {
-      // TODO: Implement save functionality
       await new Promise(resolve => setTimeout(resolve, 1000))
       console.log(`Saving ${section} settings...`)
     } catch (error) {
@@ -86,7 +80,6 @@ export default function SuperadminSettingsPage() {
       }
     >
       <div className="space-y-6">
-        {/* Settings Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
           <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 lg:grid-cols-6 h-auto bg-slate-50/50 dark:bg-slate-900/50 p-1 rounded-2xl border border-slate-200 dark:border-slate-800">
             <TabsTrigger 
@@ -127,7 +120,6 @@ export default function SuperadminSettingsPage() {
             </TabsTrigger>
           </TabsList>
 
-          {/* General Settings */}
           <TabsContent value="general" className="space-y-6">
             <Card className="border-slate-200 dark:border-slate-800 shadow-none rounded-2xl">
               <CardHeader className="px-4 sm:px-6 py-4 border-b border-slate-50 dark:border-slate-800/50">
@@ -198,7 +190,6 @@ export default function SuperadminSettingsPage() {
             </Card>
           </TabsContent>
 
-          {/* Security Settings */}
           <TabsContent value="security" className="space-y-6">
             <Card className="border-slate-200 dark:border-slate-800 shadow-none rounded-2xl">
               <CardHeader className="px-4 sm:px-6 py-4 border-b border-slate-50 dark:border-slate-800/50">
@@ -269,7 +260,6 @@ export default function SuperadminSettingsPage() {
             </Card>
           </TabsContent>
 
-          {/* Email Settings */}
           <TabsContent value="email" className="space-y-6">
             <Card className="border-slate-200 dark:border-slate-800 shadow-none rounded-2xl">
               <CardHeader className="px-4 sm:px-6 py-4 border-b border-slate-50 dark:border-slate-800/50">
@@ -353,7 +343,6 @@ export default function SuperadminSettingsPage() {
             </Card>
           </TabsContent>
 
-          {/* Payment Settings */}
           <TabsContent value="payment" className="space-y-6">
             <Card className="border-slate-200 dark:border-slate-800 shadow-none rounded-2xl">
               <CardHeader className="px-4 sm:px-6 py-4 border-b border-slate-50 dark:border-slate-800/50">
@@ -424,7 +413,6 @@ export default function SuperadminSettingsPage() {
             </Card>
           </TabsContent>
 
-          {/* Shipping Settings */}
           <TabsContent value="shipping" className="space-y-6">
             <Card className="border-slate-200 dark:border-slate-800 shadow-none rounded-2xl">
               <CardHeader className="px-4 sm:px-6 py-4 border-b border-slate-50 dark:border-slate-800/50">
@@ -484,7 +472,6 @@ export default function SuperadminSettingsPage() {
             </Card>
           </TabsContent>
 
-          {/* System Settings */}
           <TabsContent value="system" className="space-y-6">
             <Card className="border-slate-200 dark:border-slate-800 shadow-none rounded-2xl">
               <CardHeader className="px-4 sm:px-6 py-4 border-b border-slate-50 dark:border-slate-800/50">

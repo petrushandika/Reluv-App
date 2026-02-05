@@ -17,6 +17,8 @@ import {
 } from "lucide-react"
 import { superadminSidebarItems } from "@/features/(admin)/superadmin/constants/sidebarItems"
 import { useState } from "react"
+import { ProductStatusModal } from "@/features/(admin)/superadmin/components/modals/ProductStatusModal"
+import { toast } from "sonner"
 
 const pendingProducts = [
   {
@@ -39,10 +41,33 @@ const pendingProducts = [
 
 export default function SuperadminProductsPage() {
   const [searchQuery, setSearchQuery] = useState("")
+  const [isStatusModalOpen, setIsStatusModalOpen] = useState(false)
+  const [selectedProduct, setSelectedProduct] = useState<typeof pendingProducts[0] | null>(null)
+  const [actionType, setActionType] = useState<"approve" | "reject">("approve")
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
-    // TODO: Implement search functionality
+  }
+
+  const handleStatusClick = (product: typeof pendingProducts[0], type: "approve" | "reject") => {
+    setSelectedProduct(product)
+    setActionType(type)
+    setIsStatusModalOpen(true)
+  }
+
+  const confirmStatusChange = async () => {
+    if (!selectedProduct) return
+    try {
+      if (actionType === "approve") {
+        toast.success(`Product "${selectedProduct.name}" has been approved`)
+      } else {
+        toast.success(`Product "${selectedProduct.name}" has been rejected`)
+      }
+      setIsStatusModalOpen(false)
+      setSelectedProduct(null)
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || `Failed to ${actionType} product`)
+    }
   }
 
   const stats = {
@@ -73,7 +98,6 @@ export default function SuperadminProductsPage() {
       }
     >
       <div className="space-y-6">
-        {/* Stats Cards */}
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           <Card className="border-slate-200 dark:border-slate-800 shadow-none rounded-2xl group overflow-hidden">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -134,7 +158,6 @@ export default function SuperadminProductsPage() {
           </Card>
         </div>
 
-        {/* Search and Filter */}
         <div className="flex flex-col md:flex-row gap-4 items-center justify-between p-5 bg-slate-50/50 dark:bg-slate-900/50 rounded-2xl border border-slate-200 dark:border-slate-800">
           <form onSubmit={handleSearch} className="relative w-full md:w-96">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
@@ -157,7 +180,6 @@ export default function SuperadminProductsPage() {
           </div>
         </div>
 
-        {/* Products Grid */}
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {pendingProducts.map((p) => (
             <Card key={p.id} className="border-slate-200 dark:border-slate-800 shadow-none rounded-2xl overflow-hidden transition-all group hover:border-sky-500/30">
@@ -200,6 +222,7 @@ export default function SuperadminProductsPage() {
                   <Button 
                     size="sm" 
                     variant="outline" 
+                    onClick={() => handleStatusClick(p, "approve")}
                     className="h-10 text-emerald-600 border-emerald-100 hover:bg-emerald-50 dark:hover:bg-emerald-500/10 transition-all font-bold text-[10px] uppercase tracking-wider rounded-xl"
                   >
                     <CheckCircle2 className="h-4 w-4 mr-2" />
@@ -208,6 +231,7 @@ export default function SuperadminProductsPage() {
                   <Button 
                     size="sm" 
                     variant="outline" 
+                    onClick={() => handleStatusClick(p, "reject")}
                     className="h-10 text-rose-600 border-rose-100 hover:bg-rose-50 dark:hover:bg-rose-500/10 transition-all font-bold text-[10px] uppercase tracking-wider rounded-xl"
                   >
                     <XCircle className="h-4 w-4 mr-2" />
@@ -219,6 +243,17 @@ export default function SuperadminProductsPage() {
           ))}
         </div>
       </div>
+
+      <ProductStatusModal
+        isOpen={isStatusModalOpen}
+        onClose={() => {
+          setIsStatusModalOpen(false)
+          setSelectedProduct(null)
+        }}
+        onConfirm={confirmStatusChange}
+        actionType={actionType}
+        productName={selectedProduct?.name}
+      />
     </DashboardShell>
   )
 }

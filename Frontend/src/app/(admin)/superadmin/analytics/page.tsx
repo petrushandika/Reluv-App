@@ -88,7 +88,6 @@ export default function SuperadminAnalyticsPage() {
       }
     >
       <div className="space-y-6">
-        {/* Stats Cards */}
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           {stats.map((stat) => (
             <Card key={stat.title} className="border-slate-200 dark:border-slate-800 shadow-none rounded-2xl group overflow-hidden">
@@ -119,7 +118,6 @@ export default function SuperadminAnalyticsPage() {
           ))}
         </div>
 
-        {/* Time Range Filter */}
         <div className="flex flex-col md:flex-row gap-4 items-center justify-between p-5 bg-slate-50/50 dark:bg-slate-900/50 rounded-2xl border border-slate-200 dark:border-slate-800">
           <div className="flex items-center space-x-2">
             <Calendar className="h-4 w-4 text-slate-400" />
@@ -144,9 +142,7 @@ export default function SuperadminAnalyticsPage() {
           </div>
         </div>
 
-        {/* Charts Grid */}
         <div className="grid gap-6 lg:grid-cols-7">
-          {/* Platform Growth Chart */}
           <Card className="lg:col-span-4 border-slate-200 dark:border-slate-800 shadow-none rounded-2xl">
             <CardHeader className="flex flex-col xs:flex-row items-start xs:items-center justify-between px-4 sm:px-6 py-4 border-b border-slate-50 dark:border-slate-800/50 gap-4">
               <div className="space-y-1">
@@ -171,7 +167,6 @@ export default function SuperadminAnalyticsPage() {
             </CardContent>
           </Card>
 
-          {/* Top Categories */}
           <Card className="lg:col-span-3 border-slate-200 dark:border-slate-800 shadow-none rounded-2xl overflow-hidden flex flex-col">
             <CardHeader className="px-4 sm:px-6 py-4 border-b border-slate-50 dark:border-slate-800/50">
               <div className="flex items-center justify-between">
@@ -221,9 +216,7 @@ export default function SuperadminAnalyticsPage() {
           </Card>
         </div>
 
-        {/* Additional Stats Grid */}
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {/* Conversion Rate */}
           <Card className="border-slate-200 dark:border-slate-800 shadow-none rounded-2xl">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Conversion Rate</CardTitle>
@@ -239,7 +232,6 @@ export default function SuperadminAnalyticsPage() {
             </CardContent>
           </Card>
 
-          {/* Average Order Value */}
           <Card className="border-slate-200 dark:border-slate-800 shadow-none rounded-2xl">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Avg Order Value</CardTitle>
@@ -255,7 +247,6 @@ export default function SuperadminAnalyticsPage() {
             </CardContent>
           </Card>
 
-          {/* Customer Retention */}
           <Card className="border-slate-200 dark:border-slate-800 shadow-none rounded-2xl">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Customer Retention</CardTitle>

@@ -15,6 +15,8 @@ import {
 } from "lucide-react"
 import { StoreListItem } from "../api/superadminApi"
 import { useState } from "react"
+import { StoreViewModal } from "./modals/StoreViewModal"
+import { StatusConfirmModal } from "./modals/StatusConfirmModal"
 
 interface SuperadminStoresListProps {
   stores: StoreListItem[]
@@ -23,16 +25,36 @@ interface SuperadminStoresListProps {
 
 export function SuperadminStoresList({ stores, onStatusChange }: SuperadminStoresListProps) {
   const [loadingStoreId, setLoadingStoreId] = useState<number | null>(null)
+  const [selectedStore, setSelectedStore] = useState<StoreListItem | null>(null)
+  const [isViewModalOpen, setIsViewModalOpen] = useState(false)
+  const [isStatusModalOpen, setIsStatusModalOpen] = useState(false)
+  const [statusAction, setStatusAction] = useState<{ type: "verify" | "unverify" | "activate" | "deactivate", storeId: number } | null>(null)
 
-  const handleStatusChange = async (
-    storeId: number,
-    data: { isActive?: boolean; isVerified?: boolean }
-  ) => {
-    setLoadingStoreId(storeId)
+  const handleView = (store: StoreListItem) => {
+    setSelectedStore(store)
+    setIsViewModalOpen(true)
+  }
+
+  const handleStatusClick = (store: StoreListItem, type: "verify" | "unverify" | "activate" | "deactivate") => {
+    setSelectedStore(store)
+    setStatusAction({ type, storeId: store.id })
+    setIsStatusModalOpen(true)
+  }
+
+  const confirmStatusChange = async () => {
+    if (!statusAction || !selectedStore) return
+    setLoadingStoreId(statusAction.storeId)
     try {
-      await onStatusChange?.(storeId, data)
+      const data: { isActive?: boolean; isVerified?: boolean } = {}
+      if (statusAction.type === "verify") data.isVerified = true
+      if (statusAction.type === "unverify") data.isVerified = false
+      if (statusAction.type === "activate") data.isActive = true
+      if (statusAction.type === "deactivate") data.isActive = false
+      await onStatusChange?.(statusAction.storeId, data)
     } finally {
       setLoadingStoreId(null)
+      setIsStatusModalOpen(false)
+      setStatusAction(null)
     }
   }
 
@@ -158,7 +180,7 @@ export function SuperadminStoresList({ stores, onStatusChange }: SuperadminStore
                   <div className="flex items-center justify-end gap-2">
                     <Button 
                       variant="ghost" 
-                      onClick={() => window.open(`/store/${store.slug}`, "_blank")}
+                      onClick={() => handleView(store)}
                       className="h-8 w-16 sm:w-20 rounded-lg bg-sky-50 dark:bg-sky-500/10 text-sky-600 hover:text-sky-700 hover:bg-sky-100 dark:hover:bg-sky-500/20 text-[10px] font-medium uppercase tracking-widest transition-all"
                     >
                       View
@@ -166,7 +188,7 @@ export function SuperadminStoresList({ stores, onStatusChange }: SuperadminStore
                     {!store.isVerified && (
                       <Button 
                         variant="ghost" 
-                        onClick={() => handleStatusChange(store.id, { isVerified: true })}
+                        onClick={() => handleStatusClick(store, "verify")}
                         disabled={loadingStoreId === store.id}
                         className="h-8 w-16 sm:w-20 rounded-lg bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 hover:text-emerald-700 hover:bg-emerald-100 dark:hover:bg-emerald-500/20 text-[10px] font-medium uppercase tracking-widest transition-all"
                       >
@@ -176,7 +198,7 @@ export function SuperadminStoresList({ stores, onStatusChange }: SuperadminStore
                     {store.isVerified && (
                       <Button 
                         variant="ghost" 
-                        onClick={() => handleStatusChange(store.id, { isVerified: false })}
+                        onClick={() => handleStatusClick(store, "unverify")}
                         disabled={loadingStoreId === store.id}
                         className="h-8 w-16 sm:w-20 rounded-lg bg-amber-50 dark:bg-amber-500/10 text-amber-600 hover:text-amber-700 hover:bg-amber-100 dark:hover:bg-amber-500/20 text-[10px] font-medium uppercase tracking-widest transition-all"
                       >
@@ -186,7 +208,7 @@ export function SuperadminStoresList({ stores, onStatusChange }: SuperadminStore
                     {store.isActive && (
                       <Button 
                         variant="ghost" 
-                        onClick={() => handleStatusChange(store.id, { isActive: false })}
+                        onClick={() => handleStatusClick(store, "deactivate")}
                         disabled={loadingStoreId === store.id}
                         className="h-8 w-16 sm:w-20 rounded-lg bg-rose-50 dark:bg-rose-500/10 text-rose-600 hover:text-rose-700 hover:bg-rose-100 dark:hover:bg-rose-500/20 text-[10px] font-medium uppercase tracking-widest transition-all"
                       >
@@ -196,7 +218,7 @@ export function SuperadminStoresList({ stores, onStatusChange }: SuperadminStore
                     {!store.isActive && (
                       <Button 
                         variant="ghost" 
-                        onClick={() => handleStatusChange(store.id, { isActive: true })}
+                        onClick={() => handleStatusClick(store, "activate")}
                         disabled={loadingStoreId === store.id}
                         className="h-8 w-16 sm:w-20 rounded-lg bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 hover:text-emerald-700 hover:bg-emerald-100 dark:hover:bg-emerald-500/20 text-[10px] font-medium uppercase tracking-widest transition-all"
                       >
@@ -210,6 +232,34 @@ export function SuperadminStoresList({ stores, onStatusChange }: SuperadminStore
           )}
         </TableBody>
       </Table>
+
+      <StoreViewModal
+        isOpen={isViewModalOpen}
+        onClose={() => {
+          setIsViewModalOpen(false)
+          setSelectedStore(null)
+        }}
+        store={selectedStore}
+      />
+
+      <StatusConfirmModal
+        isOpen={isStatusModalOpen}
+        onClose={() => {
+          setIsStatusModalOpen(false)
+          setStatusAction(null)
+        }}
+        onConfirm={confirmStatusChange}
+        title={statusAction?.type === "verify" ? "Verify Store" : statusAction?.type === "unverify" ? "Unverify Store" : statusAction?.type === "activate" ? "Activate Store" : "Deactivate Store"}
+        description={statusAction?.type === "verify" 
+          ? "Are you sure you want to verify this store? This will mark it as verified and allow it to operate normally."
+          : statusAction?.type === "unverify"
+          ? "Are you sure you want to unverify this store? This will remove its verified status."
+          : statusAction?.type === "activate"
+          ? "Are you sure you want to activate this store? It will be visible and operational."
+          : "Are you sure you want to deactivate this store? It will be hidden and non-operational."}
+        itemName={selectedStore?.name}
+        actionType={statusAction?.type || "verify"}
+      />
     </div>
   )
 }

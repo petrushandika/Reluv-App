@@ -46,7 +46,6 @@ export default function SuperadminUsersPage() {
       setTotalPages(response.meta.totalPages)
       setTotal(response.meta.total)
       
-      // Calculate stats
       const activeCount = response.data.filter(u => u.isActive).length
       const verifiedCount = response.data.filter(u => u.isVerified).length
       const adminsCount = response.data.filter(u => u.role === "ADMIN").length
@@ -80,7 +79,6 @@ export default function SuperadminUsersPage() {
   ) => {
     try {
       await updateUserStatus(userId, data)
-      // Refresh users list
       await fetchUsers(currentPage, searchQuery)
     } catch (error) {
       console.error("Failed to update user status:", error)
@@ -108,7 +106,6 @@ export default function SuperadminUsersPage() {
       }
     >
       <div className="space-y-6">
-        {/* Stats Cards */}
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           <Card className="border-slate-200 dark:border-slate-800 shadow-none rounded-2xl group overflow-hidden">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -169,7 +166,6 @@ export default function SuperadminUsersPage() {
           </Card>
         </div>
 
-        {/* Search and Filter */}
         <div className="flex flex-col md:flex-row gap-4 items-center justify-between p-5 bg-slate-50/50 dark:bg-slate-900/50 rounded-2xl border border-slate-200 dark:border-slate-800">
           <form onSubmit={handleSearch} className="relative w-full md:w-96">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
@@ -192,7 +188,6 @@ export default function SuperadminUsersPage() {
           </div>
         </div>
 
-        {/* Users List */}
         {isLoading ? (
           <div className="space-y-4">
             <Skeleton className="h-64 w-full rounded-2xl" />
@@ -205,7 +200,6 @@ export default function SuperadminUsersPage() {
               onStatusChange={handleStatusChange}
             />
 
-            {/* Pagination */}
             {totalPages > 1 && (
               <div className="flex items-center justify-between pt-4">
                 <p className="text-xs font-medium text-slate-500">

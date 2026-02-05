@@ -15,6 +15,8 @@ import {
 } from "lucide-react"
 import { UserListItem } from "../api/superadminApi"
 import { useState } from "react"
+import { UserViewModal } from "./modals/UserViewModal"
+import { StatusConfirmModal } from "./modals/StatusConfirmModal"
 
 interface SuperadminUsersListProps {
   users: UserListItem[]
@@ -23,16 +25,37 @@ interface SuperadminUsersListProps {
 
 export function SuperadminUsersList({ users, onStatusChange }: SuperadminUsersListProps) {
   const [loadingUserId, setLoadingUserId] = useState<number | null>(null)
+  const [selectedUser, setSelectedUser] = useState<UserListItem | null>(null)
+  const [isViewModalOpen, setIsViewModalOpen] = useState(false)
+  const [isStatusModalOpen, setIsStatusModalOpen] = useState(false)
+  const [statusAction, setStatusAction] = useState<{ type: "verify" | "unverify" | "activate" | "deactivate" | "makeAdmin", userId: number } | null>(null)
 
-  const handleStatusChange = async (
-    userId: number,
-    data: { isActive?: boolean; isVerified?: boolean; role?: "USER" | "ADMIN" | "STORE" }
-  ) => {
-    setLoadingUserId(userId)
+  const handleView = (user: UserListItem) => {
+    setSelectedUser(user)
+    setIsViewModalOpen(true)
+  }
+
+  const handleStatusClick = (user: UserListItem, type: "verify" | "unverify" | "activate" | "deactivate" | "makeAdmin") => {
+    setSelectedUser(user)
+    setStatusAction({ type, userId: user.id })
+    setIsStatusModalOpen(true)
+  }
+
+  const confirmStatusChange = async () => {
+    if (!statusAction || !selectedUser) return
+    setLoadingUserId(statusAction.userId)
     try {
-      await onStatusChange?.(userId, data)
+      const data: { isActive?: boolean; isVerified?: boolean; role?: "USER" | "ADMIN" | "STORE" } = {}
+      if (statusAction.type === "verify") data.isVerified = true
+      if (statusAction.type === "unverify") data.isVerified = false
+      if (statusAction.type === "activate") data.isActive = true
+      if (statusAction.type === "deactivate") data.isActive = false
+      if (statusAction.type === "makeAdmin") data.role = "ADMIN"
+      await onStatusChange?.(statusAction.userId, data)
     } finally {
       setLoadingUserId(null)
+      setIsStatusModalOpen(false)
+      setStatusAction(null)
     }
   }
 
@@ -201,7 +224,7 @@ export function SuperadminUsersList({ users, onStatusChange }: SuperadminUsersLi
                   <div className="flex items-center justify-end gap-2">
                     <Button 
                       variant="ghost" 
-                      onClick={() => window.open(`/profile/${user.id}`, "_blank")}
+                      onClick={() => handleView(user)}
                       className="h-8 w-16 sm:w-20 rounded-lg bg-sky-50 dark:bg-sky-500/10 text-sky-600 hover:text-sky-700 hover:bg-sky-100 dark:hover:bg-sky-500/20 text-[10px] font-medium uppercase tracking-widest transition-all"
                     >
                       View
@@ -209,7 +232,7 @@ export function SuperadminUsersList({ users, onStatusChange }: SuperadminUsersLi
                     {!user.isVerified && (
                       <Button 
                         variant="ghost" 
-                        onClick={() => handleStatusChange(user.id, { isVerified: true })}
+                        onClick={() => handleStatusClick(user, "verify")}
                         disabled={loadingUserId === user.id}
                         className="h-8 w-16 sm:w-20 rounded-lg bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 hover:text-emerald-700 hover:bg-emerald-100 dark:hover:bg-emerald-500/20 text-[10px] font-medium uppercase tracking-widest transition-all"
                       >
@@ -219,7 +242,7 @@ export function SuperadminUsersList({ users, onStatusChange }: SuperadminUsersLi
                     {user.isVerified && (
                       <Button 
                         variant="ghost" 
-                        onClick={() => handleStatusChange(user.id, { isVerified: false })}
+                        onClick={() => handleStatusClick(user, "unverify")}
                         disabled={loadingUserId === user.id}
                         className="h-8 w-16 sm:w-20 rounded-lg bg-amber-50 dark:bg-amber-500/10 text-amber-600 hover:text-amber-700 hover:bg-amber-100 dark:hover:bg-amber-500/20 text-[10px] font-medium uppercase tracking-widest transition-all"
                       >
@@ -229,7 +252,7 @@ export function SuperadminUsersList({ users, onStatusChange }: SuperadminUsersLi
                     {user.isActive && (
                       <Button 
                         variant="ghost" 
-                        onClick={() => handleStatusChange(user.id, { isActive: false })}
+                        onClick={() => handleStatusClick(user, "deactivate")}
                         disabled={loadingUserId === user.id}
                         className="h-8 w-16 sm:w-20 rounded-lg bg-rose-50 dark:bg-rose-500/10 text-rose-600 hover:text-rose-700 hover:bg-rose-100 dark:hover:bg-rose-500/20 text-[10px] font-medium uppercase tracking-widest transition-all"
                       >
@@ -239,7 +262,7 @@ export function SuperadminUsersList({ users, onStatusChange }: SuperadminUsersLi
                     {!user.isActive && (
                       <Button 
                         variant="ghost" 
-                        onClick={() => handleStatusChange(user.id, { isActive: true })}
+                        onClick={() => handleStatusClick(user, "activate")}
                         disabled={loadingUserId === user.id}
                         className="h-8 w-16 sm:w-20 rounded-lg bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 hover:text-emerald-700 hover:bg-emerald-100 dark:hover:bg-emerald-500/20 text-[10px] font-medium uppercase tracking-widest transition-all"
                       >
@@ -249,7 +272,7 @@ export function SuperadminUsersList({ users, onStatusChange }: SuperadminUsersLi
                     {user.role !== "ADMIN" && (
                       <Button 
                         variant="ghost" 
-                        onClick={() => handleStatusChange(user.id, { role: "ADMIN" })}
+                        onClick={() => handleStatusClick(user, "makeAdmin")}
                         disabled={loadingUserId === user.id}
                         className="h-8 w-16 sm:w-20 rounded-lg bg-violet-50 dark:bg-violet-500/10 text-violet-600 hover:text-violet-700 hover:bg-violet-100 dark:hover:bg-violet-500/20 text-[10px] font-medium uppercase tracking-widest transition-all"
                       >
@@ -263,7 +286,36 @@ export function SuperadminUsersList({ users, onStatusChange }: SuperadminUsersLi
           )}
         </TableBody>
       </Table>
+
+      <UserViewModal
+        isOpen={isViewModalOpen}
+        onClose={() => {
+          setIsViewModalOpen(false)
+          setSelectedUser(null)
+        }}
+        user={selectedUser}
+      />
+
+      <StatusConfirmModal
+        isOpen={isStatusModalOpen}
+        onClose={() => {
+          setIsStatusModalOpen(false)
+          setStatusAction(null)
+        }}
+        onConfirm={confirmStatusChange}
+        title={statusAction?.type === "verify" ? "Verify User" : statusAction?.type === "unverify" ? "Unverify User" : statusAction?.type === "activate" ? "Activate User" : statusAction?.type === "deactivate" ? "Deactivate User" : "Make Admin"}
+        description={statusAction?.type === "verify" 
+          ? "Are you sure you want to verify this user? This will mark their account as verified."
+          : statusAction?.type === "unverify"
+          ? "Are you sure you want to unverify this user? This will remove their verified status."
+          : statusAction?.type === "activate"
+          ? "Are you sure you want to activate this user? They will be able to access the platform."
+          : statusAction?.type === "deactivate"
+          ? "Are you sure you want to deactivate this user? They will lose access to the platform."
+          : "Are you sure you want to make this user an admin? They will have full administrative privileges."}
+        itemName={selectedUser?.email}
+        actionType={statusAction?.type || "verify"}
+      />
     </div>
   )
 }
-
