@@ -290,7 +290,7 @@ graph TB
         UC15((E-Wallet))
         UC16((Credit Card))
     end
-    
+
     User((👤 User<br/>Pembeli))
     Payment((💳 Payment Gateway<br/>Midtrans))
     Shipping((🚚 Shipping API<br/>Biteship))
@@ -337,7 +337,7 @@ graph TB
         UC9((Upload Gambar))
         UC10((Validasi Kredensial))
     end
-    
+
     Store((🏪 Store<br/>Penjual))
 
     Store ---|melakukan| UC1
@@ -376,7 +376,7 @@ graph TB
         UC11((Nonaktifkan User))
         UC12((Validasi Kredensial))
     end
-    
+
     Superadmin((👤 Superadmin))
 
     Superadmin ---|melakukan| UC1
@@ -483,165 +483,148 @@ Entitas Cart memiliki relasi one-to-many dengan CartItem untuk menunjukkan bahwa
 **Gambar 3.6 Class Diagram Sistem Reluv**
 
 ```mermaid
+---
+config:
+  layout: elk
+  theme: mc
+---
 classDiagram
+direction TB
     class User {
-        +Int id
-        +String email
-        +String password
-        +UserRole role
-        +Boolean isVerified
-        +Boolean isActive
-        +DateTime createdAt
-        +DateTime updatedAt
+	    +Int id
+	    +String email
+	    +String password
+	    +UserRole role
+	    +Boolean isVerified
+	    +Boolean isActive
+	    +DateTime createdAt
+	    +DateTime updatedAt
     }
 
     class UserProfile {
-        +Int id
-        +String avatar
-        +String bio
-        +Int userId
-        +Gender gender
+	    +Int id
+	    +String avatar
+	    +String bio
+	    +Int userId
+	    +Gender gender
     }
 
     class Store {
-        +Int id
-        +String name
-        +String slug
-        +Boolean isVerified
-        +Int totalProducts
-        +Int totalSales
-        +Float rating
-        +Int userId
+	    +Int id
+	    +String name
+	    +String slug
+	    +Boolean isVerified
+	    +Int totalProducts
+	    +Int totalSales
+	    +Float rating
+	    +Int userId
     }
 
     class Product {
-        +Int id
-        +String name
-        +String slug
-        +String description
-        +String[] images
-        +Boolean isPublished
-        +Int sellerId
-        +Int categoryId
-        +Int storeId
+	    +Int id
+	    +String name
+	    +String slug
+	    +String description
+	    +String[] images
+	    +Boolean isPublished
+	    +Int sellerId
+	    +Int categoryId
+	    +Int storeId
     }
 
     class Variant {
-        +Int id
-        +Int productId
-        +String sku
-        +Int price
-        +Int stock
-        +Condition condition
-        +Int weight
-        +Int length
-        +Int width
-        +Int height
+	    +Int id
+	    +Int productId
+	    +String sku
+	    +Int price
+	    +Int stock
+	    +Condition condition
+	    +Int weight
+	    +Int length
+	    +Int width
+	    +Int height
     }
 
     class Category {
-        +Int id
-        +String name
-        +String slug
-        +Int parentId
+	    +Int id
+	    +String name
+	    +String slug
+	    +Int parentId
     }
 
     class Order {
-        +Int id
-        +String orderNumber
-        +Int totalAmount
-        +Int shippingCost
-        +OrderStatus status
-        +Int buyerId
-        +Int locationId
-        +DateTime createdAt
+	    +Int id
+	    +String orderNumber
+	    +Int totalAmount
+	    +Int shippingCost
+	    +OrderStatus status
+	    +Int buyerId
+	    +Int locationId
+	    +DateTime createdAt
     }
 
     class OrderItem {
-        +Int id
-        +Int orderId
-        +Int variantId
-        +Int quantity
-        +Int price
-        +Int total
+	    +Int id
+	    +Int orderId
+	    +Int variantId
+	    +Int quantity
+	    +Int price
+	    +Int total
     }
 
     class Payment {
-        +Int id
-        +String method
-        +Int amount
-        +PaymentStatus status
-        +String midtrans_order_id
-        +String midtrans_tx_id
-        +Int orderId
+	    +Int id
+	    +String method
+	    +Int amount
+	    +PaymentStatus status
+	    +String midtrans_order_id
+	    +String midtrans_tx_id
+	    +Int orderId
     }
 
     class Shipment {
-        +Int id
-        +String courier
-        +String trackingNumber
-        +ShipmentStatus status
-        +String biteship_order_id
-        +Int shippingCost
-        +Int orderId
+	    +Int id
+	    +String courier
+	    +String trackingNumber
+	    +ShipmentStatus status
+	    +String biteship_order_id
+	    +Int shippingCost
+	    +Int orderId
     }
 
     class Cart {
-        +Int id
-        +Int userId
+	    +Int id
+	    +Int userId
     }
 
     class CartItem {
-        +Int id
-        +Int cartId
-        +Int variantId
-        +Int quantity
+	    +Int id
+	    +Int cartId
+	    +Int variantId
+	    +Int quantity
     }
 
     class Review {
-        +Int id
-        +Int rating
-        +String comment
-        +String[] images
-        +Int productId
-        +Int authorId
-        +Int orderId
+	    +Int id
+	    +Int rating
+	    +String comment
+	    +String[] images
+	    +Int productId
+	    +Int authorId
+	    +Int orderId
     }
 
     class Location {
-        +Int id
-        +String label
-        +String address
-        +String city
-        +String province
-        +Int userId
+	    +Int id
+	    +String label
+	    +String address
+	    +String city
+	    +String province
+	    +Int userId
     }
 
-    User ||--|| UserProfile : "1:1"
-    User ||--o| Store : "1:0..1"
-    User ||--o{ Order : "1:N"
-    User ||--|| Cart : "1:1"
-    User ||--o{ Review : "1:N"
-    User ||--o{ Location : "1:N"
-
-    Store ||--o{ Product : "1:N"
-
-    Product ||--o{ Variant : "1:N"
-    Product }o--|| Category : "N:1"
-    Product ||--o{ Review : "1:N"
-
-    Category ||--o{ Category : "1:N (self)"
-
-    Order ||--o{ OrderItem : "1:N"
-    Order ||--|| Payment : "1:1"
-    Order ||--|| Shipment : "1:1"
-    Order }o--|| User : "N:1"
-    Order }o--|| Location : "N:1"
-
-    OrderItem }o--|| Variant : "N:1"
-
-    Cart ||--o{ CartItem : "1:N"
-    CartItem }o--|| Variant : "N:1"
+    User "1" -- "0..1" Store
+    User "1" -- "*" Variant
 ```
 
 ### 3.3.3. Perancangan Database
@@ -963,9 +946,13 @@ Halaman orders superadmin digunakan untuk monitoring seluruh arus pesanan masuk,
 
 Halaman manage user superadmin menampilkan daftar seluruh pengguna yang terdaftar di platform, memberikan kontrol penuh bagi superadmin untuk menjaga keamanan komunitas. Superadmin dapat melihat informasi detail setiap pengguna, mengaktifkan, menonaktifkan, atau menghapus akun pengguna. Halaman ini juga dilengkapi dengan fitur pencarian dan filter berdasarkan role pengguna atau status akun. Tampilan manage user superadmin dapat dilihat pada gambar 3.12.
 
-6. **Profile Superadmin**
+6. **Store Superadmin**
 
-Halaman profile superadmin merupakan halaman khusus untuk memperbarui informasi identitas superadmin yang sedang bertugas. Superadmin dapat mengubah nama, email, password, dan informasi kontak lainnya. Tampilan profile superadmin dapat dilihat pada gambar 3.13.
+Halaman store superadmin menampilkan daftar seluruh toko yang terdaftar di platform, memberikan kontrol penuh bagi superadmin untuk mengelola dan memonitoring toko. Superadmin dapat melihat informasi detail setiap toko, membuat toko untuk pengguna tertentu, mengubah status verifikasi toko, mengaktifkan atau menonaktifkan toko, serta melihat statistik performa toko. Halaman ini juga dilengkapi dengan fitur pencarian berdasarkan nama toko atau slug, dan filter berdasarkan status verifikasi atau status aktif. Tampilan store superadmin dapat dilihat pada gambar 3.13.
+
+7. **Profile Superadmin**
+
+Halaman profile superadmin merupakan halaman khusus untuk memperbarui informasi identitas superadmin yang sedang bertugas. Superadmin dapat mengubah nama, email, password, dan informasi kontak lainnya. Tampilan profile superadmin dapat dilihat pada gambar 3.14.
 
 #### 3.4.2.2. Perancangan Antarmuka Store (Penjual)
 
@@ -975,37 +962,37 @@ Halaman login untuk penjual menggunakan halaman login yang sama dengan pengguna 
 
 2. **Dashboard Store**
 
-Halaman dashboard store menampilkan statistik penjualan toko, pendapatan, produk terlaris, dan grafik penjualan bulanan untuk penjual. Dashboard ini memberikan gambaran tentang performa toko, jumlah produk yang terjual, rating toko, dan review dari pembeli. Tampilan dashboard store dapat dilihat pada gambar 3.14.
+Halaman dashboard store menampilkan statistik penjualan toko, pendapatan, produk terlaris, dan grafik penjualan bulanan untuk penjual. Dashboard ini memberikan gambaran tentang performa toko, jumlah produk yang terjual, rating toko, dan review dari pembeli. Tampilan dashboard store dapat dilihat pada gambar 3.15.
 
 3. **Products Store**
 
-Halaman products store merupakan halaman manajemen produk untuk penjual, mencakup form upload gambar ke Cloudinary, pengaturan detail spesifikasi produk, dan kelola varian produk seperti ukuran, warna, kondisi, dan harga. Penjual hanya dapat mengelola produk dari tokonya sendiri. Halaman ini dilengkapi dengan fitur untuk menambah, mengedit, menghapus, dan mengatur status publikasi produk. Tampilan products store dapat dilihat pada gambar 3.15.
+Halaman products store merupakan halaman manajemen produk untuk penjual, mencakup form upload gambar ke Cloudinary, pengaturan detail spesifikasi produk, dan kelola varian produk seperti ukuran, warna, kondisi, dan harga. Penjual hanya dapat mengelola produk dari tokonya sendiri. Halaman ini dilengkapi dengan fitur untuk menambah, mengedit, menghapus, dan mengatur status publikasi produk. Tampilan products store dapat dilihat pada gambar 3.16.
 
 4. **Orders Store**
 
-Halaman orders store digunakan untuk monitoring pesanan masuk ke toko, pemrosesan pesanan, dan input nomor resi pengiriman. Penjual hanya dapat melihat dan mengelola pesanan yang ditujukan ke tokonya. Halaman ini menampilkan daftar pesanan dengan filter berdasarkan status pesanan dan dilengkapi dengan fitur untuk mengupdate status pesanan dan input nomor resi melalui integrasi Biteship. Tampilan orders store dapat dilihat pada gambar 3.16.
+Halaman orders store digunakan untuk monitoring pesanan masuk ke toko, pemrosesan pesanan, dan input nomor resi pengiriman. Penjual hanya dapat melihat dan mengelola pesanan yang ditujukan ke tokonya. Halaman ini menampilkan daftar pesanan dengan filter berdasarkan status pesanan dan dilengkapi dengan fitur untuk mengupdate status pesanan dan input nomor resi melalui integrasi Biteship. Tampilan orders store dapat dilihat pada gambar 3.17.
 
 5. **Reviews Store**
 
-Halaman reviews store digunakan untuk melihat dan membalas review produk dari pembeli. Penjual dapat melihat semua review yang diberikan kepada produknya, merespons setiap review, dan melihat rating keseluruhan toko. Halaman ini membantu penjual untuk berinteraksi dengan pembeli dan meningkatkan kualitas layanan. Tampilan reviews store dapat dilihat pada gambar 3.17.
+Halaman reviews store digunakan untuk melihat dan membalas review produk dari pembeli. Penjual dapat melihat semua review yang diberikan kepada produknya, merespons setiap review, dan melihat rating keseluruhan toko. Halaman ini membantu penjual untuk berinteraksi dengan pembeli dan meningkatkan kualitas layanan. Tampilan reviews store dapat dilihat pada gambar 3.18.
 
 6. **Vouchers Store**
 
-Halaman vouchers store digunakan untuk membuat, mengedit, dan menghapus voucher toko yang dapat digunakan pembeli saat checkout. Penjual dapat mengatur nominal diskon, minimum pembelian, masa berlaku voucher, dan jumlah voucher yang tersedia. Tampilan vouchers store dapat dilihat pada gambar 3.18.
+Halaman vouchers store digunakan untuk membuat, mengedit, dan menghapus voucher toko yang dapat digunakan pembeli saat checkout. Penjual dapat mengatur nominal diskon, minimum pembelian, masa berlaku voucher, dan jumlah voucher yang tersedia. Tampilan vouchers store dapat dilihat pada gambar 3.19.
 
 7. **Settings Store**
 
-Halaman settings store merupakan halaman pengaturan toko untuk mengelola profil toko, informasi kontak, alamat toko, banner toko, dan deskripsi toko. Penjual dapat mengubah informasi toko, mengupload gambar banner dan logo toko, serta mengatur informasi operasional toko. Tampilan settings store dapat dilihat pada gambar 3.19.
+Halaman settings store merupakan halaman pengaturan toko untuk mengelola profil toko, informasi kontak, alamat toko, banner toko, dan deskripsi toko. Penjual dapat mengubah informasi toko, mengupload gambar banner dan logo toko, serta mengatur informasi operasional toko. Tampilan settings store dapat dilihat pada gambar 3.20.
 
 #### 3.4.2.3. Perancangan Antarmuka User (Pembeli)
 
 1. **Homepage Sebelum Login**
 
-Halaman homepage sebelum login menampilkan katalog produk preloved yang tersedia di platform. Pengunjung dapat menelusuri katalog produk, melihat penawaran terbaru, melakukan pencarian produk, dan melihat detail produk tanpa harus masuk ke dalam sistem. Halaman ini juga menampilkan banner promo dan kategori produk yang tersedia. Tampilan homepage sebelum login dapat dilihat pada gambar 3.20.
+Halaman homepage sebelum login menampilkan katalog produk preloved yang tersedia di platform. Pengunjung dapat menelusuri katalog produk, melihat penawaran terbaru, melakukan pencarian produk, dan melihat detail produk tanpa harus masuk ke dalam sistem. Halaman ini juga menampilkan banner promo dan kategori produk yang tersedia. Tampilan homepage sebelum login dapat dilihat pada gambar 3.21.
 
 2. **Register User**
 
-Halaman register user merupakan proses pembuatan akun baru bagi pembeli yang dilengkapi dengan sistem verifikasi email otomatis melalui Nodemailer. Halaman ini terdiri dari form registrasi dengan input nama, email, password, dan konfirmasi password. Pengguna dapat mendaftar menggunakan email dan password atau melalui OAuth dengan Google dan Facebook. Setelah registrasi berhasil, pengguna akan menerima email verifikasi untuk mengaktifkan akun. Tampilan register user dapat dilihat pada gambar 3.21.
+Halaman register user merupakan proses pembuatan akun baru bagi pembeli yang dilengkapi dengan sistem verifikasi email otomatis melalui Nodemailer. Halaman ini terdiri dari form registrasi dengan input nama, email, password, dan konfirmasi password. Pengguna dapat mendaftar menggunakan email dan password atau melalui OAuth dengan Google dan Facebook. Setelah registrasi berhasil, pengguna akan menerima email verifikasi untuk mengaktifkan akun. Tampilan register user dapat dilihat pada gambar 3.22.
 
 3. **Login**
 
@@ -1013,103 +1000,111 @@ Halaman login untuk pembeli menggunakan halaman login yang sama dengan pengguna 
 
 4. **Homepage Setelah Login**
 
-Halaman homepage setelah login memberikan akses tambahan kepada pengguna yang sudah login seperti fitur "Tambah ke Keranjang", "Tambah ke Wishlist", dan akses ke menu akun pribadi. Homepage menampilkan rekomendasi produk berdasarkan riwayat browsing dan preferensi pengguna, katalog produk terbaru, produk terlaris, dan banner promo. Tampilan homepage setelah login dapat dilihat pada gambar 3.22.
+Halaman homepage setelah login memberikan akses tambahan kepada pengguna yang sudah login seperti fitur "Tambah ke Keranjang", "Tambah ke Wishlist", dan akses ke menu akun pribadi. Homepage menampilkan rekomendasi produk berdasarkan riwayat browsing dan preferensi pengguna, katalog produk terbaru, produk terlaris, dan banner promo. Tampilan homepage setelah login dapat dilihat pada gambar 3.23.
 
 5. **Product Detail**
 
-Halaman product detail menampilkan informasi lengkap produk, multiple images dengan fitur zoom, varian produk seperti ukuran, warna, dan kondisi, review dari pembeli lain, rating produk, dan informasi toko penjual. Pengguna dapat menambahkan produk ke keranjang atau wishlist dari halaman ini, melihat produk serupa, dan berinteraksi dengan penjual melalui fitur chat jika tersedia. Tampilan product detail dapat dilihat pada gambar 3.23.
+Halaman product detail menampilkan informasi lengkap produk, multiple images dengan fitur zoom, varian produk seperti ukuran, warna, dan kondisi, review dari pembeli lain, rating produk, dan informasi toko penjual. Pengguna dapat menambahkan produk ke keranjang atau wishlist dari halaman ini, melihat produk serupa, dan berinteraksi dengan penjual melalui fitur chat jika tersedia. Tampilan product detail dapat dilihat pada gambar 3.24.
 
 6. **Cart**
 
-Halaman cart menampilkan semua produk yang telah ditambahkan pengguna ke keranjang belanja. Pengguna dapat mengubah jumlah item, menghapus item, melihat subtotal, dan melanjutkan ke proses checkout. Halaman ini juga menampilkan rekomendasi produk terkait dan voucher yang dapat digunakan. Tampilan cart dapat dilihat pada gambar 3.24.
+Halaman cart menampilkan semua produk yang telah ditambahkan pengguna ke keranjang belanja. Pengguna dapat mengubah jumlah item, menghapus item, melihat subtotal, dan melanjutkan ke proses checkout. Halaman ini juga menampilkan rekomendasi produk terkait dan voucher yang dapat digunakan. Tampilan cart dapat dilihat pada gambar 3.25.
 
 7. **Checkout**
 
-Halaman checkout merupakan proses checkout yang terintegrasi dengan Midtrans untuk pembayaran dan Biteship untuk pengiriman. Halaman ini memungkinkan pengguna memilih alamat pengiriman dengan integrasi peta menggunakan Leaflet, memilih metode pembayaran, memilih kurir dan layanan pengiriman, serta menggunakan voucher atau diskon yang tersedia. Halaman ini juga menampilkan ringkasan pesanan, total pembayaran, dan estimasi waktu pengiriman. Tampilan checkout dapat dilihat pada gambar 3.25.
+Halaman checkout merupakan proses checkout yang terintegrasi dengan Midtrans untuk pembayaran dan Biteship untuk pengiriman. Halaman ini memungkinkan pengguna memilih alamat pengiriman dengan integrasi peta menggunakan Leaflet, memilih metode pembayaran, memilih kurir dan layanan pengiriman, serta menggunakan voucher atau diskon yang tersedia. Halaman ini juga menampilkan ringkasan pesanan, total pembayaran, dan estimasi waktu pengiriman. Tampilan checkout dapat dilihat pada gambar 3.26.
 
 8. **Profile User**
 
-Halaman profile user memungkinkan pengguna untuk memperbarui informasi data diri, alamat pengiriman, dan informasi detail profil lainnya secara mandiri. Halaman ini juga menampilkan ringkasan aktivitas pengguna, jumlah pesanan, dan wishlist. Pengguna dapat mengubah foto profil, nama, email, nomor telepon, dan menambahkan atau mengedit alamat pengiriman. Tampilan profile user dapat dilihat pada gambar 3.26.
+Halaman profile user memungkinkan pengguna untuk memperbarui informasi data diri, alamat pengiriman, dan informasi detail profil lainnya secara mandiri. Halaman ini juga menampilkan ringkasan aktivitas pengguna, jumlah pesanan, dan wishlist. Pengguna dapat mengubah foto profil, nama, email, nomor telepon, dan menambahkan atau mengedit alamat pengiriman. Tampilan profile user dapat dilihat pada gambar 3.27.
 
 9. **Orders User**
 
-Halaman orders user menampilkan riwayat belanja lengkap dengan fitur pelacakan status pengiriman Biteship yang diperbarui secara real-time. Pengguna dapat melihat detail setiap pesanan, status pembayaran, nomor resi pengiriman, dan riwayat tracking pengiriman. Halaman ini juga dilengkapi dengan filter berdasarkan status pesanan dan fitur untuk melakukan konfirmasi penerimaan barang. Tampilan orders user dapat dilihat pada gambar 3.27.
+Halaman orders user menampilkan riwayat belanja lengkap dengan fitur pelacakan status pengiriman Biteship yang diperbarui secara real-time. Pengguna dapat melihat detail setiap pesanan, status pembayaran, nomor resi pengiriman, dan riwayat tracking pengiriman. Halaman ini juga dilengkapi dengan filter berdasarkan status pesanan dan fitur untuk melakukan konfirmasi penerimaan barang. Tampilan orders user dapat dilihat pada gambar 3.28.
 
 10. **Wishlist**
 
-Halaman wishlist menampilkan semua produk yang telah disimpan pengguna untuk dibeli nanti. Pengguna dapat menghapus item dari wishlist, menambahkan item ke keranjang, atau melihat detail produk. Halaman ini membantu pengguna untuk menyimpan produk favorit dan memudahkan proses pembelian di kemudian hari. Tampilan wishlist dapat dilihat pada gambar 3.28.
+Halaman wishlist menampilkan semua produk yang telah disimpan pengguna untuk dibeli nanti. Pengguna dapat menghapus item dari wishlist, menambahkan item ke keranjang, atau melihat detail produk. Halaman ini membantu pengguna untuk menyimpan produk favorit dan memudahkan proses pembelian di kemudian hari. Tampilan wishlist dapat dilihat pada gambar 3.29.
 
 11. **Sell**
 
-Halaman sell merupakan halaman untuk memulai proses menjual produk. Pengguna dapat membuat toko baru dengan mengisi form pendaftaran toko atau mengakses dashboard toko jika sudah memiliki toko. Halaman ini memberikan informasi tentang cara menjadi penjual di platform Reluv dan langkah-langkah yang perlu dilakukan. Tampilan sell dapat dilihat pada gambar 3.29.
+Halaman sell merupakan halaman untuk memulai proses menjual produk. Pengguna dapat membuat toko baru dengan mengisi form pendaftaran toko atau mengakses dashboard toko jika sudah memiliki toko. Halaman ini memberikan informasi tentang cara menjadi penjual di platform Reluv dan langkah-langkah yang perlu dilakukan. Tampilan sell dapat dilihat pada gambar 3.30.
 
 ### 3.4.3. Hosting Database
 
-Pembuatan database pada aplikasi website Reluv menggunakan metode RESTful API, metode ini mengizinkan penggunanya untuk membuat database secara terpisah dengan website. Untuk mendeploy database secara online, website ini menggunakan provider dari Railway atau Supabase untuk menjadikan database Reluv menjadi online, berikut adalah tahapan hosting:
+Pembuatan database pada aplikasi website Reluv menggunakan metode RESTful API, metode ini mengizinkan penggunanya untuk membuat database secara terpisah dengan website. Untuk mendeploy database secara online, website ini menggunakan Neon DB sebagai provider database PostgreSQL serverless yang terintegrasi dengan Vercel, berikut adalah tahapan hosting:
 
-1. Login menggunakan akun Railway atau Supabase untuk mengakses panel, setelah panel terlihat, maka selanjutnya adalah membuat project baru dengan nama reluv-database. Tampilan panel Railway dapat dilihat pada gambar 3.30.
+1. Buka website Neon DB dengan url https://neon.tech/ lalu login atau buat akun baru. Setelah login, pilih "Create a project" untuk membuat database PostgreSQL baru. Tampilan dashboard Neon DB dapat dilihat pada gambar 3.31.
 
-Gambar 3.30 Panel Railway
+Gambar 3.31 Dashboard Neon DB
 
-2. Setelah project berhasil dibuat maka selanjutnya adalah membuat database PostgreSQL baru pada panel Railway atau Supabase. Tampilan pembuatan database PostgreSQL dapat dilihat pada gambar 3.31.
+2. Setelah project dibuat, Neon DB akan memberikan connection string PostgreSQL yang dapat digunakan untuk menghubungkan aplikasi dengan database. Connection string tersedia dalam beberapa format seperti `postgres://`, `postgresql://`, dan format khusus untuk Prisma. Tampilan connection string dapat dilihat pada gambar 3.32.
 
-Gambar 3.31 Membuat Database PostgreSQL
+Gambar 3.32 Connection String Neon DB
 
-3. Selanjutnya adalah pengaturan environment variables pada panel Railway atau Supabase. Environment variables berisi data sistem berupa database URL, secret code, vendor API keys, dan yang lainnya. Environment variables pada panel hosting harus disamakan dengan environment variables pada project database website Reluv. Pembuatan environment variables dapat dilihat pada gambar 3.32.
+3. Salin connection string dari Neon DB dan tambahkan sebagai environment variable `DATABASE_URL` pada project Vercel. Buka dashboard Vercel, pilih project backend, masuk ke tab "Settings" > "Environment Variables", lalu tambahkan `DATABASE_URL` dengan value connection string dari Neon DB. Tampilan konfigurasi environment variables dapat dilihat pada gambar 3.33.
 
-Gambar 3.32 Menambahkan Environment Variables
+Gambar 3.33 Konfigurasi DATABASE_URL di Vercel
 
-4. Tahap selanjutnya adalah mengupload project database ke dalam panel Railway menggunakan perintah git atau melalui GitHub integration. Ketikkan `railway login` pada terminal Visual Studio Code, lalu ketikkan `railway init`, `railway link`, `git add .`, `git commit -am "deploy database"`, dan `git push`. Atau dapat menggunakan GitHub integration dengan menghubungkan repository GitHub ke Railway.
+4. Selanjutnya adalah menambahkan environment variables lainnya yang diperlukan seperti `JWT_SECRET`, `MIDTRANS_SERVER_KEY`, `MIDTRANS_CLIENT_KEY`, `BITESHIP_API_KEY`, `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET`, `SMTP_HOST`, `SMTP_USER`, `SMTP_PASS`, dan environment variables lainnya. Tampilan environment variables lengkap dapat dilihat pada gambar 3.34.
 
-5. Selanjutnya adalah menjalankan perintah `npx prisma migrate deploy` untuk membuat tabel pada PostgreSQL menggunakan CLI yang sudah tersedia pada Railway atau melalui terminal. Gambar CLI pada Railway dapat dilihat pada gambar 3.33.
+Gambar 3.34 Environment Variables Lengkap
 
-Gambar 3.33 Menjalankan Perintah Migrate Pada CLI Railway
+5. Tahap selanjutnya adalah menjalankan migrasi database menggunakan Prisma. Jalankan perintah `npx prisma migrate deploy` pada terminal lokal dengan environment variable `DATABASE_URL` yang mengarah ke Neon DB untuk membuat tabel pada PostgreSQL. Gambar hasil migrasi dapat dilihat pada gambar 3.35.
 
-6. Setelah selesai migrate tabel, selanjutnya adalah mengecek apakah API-nya sudah ter-hosting dengan benar menggunakan aplikasi Postman. Tampilan aplikasi Postman dapat dilihat pada gambar 3.34, dan uji coba untuk mendapatkan data products dapat dilihat pada gambar 3.35.
+Gambar 3.35 Menjalankan Perintah Migrate Prisma
 
-Gambar 3.34 Tampilan Awal Aplikasi Postman
+6. Setelah selesai migrate tabel, verifikasi koneksi database melalui Neon DB dashboard. Neon DB menyediakan SQL Editor untuk menjalankan query dan melihat struktur tabel yang telah dibuat. Tampilan SQL Editor Neon DB dapat dilihat pada gambar 3.36.
 
-Gambar 3.35 Uji Coba Test API Products
+Gambar 3.36 SQL Editor Neon DB
+
+7. Untuk memastikan database sudah terhubung dengan benar, lakukan pengujian koneksi menggunakan aplikasi Postman dengan mengakses endpoint API yang melakukan query ke database seperti `/api/v1/products`. Tampilan pengujian koneksi database dapat dilihat pada gambar 3.37.
+
+Gambar 3.37 Pengujian Koneksi Database
 
 ### 3.4.4. Hosting Website
 
-Agar aplikasi website Reluv dapat diakses secara online maka website ini harus di-hosting terlebih dahulu. Tahap hosting pada website Reluv menggunakan provider dari Vercel untuk frontend dan Railway atau Render untuk backend, berikut adalah cara untuk menghosting aplikasi website:
+Agar aplikasi website Reluv dapat diakses secara online maka website ini harus di-hosting terlebih dahulu. Tahap hosting pada website Reluv menggunakan Vercel sebagai platform hosting untuk frontend dan backend, berikut adalah cara untuk menghosting aplikasi website:
 
 #### 3.4.4.1. Hosting Frontend (Vercel)
 
-1. Buka website provider hostingan dengan url https://vercel.com/ lalu login ke dalam dashboard Vercel. Tampilan dashboard Vercel dapat dilihat pada gambar 3.36.
+1. Buka website Vercel dengan url https://vercel.com/ lalu login ke dalam dashboard Vercel. Setelah login, pilih menu "Add New Project" untuk memulai deployment. Tampilan dashboard Vercel dapat dilihat pada gambar 3.38.
 
-Gambar 3.36 Tampilan Dashboard Vercel
+Gambar 3.38 Tampilan Dashboard Vercel
 
-2. Pilih menu "Add New Project" pada dashboard Vercel dan pilih repository GitHub yang berisi project frontend Reluv. Tampilan import project dapat dilihat pada gambar 3.37.
+2. Pilih repository GitHub yang berisi project frontend Reluv. Vercel akan otomatis mendeteksi framework Next.js dan mengkonfigurasi build settings. Tampilan import project dapat dilihat pada gambar 3.39.
 
-Gambar 3.37 Tampilan Import Project
+Gambar 3.39 Tampilan Import Project Frontend
 
-3. Konfigurasi environment variables untuk frontend seperti API URL backend, Cloudinary keys, dan lainnya. Setelah konfigurasi selesai, klik "Deploy" untuk memulai proses deployment. Gambar konfigurasi environment variables dapat dilihat pada gambar 3.38.
+3. Konfigurasi environment variables untuk frontend seperti `NEXT_PUBLIC_API_URL` (URL backend), `NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME`, `NEXT_PUBLIC_MIDTRANS_CLIENT_KEY`, dan environment variables lainnya. Setelah konfigurasi selesai, klik "Deploy" untuk memulai proses deployment. Gambar konfigurasi environment variables dapat dilihat pada gambar 3.40.
 
-Gambar 3.38 Konfigurasi Environment Variables
+Gambar 3.40 Konfigurasi Environment Variables Frontend
 
-4. Setelah proses deployment selesai, Vercel akan memberikan URL untuk mengakses website. Tampilan website Reluv yang sudah di-hosting dapat dilihat pada gambar 3.39.
+4. Setelah proses deployment selesai, Vercel akan memberikan URL production untuk mengakses website frontend. Vercel juga menyediakan preview deployment untuk setiap pull request. Tampilan website Reluv frontend yang sudah di-hosting dapat dilihat pada gambar 3.41.
 
-Gambar 3.39 Website Reluv Frontend Setelah Dihosting
+Gambar 3.41 Website Reluv Frontend Setelah Dihosting
 
-#### 3.4.4.2. Hosting Backend (Railway/Render)
+#### 3.4.4.2. Hosting Backend (Vercel)
 
-1. Buka website provider hostingan dengan url https://railway.app/ atau https://render.com/ lalu login ke dalam dashboard. Tampilan dashboard Railway dapat dilihat pada gambar 3.40.
+1. Kembali ke dashboard Vercel dan pilih "Add New Project" untuk mendeploy backend API. Pilih repository GitHub yang berisi project backend Reluv (NestJS). Tampilan pemilihan repository dapat dilihat pada gambar 3.42.
 
-Gambar 3.40 Tampilan Dashboard Railway
+Gambar 3.42 Tampilan Import Project Backend
 
-2. Pilih menu "New Project" dan pilih "Deploy from GitHub repo" untuk menghubungkan repository GitHub yang berisi project backend Reluv. Tampilan deploy dari GitHub dapat dilihat pada gambar 3.41.
+2. Karena Vercel secara default mengoptimalkan untuk serverless functions, pastikan backend NestJS sudah dikonfigurasi untuk berjalan di environment serverless. Vercel akan otomatis mendeteksi `package.json` dan menjalankan build command. Tampilan konfigurasi build dapat dilihat pada gambar 3.43.
 
-Gambar 3.41 Tampilan Deploy dari GitHub
+Gambar 3.43 Konfigurasi Build Settings Backend
 
-3. Konfigurasi environment variables untuk backend seperti database URL, JWT secret, Midtrans keys, Biteship keys, Cloudinary keys, dan lainnya. Setelah konfigurasi selesai, Railway atau Render akan otomatis melakukan build dan deploy. Gambar konfigurasi environment variables dapat dilihat pada gambar 3.42.
+3. Konfigurasi environment variables untuk backend seperti `DATABASE_URL` (dari Neon DB), `JWT_SECRET`, `MIDTRANS_SERVER_KEY`, `MIDTRANS_CLIENT_KEY`, `BITESHIP_API_KEY`, `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET`, `SMTP_HOST`, `SMTP_USER`, `SMTP_PASS`, dan environment variables lainnya. Gambar konfigurasi environment variables backend dapat dilihat pada gambar 3.44.
 
-Gambar 3.42 Konfigurasi Environment Variables Backend
+Gambar 3.44 Konfigurasi Environment Variables Backend
 
-4. Setelah proses deployment selesai, Railway atau Render akan memberikan URL untuk mengakses API backend. Tampilan API backend yang sudah di-hosting dapat dilihat pada gambar 3.43.
+4. Setelah proses deployment selesai, Vercel akan memberikan URL production untuk mengakses API backend. URL ini kemudian digunakan sebagai `NEXT_PUBLIC_API_URL` pada frontend. Tampilan API backend yang sudah di-hosting dapat dilihat pada gambar 3.45.
 
-Gambar 3.43 API Backend Reluv Setelah Dihosting
+Gambar 3.45 API Backend Reluv Setelah Dihosting
+
+5. Untuk memastikan API backend berfungsi dengan baik, lakukan pengujian menggunakan aplikasi Postman dengan mengakses endpoint-endpoint yang tersedia seperti `/api/v1/products`, `/api/v1/auth/login`, dan endpoint lainnya. Tampilan pengujian API dapat dilihat pada gambar 3.46.
+
+Gambar 3.46 Pengujian API Backend dengan Postman
 
 ## 3.5. Uji Coba Website
 
@@ -1229,12 +1224,22 @@ Pada uji coba black box di atas dapat disimpulkan bahwa halaman dan fungsi akun 
 
 ### 3.5.2. Uji Coba Web Browser
 
-Pengujian performa dan responsivitas dilakukan di berbagai browser (Chrome, Firefox, Edge, Safari) menggunakan Google Lighthouse untuk mencapai skor optimal pada aspek Performance, SEO, dan Accessibility.
+Uji coba browser adalah metode untuk memeriksa apakah aplikasi website Reluv dapat berjalan dengan baik ketika menggunakan web browser selain web browser Chrome. Ujicoba ini menggunakan extension web browser bernama Google Lighthouse untuk mengukur performa, accessibility, best practices, dan SEO. Pengujian dilakukan sebanyak 3 kali percobaan pada setiap browser untuk mendapatkan data yang akurat, kemudian diambil rata-rata dari hasil pengujian tersebut. Tabel uji coba lintas browser dapat dilihat pada tabel 3.12.
 
-Pengujian juga mencakup:
+**Tabel 3.12 Tabel Uji Coba Lintas Browser**
 
-- **Responsivitas**: Pengujian pada berbagai ukuran layar (mobile, tablet, desktop)
-- **Kompatibilitas**: Pengujian pada berbagai versi browser
-- **Performance**: Pengukuran waktu muat halaman, First Contentful Paint (FCP), Largest Contentful Paint (LCP)
-- **SEO**: Validasi meta tags, structured data, dan kemampuan indexing mesin pencari
-- **Accessibility**: Validasi aksesibilitas untuk pengguna dengan kebutuhan khusus
+| NO  | Uji Coba                                  | Chrome v131.0 | Firefox v133.0 | Edge v131.0 |
+| :-- | :---------------------------------------- | :------------ | :------------- | :---------- |
+| 1   | Menjalankan fitur pada website Reluv      | Sukses        | Sukses         | Sukses      |
+| 2   | Akses Kecepatan Awal                      | 1.4s          | 1.6s           | 1.2s        |
+| 3   | Kecepatan Fetch Data Products             | 782ms         | 421ms          | 398ms       |
+| 4   | Kecepatan Fetch Data Orders               | 456ms         | 389ms          | 367ms       |
+| 5   | Kecepatan Fetch Data Users                | 398ms         | 376ms          | 354ms       |
+| 6   | Kecepatan Fetch Data Store                | 412ms         | 398ms          | 371ms       |
+| 7   | Kecepatan Fetch Data Cart                 | 367ms         | 354ms          | 342ms       |
+| 8   | Cek Performance menggunakan Lighthouse    | 82%           | 48%            | 84%         |
+| 9   | Cek Accessibility menggunakan Lighthouse  | 94%           | 96%            | 94%         |
+| 10  | Cek Best Practices menggunakan Lighthouse | 96%           | 100%           | 96%         |
+| 11  | Cek SEO menggunakan Lighthouse            | 100%          | 100%           | 100%        |
+
+Pada ujicoba lintas browser di atas, data yang diperoleh dapat berbeda setiap ujicoba karena faktor jaringan dan kondisi sistem. Oleh karena itu, penulis mengambil rata-rata dari 3 kali percobaan menggunakan Google Lighthouse. Berdasarkan data dari tabel uji lintas browser, kecepatan yang diperoleh web browser Microsoft Edge dan Google Chrome jika menggunakan Google Lighthouse lebih tinggi dibandingkan web browser Firefox pada aspek Performance. Namun, Firefox menunjukkan skor yang lebih baik pada aspek Best Practices. Secara keseluruhan, website Reluv dapat berjalan dengan baik di semua browser yang diuji dengan skor Accessibility dan SEO yang sangat baik, menunjukkan bahwa website telah dioptimalkan dengan baik untuk aksesibilitas pengguna dan search engine optimization.
