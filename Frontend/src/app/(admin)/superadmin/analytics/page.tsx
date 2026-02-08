@@ -15,57 +15,47 @@ import {
   Calendar
 } from "lucide-react"
 import { superadminSidebarItems } from "@/features/(admin)/superadmin/constants/sidebarItems"
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { getAnalytics, AnalyticsData } from "@/features/(admin)/superadmin/api/superadminApi"
+import { Skeleton } from "@/shared/components/ui/skeleton"
 
 export default function SuperadminAnalyticsPage() {
   const [timeRange, setTimeRange] = useState<"7d" | "30d" | "90d" | "1y">("30d")
+  const [isLoading, setIsLoading] = useState(true)
+  const [analytics, setAnalytics] = useState<AnalyticsData | null>(null)
 
-  const stats = [
-    {
-      title: "Total Revenue",
-      value: "Rp. 2.4B",
-      description: "All time revenue",
-      icon: DollarSign,
-      color: "text-emerald-600",
-      bg: "bg-emerald-50 dark:bg-emerald-500/10",
-      border: "border-emerald-100 dark:border-emerald-900/30",
-      trend: "+12.5%",
-      trendColor: "text-emerald-600",
-    },
-    {
-      title: "Active Users",
-      value: "42,231",
-      description: "Monthly active users",
-      icon: Users,
-      color: "text-sky-600",
-      bg: "bg-sky-50 dark:bg-sky-500/10",
-      border: "border-sky-100 dark:border-sky-900/30",
-      trend: "+8.2%",
-      trendColor: "text-sky-600",
-    },
-    {
-      title: "Total Orders",
-      value: "15,842",
-      description: "Completed orders",
-      icon: ShoppingCart,
-      color: "text-violet-600",
-      bg: "bg-violet-50 dark:bg-violet-500/10",
-      border: "border-violet-100 dark:border-violet-900/30",
-      trend: "+15.3%",
-      trendColor: "text-violet-600",
-    },
-    {
-      title: "Active Stores",
-      value: "1,284",
-      description: "Verified stores",
-      icon: Store,
-      color: "text-amber-600",
-      bg: "bg-amber-50 dark:bg-amber-500/10",
-      border: "border-amber-100 dark:border-amber-900/30",
-      trend: "+5.7%",
-      trendColor: "text-amber-600",
-    },
-  ]
+  const fetchAnalytics = async (range: "7d" | "30d" | "90d" | "1y") => {
+    try {
+      setIsLoading(true)
+      const data = await getAnalytics({ timeRange: range })
+      setAnalytics(data)
+    } catch (error) {
+      console.error("Failed to fetch analytics:", error)
+      // Set default values on error
+      setAnalytics({
+        totalRevenue: 0,
+        revenueGrowth: 0,
+        activeUsers: 0,
+        userGrowth: 0,
+        totalOrders: 0,
+        orderGrowth: 0,
+        activeStores: 0,
+        storeGrowth: 0,
+        conversionRate: 0,
+        avgOrderValue: 0,
+        customerRetention: 0,
+        topCategories: [],
+        revenueChart: [],
+        userChart: [],
+      })
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    fetchAnalytics(timeRange)
+  }, [timeRange])
 
   return (
     <DashboardShell
@@ -88,35 +78,108 @@ export default function SuperadminAnalyticsPage() {
       }
     >
       <div className="space-y-6">
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-          {stats.map((stat) => (
-            <Card key={stat.title} className="border-slate-200 dark:border-slate-800 shadow-none rounded-2xl group overflow-hidden">
+        {isLoading ? (
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            <Skeleton className="h-32 w-full rounded-2xl" />
+            <Skeleton className="h-32 w-full rounded-2xl" />
+            <Skeleton className="h-32 w-full rounded-2xl" />
+            <Skeleton className="h-32 w-full rounded-2xl" />
+          </div>
+        ) : (
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            <Card className="border-slate-200 dark:border-slate-800 shadow-none rounded-2xl group overflow-hidden">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-[10px] font-bold uppercase tracking-widest text-slate-500">{stat.title}</CardTitle>
-                <div className={`${stat.bg} ${stat.border} p-2 rounded-xl group-hover:scale-110 transition-transform duration-300 border`}>
-                  <stat.icon className={`h-4 w-4 ${stat.color}`} />
+                <CardTitle className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Total Revenue</CardTitle>
+                <div className="bg-emerald-50 dark:bg-emerald-500/10 border-emerald-100 dark:border-emerald-900/30 p-2 rounded-xl group-hover:scale-110 transition-transform duration-300 border">
+                  <DollarSign className="h-4 w-4 text-emerald-600" />
                 </div>
               </CardHeader>
               <CardContent>
-                <div className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">{stat.value}</div>
+                <div className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">
+                  Rp. {analytics?.totalRevenue.toLocaleString("id-ID") || "0"}
+                </div>
                 <div className="flex items-center justify-between mt-1">
                   <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                    {stat.description}
+                    All time revenue
                   </p>
-                  <p className={`text-[10px] font-bold ${stat.trendColor} flex items-center w-fit px-1.5 py-0.5 rounded ${
-                    stat.color.includes('emerald') ? 'bg-emerald-50 dark:bg-emerald-500/10' :
-                    stat.color.includes('sky') ? 'bg-sky-50 dark:bg-sky-500/10' :
-                    stat.color.includes('violet') ? 'bg-violet-50 dark:bg-violet-500/10' :
-                    'bg-amber-50 dark:bg-amber-500/10'
-                  }`}>
+                  <p className="text-[10px] font-bold text-emerald-600 flex items-center w-fit px-1.5 py-0.5 rounded bg-emerald-50 dark:bg-emerald-500/10">
                     <TrendingUp className="h-3 w-3 mr-0.5" />
-                    {stat.trend}
+                    +{analytics?.revenueGrowth || 0}%
                   </p>
                 </div>
               </CardContent>
             </Card>
-          ))}
-        </div>
+
+            <Card className="border-slate-200 dark:border-slate-800 shadow-none rounded-2xl group overflow-hidden">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Active Users</CardTitle>
+                <div className="bg-sky-50 dark:bg-sky-500/10 border-sky-100 dark:border-sky-900/30 p-2 rounded-xl group-hover:scale-110 transition-transform duration-300 border">
+                  <Users className="h-4 w-4 text-sky-600" />
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">
+                  {analytics?.activeUsers.toLocaleString() || "0"}
+                </div>
+                <div className="flex items-center justify-between mt-1">
+                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                    Monthly active users
+                  </p>
+                  <p className="text-[10px] font-bold text-sky-600 flex items-center w-fit px-1.5 py-0.5 rounded bg-sky-50 dark:bg-sky-500/10">
+                    <TrendingUp className="h-3 w-3 mr-0.5" />
+                    +{analytics?.userGrowth || 0}%
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="border-slate-200 dark:border-slate-800 shadow-none rounded-2xl group overflow-hidden">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Total Orders</CardTitle>
+                <div className="bg-violet-50 dark:bg-violet-500/10 border-violet-100 dark:border-violet-900/30 p-2 rounded-xl group-hover:scale-110 transition-transform duration-300 border">
+                  <ShoppingCart className="h-4 w-4 text-violet-600" />
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">
+                  {analytics?.totalOrders.toLocaleString() || "0"}
+                </div>
+                <div className="flex items-center justify-between mt-1">
+                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                    Completed orders
+                  </p>
+                  <p className="text-[10px] font-bold text-violet-600 flex items-center w-fit px-1.5 py-0.5 rounded bg-violet-50 dark:bg-violet-500/10">
+                    <TrendingUp className="h-3 w-3 mr-0.5" />
+                    +{analytics?.orderGrowth || 0}%
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="border-slate-200 dark:border-slate-800 shadow-none rounded-2xl group overflow-hidden">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Active Stores</CardTitle>
+                <div className="bg-amber-50 dark:bg-amber-500/10 border-amber-100 dark:border-amber-900/30 p-2 rounded-xl group-hover:scale-110 transition-transform duration-300 border">
+                  <Store className="h-4 w-4 text-amber-600" />
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">
+                  {analytics?.activeStores.toLocaleString() || "0"}
+                </div>
+                <div className="flex items-center justify-between mt-1">
+                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                    Verified stores
+                  </p>
+                  <p className="text-[10px] font-bold text-amber-600 flex items-center w-fit px-1.5 py-0.5 rounded bg-amber-50 dark:bg-amber-500/10">
+                    <TrendingUp className="h-3 w-3 mr-0.5" />
+                    +{analytics?.storeGrowth || 0}%
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
 
         <div className="flex flex-col md:flex-row gap-4 items-center justify-between p-5 bg-slate-50/50 dark:bg-slate-900/50 rounded-2xl border border-slate-200 dark:border-slate-800">
           <div className="flex items-center space-x-2">

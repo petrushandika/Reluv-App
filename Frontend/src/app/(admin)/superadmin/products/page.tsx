@@ -16,40 +16,73 @@ import {
   AlertCircle
 } from "lucide-react"
 import { superadminSidebarItems } from "@/features/(admin)/superadmin/constants/sidebarItems"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { ProductStatusModal } from "@/features/(admin)/superadmin/components/modals/ProductStatusModal"
 import { toast } from "sonner"
-
-const pendingProducts = [
-  {
-    id: "PROD-998",
-    name: "Luxury Silk Scarf",
-    store: "Elegance Boutique",
-    price: 750000,
-    category: "Accessories",
-    status: "pending",
-  },
-  {
-    id: "PROD-999",
-    name: "Designer Handbag",
-    store: "Paris Vintage",
-    price: 8500000,
-    category: "Bags",
-    status: "pending",
-  },
-]
+import { getProducts, updateProductStatus, ProductListItem, ProductsResponse } from "@/features/(admin)/superadmin/api/superadminApi"
+import { Skeleton } from "@/shared/components/ui/skeleton"
 
 export default function SuperadminProductsPage() {
+  const [products, setProducts] = useState<ProductListItem[]>([])
+  const [isLoading, setIsLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState("")
   const [isStatusModalOpen, setIsStatusModalOpen] = useState(false)
-  const [selectedProduct, setSelectedProduct] = useState<typeof pendingProducts[0] | null>(null)
+  const [selectedProduct, setSelectedProduct] = useState<ProductListItem | null>(null)
   const [actionType, setActionType] = useState<"approve" | "reject">("approve")
+  const [currentPage, setCurrentPage] = useState(1)
+  const [totalPages, setTotalPages] = useState(1)
+  const [total, setTotal] = useState(0)
+  const [stats, setStats] = useState({
+    total: 0,
+    pending: 0,
+    approved: 0,
+    rejected: 0,
+  })
+
+  const fetchProducts = async (page: number = 1, search: string = "") => {
+    try {
+      setIsLoading(true)
+      const response: ProductsResponse = await getProducts({
+        page,
+        limit: 10,
+        search: search || undefined,
+        status: "PENDING", // Show pending products for review
+      })
+      setProducts(response.data)
+      setTotalPages(response.meta.totalPages)
+      setTotal(response.meta.total)
+      
+      // Fetch all products for stats
+      const allProducts = await getProducts({ limit: 1000 })
+      const pendingCount = allProducts.data.filter(p => p.status === "PENDING").length
+      const approvedCount = allProducts.data.filter(p => p.status === "APPROVED").length
+      const rejectedCount = allProducts.data.filter(p => p.status === "REJECTED").length
+      
+      setStats({
+        total: allProducts.meta.total,
+        pending: pendingCount,
+        approved: approvedCount,
+        rejected: rejectedCount,
+      })
+    } catch (error) {
+      console.error("Failed to fetch products:", error)
+      toast.error("Failed to load products")
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    fetchProducts(currentPage, searchQuery)
+  }, [currentPage])
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
+    setCurrentPage(1)
+    fetchProducts(1, searchQuery)
   }
 
-  const handleStatusClick = (product: typeof pendingProducts[0], type: "approve" | "reject") => {
+  const handleStatusClick = (product: ProductListItem, type: "approve" | "reject") => {
     setSelectedProduct(product)
     setActionType(type)
     setIsStatusModalOpen(true)
@@ -58,6 +91,11 @@ export default function SuperadminProductsPage() {
   const confirmStatusChange = async () => {
     if (!selectedProduct) return
     try {
+      await updateProductStatus(selectedProduct.id, {
+        status: actionType === "approve" ? "APPROVED" : "REJECTED",
+        reason: actionType === "reject" ? "Product does not meet quality standards" : undefined
+      })
+      
       if (actionType === "approve") {
         toast.success(`Product "${selectedProduct.name}" has been approved`)
       } else {
@@ -65,16 +103,10 @@ export default function SuperadminProductsPage() {
       }
       setIsStatusModalOpen(false)
       setSelectedProduct(null)
+      await fetchProducts(currentPage, searchQuery)
     } catch (error: any) {
       toast.error(error.response?.data?.message || `Failed to ${actionType} product`)
     }
-  }
-
-  const stats = {
-    total: 1248,
-    pending: 12,
-    approved: 1156,
-    rejected: 80,
   }
 
   return (
@@ -180,8 +212,22 @@ export default function SuperadminProductsPage() {
           </div>
         </div>
 
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {pendingProducts.map((p) => (
+        {isLoading ? (
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <Skeleton className="h-96 w-full rounded-2xl" />
+            <Skeleton className="h-96 w-full rounded-2xl" />
+            <Skeleton className="h-96 w-full rounded-2xl" />
+          </div>
+        ) : products.length === 0 ? (
+          <Card className="border-slate-200 dark:border-slate-800 shadow-none rounded-2xl">
+            <CardContent className="p-12 text-center">
+              <Package className="h-12 w-12 text-slate-300 dark:text-slate-700 mx-auto mb-4" />
+              <p className="text-sm font-medium text-slate-500 dark:text-slate-400">No pending products found</p>
+            </CardContent>
+          </Card>
+        ) : (
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {products.map((p) => (
             <Card key={p.id} className="border-slate-200 dark:border-slate-800 shadow-none rounded-2xl overflow-hidden transition-all group hover:border-sky-500/30">
               <div className="h-48 bg-slate-50 dark:bg-slate-900 relative border-b border-slate-100 dark:border-slate-800">
                 <div className="absolute top-4 left-4 z-10">
@@ -204,14 +250,14 @@ export default function SuperadminProductsPage() {
                       <Store className="h-2.5 w-2.5 text-sky-600" />
                     </div>
                     <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                      {p.store}
+                      {p.store?.name || "Unknown Store"}
                     </p>
                   </div>
                 </div>
                 
                 <div className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-800/50">
                   <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                    {p.category}
+                    {p.category?.name || "Uncategorized"}
                   </span>
                   <span className="text-sm font-bold text-slate-900 dark:text-white">
                     Rp. {p.price.toLocaleString("id-ID")}
@@ -242,6 +288,7 @@ export default function SuperadminProductsPage() {
             </Card>
           ))}
         </div>
+        )}
       </div>
 
       <ProductStatusModal

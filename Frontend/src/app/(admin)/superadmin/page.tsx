@@ -18,15 +18,47 @@ import {
   Users
 } from "lucide-react"
 import { superadminSidebarItems } from "@/features/(admin)/superadmin/constants/sidebarItems"
+import { useEffect, useState } from "react"
+import { getDashboardStats, DashboardStats } from "@/features/(admin)/superadmin/api/superadminApi"
+import { Skeleton } from "@/shared/components/ui/skeleton"
 
 export default function SuperadminDashboardPage() {
+  const [stats, setStats] = useState<DashboardStats | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        setIsLoading(true)
+        const data = await getDashboardStats()
+        setStats(data)
+      } catch (error) {
+        console.error("Failed to fetch dashboard stats:", error)
+        // Set default values on error
+        setStats({
+          totalGMV: 0,
+          totalStores: 0,
+          pendingStores: 0,
+          activeUsers: 0,
+          newUsersThisWeek: 0,
+          apiLatency: 0,
+          region: "SE Asia"
+        })
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    fetchStats()
+  }, [])
+
   return (
     <DashboardShell 
       title="Overview" 
       sidebarItems={superadminSidebarItems}
       type="superadmin"
       branding={
-        <h1 className="text-2xl font-medium text-(--text-primary)">Superadmin</h1>
+        <h1 className="text-2xl font-medium text-slate-900 dark:text-white">Superadmin</h1>
       }
       actions={
         <div className="flex items-center w-full sm:w-auto">
@@ -38,58 +70,71 @@ export default function SuperadminDashboardPage() {
       }
     >
       <div className="space-y-6">
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-          <Card className="border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 transition-all hover:border-emerald-200 dark:hover:border-emerald-900/50 group">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-[10px] font-medium text-slate-400 uppercase tracking-widest">Global GMV</CardTitle>
-              <div className="p-2 bg-emerald-50 dark:bg-emerald-500/10 rounded-lg border border-emerald-100 dark:border-emerald-900/20 group-hover:bg-emerald-100 transition-colors">
-                <Activity className="h-4 w-4 text-emerald-600 dark:text-emerald-400 animate-pulse" />
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-medium text-slate-900 dark:text-white">Rp. 1.432.231.000</div>
-              <p className="text-[10px] text-emerald-600 dark:text-emerald-400 font-medium mt-1 flex items-center bg-emerald-50 dark:bg-emerald-500/10 w-fit px-1.5 py-0.5 rounded">
-                +5.2% from last cycle
-              </p>
-            </CardContent>
-          </Card>
-          <Card className="border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 transition-all hover:border-blue-200 dark:hover:border-blue-900/50 group">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-[10px] font-medium text-slate-400 uppercase tracking-widest">Total Stores</CardTitle>
-              <div className="p-2 bg-blue-50 dark:bg-blue-500/10 rounded-lg border border-blue-100 dark:border-blue-900/20 group-hover:bg-blue-100 transition-colors">
-                <Store className="h-4 w-4 text-blue-600 dark:text-blue-400" />
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-medium text-slate-900 dark:text-white">+1,284</div>
-              <p className="text-[10px] text-amber-600 dark:text-amber-400 font-medium mt-1 flex items-center bg-amber-50 dark:bg-amber-500/10 w-fit px-1.5 py-0.5 rounded uppercase tracking-wider">
-                12 pending verification
-              </p>
-            </CardContent>
-          </Card>
-          <Card className="border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 transition-all hover:border-violet-200 dark:hover:border-violet-900/50 group">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-[10px] font-medium text-slate-400 uppercase tracking-widest">Active Users</CardTitle>
-              <div className="p-2 bg-violet-50 dark:bg-violet-500/10 rounded-lg border border-violet-100 dark:border-violet-900/20 group-hover:bg-violet-100 transition-colors">
-                <Users className="h-4 w-4 text-violet-600 dark:text-violet-400" />
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-medium text-slate-900 dark:text-white">+42,231</div>
-              <p className="text-[10px] text-violet-600 dark:text-violet-400 font-medium mt-1 uppercase tracking-wider">+1,200 new this week</p>
-            </CardContent>
-          </Card>
-          <Card className="border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 transition-all group">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-[10px] font-medium text-slate-400 uppercase tracking-widest">API Latency</CardTitle>
-              <div className="h-3 w-3 rounded-full bg-emerald-500 animate-pulse ring-4 ring-emerald-500/20" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-medium text-slate-900 dark:text-white">42ms</div>
-              <p className="text-[10px] text-slate-400 font-medium mt-1 uppercase tracking-widest">Region: SE Asia</p>
-            </CardContent>
-          </Card>
-        </div>
+        {isLoading ? (
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            <Skeleton className="h-32 w-full rounded-2xl" />
+            <Skeleton className="h-32 w-full rounded-2xl" />
+            <Skeleton className="h-32 w-full rounded-2xl" />
+            <Skeleton className="h-32 w-full rounded-2xl" />
+          </div>
+        ) : (
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            <Card className="border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 transition-all hover:border-emerald-200 dark:hover:border-emerald-900/50 group">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-[10px] font-medium text-slate-400 uppercase tracking-widest">Global GMV</CardTitle>
+                <div className="p-2 bg-emerald-50 dark:bg-emerald-500/10 rounded-lg border border-emerald-100 dark:border-emerald-900/20 group-hover:bg-emerald-100 transition-colors">
+                  <Activity className="h-4 w-4 text-emerald-600 dark:text-emerald-400 animate-pulse" />
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-medium text-slate-900 dark:text-white">
+                  Rp. {stats?.totalGMV.toLocaleString("id-ID") || "0"}
+                </div>
+                <p className="text-[10px] text-emerald-600 dark:text-emerald-400 font-medium mt-1 flex items-center bg-emerald-50 dark:bg-emerald-500/10 w-fit px-1.5 py-0.5 rounded">
+                  +5.2% from last cycle
+                </p>
+              </CardContent>
+            </Card>
+            <Card className="border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 transition-all hover:border-blue-200 dark:hover:border-blue-900/50 group">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-[10px] font-medium text-slate-400 uppercase tracking-widest">Total Stores</CardTitle>
+                <div className="p-2 bg-blue-50 dark:bg-blue-500/10 rounded-lg border border-blue-100 dark:border-blue-900/20 group-hover:bg-blue-100 transition-colors">
+                  <Store className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-medium text-slate-900 dark:text-white">+{stats?.totalStores.toLocaleString() || "0"}</div>
+                <p className="text-[10px] text-amber-600 dark:text-amber-400 font-medium mt-1 flex items-center bg-amber-50 dark:bg-amber-500/10 w-fit px-1.5 py-0.5 rounded uppercase tracking-wider">
+                  {stats?.pendingStores || 0} pending verification
+                </p>
+              </CardContent>
+            </Card>
+            <Card className="border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 transition-all hover:border-violet-200 dark:hover:border-violet-900/50 group">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-[10px] font-medium text-slate-400 uppercase tracking-widest">Active Users</CardTitle>
+                <div className="p-2 bg-violet-50 dark:bg-violet-500/10 rounded-lg border border-violet-100 dark:border-violet-900/20 group-hover:bg-violet-100 transition-colors">
+                  <Users className="h-4 w-4 text-violet-600 dark:text-violet-400" />
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-medium text-slate-900 dark:text-white">+{stats?.activeUsers.toLocaleString() || "0"}</div>
+                <p className="text-[10px] text-violet-600 dark:text-violet-400 font-medium mt-1 uppercase tracking-wider">
+                  +{stats?.newUsersThisWeek.toLocaleString() || "0"} new this week
+                </p>
+              </CardContent>
+            </Card>
+            <Card className="border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 transition-all group">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-[10px] font-medium text-slate-400 uppercase tracking-widest">API Latency</CardTitle>
+                <div className="h-3 w-3 rounded-full bg-emerald-500 animate-pulse ring-4 ring-emerald-500/20" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-medium text-slate-900 dark:text-white">{stats?.apiLatency || 0}ms</div>
+                <p className="text-[10px] text-slate-400 font-medium mt-1 uppercase tracking-widest">Region: {stats?.region || "SE Asia"}</p>
+              </CardContent>
+            </Card>
+          </div>
+        )}
         <div className="grid gap-6 lg:grid-cols-7">
           {}
           <Card className="lg:col-span-4 border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 transition-all">

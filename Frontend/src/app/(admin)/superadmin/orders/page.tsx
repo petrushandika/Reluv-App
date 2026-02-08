@@ -14,53 +14,60 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/ui
 import { Button } from "@/shared/components/ui/button"
 import { SuperadminOrdersList } from "@/features/(admin)/superadmin/components/SuperadminOrdersList"
 import { superadminSidebarItems } from "@/features/(admin)/superadmin/constants/sidebarItems"
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { getOrders, OrdersResponse } from "@/features/(admin)/superadmin/api/superadminApi"
+import { Skeleton } from "@/shared/components/ui/skeleton"
 
 export default function SuperadminOrdersPage() {
   const [searchQuery, setSearchQuery] = useState("")
+  const [isLoading, setIsLoading] = useState(true)
+  const [currentPage, setCurrentPage] = useState(1)
+  const [totalPages, setTotalPages] = useState(1)
+  const [total, setTotal] = useState(0)
+  const [stats, setStats] = useState({
+    totalGMV: 0,
+    totalOrders: 0,
+    activeDisputes: 0,
+    growthRate: 0,
+  })
+
+  const fetchOrders = async (page: number = 1, search: string = "") => {
+    try {
+      setIsLoading(true)
+      const response: OrdersResponse = await getOrders({
+        page,
+        limit: 10,
+        search: search || undefined,
+      })
+      setTotalPages(response.meta.totalPages)
+      setTotal(response.meta.total)
+      
+      // Calculate stats from orders
+      const totalGMV = response.data.reduce((sum, order) => sum + order.totalAmount, 0)
+      const activeDisputes = response.data.filter(o => o.status === "CANCELLED").length
+      
+      setStats({
+        totalGMV,
+        totalOrders: response.meta.total,
+        activeDisputes,
+        growthRate: 18.4, // This would come from backend analytics
+      })
+    } catch (error) {
+      console.error("Failed to fetch orders:", error)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    fetchOrders(currentPage, searchQuery)
+  }, [currentPage])
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
+    setCurrentPage(1)
+    fetchOrders(1, searchQuery)
   }
-
-  const stats = [
-    {
-      title: "Global GMV",
-      value: "Rp. 154.2M",
-      description: "Total platform revenue",
-      icon: DollarSign,
-      color: "text-emerald-600",
-      bg: "bg-emerald-50 dark:bg-emerald-500/10",
-      border: "border-emerald-100 dark:border-emerald-900/30",
-    },
-    {
-      title: "Total Orders",
-      value: "1,248",
-      description: "All time transactions",
-      icon: ShoppingCart,
-      color: "text-sky-600",
-      bg: "bg-sky-50 dark:bg-sky-500/10",
-      border: "border-sky-100 dark:border-sky-900/30",
-    },
-    {
-      title: "Active Disputes",
-      value: "4",
-      description: "Needs attention",
-      icon: AlertCircle,
-      color: "text-rose-600",
-      bg: "bg-rose-50 dark:bg-rose-500/10",
-      border: "border-rose-100 dark:border-rose-900/30",
-    },
-    {
-      title: "Growth Rate",
-      value: "+18.4%",
-      description: "Compared to last month",
-      icon: TrendingUp,
-      color: "text-violet-600",
-      bg: "bg-violet-50 dark:bg-violet-500/10",
-      border: "border-violet-100 dark:border-violet-900/30",
-    },
-  ]
 
   return (
     <DashboardShell
@@ -83,24 +90,78 @@ export default function SuperadminOrdersPage() {
       }
     >
       <div className="space-y-6">
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-          {stats.map((stat) => (
-            <Card key={stat.title} className="border-slate-200 dark:border-slate-800 shadow-none rounded-2xl group overflow-hidden">
+        {isLoading ? (
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            <Skeleton className="h-32 w-full rounded-2xl" />
+            <Skeleton className="h-32 w-full rounded-2xl" />
+            <Skeleton className="h-32 w-full rounded-2xl" />
+            <Skeleton className="h-32 w-full rounded-2xl" />
+          </div>
+        ) : (
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            <Card className="border-slate-200 dark:border-slate-800 shadow-none rounded-2xl group overflow-hidden">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-[10px] font-bold uppercase tracking-widest text-slate-500">{stat.title}</CardTitle>
-                <div className={`${stat.bg} ${stat.border} p-2 rounded-xl group-hover:scale-110 transition-transform duration-300 border`}>
-                  <stat.icon className={`h-4 w-4 ${stat.color}`} />
+                <CardTitle className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Global GMV</CardTitle>
+                <div className="bg-emerald-50 dark:bg-emerald-500/10 border-emerald-100 dark:border-emerald-900/30 p-2 rounded-xl group-hover:scale-110 transition-transform duration-300 border">
+                  <DollarSign className="h-4 w-4 text-emerald-600" />
                 </div>
               </CardHeader>
               <CardContent>
-                <div className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">{stat.value}</div>
+                <div className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">
+                  Rp. {stats.totalGMV.toLocaleString("id-ID")}
+                </div>
                 <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">
-                  {stat.description}
+                  Total platform revenue
                 </p>
               </CardContent>
             </Card>
-          ))}
-        </div>
+
+            <Card className="border-slate-200 dark:border-slate-800 shadow-none rounded-2xl group overflow-hidden">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Total Orders</CardTitle>
+                <div className="bg-sky-50 dark:bg-sky-500/10 border-sky-100 dark:border-sky-900/30 p-2 rounded-xl group-hover:scale-110 transition-transform duration-300 border">
+                  <ShoppingCart className="h-4 w-4 text-sky-600" />
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">{stats.totalOrders.toLocaleString()}</div>
+                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">
+                  All time transactions
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="border-slate-200 dark:border-slate-800 shadow-none rounded-2xl group overflow-hidden">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Active Disputes</CardTitle>
+                <div className="bg-rose-50 dark:bg-rose-500/10 border-rose-100 dark:border-rose-900/30 p-2 rounded-xl group-hover:scale-110 transition-transform duration-300 border">
+                  <AlertCircle className="h-4 w-4 text-rose-600" />
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">{stats.activeDisputes}</div>
+                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">
+                  Needs attention
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="border-slate-200 dark:border-slate-800 shadow-none rounded-2xl group overflow-hidden">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Growth Rate</CardTitle>
+                <div className="bg-violet-50 dark:bg-violet-500/10 border-violet-100 dark:border-violet-900/30 p-2 rounded-xl group-hover:scale-110 transition-transform duration-300 border">
+                  <TrendingUp className="h-4 w-4 text-violet-600" />
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">+{stats.growthRate}%</div>
+                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">
+                  Compared to last month
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+        )}
 
         <div className="flex flex-col md:flex-row gap-4 items-center justify-between p-5 bg-slate-50/50 dark:bg-slate-900/50 rounded-2xl border border-slate-200 dark:border-slate-800">
           <form onSubmit={handleSearch} className="relative w-full md:w-96">

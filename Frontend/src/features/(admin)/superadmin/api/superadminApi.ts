@@ -166,3 +166,188 @@ export const deleteCategory = async (
   await api.delete(`/categories/${categoryId}`);
 };
 
+// Dashboard Stats
+export interface DashboardStats {
+  totalGMV: number;
+  totalStores: number;
+  pendingStores: number;
+  activeUsers: number;
+  newUsersThisWeek: number;
+  apiLatency: number;
+  region: string;
+}
+
+export const getDashboardStats = async (): Promise<DashboardStats> => {
+  const response = await api.get<DashboardStats>("/admin/dashboard/stats");
+  return response.data;
+};
+
+// Products
+export interface ProductListItem {
+  id: number;
+  name: string;
+  slug: string;
+  price: number;
+  stock: number;
+  status: "PENDING" | "APPROVED" | "REJECTED";
+  categoryId: number;
+  storeId: number;
+  createdAt: string;
+  category?: {
+    id: number;
+    name: string;
+    slug: string;
+  };
+  store?: {
+    id: number;
+    name: string;
+    slug: string;
+  };
+  images?: Array<{
+    id: number;
+    url: string;
+    isPrimary: boolean;
+  }>;
+}
+
+export interface ProductsResponse {
+  data: ProductListItem[];
+  meta: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+  };
+}
+
+export interface QueryProductsParams {
+  page?: number;
+  limit?: number;
+  search?: string;
+  status?: "PENDING" | "APPROVED" | "REJECTED";
+  categoryId?: number;
+  storeId?: number;
+}
+
+export const getProducts = async (
+  params?: QueryProductsParams
+): Promise<ProductsResponse> => {
+  const response = await api.get<ProductsResponse>("/products/admin", { params });
+  return response.data;
+};
+
+export const updateProductStatus = async (
+  productId: number,
+  data: { status: "APPROVED" | "REJECTED"; reason?: string }
+): Promise<ProductListItem> => {
+  const response = await api.patch<ProductListItem>(`/products/admin/${productId}/status`, data);
+  return response.data;
+};
+
+// Orders
+export interface OrderListItem {
+  id: number;
+  orderNumber: string;
+  totalAmount: number;
+  status: "PENDING" | "PROCESSING" | "SHIPPED" | "DELIVERED" | "CANCELLED";
+  paymentStatus: "PENDING" | "PAID" | "FAILED" | "REFUNDED";
+  shippingStatus: "PENDING" | "PROCESSING" | "SHIPPED" | "DELIVERED";
+  createdAt: string;
+  user?: {
+    id: number;
+    email: string;
+    firstName?: string;
+    lastName?: string;
+  };
+  store?: {
+    id: number;
+    name: string;
+    slug: string;
+  };
+  orderItems?: Array<{
+    id: number;
+    quantity: number;
+    price: number;
+    product: {
+      id: number;
+      name: string;
+      slug: string;
+    };
+  }>;
+}
+
+export interface OrdersResponse {
+  data: OrderListItem[];
+  meta: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+  };
+}
+
+export interface QueryOrdersParams {
+  page?: number;
+  limit?: number;
+  search?: string;
+  status?: "PENDING" | "PROCESSING" | "SHIPPED" | "DELIVERED" | "CANCELLED";
+  paymentStatus?: "PENDING" | "PAID" | "FAILED" | "REFUNDED";
+  storeId?: number;
+  userId?: number;
+}
+
+export const getOrders = async (
+  params?: QueryOrdersParams
+): Promise<OrdersResponse> => {
+  const response = await api.get<OrdersResponse>("/orders/admin", { params });
+  return response.data;
+};
+
+export const updateOrderStatus = async (
+  orderId: number,
+  data: { 
+    status?: "PENDING" | "PROCESSING" | "SHIPPED" | "DELIVERED" | "CANCELLED";
+    paymentStatus?: "PENDING" | "PAID" | "FAILED" | "REFUNDED";
+    shippingStatus?: "PENDING" | "PROCESSING" | "SHIPPED" | "DELIVERED";
+  }
+): Promise<OrderListItem> => {
+  const response = await api.patch<OrderListItem>(`/orders/admin/${orderId}`, data);
+  return response.data;
+};
+
+// Analytics
+export interface AnalyticsData {
+  totalRevenue: number;
+  revenueGrowth: number;
+  activeUsers: number;
+  userGrowth: number;
+  totalOrders: number;
+  orderGrowth: number;
+  activeStores: number;
+  storeGrowth: number;
+  conversionRate: number;
+  avgOrderValue: number;
+  customerRetention: number;
+  topCategories: Array<{
+    name: string;
+    revenue: number;
+    orders: number;
+  }>;
+  revenueChart: Array<{ date: string; amount: number }>;
+  userChart: Array<{ date: string; count: number }>;
+}
+
+export interface QueryAnalyticsParams {
+  timeRange?: "7d" | "30d" | "90d" | "1y";
+  startDate?: string;
+  endDate?: string;
+  period?: "day" | "week" | "month" | "year";
+}
+
+export const getAnalytics = async (
+  params?: QueryAnalyticsParams
+): Promise<AnalyticsData> => {
+  const response = await api.get<AnalyticsData>("/admin/analytics", { params });
+  return response.data;
+};
+
