@@ -2,9 +2,15 @@
 
 import Skeleton from '@/shared/components/common/Skeleton';
 
-const ProductCardSkeleton = () => {
+interface ProductCardSkeletonProps {
+  containerClassName?: string;
+}
+
+const ProductCardSkeleton = ({ containerClassName }: ProductCardSkeletonProps) => {
+  const defaultClasses = "w-full";
+  
   return (
-    <div className="flex-grow-0 flex-shrink-0 w-1/2 md:w-1/3 lg:w-1/5 pl-4">
+    <div className={containerClassName || defaultClasses}>
       <div className="relative group/card">
         <Skeleton variant="rectangular" className="aspect-square w-full rounded" />
         <Skeleton

@@ -64,8 +64,7 @@ const ProductCard = ({ product, containerClassName }: ProductCardProps) => {
     }
   };
 
-  const defaultClasses =
-    "flex-grow-0 flex-shrink-0 w-1/2 md:w-1/3 lg:w-1/5 pl-4";
+  const defaultClasses = "w-full";
 
   return (
     <div className={containerClassName || defaultClasses}>

@@ -100,30 +100,31 @@ const ProductList = ({
   }
 
   return (
-    <div
-      className={`w-full bg-white dark:bg-gray-900 py-6 sm:py-8 md:py-12 lg:py-5`}
-    >
-      <div className={`container mx-auto px-4 sm:px-6 md:px-10 xl:px-20 2xl:px-40`}>
-        <div className={`flex flex-col justify-between mb-6 sm:mb-8 md:mb-10`}>
-          <h2
-            className={`text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-sky-600 dark:text-sky-400 mb-1`}
-          >
+    <div className="w-full bg-white dark:bg-gray-900 py-6 sm:py-8 md:py-12 lg:py-5">
+      <div className="container mx-auto px-4 sm:px-6 md:px-10 xl:px-20 2xl:px-40">
+        <div className="flex flex-col justify-between mb-6 sm:mb-8 md:mb-10">
+          <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-sky-600 dark:text-sky-400 mb-1">
             {title}
           </h2>
-          <div
-            className={`w-12 sm:w-16 md:w-20 h-0.5 sm:h-1 bg-gradient-to-r from-sky-400 to-sky-600 rounded-full`}
-          ></div>
+          <div className="w-12 sm:w-16 md:w-20 h-0.5 sm:h-1 bg-gradient-to-r from-sky-400 to-sky-600 rounded-full"></div>
         </div>
 
-        <div className={`relative`}>
-          <div className={`overflow-hidden`} ref={emblaRef}>
-            <div className={`flex -ml-4`}>
+        <div className="relative">
+          <div className="overflow-hidden" ref={emblaRef}>
+            <div className="flex -ml-4">
               {isLoading
                 ? Array.from({ length: 5 }).map((_, index) => (
-                    <ProductCardSkeleton key={index} />
+                    <ProductCardSkeleton
+                      key={`skeleton-${index}`}
+                      containerClassName="flex-grow-0 flex-shrink-0 w-1/2 md:w-1/3 lg:w-1/5 pl-4"
+                    />
                   ))
                 : safeProducts.map((product) => (
-                    <ProductCard key={product.id} product={product} />
+                    <ProductCard
+                      key={product.id}
+                      product={product}
+                      containerClassName="flex-grow-0 flex-shrink-0 w-1/2 md:w-1/3 lg:w-1/5 pl-4"
+                    />
                   ))}
             </div>
           </div>
@@ -131,22 +132,20 @@ const ProductList = ({
           <NextButton onClick={scrollNext} enabled={nextBtnEnabled} />
         </div>
 
-        <div className={`mt-0 md:mt-8 block md:hidden`}>
-          <div
-            className={`bg-gray-200 dark:bg-gray-700 rounded-full h-1 w-full overflow-hidden`}
-          >
+        <div className="mt-0 md:mt-8 block md:hidden">
+          <div className="bg-gray-200 dark:bg-gray-700 rounded-full h-1 w-full overflow-hidden">
             <div
-              className={`bg-gray-700 dark:bg-gray-500 h-1 rounded-full`}
+              className="bg-gray-700 dark:bg-gray-500 h-1 rounded-full"
               style={{ width: `${scrollProgress}%` }}
             />
           </div>
         </div>
 
         {showSeeMoreButton && (
-          <div className={`text-center mt-4 sm:mt-6 md:mt-10`}>
+          <div className="text-center mt-4 sm:mt-6 md:mt-10">
             <button
               onClick={onSeeMoreClick}
-              className={`bg-white dark:bg-gray-800 text-sky-600 dark:text-sky-400 font-semibold py-2.5 sm:py-3 px-6 sm:px-8 border border-sky-600 dark:border-sky-400 rounded-md hover:bg-sky-600 dark:hover:bg-sky-500 hover:text-white transition-all duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:ring-opacity-50 text-sm sm:text-base cursor-pointer touch-manipulation`}
+              className="bg-white dark:bg-gray-800 text-sky-600 dark:text-sky-400 font-semibold py-2.5 sm:py-3 px-6 sm:px-8 border border-sky-600 dark:border-sky-400 rounded-md hover:bg-sky-600 dark:hover:bg-sky-500 hover:text-white transition-all duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 focus:ring-opacity-50 text-sm sm:text-base cursor-pointer touch-manipulation"
             >
               See More
             </button>
