@@ -685,7 +685,12 @@ export class OrdersService {
 
     const where: any = {
       ...(search && {
-        OR: [{ orderNumber: { contains: search, mode: 'insensitive' } }],
+        OR: [
+          { orderNumber: { contains: search, mode: 'insensitive' } },
+          { buyer: { email: { contains: search, mode: 'insensitive' } } },
+          { buyer: { firstName: { contains: search, mode: 'insensitive' } } },
+          { buyer: { lastName: { contains: search, mode: 'insensitive' } } },
+        ],
       }),
       ...(status && { status }),
     };

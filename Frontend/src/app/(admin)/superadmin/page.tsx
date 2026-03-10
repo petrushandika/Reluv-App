@@ -58,7 +58,7 @@ export default function SuperadminDashboardPage() {
       sidebarItems={superadminSidebarItems}
       type="superadmin"
       branding={
-        <h1 className="text-2xl font-medium text-slate-900 dark:text-white">Superadmin</h1>
+        <div className="text-2xl font-medium text-slate-900 dark:text-white">Superadmin</div>
       }
       actions={
         <div className="flex items-center w-full sm:w-auto">

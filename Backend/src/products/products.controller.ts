@@ -131,6 +131,13 @@ export class ProductsController {
     return this.productsService.updateStatusAdmin(productId, data);
   }
 
+  @UseGuards(JwtAuthGuard, AdminGuard)
+  @Delete('admin/:productId')
+  @HttpCode(HttpStatus.OK)
+  removeAdmin(@Param('productId', ParseIntPipe) productId: number) {
+    return this.productsService.removeAdmin(productId);
+  }
+
   @Get(':slug')
   @HttpCode(HttpStatus.OK)
   findOneBySlug(@Param('slug') slug: string) {

@@ -3,6 +3,12 @@
 import { Button } from "@/shared/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/ui/card"
 import { DashboardShell } from "@/shared/components/layout/DashboardShell"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/shared/components/ui/dropdown-menu"
 import { 
   Search, 
   ShieldCheck, 
@@ -10,16 +16,19 @@ import {
   CheckCircle2,
   XCircle,
   AlertCircle,
-  Download
+  Download,
+  Filter,
+  ChevronDown
 } from "lucide-react"
 import { superadminSidebarItems } from "@/features/(admin)/superadmin/constants/sidebarItems"
 import { useState, useEffect } from "react"
 import { ProductStatusModal } from "@/features/(admin)/superadmin/components/modals/ProductStatusModal"
 import { toast } from "sonner"
-import { getProducts, updateProductStatus, ProductListItem, ProductsResponse } from "@/features/(admin)/superadmin/api/superadminApi"
+import { getProducts, updateProductStatus, deleteProductAdmin, ProductListItem, ProductsResponse } from "@/features/(admin)/superadmin/api/superadminApi"
 import { Skeleton } from "@/shared/components/ui/skeleton"
 import { exportToCsv } from "@/shared/utils/exportToCsv"
 import { SuperadminProductsList } from "@/features/(admin)/superadmin/components/SuperadminProductsList"
+import { DeleteConfirmModal } from "@/features/(admin)/superadmin/components/modals/DeleteConfirmModal"
 
 export default function SuperadminProductsPage() {
   const [products, setProducts] = useState<ProductListItem[]>([])
@@ -37,6 +46,8 @@ export default function SuperadminProductsPage() {
   })
 
   const [filterStatus, setFilterStatus] = useState<string | undefined>(undefined)
+  const [productToDelete, setProductToDelete] = useState<ProductListItem | null>(null)
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
 
   const fetchProducts = async (page: number = 1, search: string = "", status: string | undefined = filterStatus) => {
     try {
@@ -119,13 +130,33 @@ export default function SuperadminProductsPage() {
     exportToCsv(dataToExport, "reluv-products-export")
   }
 
+  const handleDeleteRequest = (product: ProductListItem) => {
+    setProductToDelete(product)
+    setIsDeleteModalOpen(true)
+  }
+
+  const handleDeleteConfirm = async () => {
+    if (!productToDelete) return
+    try {
+      await deleteProductAdmin(productToDelete.id)
+      toast.success(`Product "${productToDelete.name}" has been deleted`)
+      setIsDeleteModalOpen(false)
+      setProductToDelete(null)
+      await fetchProducts(currentPage, searchQuery, filterStatus)
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || "Failed to delete product")
+    }
+  }
+
+  const filterLabel = filterStatus == null || filterStatus === undefined ? "All" : filterStatus.charAt(0) + filterStatus.slice(1).toLowerCase()
+
   return (
     <DashboardShell 
       title="Products" 
       sidebarItems={superadminSidebarItems}
       type="superadmin"
       branding={
-        <h1 className="text-2xl font-medium text-slate-900 dark:text-white">Superadmin</h1>
+        <div className="text-2xl font-medium text-slate-900 dark:text-white">Superadmin</div>
       }
       actions={
         <div className="flex items-center gap-2 sm:gap-3 flex-wrap sm:flex-nowrap">
@@ -208,32 +239,55 @@ export default function SuperadminProductsPage() {
           </Card>
         </div>
 
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-          <form onSubmit={handleSearch} className="relative w-full">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
+          <form onSubmit={handleSearch} className="relative w-full min-w-0">
+            <Search className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 shrink-0" />
             <input 
               type="text"
               placeholder="Search products across all stores..." 
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-11 h-11 rounded-xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 transition-all text-sm font-medium"
+              className="w-full pl-9 sm:pl-11 h-11 rounded-xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 transition-all text-sm font-medium"
             />
           </form>
-          <div className="flex gap-2 w-full sm:w-auto overflow-x-auto pb-2 sm:pb-0 hide-scrollbar">
-            {["ALL", "PENDING", "APPROVED", "REJECTED"].map((s) => (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
               <Button
-                key={s}
-                variant={filterStatus === (s === "ALL" ? undefined : s) ? "default" : "outline"}
-                onClick={() => {
-                  setFilterStatus(s === "ALL" ? undefined : s)
-                  setCurrentPage(1)
-                }}
-                className="h-11 px-4 rounded-xl font-bold text-[10px] uppercase tracking-widest border shadow-sm transition-all whitespace-nowrap"
+                variant="outline"
+                className="w-full sm:w-auto h-11 px-4 sm:px-5 rounded-xl border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 font-bold text-xs uppercase tracking-widest hover:bg-slate-50 dark:hover:bg-slate-900 transition-all border shadow-sm flex items-center justify-center gap-2"
               >
-                {s}
+                <Filter className="h-4 w-4 shrink-0" />
+                <span className="truncate">{filterLabel}</span>
+                <ChevronDown className="h-4 w-4 shrink-0 opacity-70" />
               </Button>
-            ))}
-          </div>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-[200px] rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 p-1">
+              <DropdownMenuItem
+                onClick={() => { setFilterStatus(undefined); setCurrentPage(1) }}
+                className="rounded-lg cursor-pointer font-medium text-slate-700 dark:text-slate-300"
+              >
+                All
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => { setFilterStatus("PENDING"); setCurrentPage(1) }}
+                className="rounded-lg cursor-pointer font-medium text-slate-700 dark:text-slate-300"
+              >
+                Pending
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => { setFilterStatus("APPROVED"); setCurrentPage(1) }}
+                className="rounded-lg cursor-pointer font-medium text-slate-700 dark:text-slate-300"
+              >
+                Approved
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => { setFilterStatus("REJECTED"); setCurrentPage(1) }}
+                className="rounded-lg cursor-pointer font-medium text-slate-700 dark:text-slate-300"
+              >
+                Rejected
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
 
         {isLoading ? (
@@ -251,6 +305,7 @@ export default function SuperadminProductsPage() {
                 setIsStatusModalOpen(true)
               }
             }}
+            onDelete={handleDeleteRequest}
           />
         )}
       </div>
@@ -264,6 +319,18 @@ export default function SuperadminProductsPage() {
         onConfirm={confirmStatusChange}
         actionType={actionType}
         productName={selectedProduct?.name}
+      />
+
+      <DeleteConfirmModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => {
+          setIsDeleteModalOpen(false)
+          setProductToDelete(null)
+        }}
+        onConfirm={handleDeleteConfirm}
+        title="Delete Product"
+        description="Are you sure you want to delete this product? This action cannot be undone."
+        itemName={productToDelete?.name}
       />
     </DashboardShell>
   )

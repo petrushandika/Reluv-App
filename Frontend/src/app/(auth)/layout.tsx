@@ -3,6 +3,10 @@ import { Metadata } from 'next';
 export const metadata: Metadata = {
   title: 'Sign In | Reluv App',
   description: 'Sign in to your Reluv account to manage your profile, orders, and wishlist.',
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
 export default function AuthLayout({

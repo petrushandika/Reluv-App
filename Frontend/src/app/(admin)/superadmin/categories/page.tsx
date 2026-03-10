@@ -38,6 +38,30 @@ export default function SuperadminCategoriesPage() {
   const [modalMode, setModalMode] = useState<"create" | "edit" | "addSubcategory">("create")
   const [parentIdForSubcategory, setParentIdForSubcategory] = useState<number | undefined>(undefined)
 
+  /** Filter category tree by name/slug (case-insensitive). Keeps node if it or any descendant matches. */
+  const filterCategoryTree = (items: CategoryListItem[], search: string): CategoryListItem[] => {
+    if (!search || !search.trim()) return items
+    const q = search.trim().toLowerCase()
+    const result: CategoryListItem[] = []
+    for (const cat of items) {
+      const matchesSelf = cat.name.toLowerCase().includes(q) || (cat.slug || "").toLowerCase().includes(q)
+      const filteredChildren =
+        cat.childCategories && cat.childCategories.length > 0
+          ? filterCategoryTree(cat.childCategories, search)
+          : []
+      const matchesChild = filteredChildren.length > 0
+      if (matchesSelf || matchesChild) {
+        result.push({
+          ...cat,
+          childCategories: matchesSelf ? cat.childCategories : filteredChildren,
+        })
+      }
+    }
+    return result
+  }
+
+  const filteredCategories = filterCategoryTree(categories, searchQuery)
+
   const fetchCategories = async () => {
     try {
       setIsLoading(true)
@@ -57,6 +81,7 @@ export default function SuperadminCategoriesPage() {
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
+    // Filter is applied via filteredCategories (client-side)
   }
 
   const handleEdit = (category: CategoryListItem) => {
@@ -106,14 +131,14 @@ export default function SuperadminCategoriesPage() {
   }
 
   const stats = {
-    total: categories.length,
-    root: categories.filter(c => !c.parentId).length,
-    withProducts: categories.filter(c => (c._count?.products || 0) > 0).length,
-    withSubcategories: categories.filter(c => (c._count?.childCategories || 0) > 0).length,
+    total: filteredCategories.length,
+    root: filteredCategories.filter(c => !c.parentId).length,
+    withProducts: filteredCategories.filter(c => (c._count?.products || 0) > 0).length,
+    withSubcategories: filteredCategories.filter(c => (c._count?.childCategories || 0) > 0).length,
   }
 
   const handleExport = () => {
-    const dataToExport = categories.map(cat => ({
+    const dataToExport = filteredCategories.map(cat => ({
       ID: cat.id,
       Name: cat.name,
       Slug: cat.slug,
@@ -132,7 +157,7 @@ export default function SuperadminCategoriesPage() {
       sidebarItems={superadminSidebarItems}
       type="superadmin"
       branding={
-        <h1 className="text-2xl font-medium text-slate-900 dark:text-white">Superadmin</h1>
+        <div className="text-2xl font-medium text-slate-900 dark:text-white">Superadmin</div>
       }
       actions={
         <div className="flex items-center gap-2 sm:gap-3 flex-wrap sm:flex-nowrap">
@@ -243,7 +268,7 @@ export default function SuperadminCategoriesPage() {
           </div>
         ) : (
           <SuperadminCategoriesList 
-            categories={categories} 
+            categories={filteredCategories} 
             onEdit={handleEdit}
             onDelete={handleDelete}
             onAddSubcategory={handleAddSubcategory}

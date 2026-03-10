@@ -59,8 +59,8 @@ export function SuperadminOrdersList({ orders, onStatusChange }: SuperadminOrder
   };
 
   return (
-    <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 overflow-hidden">
-      <Table>
+    <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 overflow-x-auto">
+      <Table className="min-w-[800px]">
         <TableHeader className="bg-slate-50/50 dark:bg-slate-900/50 border-b border-slate-200 dark:border-slate-800">
           <TableRow className="hover:bg-transparent border-none">
             <TableHead className="w-[180px] text-center text-[10px] font-bold uppercase tracking-widest text-slate-500 py-4 pl-6">Order ID</TableHead>

@@ -204,11 +204,8 @@ export interface ProductListItem {
     name: string;
     slug: string;
   };
-  images?: Array<{
-    id: number;
-    url: string;
-    isPrimary: boolean;
-  }>;
+  /** Backend returns string[] (URLs); legacy shape also supported */
+  images?: string[] | Array<{ id?: number; url: string; isPrimary?: boolean }>;
 }
 
 export interface ProductsResponse {
@@ -243,6 +240,10 @@ export const updateProductStatus = async (
 ): Promise<ProductListItem> => {
   const response = await api.patch<ProductListItem>(`/products/admin/${productId}/status`, data);
   return response.data;
+};
+
+export const deleteProductAdmin = async (productId: number): Promise<void> => {
+  await api.delete(`/products/admin/${productId}`);
 };
 
 // Orders

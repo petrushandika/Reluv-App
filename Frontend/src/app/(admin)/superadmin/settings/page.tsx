@@ -87,7 +87,7 @@ export default function SuperadminSettingsPage() {
       sidebarItems={superadminSidebarItems}
       type="superadmin"
       branding={
-        <h1 className="text-2xl font-medium text-slate-900 dark:text-white">Superadmin</h1>
+        <div className="text-2xl font-medium text-slate-900 dark:text-white">Superadmin</div>
       }
       actions={
         <div className="flex items-center gap-2 sm:gap-3 flex-wrap sm:flex-nowrap">

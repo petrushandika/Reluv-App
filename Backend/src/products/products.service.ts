@@ -766,9 +766,11 @@ export class ProductsService {
       search,
       categoryId,
       storeId,
+      status: statusParam,
       isPublished,
       isActive,
     } = query;
+    const status = typeof statusParam === 'string' ? statusParam.toUpperCase() : statusParam;
     const skip = (Number(page) - 1) * Number(limit);
 
     const where: Prisma.ProductWhereInput = {
@@ -780,8 +782,11 @@ export class ProductsService {
       }),
       ...(categoryId && { categoryId: Number(categoryId) }),
       ...(storeId && { storeId: Number(storeId) }),
-      ...(isPublished !== undefined && { isPublished: isPublished === 'true' }),
-      ...(isActive !== undefined && { isActive: isActive === 'true' }),
+      ...(status === 'PENDING' && { isPublished: false, isActive: true }),
+      ...(status === 'APPROVED' && { isPublished: true, isActive: true }),
+      ...(status === 'REJECTED' && { isActive: false }),
+      ...(status === undefined && isPublished !== undefined && { isPublished: isPublished === 'true' }),
+      ...(status === undefined && isActive !== undefined && { isActive: isActive === 'true' }),
     };
 
     const [products, total] = await this.prisma.$transaction([
@@ -793,13 +798,14 @@ export class ProductsService {
           id: true,
           name: true,
           slug: true,
+          images: true,
           isPublished: true,
           isActive: true,
           categoryId: true,
           storeId: true,
           createdAt: true,
-          category: { select: { name: true } },
-          store: { select: { name: true } },
+          category: { select: { id: true, name: true, slug: true } },
+          store: { select: { id: true, name: true, slug: true } },
           variants: {
             select: { price: true, stock: true },
             orderBy: { price: 'asc' },
@@ -857,6 +863,12 @@ export class ProductsService {
     return this.prisma.product.update({
       where: { id: productId },
       data: updateData,
+    });
+  }
+
+  async removeAdmin(productId: number) {
+    return this.prisma.product.delete({
+      where: { id: productId },
     });
   }
 }
