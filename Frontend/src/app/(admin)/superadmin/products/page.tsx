@@ -5,7 +5,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/ui
 import { DashboardShell } from "@/shared/components/layout/DashboardShell"
 import { 
   Search, 
-  Filter, 
   ShieldCheck, 
   Package,
   CheckCircle2,
@@ -37,18 +36,19 @@ export default function SuperadminProductsPage() {
     rejected: 0,
   })
 
-  const fetchProducts = async (page: number = 1, search: string = "") => {
+  const [filterStatus, setFilterStatus] = useState<string | undefined>(undefined)
+
+  const fetchProducts = async (page: number = 1, search: string = "", status: string | undefined = filterStatus) => {
     try {
       setIsLoading(true)
       const response: ProductsResponse = await getProducts({
         page,
         limit: 10,
         search: search || undefined,
-        status: "PENDING", // Show pending products for review
+        status: status as any,
       })
       setProducts(response.data)
       
-      // Fetch all products for stats
       const allProducts = await getProducts({ limit: 1000 })
       const pendingCount = allProducts.data.filter(p => p.status === "PENDING").length
       const approvedCount = allProducts.data.filter(p => p.status === "APPROVED").length
@@ -69,20 +69,26 @@ export default function SuperadminProductsPage() {
   }
 
   useEffect(() => {
-    fetchProducts(currentPage, searchQuery)
-  }, [currentPage, searchQuery])
+    fetchProducts(currentPage, searchQuery, filterStatus)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentPage, searchQuery, filterStatus])
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
     setCurrentPage(1)
-    fetchProducts(1, searchQuery)
+    fetchProducts(1, searchQuery, filterStatus)
   }
 
   const confirmStatusChange = async () => {
     if (!selectedProduct) return
+    
+    const newStatus = actionType === "approve" ? "APPROVED" : "REJECTED"
+    // Optimistic update
+    setProducts(prev => prev.map(p => p.id === selectedProduct.id ? { ...p, status: newStatus } : p))
+    
     try {
       await updateProductStatus(selectedProduct.id, {
-        status: actionType === "approve" ? "APPROVED" : "REJECTED",
+        status: newStatus,
         reason: actionType === "reject" ? "Product does not meet quality standards" : undefined
       })
       
@@ -93,9 +99,9 @@ export default function SuperadminProductsPage() {
       }
       setIsStatusModalOpen(false)
       setSelectedProduct(null)
-      await fetchProducts(currentPage, searchQuery)
     } catch (error: any) {
       toast.error(error.response?.data?.message || `Failed to ${actionType} product`)
+      fetchProducts(currentPage, searchQuery, filterStatus) // Rollback
     }
   }
 
@@ -202,24 +208,30 @@ export default function SuperadminProductsPage() {
           </Card>
         </div>
 
-        <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
-          <form onSubmit={handleSearch} className="relative w-full md:w-96">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
-            <input 
-              type="text"
-              placeholder="Search products across all stores..." 
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-11 h-11 rounded-xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 transition-all text-sm font-medium"
-            />
-          </form>
-          <Button 
-            variant="outline" 
-            className="w-full md:w-auto h-11 px-5 rounded-xl border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 font-bold text-xs uppercase tracking-widest hover:bg-slate-50 dark:hover:bg-slate-900 transition-all border shadow-sm"
-          >
-            <Filter className="mr-2 h-4 w-4" />
-            Filter
-          </Button>
+        <form onSubmit={handleSearch} className="relative w-full md:w-96">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+          <input 
+            type="text"
+            placeholder="Search products across all stores..." 
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full pl-11 h-11 rounded-xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 transition-all text-sm font-medium"
+          />
+        </form>
+        <div className="flex gap-2">
+          {["ALL", "PENDING", "APPROVED", "REJECTED"].map((s) => (
+            <Button
+              key={s}
+              variant={filterStatus === (s === "ALL" ? undefined : s) ? "default" : "outline"}
+              onClick={() => {
+                setFilterStatus(s === "ALL" ? undefined : s)
+                setCurrentPage(1)
+              }}
+              className="h-11 px-4 rounded-xl font-bold text-[10px] uppercase tracking-widest border shadow-sm transition-all"
+            >
+              {s}
+            </Button>
+          ))}
         </div>
 
         {isLoading ? (

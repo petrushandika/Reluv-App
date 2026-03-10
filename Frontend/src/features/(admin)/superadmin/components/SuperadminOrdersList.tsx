@@ -18,7 +18,8 @@ import {
   Clock,
   Truck,
   Package,
-  XCircle
+  XCircle,
+  Plus
 } from "lucide-react"
 import { cn } from "@/shared/lib/utils"
 import { useState } from "react"
@@ -62,12 +63,12 @@ export function SuperadminOrdersList({ orders, onStatusChange }: SuperadminOrder
       <Table>
         <TableHeader className="bg-slate-50/50 dark:bg-slate-900/50 border-b border-slate-200 dark:border-slate-800">
           <TableRow className="hover:bg-transparent border-none">
-            <TableHead className="w-[180px] text-left text-[10px] font-bold uppercase tracking-widest text-slate-500 py-4 pl-6">Order ID</TableHead>
-            <TableHead className="text-left text-[10px] font-bold uppercase tracking-widest text-slate-500">Customer</TableHead>
+            <TableHead className="w-[180px] text-center text-[10px] font-bold uppercase tracking-widest text-slate-500 py-4 pl-6">Order ID</TableHead>
+            <TableHead className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-500">Customer</TableHead>
             <TableHead className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-500">Amount</TableHead>
             <TableHead className="w-[80px] text-center text-[10px] font-bold uppercase tracking-widest text-slate-500 py-4">View</TableHead>
             <TableHead className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-500">Status</TableHead>
-            <TableHead className="text-left text-[10px] font-bold uppercase tracking-widest text-slate-500">Date</TableHead>
+            <TableHead className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-500">Date</TableHead>
             <TableHead className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-500 pr-6">Actions</TableHead>
           </TableRow>
         </TableHeader>
@@ -127,6 +128,13 @@ export function SuperadminOrdersList({ orders, onStatusChange }: SuperadminOrder
                 </TableCell>
                 <TableCell className="text-center pr-6">
                   <div className="flex items-center justify-center gap-1">
+                    <Button 
+                      variant="ghost" 
+                      size="icon"
+                      className="h-8 w-8 rounded-lg text-slate-400 hover:text-sky-600 hover:bg-sky-50 dark:hover:bg-sky-500/10 transition-all"
+                    >
+                      <Plus className="h-3.5 w-3.5" />
+                    </Button>
                     <Button 
                       variant="ghost" 
                       size="icon"

@@ -187,12 +187,12 @@ export function SuperadminCategoriesList({
       <Table>
         <TableHeader className="bg-slate-50/50 dark:bg-slate-900/50 border-b border-slate-200 dark:border-slate-800">
           <TableRow className="hover:bg-transparent border-none">
-            <TableHead className="w-[300px] text-left text-[10px] font-bold uppercase tracking-widest text-slate-500 py-4 pl-6">Category</TableHead>
-            <TableHead className="text-left text-[10px] font-bold uppercase tracking-widest text-slate-500">Parent</TableHead>
+            <TableHead className="w-[300px] text-center text-[10px] font-bold uppercase tracking-widest text-slate-500 py-4 pl-6">Category</TableHead>
+            <TableHead className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-500">Parent</TableHead>
             <TableHead className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-500">Products</TableHead>
             <TableHead className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-500">Subcategories</TableHead>
             <TableHead className="w-[80px] text-center text-[10px] font-bold uppercase tracking-widest text-slate-500 py-4">View</TableHead>
-            <TableHead className="text-left text-[10px] font-bold uppercase tracking-widest text-slate-500">Created</TableHead>
+            <TableHead className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-500">Created</TableHead>
             <TableHead className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-500 pr-6">Actions</TableHead>
           </TableRow>
         </TableHeader>

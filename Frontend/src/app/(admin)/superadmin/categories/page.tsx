@@ -215,25 +215,23 @@ export default function SuperadminCategoriesPage() {
           </Card>
         </div>
 
-        <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
-          <form onSubmit={handleSearch} className="relative w-full md:w-96">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
-            <input 
-              type="text"
-              placeholder="Search categories by name or slug..." 
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-11 h-11 rounded-xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 transition-all text-sm font-medium shadow-sm"
-            />
-          </form>
-          <Button 
-            variant="outline" 
-            className="w-full md:w-auto h-11 px-5 rounded-xl border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 font-bold text-xs uppercase tracking-widest hover:bg-slate-50 dark:hover:bg-slate-900 transition-all border shadow-sm"
-          >
-            <Filter className="mr-2 h-4 w-4" />
-            Filter
-          </Button>
-        </div>
+        <form onSubmit={handleSearch} className="relative w-full md:w-96">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+          <input 
+            type="text"
+            placeholder="Search categories by name or slug..." 
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full pl-11 h-11 rounded-xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 transition-all text-sm font-medium shadow-sm"
+          />
+        </form>
+        <Button 
+          variant="outline" 
+          className="w-full md:w-auto h-11 px-5 rounded-xl border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 font-bold text-xs uppercase tracking-widest hover:bg-slate-50 dark:hover:bg-slate-900 transition-all border shadow-sm"
+        >
+          <Filter className="mr-2 h-4 w-4" />
+          Filter
+        </Button>
 
         {isLoading ? (
           <div className="space-y-4">

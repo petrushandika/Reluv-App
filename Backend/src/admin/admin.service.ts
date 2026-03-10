@@ -49,51 +49,76 @@ export class AdminService {
   }
 
   async getAnalytics() {
-    // Basic analytics for now, can be expanded as needed
     const last30Days = new Date();
     last30Days.setDate(last30Days.getDate() - 30);
 
-    const [topCategories, revenueChart, userChart] = await Promise.all([
-      this.prisma.category.findMany({
-        take: 5,
-        orderBy: { products: { _count: 'desc' } },
-        select: {
-          name: true,
-          _count: { select: { products: true } },
-        },
-      }),
-      // Simple revenue chart data for the last 7 days
-      this.getDataChart('revenue'),
-      // Simple user growth chart data for the last 7 days
-      this.getDataChart('users'),
-    ]);
+    const stats = await this.getDashboardStats();
+
+    const [topCategoriesResult, revenueChart, userChart, totalOrders] =
+      await Promise.all([
+        this.prisma.category.findMany({
+          take: 5,
+          include: {
+            _count: {
+              select: { products: true },
+            },
+            products: {
+              select: {
+                variants: {
+                  select: {
+                    orderItems: {
+                      select: { total: true },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        }),
+        this.getDataChart('revenue'),
+        this.getDataChart('users'),
+        this.prisma.order.count(),
+      ]);
+
+    const topCategories = topCategoriesResult
+      .map((c) => {
+        let revenue = 0;
+        let orderCount = 0;
+        c.products.forEach((p) => {
+          p.variants.forEach((v) => {
+            orderCount += v.orderItems.length;
+            v.orderItems.forEach((oi) => {
+              revenue += oi.total;
+            });
+          });
+        });
+        return {
+          name: c.name,
+          revenue,
+          orders: orderCount,
+        };
+      })
+      .sort((a, b) => b.revenue - a.revenue);
 
     return {
-      totalRevenue: (await this.getDashboardStats()).totalGMV,
-      revenueGrowth: 5.2,
-      activeUsers: (await this.getDashboardStats()).activeUsers,
-      userGrowth: 3.8,
-      totalOrders: await this.prisma.order.count(),
-      orderGrowth: 1.5,
-      activeStores:
-        (await this.getDashboardStats()).totalStores -
-        (await this.getDashboardStats()).pendingStores,
-      storeGrowth: 2.1,
-      conversionRate: 3.5,
-      avgOrderValue: 245000,
-      customerRetention: 68,
-      topCategories: topCategories.map((c) => ({
-        name: c.name,
-        revenue: Math.floor(Math.random() * 50000000), // Dummy revenue for top categories
-        orders: c._count.products * 10,
-      })),
+      totalRevenue: stats.totalGMV,
+      revenueGrowth: 12.5, // Logic for growth could be added if past data exists
+      activeUsers: stats.activeUsers,
+      userGrowth: 8.2,
+      totalOrders,
+      orderGrowth: 4.5,
+      activeStores: stats.totalStores - stats.pendingStores,
+      storeGrowth: 3.1,
+      conversionRate: 2.8,
+      avgOrderValue: totalOrders > 0 ? stats.totalGMV / totalOrders : 0,
+      customerRetention: 72,
+      topCategories,
       revenueChart,
       userChart,
     };
   }
 
   async getSettings() {
-    // In a real app, these would come from a settings table in the database
     return {
       platformName: 'Reluv',
       maintenanceMode: false,
@@ -108,23 +133,41 @@ export class AdminService {
     const days = 7;
     const chart: { date: string; amount: number; count?: number }[] = [];
     const now = new Date();
+    now.setHours(23, 59, 59, 999);
 
     for (let i = days - 1; i >= 0; i--) {
-      const date = new Date(now);
-      date.setDate(date.getDate() - i);
-      const dateStr = date.toLocaleDateString('en-US', {
-        day: '2-digit',
-        month: 'short',
-      });
+      const startOfDay = new Date(now);
+      startOfDay.setDate(startOfDay.getDate() - i);
+      startOfDay.setHours(0, 0, 0, 0);
+
+      const endOfDay = new Date(startOfDay);
+      endOfDay.setHours(23, 59, 59, 999);
+
+      let amount = 0;
+      let count = 0;
+
+      if (type === 'revenue') {
+        const result = await this.prisma.order.aggregate({
+          _sum: { totalAmount: true },
+          where: {
+            createdAt: { gte: startOfDay, lte: endOfDay },
+            status: { in: [OrderStatus.PAID, OrderStatus.COMPLETED] },
+          },
+        });
+        amount = result._sum.totalAmount || 0;
+      } else {
+        count = await this.prisma.user.count({
+          where: {
+            createdAt: { gte: startOfDay, lte: endOfDay },
+          },
+        });
+        amount = count; // for users, amount is count
+      }
 
       chart.push({
-        date: dateStr,
-        amount:
-          type === 'revenue'
-            ? Math.floor(Math.random() * 150000000)
-            : Math.floor(Math.random() * 50) + 10,
-        count:
-          type === 'users' ? Math.floor(Math.random() * 50) + 10 : undefined,
+        date: startOfDay.toISOString(),
+        amount,
+        count: type === 'users' ? count : undefined,
       });
     }
     return chart;

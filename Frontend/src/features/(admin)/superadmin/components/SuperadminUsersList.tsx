@@ -17,7 +17,8 @@ import {
   Trash2,
   CheckCircle2,
   XCircle,
-  Clock
+  Clock,
+  Plus
 } from "lucide-react"
 import Image from "next/image"
 import { UserListItem } from "../api/superadminApi"
@@ -120,13 +121,13 @@ export function SuperadminUsersList({ users, onStatusChange }: SuperadminUsersLi
       <Table>
         <TableHeader className="bg-slate-50/50 dark:bg-slate-900/50 border-b border-slate-200 dark:border-slate-800">
           <TableRow className="hover:bg-transparent border-none">
-            <TableHead className="w-[200px] text-left text-[10px] font-bold uppercase tracking-widest text-slate-500 py-4 pl-6">User</TableHead>
-            <TableHead className="text-left text-[10px] font-bold uppercase tracking-widest text-slate-500">Contact</TableHead>
+            <TableHead className="w-[200px] text-center text-[10px] font-bold uppercase tracking-widest text-slate-500 py-4 pl-6">User</TableHead>
+            <TableHead className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-500">Contact</TableHead>
             <TableHead className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-500">Role</TableHead>
-            <TableHead className="text-left text-[10px] font-bold uppercase tracking-widest text-slate-500">Store</TableHead>
+            <TableHead className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-500">Store</TableHead>
             <TableHead className="w-[80px] text-center text-[10px] font-bold uppercase tracking-widest text-slate-500 py-4">View</TableHead>
             <TableHead className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-500">Status</TableHead>
-            <TableHead className="text-left text-[10px] font-bold uppercase tracking-widest text-slate-500">Joined</TableHead>
+            <TableHead className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-500">Joined</TableHead>
             <TableHead className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-500 pr-6">Actions</TableHead>
           </TableRow>
         </TableHeader>
@@ -233,6 +234,13 @@ export function SuperadminUsersList({ users, onStatusChange }: SuperadminUsersLi
                 </TableCell>
                 <TableCell className="text-center pr-6">
                   <div className="flex items-center justify-center gap-1">
+                    <Button 
+                      variant="ghost" 
+                      size="icon"
+                      className="h-8 w-8 rounded-lg text-slate-400 hover:text-sky-600 hover:bg-sky-50 dark:hover:bg-sky-500/10 transition-all"
+                    >
+                      <Plus className="h-3.5 w-3.5" />
+                    </Button>
                     <Button 
                       variant="ghost" 
                       size="icon"

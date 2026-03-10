@@ -206,12 +206,6 @@ export class StoreController {
     return this.storeService.updateOrderStatus(user.id, id, status);
   }
 
-  @Get(':slug')
-  @HttpCode(HttpStatus.OK)
-  findBySlug(@Param('slug') slug: string) {
-    return this.storeService.findBySlug(slug);
-  }
-
   // Admin Endpoints
   @UseGuards(JwtAuthGuard, AdminGuard)
   @Get('admin')
@@ -228,5 +222,11 @@ export class StoreController {
     @Body() data: any,
   ) {
     return this.storeService.updateStatusAdmin(storeId, data);
+  }
+
+  @Get(':slug')
+  @HttpCode(HttpStatus.OK)
+  findBySlug(@Param('slug') slug: string) {
+    return this.storeService.findBySlug(slug);
   }
 }

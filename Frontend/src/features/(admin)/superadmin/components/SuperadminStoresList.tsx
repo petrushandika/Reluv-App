@@ -17,7 +17,8 @@ import {
   Trash2,
   CheckCircle2,
   AlertCircle,
-  XCircle
+  XCircle,
+  Plus
 } from "lucide-react"
 import Image from "next/image"
 import { StoreListItem } from "../api/superadminApi"
@@ -81,8 +82,8 @@ export function SuperadminStoresList({ stores, onStatusChange }: SuperadminStore
       <Table>
         <TableHeader className="bg-slate-50/50 dark:bg-slate-900/50 border-b border-slate-200 dark:border-slate-800">
           <TableRow className="hover:bg-transparent border-none">
-            <TableHead className="w-[200px] text-left text-[10px] font-bold uppercase tracking-widest text-slate-500 py-4 pl-6">Store</TableHead>
-            <TableHead className="text-left text-[10px] font-bold uppercase tracking-widest text-slate-500">Owner</TableHead>
+            <TableHead className="w-[200px] text-center text-[10px] font-bold uppercase tracking-widest text-slate-500 py-4 pl-6">Store</TableHead>
+            <TableHead className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-500">Owner</TableHead>
             <TableHead className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-500">Products</TableHead>
             <TableHead className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-500">Sales</TableHead>
             <TableHead className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-500">Rating</TableHead>
@@ -177,6 +178,13 @@ export function SuperadminStoresList({ stores, onStatusChange }: SuperadminStore
                 </TableCell>
                 <TableCell className="text-center pr-6">
                   <div className="flex items-center justify-center gap-1">
+                    <Button 
+                      variant="ghost" 
+                      size="icon"
+                      className="h-8 w-8 rounded-lg text-slate-400 hover:text-sky-600 hover:bg-sky-50 dark:hover:bg-sky-500/10 transition-all"
+                    >
+                      <Plus className="h-3.5 w-3.5" />
+                    </Button>
                     <Button 
                       variant="ghost" 
                       size="icon"

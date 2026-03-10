@@ -795,6 +795,8 @@ export class ProductsService {
           slug: true,
           isPublished: true,
           isActive: true,
+          categoryId: true,
+          storeId: true,
           createdAt: true,
           category: { select: { name: true } },
           store: { select: { name: true } },
@@ -808,8 +810,24 @@ export class ProductsService {
       this.prisma.product.count({ where }),
     ]);
 
+    const mappedProducts = products.map((p) => {
+      const price = p.variants[0]?.price || 0;
+      const stock = p.variants.reduce((sum, v) => sum + v.stock, 0);
+
+      let status = 'APPROVED';
+      if (!p.isActive) status = 'REJECTED';
+      else if (!p.isPublished) status = 'PENDING';
+
+      return {
+        ...p,
+        price,
+        stock,
+        status,
+      };
+    });
+
     return {
-      data: products,
+      data: mappedProducts,
       meta: {
         total,
         page: Number(page),
@@ -820,9 +838,25 @@ export class ProductsService {
   }
 
   async updateStatusAdmin(productId: number, data: any) {
+    // If incoming data has 'status', map it back to isPublished/isActive
+    const updateData: any = { ...data };
+    if (data.status) {
+      if (data.status === 'APPROVED') {
+        updateData.isActive = true;
+        updateData.isPublished = true;
+      } else if (data.status === 'PENDING') {
+        updateData.isActive = true;
+        updateData.isPublished = false;
+      } else if (data.status === 'REJECTED') {
+        updateData.isActive = false;
+        updateData.isPublished = false;
+      }
+      delete updateData.status;
+    }
+
     return this.prisma.product.update({
       where: { id: productId },
-      data,
+      data: updateData,
     });
   }
 }

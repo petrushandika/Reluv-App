@@ -15,7 +15,7 @@ import { Button } from "@/shared/components/ui/button"
 import { SuperadminOrdersList } from "@/features/(admin)/superadmin/components/SuperadminOrdersList"
 import { superadminSidebarItems } from "@/features/(admin)/superadmin/constants/sidebarItems"
 import { useState, useEffect } from "react"
-import { getOrders, OrdersResponse, OrderListItem } from "@/features/(admin)/superadmin/api/superadminApi"
+import { getOrders, updateOrderStatus, OrdersResponse, OrderListItem } from "@/features/(admin)/superadmin/api/superadminApi"
 import { Skeleton } from "@/shared/components/ui/skeleton"
 import { exportToCsv } from "@/shared/utils/exportToCsv"
 
@@ -41,7 +41,6 @@ export default function SuperadminOrdersPage() {
       })
       setOrders(response.data)
       
-      // Calculate stats from orders
       const totalGMV = response.data.reduce((sum, order) => sum + order.totalAmount, 0)
       const activeDisputes = response.data.filter(o => o.status === "CANCELLED").length
       
@@ -49,12 +48,24 @@ export default function SuperadminOrdersPage() {
         totalGMV,
         totalOrders: response.meta.total,
         activeDisputes,
-        growthRate: 18.4, // This would come from backend analytics
+        growthRate: 18.4,
       })
     } catch (error) {
       console.error("Failed to fetch orders:", error)
     } finally {
       setIsLoading(false)
+    }
+  }
+
+  const handleStatusChange = async (orderId: number, status: string) => {
+    // Optimistic update
+    setOrders(prev => prev.map(o => o.id === orderId ? { ...o, status: status as any } : o))
+    
+    try {
+      await updateOrderStatus(orderId, { status: status as any })
+    } catch (error) {
+      console.error("Failed to update order status:", error)
+      fetchOrders(currentPage, searchQuery) // Rollback on error
     }
   }
 
@@ -175,27 +186,28 @@ export default function SuperadminOrdersPage() {
           </div>
         )}
 
-        <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
-          <form onSubmit={handleSearch} className="relative w-full md:w-96">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
-            <input 
-              type="text"
-              placeholder="Search by order ID, customer, or store..." 
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-11 h-11 rounded-xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 transition-all text-sm font-medium"
-            />
-          </form>
-          <Button 
-            variant="outline" 
-            className="w-full md:w-auto h-11 px-5 rounded-xl border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 font-bold text-xs uppercase tracking-widest hover:bg-slate-50 dark:hover:bg-slate-900 transition-all border shadow-sm"
-          >
-            <Filter className="mr-2 h-4 w-4" />
-            Filter
-          </Button>
-        </div>
+        <form onSubmit={handleSearch} className="relative w-full md:w-96">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+          <input 
+            type="text"
+            placeholder="Search by order ID, customer, or store..." 
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full pl-11 h-11 rounded-xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 transition-all text-sm font-medium"
+          />
+        </form>
+        <Button 
+          variant="outline" 
+          className="w-full md:w-auto h-11 px-5 rounded-xl border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 font-bold text-xs uppercase tracking-widest hover:bg-slate-50 dark:hover:bg-slate-900 transition-all border shadow-sm"
+        >
+          <Filter className="mr-2 h-4 w-4" />
+          Filter
+        </Button>
 
-        <SuperadminOrdersList orders={orders} />
+        <SuperadminOrdersList 
+          orders={orders} 
+          onStatusChange={handleStatusChange}
+        />
       </div>
     </DashboardShell>
   )

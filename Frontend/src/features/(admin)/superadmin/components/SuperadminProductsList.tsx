@@ -18,7 +18,8 @@ import {
   CheckCircle2,
   XCircle,
   AlertCircle,
-  Store
+  Store,
+  Plus
 } from "lucide-react"
 import Image from "next/image"
 import { ProductListItem } from "../api/superadminApi"
@@ -76,11 +77,12 @@ export function SuperadminProductsList({ products, onStatusChange }: SuperadminP
       <Table>
         <TableHeader className="bg-slate-50/50 dark:bg-slate-900/50 border-b border-slate-200 dark:border-slate-800">
           <TableRow className="hover:bg-transparent border-none">
-            <TableHead className="w-[250px] text-left text-[10px] font-bold uppercase tracking-widest text-slate-500 py-4 pl-6">Product</TableHead>
-            <TableHead className="text-left text-[10px] font-bold uppercase tracking-widest text-slate-500">Store</TableHead>
-            <TableHead className="text-left text-[10px] font-bold uppercase tracking-widest text-slate-500">Category</TableHead>
+            <TableHead className="w-[250px] text-center text-[10px] font-bold uppercase tracking-widest text-slate-500 py-4 pl-6">Product</TableHead>
+            <TableHead className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-500">Store</TableHead>
+            <TableHead className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-500">Category</TableHead>
             <TableHead className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-500">Price</TableHead>
             <TableHead className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-500">Stock</TableHead>
+            <TableHead className="w-[80px] text-center text-[10px] font-bold uppercase tracking-widest text-slate-500 py-4">View</TableHead>
             <TableHead className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-500">Status</TableHead>
             <TableHead className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-500 pr-6">Actions</TableHead>
           </TableRow>
@@ -88,7 +90,7 @@ export function SuperadminProductsList({ products, onStatusChange }: SuperadminP
         <TableBody>
           {products.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={7} className="py-12 text-center">
+              <TableCell colSpan={8} className="py-12 text-center">
                 <p className="text-sm font-medium text-slate-500">No products found</p>
               </TableCell>
             </TableRow>
@@ -97,31 +99,31 @@ export function SuperadminProductsList({ products, onStatusChange }: SuperadminP
               <TableRow key={p.id} className="border-slate-100 dark:border-slate-800/60 hover:bg-slate-50/50 dark:hover:bg-slate-900/50 transition-colors">
                 <TableCell className="py-4 pl-6">
                   <div className="flex items-center space-x-3 text-left">
-                    <div className="h-10 w-10 rounded-lg bg-sky-50 dark:bg-sky-500/10 border border-sky-100 dark:border-sky-900/30 flex items-center justify-center shrink-0 overflow-hidden">
-                      {p.images?.[0]?.url ? (
+                    <div className="h-10 w-10 rounded-lg bg-sky-50 dark:bg-sky-500/10 border border-sky-100 dark:border-sky-900/30 flex items-center justify-center shrink-0 overflow-hidden text-left">
+                      {p.images?.[0] ? (
                         <div className="relative h-full w-full">
-                          <Image src={p.images[0].url} alt={p.name} fill className="object-cover" />
+                          <Image src={typeof p.images[0] === 'string' ? p.images[0] : (p.images[0] as any).url} alt={p.name} fill className="object-cover" />
                         </div>
                       ) : (
                         <Package className="h-5 w-5 text-sky-600" />
                       )}
                     </div>
-                    <div className="flex flex-col min-w-0">
-                      <span className="text-xs font-bold text-slate-900 dark:text-white truncate">{p.name}</span>
-                      <span className="text-[10px] text-slate-400 truncate tracking-tight">/{p.slug}</span>
+                    <div className="flex flex-col min-w-0 text-left">
+                      <span className="text-xs font-bold text-slate-900 dark:text-white truncate text-left">{p.name}</span>
+                      <span className="text-[10px] text-slate-400 truncate tracking-tight text-left">/{p.slug}</span>
                     </div>
                   </div>
                 </TableCell>
                 <TableCell className="text-left">
-                  <div className="flex items-center">
+                  <div className="flex items-center text-left">
                     <Store className="h-3 w-3 mr-2 text-slate-400" />
-                    <span className="text-xs font-bold text-slate-700 dark:text-slate-300 truncate">
+                    <span className="text-xs font-bold text-slate-700 dark:text-slate-300 truncate text-left">
                       {p.store?.name || "N/A"}
                     </span>
                   </div>
                 </TableCell>
                 <TableCell className="text-left">
-                  <Badge variant="outline" className="text-[9px] font-bold uppercase tracking-widest text-slate-500 border-slate-200">
+                  <Badge variant="outline" className="text-[9px] font-bold uppercase tracking-widest text-slate-500 border-slate-200 block w-fit">
                     {p.category?.name || "N/A"}
                   </Badge>
                 </TableCell>
@@ -133,6 +135,15 @@ export function SuperadminProductsList({ products, onStatusChange }: SuperadminP
                     {p.stock}
                   </span>
                 </TableCell>
+                <TableCell className="py-4 text-center">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8 rounded-lg bg-sky-50 dark:bg-sky-500/10 text-sky-600 hover:text-sky-700 hover:bg-sky-100 dark:hover:bg-sky-500/20 transition-all mx-auto"
+                  >
+                    <Eye className="h-4 w-4" />
+                  </Button>
+                </TableCell>
                 <TableCell className="text-center">
                   <div className="flex justify-center" onClick={() => handleStatusClick(p)}>
                     {getStatusBadge(p.status)}
@@ -140,13 +151,17 @@ export function SuperadminProductsList({ products, onStatusChange }: SuperadminP
                 </TableCell>
                 <TableCell className="text-center pr-6">
                   <div className="flex items-center justify-center gap-1">
-                    <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg text-slate-400 hover:text-sky-600 hover:bg-sky-50 dark:hover:bg-sky-500/10">
-                      <Eye className="h-3.5 w-3.5" />
+                    <Button 
+                      variant="ghost" 
+                      size="icon" 
+                      className="h-8 w-8 rounded-lg text-slate-400 hover:text-sky-600 hover:bg-sky-50 dark:hover:bg-sky-500/10 transition-all"
+                    >
+                      <Plus className="h-3.5 w-3.5" />
                     </Button>
-                    <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg text-slate-400 hover:text-sky-600 hover:bg-sky-50 dark:hover:bg-sky-500/10">
+                    <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg text-slate-400 hover:text-sky-600 hover:bg-sky-50 dark:hover:bg-sky-500/10 transition-all">
                       <Edit2 className="h-3.5 w-3.5" />
                     </Button>
-                    <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-500/10">
+                    <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-500/10 transition-all">
                       <Trash2 className="h-3.5 w-3.5" />
                     </Button>
                   </div>
