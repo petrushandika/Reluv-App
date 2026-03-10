@@ -1,6 +1,6 @@
 "use client"
 
-import {
+import { 
   Table,
   TableBody,
   TableCell,
@@ -13,12 +13,17 @@ import { Button } from "@/shared/components/ui/button"
 import { 
   Store,
   Eye,
+  Edit2,
+  Trash2,
+  CheckCircle2,
+  AlertCircle,
+  XCircle
 } from "lucide-react"
 import Image from "next/image"
 import { StoreListItem } from "../api/superadminApi"
 import { useState } from "react"
 import { StoreViewModal } from "./modals/StoreViewModal"
-import { StatusConfirmModal } from "./modals/StatusConfirmModal"
+import { StatusChangeModal } from "./modals/StatusChangeModal"
 
 interface SuperadminStoresListProps {
   stores: StoreListItem[]
@@ -26,38 +31,18 @@ interface SuperadminStoresListProps {
 }
 
 export function SuperadminStoresList({ stores, onStatusChange }: SuperadminStoresListProps) {
-  const [loadingStoreId, setLoadingStoreId] = useState<number | null>(null)
   const [selectedStore, setSelectedStore] = useState<StoreListItem | null>(null)
   const [isViewModalOpen, setIsViewModalOpen] = useState(false)
   const [isStatusModalOpen, setIsStatusModalOpen] = useState(false)
-  const [statusAction, setStatusAction] = useState<{ type: "verify" | "unverify" | "activate" | "deactivate", storeId: number } | null>(null)
 
   const handleView = (store: StoreListItem) => {
     setSelectedStore(store)
     setIsViewModalOpen(true)
   }
 
-  const handleStatusClick = (store: StoreListItem, type: "verify" | "unverify" | "activate" | "deactivate") => {
+  const handleStatusClick = (store: StoreListItem) => {
     setSelectedStore(store)
-    setStatusAction({ type, storeId: store.id })
     setIsStatusModalOpen(true)
-  }
-
-  const confirmStatusChange = async () => {
-    if (!statusAction || !selectedStore) return
-    setLoadingStoreId(statusAction.storeId)
-    try {
-      const data: { isActive?: boolean; isVerified?: boolean } = {}
-      if (statusAction.type === "verify") data.isVerified = true
-      if (statusAction.type === "unverify") data.isVerified = false
-      if (statusAction.type === "activate") data.isActive = true
-      if (statusAction.type === "deactivate") data.isActive = false
-      await onStatusChange?.(statusAction.storeId, data)
-    } finally {
-      setLoadingStoreId(null)
-      setIsStatusModalOpen(false)
-      setStatusAction(null)
-    }
   }
 
   const getStatusBadge = (isActive: boolean, isVerified: boolean) => {
@@ -65,7 +50,7 @@ export function SuperadminStoresList({ stores, onStatusChange }: SuperadminStore
       return (
         <Badge 
           variant="outline" 
-          className="text-rose-600 border-rose-100 bg-rose-50 dark:bg-rose-500/10 dark:border-rose-900/30 uppercase text-[9px] font-bold tracking-[0.2em] px-2 py-1 mx-auto block w-fit"
+          className="text-rose-600 border-rose-100 bg-rose-50 dark:bg-rose-500/10 dark:border-rose-900/30 uppercase text-[9px] font-bold tracking-[0.2em] px-2 py-1 block w-fit shadow-xs cursor-pointer hover:bg-rose-100 dark:hover:bg-rose-500/20 transition-all"
         >
           Inactive
         </Badge>
@@ -75,7 +60,7 @@ export function SuperadminStoresList({ stores, onStatusChange }: SuperadminStore
       return (
         <Badge 
           variant="outline" 
-          className="text-amber-600 border-amber-100 bg-amber-50 dark:bg-amber-500/10 dark:border-amber-900/30 uppercase text-[9px] font-bold tracking-[0.2em] px-2 py-1 mx-auto block w-fit"
+          className="text-amber-600 border-amber-100 bg-amber-50 dark:bg-amber-500/10 dark:border-amber-900/30 uppercase text-[9px] font-bold tracking-[0.2em] px-2 py-1 block w-fit shadow-xs cursor-pointer hover:bg-amber-100 dark:hover:bg-amber-500/20 transition-all"
         >
           Pending
         </Badge>
@@ -84,7 +69,7 @@ export function SuperadminStoresList({ stores, onStatusChange }: SuperadminStore
     return (
       <Badge 
         variant="outline" 
-        className="text-emerald-600 border-emerald-100 bg-emerald-50 dark:bg-emerald-500/10 dark:border-emerald-900/30 uppercase text-[9px] font-bold tracking-[0.2em] px-2 py-1 mx-auto block w-fit"
+        className="text-emerald-600 border-emerald-100 bg-emerald-50 dark:bg-emerald-500/10 dark:border-emerald-900/30 uppercase text-[9px] font-bold tracking-[0.2em] px-2 py-1 block w-fit shadow-xs cursor-pointer hover:bg-emerald-100 dark:hover:bg-emerald-500/20 transition-all"
       >
         Verified
       </Badge>
@@ -96,8 +81,8 @@ export function SuperadminStoresList({ stores, onStatusChange }: SuperadminStore
       <Table>
         <TableHeader className="bg-slate-50/50 dark:bg-slate-900/50 border-b border-slate-200 dark:border-slate-800">
           <TableRow className="hover:bg-transparent border-none">
-            <TableHead className="w-[200px] text-center text-[10px] font-bold uppercase tracking-widest text-slate-500 py-4">Store</TableHead>
-            <TableHead className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-500">Owner</TableHead>
+            <TableHead className="w-[200px] text-left text-[10px] font-bold uppercase tracking-widest text-slate-500 py-4 pl-6">Store</TableHead>
+            <TableHead className="text-left text-[10px] font-bold uppercase tracking-widest text-slate-500">Owner</TableHead>
             <TableHead className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-500">Products</TableHead>
             <TableHead className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-500">Sales</TableHead>
             <TableHead className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-500">Rating</TableHead>
@@ -110,12 +95,7 @@ export function SuperadminStoresList({ stores, onStatusChange }: SuperadminStore
           {stores.length === 0 ? (
             <TableRow>
               <TableCell colSpan={8} className="py-12 text-center">
-                <div className="flex flex-col items-center justify-center space-y-3">
-                  <div className="h-12 w-12 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
-                    <Store className="h-6 w-6 text-slate-400" />
-                  </div>
-                  <p className="text-sm font-medium text-slate-500 text-center">No stores found</p>
-                </div>
+                <p className="text-sm font-medium text-slate-500">No stores found</p>
               </TableCell>
             </TableRow>
           ) : (
@@ -124,17 +104,18 @@ export function SuperadminStoresList({ stores, onStatusChange }: SuperadminStore
                 key={store.id} 
                 className="border-slate-100 dark:border-slate-800/60 hover:bg-slate-50/50 dark:hover:bg-slate-900/50 transition-colors"
               >
-                <TableCell className="py-4">
-                  <div className="flex items-center justify-center space-x-3">
+                <TableCell className="py-4 pl-6">
+                  <div className="flex items-center space-x-3">
                     <div className="h-10 w-10 rounded-lg bg-sky-50 dark:bg-sky-500/10 border border-sky-100 dark:border-sky-900/30 flex items-center justify-center shrink-0">
                       {store.profile?.avatar ? (
-                        <Image 
-                          src={store.profile.avatar} 
-                          alt={store.name}
-                          width={40}
-                          height={40}
-                          className="h-full w-full rounded-lg object-cover"
-                        />
+                        <div className="relative h-full w-full">
+                          <Image 
+                            src={store.profile.avatar} 
+                            alt={store.name}
+                            fill
+                            className="rounded-lg object-cover"
+                          />
+                        </div>
                       ) : (
                         <Store className="h-5 w-5 text-sky-600 dark:text-sky-400" />
                       )}
@@ -143,21 +124,21 @@ export function SuperadminStoresList({ stores, onStatusChange }: SuperadminStore
                       <span className="text-xs font-bold text-slate-900 dark:text-white truncate">
                         {store.name}
                       </span>
-                      <span className="text-[10px] font-medium text-slate-400 uppercase tracking-wider truncate">
+                      <span className="text-[10px] text-slate-400 truncate">
                         /{store.slug}
                       </span>
                     </div>
                   </div>
                 </TableCell>
-                <TableCell className="text-center">
-                  <div className="flex flex-col min-w-0">
+                <TableCell className="text-left">
+                  <div className="flex flex-col min-w-0 text-left">
                     <span className="text-xs font-bold text-slate-700 dark:text-slate-300 truncate">
                       {store.user?.firstName && store.user?.lastName
                         ? `${store.user.firstName} ${store.user.lastName}`
                         : store.user?.email || "N/A"}
                     </span>
                     {store.user?.email && (
-                      <span className="text-[10px] text-slate-400 truncate">
+                      <span className="text-[10px] text-slate-400 truncate text-left">
                         {store.user.email}
                       </span>
                     )}
@@ -168,15 +149,16 @@ export function SuperadminStoresList({ stores, onStatusChange }: SuperadminStore
                     {store.totalProducts}
                   </span>
                 </TableCell>
-                <TableCell className="text-center">
-                  <span className="text-xs font-bold text-slate-700 dark:text-slate-300">
-                    {store.totalSales}
-                  </span>
+                <TableCell className="text-center font-bold text-xs text-slate-900 dark:text-white">
+                  {store.totalSales}
                 </TableCell>
                 <TableCell className="text-center">
-                  <span className="text-xs font-bold text-slate-700 dark:text-slate-300">
-                    {store.rating ? store.rating.toFixed(1) : "N/A"}
-                  </span>
+                  <div className="flex items-center justify-center space-x-1">
+                    <span className="text-xs font-bold text-slate-900 dark:text-white">
+                      {store.rating ? store.rating.toFixed(1) : "0.0"}
+                    </span>
+                    <span className="text-[10px] text-amber-500">★</span>
+                  </div>
                 </TableCell>
                 <TableCell className="py-4 text-center">
                   <Button
@@ -189,50 +171,26 @@ export function SuperadminStoresList({ stores, onStatusChange }: SuperadminStore
                   </Button>
                 </TableCell>
                 <TableCell className="text-center">
-                  {getStatusBadge(store.isActive, store.isVerified)}
+                  <div className="flex justify-center" onClick={() => handleStatusClick(store)}>
+                    {getStatusBadge(store.isActive, store.isVerified)}
+                  </div>
                 </TableCell>
                 <TableCell className="text-center pr-6">
-                  <div className="flex items-center justify-center gap-2">
-                    {!store.isVerified && (
-                      <Button 
-                        variant="ghost" 
-                        onClick={() => handleStatusClick(store, "verify")}
-                        disabled={loadingStoreId === store.id}
-                        className="h-8 w-16 sm:w-20 rounded-lg bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 hover:text-emerald-700 hover:bg-emerald-100 dark:hover:bg-emerald-500/20 text-[10px] font-medium uppercase tracking-widest transition-all"
-                      >
-                        Verify
-                      </Button>
-                    )}
-                    {store.isVerified && (
-                      <Button 
-                        variant="ghost" 
-                        onClick={() => handleStatusClick(store, "unverify")}
-                        disabled={loadingStoreId === store.id}
-                        className="h-8 w-16 sm:w-20 rounded-lg bg-amber-50 dark:bg-amber-500/10 text-amber-600 hover:text-amber-700 hover:bg-amber-100 dark:hover:bg-amber-500/20 text-[10px] font-medium uppercase tracking-widest transition-all"
-                      >
-                        Unverify
-                      </Button>
-                    )}
-                    {store.isActive && (
-                      <Button 
-                        variant="ghost" 
-                        onClick={() => handleStatusClick(store, "deactivate")}
-                        disabled={loadingStoreId === store.id}
-                        className="h-8 w-16 sm:w-20 rounded-lg bg-rose-50 dark:bg-rose-500/10 text-rose-600 hover:text-rose-700 hover:bg-rose-100 dark:hover:bg-rose-500/20 text-[10px] font-medium uppercase tracking-widest transition-all"
-                      >
-                        Deactivate
-                      </Button>
-                    )}
-                    {!store.isActive && (
-                      <Button 
-                        variant="ghost" 
-                        onClick={() => handleStatusClick(store, "activate")}
-                        disabled={loadingStoreId === store.id}
-                        className="h-8 w-16 sm:w-20 rounded-lg bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 hover:text-emerald-700 hover:bg-emerald-100 dark:hover:bg-emerald-500/20 text-[10px] font-medium uppercase tracking-widest transition-all"
-                      >
-                        Activate
-                      </Button>
-                    )}
+                  <div className="flex items-center justify-center gap-1">
+                    <Button 
+                      variant="ghost" 
+                      size="icon"
+                      className="h-8 w-8 rounded-lg text-slate-400 hover:text-sky-600 hover:bg-sky-50 dark:hover:bg-sky-500/10 transition-all"
+                    >
+                      <Edit2 className="h-3.5 w-3.5" />
+                    </Button>
+                    <Button 
+                      variant="ghost" 
+                      size="icon"
+                      className="h-8 w-8 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-500/10 transition-all"
+                    >
+                      <Trash2 className="h-3.5 w-3.5" />
+                    </Button>
                   </div>
                 </TableCell>
               </TableRow>
@@ -250,25 +208,31 @@ export function SuperadminStoresList({ stores, onStatusChange }: SuperadminStore
         store={selectedStore}
       />
 
-      <StatusConfirmModal
+      <StatusChangeModal
         isOpen={isStatusModalOpen}
         onClose={() => {
           setIsStatusModalOpen(false)
-          setStatusAction(null)
+          setSelectedStore(null)
         }}
-        onConfirm={confirmStatusChange}
-        title={statusAction?.type === "verify" ? "Verify Store" : statusAction?.type === "unverify" ? "Unverify Store" : statusAction?.type === "activate" ? "Activate Store" : "Deactivate Store"}
-        description={statusAction?.type === "verify" 
-          ? "Are you sure you want to verify this store? This will mark it as verified and allow it to operate normally."
-          : statusAction?.type === "unverify"
-          ? "Are you sure you want to unverify this store? This will remove its verified status."
-          : statusAction?.type === "activate"
-          ? "Are you sure you want to activate this store? It will be visible and operational."
-          : "Are you sure you want to deactivate this store? It will be hidden and non-operational."}
-        itemName={selectedStore?.name}
-        actionType={statusAction?.type || "verify"}
+        onConfirm={(status) => {
+          if (selectedStore) {
+            const data: any = {}
+            if (status === "VERIFIED") { data.isActive = true; data.isVerified = true; }
+            if (status === "PENDING") { data.isActive = true; data.isVerified = false; }
+            if (status === "INACTIVE") { data.isActive = false; }
+            onStatusChange?.(selectedStore.id, data)
+            setIsStatusModalOpen(false)
+          }
+        }}
+        currentStatus={selectedStore?.isVerified ? "VERIFIED" : (selectedStore?.isActive ? "PENDING" : "INACTIVE")}
+        itemName={selectedStore?.name || ""}
+        title="Store Status"
+        options={[
+          { id: "VERIFIED", label: "Verified", icon: CheckCircle2, color: "text-emerald-600", bg: "bg-emerald-50 dark:bg-emerald-500/10", description: "Store is active and officially verified. Can sell products normally." },
+          { id: "PENDING", label: "Pending", icon: AlertCircle, color: "text-amber-600", bg: "bg-amber-50 dark:bg-amber-500/10", description: "Store is awaiting verification review by the team." },
+          { id: "INACTIVE", label: "Inactive", icon: XCircle, color: "text-rose-600", bg: "bg-rose-50 dark:bg-rose-500/10", description: "Store is deactivated and products are hidden from the public." },
+        ]}
       />
     </div>
   )
 }
-

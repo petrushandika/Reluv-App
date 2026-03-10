@@ -14,6 +14,9 @@ import {
   Tag,
   ChevronRight,
   Eye,
+  PlusCircle,
+  Edit2,
+  Trash2
 } from "lucide-react"
 import { CategoryListItem } from "../api/superadminApi"
 import { useState, ReactElement } from "react"
@@ -106,7 +109,7 @@ export function SuperadminCategoriesList({
             ) : (
               <Badge 
                 variant="outline" 
-                className="text-sky-600 border-sky-100 bg-sky-50 dark:bg-sky-500/10 dark:border-sky-900/30 uppercase text-[9px] font-bold tracking-[0.2em] px-2 py-1 mx-auto block w-fit"
+                className="text-sky-600 border-sky-100 bg-sky-50 dark:bg-sky-500/10 dark:border-sky-900/30 uppercase text-[9px] font-bold tracking-[0.2em] px-2 py-1 block w-fit"
               >
                 Root
               </Badge>
@@ -132,7 +135,7 @@ export function SuperadminCategoriesList({
               <Eye className="h-4 w-4" />
             </Button>
           </TableCell>
-          <TableCell className="text-center">
+          <TableCell className="text-left">
             <span className="text-xs font-bold text-slate-700 dark:text-slate-300">
               {new Date(category.createdAt).toLocaleDateString("id-ID", {
                 year: "numeric",
@@ -142,27 +145,30 @@ export function SuperadminCategoriesList({
             </span>
           </TableCell>
           <TableCell className="text-center pr-6">
-            <div className="flex items-center justify-center gap-2">
+            <div className="flex items-center justify-center gap-1">
               <Button 
                 variant="ghost" 
+                size="icon"
                 onClick={() => onEdit?.(category)}
-                className="h-8 w-16 sm:w-20 rounded-lg bg-sky-50 dark:bg-sky-500/10 text-sky-600 hover:text-sky-700 hover:bg-sky-100 dark:hover:bg-sky-500/20 text-[10px] font-medium uppercase tracking-widest transition-all"
+                className="h-8 w-8 rounded-lg text-slate-400 hover:text-sky-600 hover:bg-sky-50 dark:hover:bg-sky-500/10 transition-all"
               >
-                Edit
+                <Edit2 className="h-3.5 w-3.5" />
               </Button>
               <Button 
                 variant="ghost" 
+                size="icon"
                 onClick={() => onAddSubcategory?.(category.id)}
-                className="h-8 w-16 sm:w-20 rounded-lg bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 hover:text-emerald-700 hover:bg-emerald-100 dark:hover:bg-emerald-500/20 text-[10px] font-medium uppercase tracking-widest transition-all"
+                className="h-8 w-8 rounded-lg text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-500/10 transition-all"
               >
-                Add Sub
+                <PlusCircle className="h-3.5 w-3.5" />
               </Button>
               <Button 
                 variant="ghost" 
+                size="icon"
                 onClick={() => handleDeleteClick(category)}
-                className="h-8 w-16 sm:w-20 rounded-lg bg-rose-50 dark:bg-rose-500/10 text-rose-600 hover:text-rose-700 hover:bg-rose-100 dark:hover:bg-rose-500/20 text-[10px] font-medium uppercase tracking-widest transition-all"
+                className="h-8 w-8 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-500/10 transition-all"
               >
-                Delete
+                <Trash2 className="h-3.5 w-3.5" />
               </Button>
             </div>
           </TableCell>
@@ -181,12 +187,12 @@ export function SuperadminCategoriesList({
       <Table>
         <TableHeader className="bg-slate-50/50 dark:bg-slate-900/50 border-b border-slate-200 dark:border-slate-800">
           <TableRow className="hover:bg-transparent border-none">
-            <TableHead className="w-[300px] text-center text-[10px] font-bold uppercase tracking-widest text-slate-500 py-4">Category</TableHead>
-            <TableHead className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-500">Parent</TableHead>
+            <TableHead className="w-[300px] text-left text-[10px] font-bold uppercase tracking-widest text-slate-500 py-4 pl-6">Category</TableHead>
+            <TableHead className="text-left text-[10px] font-bold uppercase tracking-widest text-slate-500">Parent</TableHead>
             <TableHead className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-500">Products</TableHead>
             <TableHead className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-500">Subcategories</TableHead>
             <TableHead className="w-[80px] text-center text-[10px] font-bold uppercase tracking-widest text-slate-500 py-4">View</TableHead>
-            <TableHead className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-500">Created</TableHead>
+            <TableHead className="text-left text-[10px] font-bold uppercase tracking-widest text-slate-500">Created</TableHead>
             <TableHead className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-500 pr-6">Actions</TableHead>
           </TableRow>
         </TableHeader>

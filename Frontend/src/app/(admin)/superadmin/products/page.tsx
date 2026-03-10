@@ -1,7 +1,6 @@
 "use client"
 
 import { Button } from "@/shared/components/ui/button"
-import { Badge } from "@/shared/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/ui/card"
 import { DashboardShell } from "@/shared/components/layout/DashboardShell"
 import { 
@@ -11,7 +10,6 @@ import {
   Package,
   CheckCircle2,
   XCircle,
-  Store,
   AlertCircle,
   Download
 } from "lucide-react"
@@ -22,6 +20,7 @@ import { toast } from "sonner"
 import { getProducts, updateProductStatus, ProductListItem, ProductsResponse } from "@/features/(admin)/superadmin/api/superadminApi"
 import { Skeleton } from "@/shared/components/ui/skeleton"
 import { exportToCsv } from "@/shared/utils/exportToCsv"
+import { SuperadminProductsList } from "@/features/(admin)/superadmin/components/SuperadminProductsList"
 
 export default function SuperadminProductsPage() {
   const [products, setProducts] = useState<ProductListItem[]>([])
@@ -77,12 +76,6 @@ export default function SuperadminProductsPage() {
     e.preventDefault()
     setCurrentPage(1)
     fetchProducts(1, searchQuery)
-  }
-
-  const handleStatusClick = (product: ProductListItem, type: "approve" | "reject") => {
-    setSelectedProduct(product)
-    setActionType(type)
-    setIsStatusModalOpen(true)
   }
 
   const confirmStatusChange = async () => {
@@ -230,81 +223,21 @@ export default function SuperadminProductsPage() {
         </div>
 
         {isLoading ? (
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            <Skeleton className="h-96 w-full rounded-2xl" />
-            <Skeleton className="h-96 w-full rounded-2xl" />
-            <Skeleton className="h-96 w-full rounded-2xl" />
+          <div className="space-y-4">
+            <Skeleton className="h-[500px] w-full rounded-2xl" />
           </div>
-        ) : products.length === 0 ? (
-          <Card className="border-slate-200 dark:border-slate-800 shadow-none rounded-2xl">
-            <CardContent className="p-12 text-center">
-              <Package className="h-12 w-12 text-slate-300 dark:text-slate-700 mx-auto mb-4" />
-              <p className="text-sm font-medium text-slate-500 dark:text-slate-400">No pending products found</p>
-            </CardContent>
-          </Card>
         ) : (
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {products.map((p) => (
-            <Card key={p.id} className="border-slate-200 dark:border-slate-800 shadow-none rounded-2xl overflow-hidden transition-all group hover:border-sky-500/30">
-              <div className="h-48 bg-slate-50 dark:bg-slate-900 relative border-b border-slate-100 dark:border-slate-800">
-                <div className="absolute top-4 left-4 z-10">
-                  <Badge className="bg-white dark:bg-slate-900 text-amber-600 dark:text-amber-400 border-amber-100 dark:border-amber-900/30 uppercase text-[9px] font-bold tracking-[0.2em] px-3 py-1 rounded-full">
-                    {p.status}
-                  </Badge>
-                </div>
-                <div className="h-full w-full flex items-center justify-center text-slate-200 dark:text-slate-800">
-                  <Package className="h-16 w-16 group-hover:scale-110 transition-transform duration-500" />
-                </div>
-                <div className="absolute inset-0 bg-linear-to-t from-slate-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-              </div>
-              <CardContent className="p-5 space-y-4">
-                <div>
-                  <h4 className="font-bold text-slate-900 dark:text-white line-clamp-1 text-lg group-hover:text-sky-600 transition-colors">
-                    {p.name}
-                  </h4>
-                  <div className="flex items-center mt-1">
-                    <div className="h-4 w-4 rounded-full bg-sky-100 dark:bg-sky-500/20 flex items-center justify-center mr-2">
-                      <Store className="h-2.5 w-2.5 text-sky-600" />
-                    </div>
-                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                      {p.store?.name || "Unknown Store"}
-                    </p>
-                  </div>
-                </div>
-                
-                <div className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-800/50">
-                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                    {p.category?.name || "Uncategorized"}
-                  </span>
-                  <span className="text-sm font-bold text-slate-900 dark:text-white">
-                    Rp. {p.price.toLocaleString("id-ID")}
-                  </span>
-                </div>
-
-                <div className="grid grid-cols-2 gap-3 pt-1">
-                  <Button 
-                    size="sm" 
-                    variant="outline" 
-                    onClick={() => handleStatusClick(p, "approve")}
-                    className="h-10 text-emerald-600 border-emerald-100 hover:bg-emerald-50 dark:hover:bg-emerald-500/10 transition-all font-bold text-[10px] uppercase tracking-wider rounded-xl"
-                  >
-                    <CheckCircle2 className="h-4 w-4 mr-2" />
-                    Approve
-                  </Button>
-                  <Button 
-                    size="sm" 
-                    variant="outline" 
-                    onClick={() => handleStatusClick(p, "reject")}
-                    className="h-10 text-rose-600 border-rose-100 hover:bg-rose-50 dark:hover:bg-rose-500/10 transition-all font-bold text-[10px] uppercase tracking-wider rounded-xl"
-                  >
-                    <XCircle className="h-4 w-4 mr-2" />
-                    Reject
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+          <SuperadminProductsList 
+            products={products}
+            onStatusChange={(productId, status) => {
+              const product = products.find(p => p.id === productId)
+              if (product) {
+                setSelectedProduct(product)
+                setActionType(status === "APPROVED" ? "approve" : "reject")
+                setIsStatusModalOpen(true)
+              }
+            }}
+          />
         )}
       </div>
 
