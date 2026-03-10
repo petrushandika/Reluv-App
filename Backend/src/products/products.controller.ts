@@ -113,13 +113,6 @@ export class ProductsController {
     return this.productsService.removeVariant(user, productId, variantId);
   }
 
-  @Get(':slug')
-  @HttpCode(HttpStatus.OK)
-  findOneBySlug(@Param('slug') slug: string) {
-    const decodedSlug = decodeURIComponent(slug);
-    return this.productsService.findOneBySlug(decodedSlug);
-  }
-
   // Admin Endpoints
   @UseGuards(JwtAuthGuard, AdminGuard)
   @Get('admin')
@@ -136,5 +129,12 @@ export class ProductsController {
     @Body() data: any,
   ) {
     return this.productsService.updateStatusAdmin(productId, data);
+  }
+
+  @Get(':slug')
+  @HttpCode(HttpStatus.OK)
+  findOneBySlug(@Param('slug') slug: string) {
+    const decodedSlug = decodeURIComponent(slug);
+    return this.productsService.findOneBySlug(decodedSlug);
   }
 }

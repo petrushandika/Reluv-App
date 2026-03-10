@@ -208,30 +208,32 @@ export default function SuperadminProductsPage() {
           </Card>
         </div>
 
-        <form onSubmit={handleSearch} className="relative w-full md:w-96">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
-          <input 
-            type="text"
-            placeholder="Search products across all stores..." 
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-11 h-11 rounded-xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 transition-all text-sm font-medium"
-          />
-        </form>
-        <div className="flex gap-2">
-          {["ALL", "PENDING", "APPROVED", "REJECTED"].map((s) => (
-            <Button
-              key={s}
-              variant={filterStatus === (s === "ALL" ? undefined : s) ? "default" : "outline"}
-              onClick={() => {
-                setFilterStatus(s === "ALL" ? undefined : s)
-                setCurrentPage(1)
-              }}
-              className="h-11 px-4 rounded-xl font-bold text-[10px] uppercase tracking-widest border shadow-sm transition-all"
-            >
-              {s}
-            </Button>
-          ))}
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+          <form onSubmit={handleSearch} className="relative w-full">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+            <input 
+              type="text"
+              placeholder="Search products across all stores..." 
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pl-11 h-11 rounded-xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 transition-all text-sm font-medium"
+            />
+          </form>
+          <div className="flex gap-2 w-full sm:w-auto overflow-x-auto pb-2 sm:pb-0 hide-scrollbar">
+            {["ALL", "PENDING", "APPROVED", "REJECTED"].map((s) => (
+              <Button
+                key={s}
+                variant={filterStatus === (s === "ALL" ? undefined : s) ? "default" : "outline"}
+                onClick={() => {
+                  setFilterStatus(s === "ALL" ? undefined : s)
+                  setCurrentPage(1)
+                }}
+                className="h-11 px-4 rounded-xl font-bold text-[10px] uppercase tracking-widest border shadow-sm transition-all whitespace-nowrap"
+              >
+                {s}
+              </Button>
+            ))}
+          </div>
         </div>
 
         {isLoading ? (

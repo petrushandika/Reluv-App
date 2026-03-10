@@ -1,4 +1,9 @@
-'use client';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Sign In | Reluv App',
+  description: 'Sign in to your Reluv account to manage your profile, orders, and wishlist.',
+};
 
 export default function AuthLayout({
   children,
