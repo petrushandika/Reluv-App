@@ -1,6 +1,6 @@
 "use client"
 
-import {
+import { 
   Table,
   TableBody,
   TableCell,
@@ -10,6 +10,9 @@ import {
 } from "@/shared/components/ui/table"
 import { Badge } from "@/shared/components/ui/badge"
 import { Button } from "@/shared/components/ui/button"
+import { 
+  Eye,
+} from "lucide-react"
 import { cn } from "@/shared/lib/utils"
 import { useState } from "react"
 import { OrderViewModal } from "./modals/OrderViewModal"
@@ -69,49 +72,54 @@ export function SuperadminOrdersList() {
       <Table>
         <TableHeader className="bg-slate-50/50 dark:bg-slate-900/50 border-b border-slate-200 dark:border-slate-800">
           <TableRow className="hover:bg-transparent border-none">
-            <TableHead className="w-[180px] text-[10px] font-bold uppercase tracking-widest text-slate-500 py-4 pl-6">Order ID</TableHead>
-            <TableHead className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Customer</TableHead>
-            <TableHead className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Store</TableHead>
-            <TableHead className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Amount</TableHead>
-            <TableHead className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Status</TableHead>
-            <TableHead className="text-right text-[10px] font-bold uppercase tracking-widest text-slate-500 pr-6">Actions</TableHead>
+            <TableHead className="w-[80px] text-center text-[10px] font-bold uppercase tracking-widest text-slate-500 py-4">View</TableHead>
+            <TableHead className="w-[180px] text-center text-[10px] font-bold uppercase tracking-widest text-slate-500 py-4">Order ID</TableHead>
+            <TableHead className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-500">Customer</TableHead>
+            <TableHead className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-500">Store</TableHead>
+            <TableHead className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-500">Amount</TableHead>
+            <TableHead className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-500">Status</TableHead>
+            <TableHead className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-500 pr-6">Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {orders.map((order) => (
             <TableRow key={order.id} className="border-slate-100 dark:border-slate-800/60 hover:bg-slate-50/50 dark:hover:bg-slate-900/50 transition-colors">
-              <TableCell className="py-4 pl-6">
+              <TableCell className="py-4 text-center">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => handleView(order)}
+                  className="h-8 w-8 rounded-lg bg-sky-50 dark:bg-sky-500/10 text-sky-600 hover:text-sky-700 hover:bg-sky-100 dark:hover:bg-sky-500/20 transition-all mx-auto"
+                >
+                  <Eye className="h-4 w-4" />
+                </Button>
+              </TableCell>
+              <TableCell className="py-4 text-center">
                 <span className="text-xs font-bold text-slate-900 dark:text-white">#{order.orderNumber}</span>
               </TableCell>
-              <TableCell>
+              <TableCell className="text-center">
                 <span className="text-xs font-bold text-slate-700 dark:text-slate-300">{order.customer}</span>
               </TableCell>
-              <TableCell>
+              <TableCell className="text-center">
                 <span className="text-xs font-bold text-slate-700 dark:text-slate-300">{order.store}</span>
               </TableCell>
-              <TableCell className="font-bold text-xs text-slate-900 dark:text-white">
+              <TableCell className="text-center font-bold text-xs text-slate-900 dark:text-white">
                 Rp. {order.totalAmount.toLocaleString("id-ID")}
               </TableCell>
-              <TableCell>
+              <TableCell className="text-center">
                 <Badge 
                   variant="outline" 
                   className={cn(
-                    "font-bold text-[9px] uppercase tracking-[0.2em] px-2 py-1 rounded-full",
+                    "font-bold text-[9px] uppercase tracking-[0.2em] px-2 py-1 rounded-full mx-auto block w-fit",
                     getStatusColor(order.status)
                   )}
                 >
                   {order.status}
                 </Badge>
               </TableCell>
-              <TableCell className="text-right pr-6">
-                <div className="flex items-center justify-end gap-2">
-                  <Button 
-                    variant="ghost" 
-                    onClick={() => handleView(order)}
-                    className="h-8 w-16 sm:w-20 rounded-lg bg-sky-50 dark:bg-sky-500/10 text-sky-600 hover:text-sky-700 hover:bg-sky-100 dark:hover:bg-sky-500/20 text-[10px] font-medium uppercase tracking-widest transition-all"
-                  >
-                    View
-                  </Button>
+              <TableCell className="text-center pr-6">
+                <div className="flex items-center justify-center gap-2">
+                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">No Action</span>
                 </div>
               </TableCell>
             </TableRow>

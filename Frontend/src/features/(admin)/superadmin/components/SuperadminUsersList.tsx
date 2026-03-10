@@ -12,6 +12,7 @@ import { Badge } from "@/shared/components/ui/badge"
 import { Button } from "@/shared/components/ui/button"
 import { 
   User,
+  Eye,
 } from "lucide-react"
 import { UserListItem } from "../api/superadminApi"
 import { useState } from "react"
@@ -65,7 +66,7 @@ export function SuperadminUsersList({ users, onStatusChange }: SuperadminUsersLi
         return (
           <Badge 
             variant="outline" 
-            className="text-violet-600 border-violet-100 bg-violet-50 dark:bg-violet-500/10 dark:border-violet-900/30 uppercase text-[9px] font-bold tracking-[0.2em] px-2 py-1"
+            className="text-violet-600 border-violet-100 bg-violet-50 dark:bg-violet-500/10 dark:border-violet-900/30 uppercase text-[9px] font-bold tracking-[0.2em] px-2 py-1 mx-auto block w-fit"
           >
             Admin
           </Badge>
@@ -74,7 +75,7 @@ export function SuperadminUsersList({ users, onStatusChange }: SuperadminUsersLi
         return (
           <Badge 
             variant="outline" 
-            className="text-sky-600 border-sky-100 bg-sky-50 dark:bg-sky-500/10 dark:border-sky-900/30 uppercase text-[9px] font-bold tracking-[0.2em] px-2 py-1"
+            className="text-sky-600 border-sky-100 bg-sky-50 dark:bg-sky-500/10 dark:border-sky-900/30 uppercase text-[9px] font-bold tracking-[0.2em] px-2 py-1 mx-auto block w-fit"
           >
             Store
           </Badge>
@@ -83,7 +84,7 @@ export function SuperadminUsersList({ users, onStatusChange }: SuperadminUsersLi
         return (
           <Badge 
             variant="outline" 
-            className="text-slate-600 border-slate-100 bg-slate-50 dark:bg-slate-500/10 dark:border-slate-900/30 uppercase text-[9px] font-bold tracking-[0.2em] px-2 py-1"
+            className="text-slate-600 border-slate-100 bg-slate-50 dark:bg-slate-500/10 dark:border-slate-900/30 uppercase text-[9px] font-bold tracking-[0.2em] px-2 py-1 mx-auto block w-fit"
           >
             User
           </Badge>
@@ -96,7 +97,7 @@ export function SuperadminUsersList({ users, onStatusChange }: SuperadminUsersLi
       return (
         <Badge 
           variant="outline" 
-          className="text-rose-600 border-rose-100 bg-rose-50 dark:bg-rose-500/10 dark:border-rose-900/30 uppercase text-[9px] font-bold tracking-[0.2em] px-2 py-1"
+          className="text-rose-600 border-rose-100 bg-rose-50 dark:bg-rose-500/10 dark:border-rose-900/30 uppercase text-[9px] font-bold tracking-[0.2em] px-2 py-1 mx-auto block w-fit"
         >
           Inactive
         </Badge>
@@ -106,7 +107,7 @@ export function SuperadminUsersList({ users, onStatusChange }: SuperadminUsersLi
       return (
         <Badge 
           variant="outline" 
-          className="text-amber-600 border-amber-100 bg-amber-50 dark:bg-amber-500/10 dark:border-amber-900/30 uppercase text-[9px] font-bold tracking-[0.2em] px-2 py-1"
+          className="text-amber-600 border-amber-100 bg-amber-50 dark:bg-amber-500/10 dark:border-amber-900/30 uppercase text-[9px] font-bold tracking-[0.2em] px-2 py-1 mx-auto block w-fit"
         >
           Unverified
         </Badge>
@@ -115,7 +116,7 @@ export function SuperadminUsersList({ users, onStatusChange }: SuperadminUsersLi
     return (
       <Badge 
         variant="outline" 
-        className="text-emerald-600 border-emerald-100 bg-emerald-50 dark:bg-emerald-500/10 dark:border-emerald-900/30 uppercase text-[9px] font-bold tracking-[0.2em] px-2 py-1"
+        className="text-emerald-600 border-emerald-100 bg-emerald-50 dark:bg-emerald-500/10 dark:border-emerald-900/30 uppercase text-[9px] font-bold tracking-[0.2em] px-2 py-1 mx-auto block w-fit"
       >
         Active
       </Badge>
@@ -127,19 +128,20 @@ export function SuperadminUsersList({ users, onStatusChange }: SuperadminUsersLi
       <Table>
         <TableHeader className="bg-slate-50/50 dark:bg-slate-900/50 border-b border-slate-200 dark:border-slate-800">
           <TableRow className="hover:bg-transparent border-none">
-            <TableHead className="w-[200px] text-[10px] font-bold uppercase tracking-widest text-slate-500 py-4 pl-6">User</TableHead>
-            <TableHead className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Contact</TableHead>
-            <TableHead className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Role</TableHead>
-            <TableHead className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Store</TableHead>
-            <TableHead className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Status</TableHead>
-            <TableHead className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Joined</TableHead>
-            <TableHead className="text-right text-[10px] font-bold uppercase tracking-widest text-slate-500 pr-6">Actions</TableHead>
+            <TableHead className="w-[80px] text-center text-[10px] font-bold uppercase tracking-widest text-slate-500 py-4">View</TableHead>
+            <TableHead className="w-[200px] text-center text-[10px] font-bold uppercase tracking-widest text-slate-500 py-4">User</TableHead>
+            <TableHead className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-500">Contact</TableHead>
+            <TableHead className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-500">Role</TableHead>
+            <TableHead className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-500">Store</TableHead>
+            <TableHead className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-500">Status</TableHead>
+            <TableHead className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-500">Joined</TableHead>
+            <TableHead className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-500 pr-6">Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {users.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={7} className="py-12 text-center">
+              <TableCell colSpan={8} className="py-12 text-center">
                 <div className="flex flex-col items-center justify-center space-y-3">
                   <div className="h-12 w-12 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
                     <User className="h-6 w-6 text-slate-400" />
@@ -154,8 +156,18 @@ export function SuperadminUsersList({ users, onStatusChange }: SuperadminUsersLi
                 key={user.id} 
                 className="border-slate-100 dark:border-slate-800/60 hover:bg-slate-50/50 dark:hover:bg-slate-900/50 transition-colors"
               >
-                <TableCell className="py-4 pl-6">
-                  <div className="flex items-center space-x-3">
+                <TableCell className="py-4 text-center">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => handleView(user)}
+                    className="h-8 w-8 rounded-lg bg-sky-50 dark:bg-sky-500/10 text-sky-600 hover:text-sky-700 hover:bg-sky-100 dark:hover:bg-sky-500/20 transition-all mx-auto"
+                  >
+                    <Eye className="h-4 w-4" />
+                  </Button>
+                </TableCell>
+                <TableCell className="py-4">
+                  <div className="flex items-center justify-center space-x-3">
                     <div className="h-10 w-10 rounded-lg bg-sky-50 dark:bg-sky-500/10 border border-sky-100 dark:border-sky-900/30 flex items-center justify-center shrink-0">
                       {user.profile?.avatar ? (
                         <img 
@@ -167,7 +179,7 @@ export function SuperadminUsersList({ users, onStatusChange }: SuperadminUsersLi
                         <User className="h-5 w-5 text-sky-600 dark:text-sky-400" />
                       )}
                     </div>
-                    <div className="flex flex-col min-w-0">
+                    <div className="flex flex-col min-w-0 text-left">
                       <span className="text-xs font-bold text-slate-900 dark:text-white truncate">
                         {user.firstName && user.lastName
                           ? `${user.firstName} ${user.lastName}`
@@ -179,7 +191,7 @@ export function SuperadminUsersList({ users, onStatusChange }: SuperadminUsersLi
                     </div>
                   </div>
                 </TableCell>
-                <TableCell>
+                <TableCell className="text-center">
                   <div className="flex flex-col space-y-1 min-w-0">
                     <span className="text-xs font-bold text-slate-700 dark:text-slate-300 truncate">
                       {user.email}
@@ -191,10 +203,10 @@ export function SuperadminUsersList({ users, onStatusChange }: SuperadminUsersLi
                     )}
                   </div>
                 </TableCell>
-                <TableCell>
+                <TableCell className="text-center">
                   {getRoleBadge(user.role)}
                 </TableCell>
-                <TableCell>
+                <TableCell className="text-center">
                   {user.store ? (
                     <div className="flex flex-col min-w-0">
                       <span className="text-xs font-bold text-slate-700 dark:text-slate-300 truncate">
@@ -208,10 +220,10 @@ export function SuperadminUsersList({ users, onStatusChange }: SuperadminUsersLi
                     <span className="text-xs font-bold text-slate-400">No store</span>
                   )}
                 </TableCell>
-                <TableCell>
+                <TableCell className="text-center">
                   {getStatusBadge(user.isActive, user.isVerified)}
                 </TableCell>
-                <TableCell>
+                <TableCell className="text-center">
                   <span className="text-xs font-bold text-slate-700 dark:text-slate-300">
                     {new Date(user.createdAt).toLocaleDateString("id-ID", {
                       year: "numeric",
@@ -220,15 +232,8 @@ export function SuperadminUsersList({ users, onStatusChange }: SuperadminUsersLi
                     })}
                   </span>
                 </TableCell>
-                <TableCell className="text-right pr-6">
-                  <div className="flex items-center justify-end gap-2">
-                    <Button 
-                      variant="ghost" 
-                      onClick={() => handleView(user)}
-                      className="h-8 w-16 sm:w-20 rounded-lg bg-sky-50 dark:bg-sky-500/10 text-sky-600 hover:text-sky-700 hover:bg-sky-100 dark:hover:bg-sky-500/20 text-[10px] font-medium uppercase tracking-widest transition-all"
-                    >
-                      View
-                    </Button>
+                <TableCell className="text-center pr-6">
+                  <div className="flex items-center justify-center gap-2">
                     {!user.isVerified && (
                       <Button 
                         variant="ghost" 

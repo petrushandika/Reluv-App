@@ -12,6 +12,7 @@ import { Badge } from "@/shared/components/ui/badge"
 import { Button } from "@/shared/components/ui/button"
 import { 
   Store,
+  Eye,
 } from "lucide-react"
 import { StoreListItem } from "../api/superadminApi"
 import { useState } from "react"
@@ -63,7 +64,7 @@ export function SuperadminStoresList({ stores, onStatusChange }: SuperadminStore
       return (
         <Badge 
           variant="outline" 
-          className="text-rose-600 border-rose-100 bg-rose-50 dark:bg-rose-500/10 dark:border-rose-900/30 uppercase text-[9px] font-bold tracking-[0.2em] px-2 py-1"
+          className="text-rose-600 border-rose-100 bg-rose-50 dark:bg-rose-500/10 dark:border-rose-900/30 uppercase text-[9px] font-bold tracking-[0.2em] px-2 py-1 mx-auto block w-fit"
         >
           Inactive
         </Badge>
@@ -73,7 +74,7 @@ export function SuperadminStoresList({ stores, onStatusChange }: SuperadminStore
       return (
         <Badge 
           variant="outline" 
-          className="text-amber-600 border-amber-100 bg-amber-50 dark:bg-amber-500/10 dark:border-amber-900/30 uppercase text-[9px] font-bold tracking-[0.2em] px-2 py-1"
+          className="text-amber-600 border-amber-100 bg-amber-50 dark:bg-amber-500/10 dark:border-amber-900/30 uppercase text-[9px] font-bold tracking-[0.2em] px-2 py-1 mx-auto block w-fit"
         >
           Pending
         </Badge>
@@ -82,7 +83,7 @@ export function SuperadminStoresList({ stores, onStatusChange }: SuperadminStore
     return (
       <Badge 
         variant="outline" 
-        className="text-emerald-600 border-emerald-100 bg-emerald-50 dark:bg-emerald-500/10 dark:border-emerald-900/30 uppercase text-[9px] font-bold tracking-[0.2em] px-2 py-1"
+        className="text-emerald-600 border-emerald-100 bg-emerald-50 dark:bg-emerald-500/10 dark:border-emerald-900/30 uppercase text-[9px] font-bold tracking-[0.2em] px-2 py-1 mx-auto block w-fit"
       >
         Verified
       </Badge>
@@ -94,24 +95,25 @@ export function SuperadminStoresList({ stores, onStatusChange }: SuperadminStore
       <Table>
         <TableHeader className="bg-slate-50/50 dark:bg-slate-900/50 border-b border-slate-200 dark:border-slate-800">
           <TableRow className="hover:bg-transparent border-none">
-            <TableHead className="w-[200px] text-[10px] font-bold uppercase tracking-widest text-slate-500 py-4 pl-6">Store</TableHead>
-            <TableHead className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Owner</TableHead>
-            <TableHead className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Products</TableHead>
-            <TableHead className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Sales</TableHead>
-            <TableHead className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Rating</TableHead>
-            <TableHead className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Status</TableHead>
-            <TableHead className="text-right text-[10px] font-bold uppercase tracking-widest text-slate-500 pr-6">Actions</TableHead>
+            <TableHead className="w-[80px] text-center text-[10px] font-bold uppercase tracking-widest text-slate-500 py-4">View</TableHead>
+            <TableHead className="w-[200px] text-center text-[10px] font-bold uppercase tracking-widest text-slate-500 py-4">Store</TableHead>
+            <TableHead className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-500">Owner</TableHead>
+            <TableHead className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-500">Products</TableHead>
+            <TableHead className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-500">Sales</TableHead>
+            <TableHead className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-500">Rating</TableHead>
+            <TableHead className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-500">Status</TableHead>
+            <TableHead className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-500 pr-6">Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {stores.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={7} className="py-12 text-center">
+              <TableCell colSpan={8} className="py-12 text-center text-center">
                 <div className="flex flex-col items-center justify-center space-y-3">
                   <div className="h-12 w-12 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
                     <Store className="h-6 w-6 text-slate-400" />
                   </div>
-                  <p className="text-sm font-medium text-slate-500">No stores found</p>
+                  <p className="text-sm font-medium text-slate-500 text-center">No stores found</p>
                 </div>
               </TableCell>
             </TableRow>
@@ -121,8 +123,18 @@ export function SuperadminStoresList({ stores, onStatusChange }: SuperadminStore
                 key={store.id} 
                 className="border-slate-100 dark:border-slate-800/60 hover:bg-slate-50/50 dark:hover:bg-slate-900/50 transition-colors"
               >
-                <TableCell className="py-4 pl-6">
-                  <div className="flex items-center space-x-3">
+                <TableCell className="py-4 text-center">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => handleView(store)}
+                    className="h-8 w-8 rounded-lg bg-sky-50 dark:bg-sky-500/10 text-sky-600 hover:text-sky-700 hover:bg-sky-100 dark:hover:bg-sky-500/20 transition-all mx-auto"
+                  >
+                    <Eye className="h-4 w-4" />
+                  </Button>
+                </TableCell>
+                <TableCell className="py-4">
+                  <div className="flex items-center justify-center space-x-3">
                     <div className="h-10 w-10 rounded-lg bg-sky-50 dark:bg-sky-500/10 border border-sky-100 dark:border-sky-900/30 flex items-center justify-center shrink-0">
                       {store.profile?.avatar ? (
                         <img 
@@ -134,7 +146,7 @@ export function SuperadminStoresList({ stores, onStatusChange }: SuperadminStore
                         <Store className="h-5 w-5 text-sky-600 dark:text-sky-400" />
                       )}
                     </div>
-                    <div className="flex flex-col min-w-0">
+                    <div className="flex flex-col min-w-0 text-left">
                       <span className="text-xs font-bold text-slate-900 dark:text-white truncate">
                         {store.name}
                       </span>
@@ -144,7 +156,7 @@ export function SuperadminStoresList({ stores, onStatusChange }: SuperadminStore
                     </div>
                   </div>
                 </TableCell>
-                <TableCell>
+                <TableCell className="text-center">
                   <div className="flex flex-col min-w-0">
                     <span className="text-xs font-bold text-slate-700 dark:text-slate-300 truncate">
                       {store.user?.firstName && store.user?.lastName
@@ -158,33 +170,26 @@ export function SuperadminStoresList({ stores, onStatusChange }: SuperadminStore
                     )}
                   </div>
                 </TableCell>
-                <TableCell>
+                <TableCell className="text-center">
                   <span className="text-xs font-bold text-slate-700 dark:text-slate-300">
                     {store.totalProducts}
                   </span>
                 </TableCell>
-                <TableCell>
+                <TableCell className="text-center">
                   <span className="text-xs font-bold text-slate-700 dark:text-slate-300">
                     {store.totalSales}
                   </span>
                 </TableCell>
-                <TableCell>
+                <TableCell className="text-center">
                   <span className="text-xs font-bold text-slate-700 dark:text-slate-300">
                     {store.rating ? store.rating.toFixed(1) : "N/A"}
                   </span>
                 </TableCell>
-                <TableCell>
+                <TableCell className="text-center">
                   {getStatusBadge(store.isActive, store.isVerified)}
                 </TableCell>
-                <TableCell className="text-right pr-6">
-                  <div className="flex items-center justify-end gap-2">
-                    <Button 
-                      variant="ghost" 
-                      onClick={() => handleView(store)}
-                      className="h-8 w-16 sm:w-20 rounded-lg bg-sky-50 dark:bg-sky-500/10 text-sky-600 hover:text-sky-700 hover:bg-sky-100 dark:hover:bg-sky-500/20 text-[10px] font-medium uppercase tracking-widest transition-all"
-                    >
-                      View
-                    </Button>
+                <TableCell className="text-center pr-6">
+                  <div className="flex items-center justify-center gap-2">
                     {!store.isVerified && (
                       <Button 
                         variant="ghost" 

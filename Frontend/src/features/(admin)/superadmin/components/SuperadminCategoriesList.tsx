@@ -13,6 +13,7 @@ import { Button } from "@/shared/components/ui/button"
 import { 
   Tag,
   ChevronRight,
+  Eye,
 } from "lucide-react"
 import { CategoryListItem } from "../api/superadminApi"
 import { useState, ReactElement } from "react"
@@ -69,7 +70,17 @@ export function SuperadminCategoriesList({
           key={category.id} 
           className="border-slate-100 dark:border-slate-800/60 hover:bg-slate-50/50 dark:hover:bg-slate-900/50 transition-colors"
         >
-          <TableCell className="py-4 pl-6" style={{ paddingLeft: `${24 + level * 24}px` }}>
+          <TableCell className="py-4 text-center">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => onEdit?.(category)}
+              className="h-8 w-8 rounded-lg bg-sky-50 dark:bg-sky-500/10 text-sky-600 hover:text-sky-700 hover:bg-sky-100 dark:hover:bg-sky-500/20 transition-all mx-auto"
+            >
+              <Eye className="h-4 w-4" />
+            </Button>
+          </TableCell>
+          <TableCell className="py-4" style={{ paddingLeft: `${24 + level * 24}px` }}>
             <div className="flex items-center space-x-3">
               {hasChildren && (
                 <Button
@@ -87,7 +98,7 @@ export function SuperadminCategoriesList({
               <div className="h-10 w-10 rounded-lg bg-sky-50 dark:bg-sky-500/10 border border-sky-100 dark:border-sky-900/30 flex items-center justify-center shrink-0">
                 <Tag className="h-5 w-5 text-sky-600 dark:text-sky-400" />
               </div>
-              <div className="flex flex-col min-w-0">
+              <div className="flex flex-col min-w-0 text-left">
                 <span className="text-xs font-bold text-slate-900 dark:text-white truncate">
                   {category.name}
                 </span>
@@ -97,7 +108,7 @@ export function SuperadminCategoriesList({
               </div>
             </div>
           </TableCell>
-          <TableCell>
+          <TableCell className="text-center">
             {category.parentCategory ? (
               <span className="text-xs font-bold text-slate-700 dark:text-slate-300 truncate">
                 {category.parentCategory.name}
@@ -105,23 +116,23 @@ export function SuperadminCategoriesList({
             ) : (
               <Badge 
                 variant="outline" 
-                className="text-sky-600 border-sky-100 bg-sky-50 dark:bg-sky-500/10 dark:border-sky-900/30 uppercase text-[9px] font-bold tracking-[0.2em] px-2 py-1"
+                className="text-sky-600 border-sky-100 bg-sky-50 dark:bg-sky-500/10 dark:border-sky-900/30 uppercase text-[9px] font-bold tracking-[0.2em] px-2 py-1 mx-auto block w-fit"
               >
                 Root
               </Badge>
             )}
           </TableCell>
-          <TableCell>
+          <TableCell className="text-center">
             <span className="text-xs font-bold text-slate-700 dark:text-slate-300">
               {productCount}
             </span>
           </TableCell>
-          <TableCell>
+          <TableCell className="text-center">
             <span className="text-xs font-bold text-slate-700 dark:text-slate-300">
               {childCount}
             </span>
           </TableCell>
-          <TableCell>
+          <TableCell className="text-center">
             <span className="text-xs font-bold text-slate-700 dark:text-slate-300">
               {new Date(category.createdAt).toLocaleDateString("id-ID", {
                 year: "numeric",
@@ -130,8 +141,8 @@ export function SuperadminCategoriesList({
               })}
             </span>
           </TableCell>
-          <TableCell className="text-right pr-6">
-            <div className="flex items-center justify-end gap-2">
+          <TableCell className="text-center pr-6">
+            <div className="flex items-center justify-center gap-2">
               <Button 
                 variant="ghost" 
                 onClick={() => onEdit?.(category)}
@@ -170,18 +181,19 @@ export function SuperadminCategoriesList({
       <Table>
         <TableHeader className="bg-slate-50/50 dark:bg-slate-900/50 border-b border-slate-200 dark:border-slate-800">
           <TableRow className="hover:bg-transparent border-none">
-            <TableHead className="w-[300px] text-[10px] font-bold uppercase tracking-widest text-slate-500 py-4 pl-6">Category</TableHead>
-            <TableHead className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Parent</TableHead>
-            <TableHead className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Products</TableHead>
-            <TableHead className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Subcategories</TableHead>
-            <TableHead className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Created</TableHead>
-            <TableHead className="text-right text-[10px] font-bold uppercase tracking-widest text-slate-500 pr-6">Actions</TableHead>
+            <TableHead className="w-[80px] text-center text-[10px] font-bold uppercase tracking-widest text-slate-500 py-4">View</TableHead>
+            <TableHead className="w-[300px] text-center text-[10px] font-bold uppercase tracking-widest text-slate-500 py-4">Category</TableHead>
+            <TableHead className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-500">Parent</TableHead>
+            <TableHead className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-500">Products</TableHead>
+            <TableHead className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-500">Subcategories</TableHead>
+            <TableHead className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-500">Created</TableHead>
+            <TableHead className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-500 pr-6">Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {rootCategories.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={6} className="py-12 text-center">
+              <TableCell colSpan={7} className="py-12 text-center">
                 <div className="flex flex-col items-center justify-center space-y-3">
                   <div className="h-12 w-12 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
                     <Tag className="h-6 w-6 text-slate-400" />

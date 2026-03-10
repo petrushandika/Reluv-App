@@ -10,10 +10,8 @@ import {
   Download,
   Users,
   UserCheck,
-  UserX,
   Shield,
   CheckCircle2,
-  XCircle,
 } from "lucide-react"
 import { useEffect, useState } from "react"
 import { getUsers, updateUserStatus, UserListItem, UsersResponse } from "@/features/(admin)/superadmin/api/superadminApi"
@@ -65,7 +63,7 @@ export default function SuperadminUsersPage() {
 
   useEffect(() => {
     fetchUsers(currentPage, searchQuery)
-  }, [currentPage])
+  }, [currentPage, searchQuery])
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
@@ -166,7 +164,7 @@ export default function SuperadminUsersPage() {
           </Card>
         </div>
 
-        <div className="flex flex-col md:flex-row gap-4 items-center justify-between p-5 bg-slate-50/50 dark:bg-slate-900/50 rounded-2xl border border-slate-200 dark:border-slate-800">
+        <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
           <form onSubmit={handleSearch} className="relative w-full md:w-96">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
             <input 
@@ -174,13 +172,13 @@ export default function SuperadminUsersPage() {
               placeholder="Search users by name or email..." 
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-11 h-11 rounded-xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 transition-all text-sm font-medium"
+              className="w-full pl-11 h-11 rounded-xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 transition-all text-sm font-medium shadow-sm"
             />
           </form>
           <div className="flex items-center space-x-3 w-full md:w-auto">
             <Button 
               variant="outline" 
-              className="flex-1 md:flex-none h-11 px-5 rounded-xl border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 font-bold text-xs uppercase tracking-widest hover:bg-slate-50 dark:hover:bg-slate-900 transition-all border"
+              className="flex-1 md:flex-none h-11 px-5 rounded-xl border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 font-bold text-xs uppercase tracking-widest hover:bg-slate-50 dark:hover:bg-slate-900 transition-all border shadow-sm"
             >
               <Filter className="mr-2 h-4 w-4" />
               Filter
