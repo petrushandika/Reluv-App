@@ -11,6 +11,7 @@ import {
 import { Badge } from "@/shared/components/ui/badge"
 import { StoreListItem } from "../../api/superadminApi"
 import { Store, User, Package, ShoppingBag, Star, Calendar } from "lucide-react"
+import Image from "next/image"
 
 interface StoreViewModalProps {
   isOpen: boolean
@@ -37,9 +38,11 @@ export function StoreViewModal({ isOpen, onClose, store }: StoreViewModalProps) 
           <div className="flex items-start gap-4 p-4 bg-slate-50 dark:bg-slate-900/50 rounded-xl border border-slate-200 dark:border-slate-800">
             <div className="h-16 w-16 rounded-lg bg-sky-50 dark:bg-sky-500/10 border border-sky-100 dark:border-sky-900/30 flex items-center justify-center shrink-0">
               {store.profile?.avatar ? (
-                <img 
+                <Image 
                   src={store.profile.avatar} 
                   alt={store.name}
+                  width={64}
+                  height={64}
                   className="h-full w-full rounded-lg object-cover"
                 />
               ) : (

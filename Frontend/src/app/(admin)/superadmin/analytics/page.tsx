@@ -18,6 +18,7 @@ import { superadminSidebarItems } from "@/features/(admin)/superadmin/constants/
 import { useState, useEffect } from "react"
 import { getAnalytics, AnalyticsData } from "@/features/(admin)/superadmin/api/superadminApi"
 import { Skeleton } from "@/shared/components/ui/skeleton"
+import { exportToCsv } from "@/shared/utils/exportToCsv"
 
 export default function SuperadminAnalyticsPage() {
   const [timeRange, setTimeRange] = useState<"7d" | "30d" | "90d" | "1y">("30d")
@@ -70,6 +71,11 @@ export default function SuperadminAnalyticsPage() {
           <Button 
             variant="outline" 
             className="rounded-xl border-slate-200 dark:border-slate-800 font-bold text-xs uppercase tracking-widest h-10 px-4 hover:bg-slate-50 dark:hover:bg-slate-900 transition-all border"
+            onClick={() => {
+              if (analytics) {
+                exportToCsv([analytics], "reluv-analytics-report")
+              }
+            }}
           >
             <Download className="mr-2 h-4 w-4" />
             Export Report
@@ -247,32 +253,30 @@ export default function SuperadminAnalyticsPage() {
             <CardContent className="p-0 flex flex-col h-[450px]">
               <div className="px-6 py-6 flex-1 overflow-y-auto scrollbar-hide">
                 <div className="space-y-4">
-                  {[
-                    { name: "Fashion", revenue: "Rp. 850M", orders: 5420, color: "bg-sky-500" },
-                    { name: "Accessories", revenue: "Rp. 420M", orders: 2840, color: "bg-emerald-500" },
-                    { name: "Bags", revenue: "Rp. 380M", orders: 1920, color: "bg-violet-500" },
-                    { name: "Shoes", revenue: "Rp. 320M", orders: 1680, color: "bg-amber-500" },
-                    { name: "Jewelry", revenue: "Rp. 210M", orders: 980, color: "bg-rose-500" },
-                  ].map((category, index) => (
-                    <div key={index} className="flex items-center space-x-4">
-                      <div className={`h-10 w-10 ${category.color} rounded-lg flex items-center justify-center shrink-0`}>
-                        <span className="text-white font-bold text-xs">{index + 1}</span>
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-xs font-bold text-slate-900 dark:text-white truncate">
-                          {category.name}
-                        </p>
-                        <div className="flex items-center space-x-3 mt-1">
-                          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
-                            {category.revenue}
-                          </span>
-                          <span className="text-[10px] font-bold text-slate-400">
-                            {category.orders} orders
-                          </span>
+                  {(analytics?.topCategories || []).length === 0 ? (
+                    <p className="text-center text-xs text-slate-400 py-4">No data available</p>
+                  ) : (
+                    analytics?.topCategories.map((category, index) => (
+                      <div key={index} className="flex items-center space-x-4">
+                        <div className={`h-10 w-10 bg-sky-500 rounded-lg flex items-center justify-center shrink-0`}>
+                          <span className="text-white font-bold text-xs">{index + 1}</span>
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-xs font-bold text-slate-900 dark:text-white truncate">
+                            {category.name}
+                          </p>
+                          <div className="flex items-center space-x-3 mt-1">
+                            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                              Rp. {category.revenue.toLocaleString("id-ID")}
+                            </span>
+                            <span className="text-[10px] font-bold text-slate-400">
+                              {category.orders} orders
+                            </span>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    ))
+                  )}
                 </div>
               </div>
             </CardContent>
@@ -288,9 +292,11 @@ export default function SuperadminAnalyticsPage() {
               </div>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">3.24%</div>
+              <div className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">
+                {analytics?.conversionRate || 0}%
+              </div>
               <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">
-                +0.12% from last month
+                Platform average
               </p>
             </CardContent>
           </Card>
@@ -303,9 +309,11 @@ export default function SuperadminAnalyticsPage() {
               </div>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">Rp. 151K</div>
+              <div className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">
+                Rp. {Math.round(analytics?.avgOrderValue || 0).toLocaleString("id-ID")}
+              </div>
               <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">
-                +Rp. 8.2K from last month
+                Per transaction
               </p>
             </CardContent>
           </Card>
@@ -318,9 +326,11 @@ export default function SuperadminAnalyticsPage() {
               </div>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">68.5%</div>
+              <div className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">
+                {analytics?.customerRetention || 0}%
+              </div>
               <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">
-                +2.1% from last month
+                Returning customers
               </p>
             </CardContent>
           </Card>

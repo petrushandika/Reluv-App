@@ -33,6 +33,7 @@ import { GeocodeModule } from './geocode/geocode.module';
 import { DiscountsModule } from './discounts/discounts.module';
 import { PromotionsModule } from './promotions/promotions.module';
 import { BadgesModule } from './badges/badges.module';
+import { AdminModule } from './admin/admin.module';
 
 @Module({
   imports: [
@@ -63,6 +64,7 @@ import { BadgesModule } from './badges/badges.module';
     DiscountsModule,
     PromotionsModule,
     BadgesModule,
+    AdminModule,
   ],
   controllers: [AppController],
 })
@@ -89,6 +91,7 @@ export class AppModule implements NestModule {
         { path: 'products/:slug', method: RequestMethod.GET },
         { path: 'categories', method: RequestMethod.GET },
         { path: 'categories/:id', method: RequestMethod.GET },
+        { path: 'categories/slug/:slug', method: RequestMethod.GET },
         { path: 'products/:productId/reviews', method: RequestMethod.GET },
         { path: 'shipping-rates/check-by-area', method: RequestMethod.POST },
         { path: 'shipping-rates/check-by-coords', method: RequestMethod.POST },

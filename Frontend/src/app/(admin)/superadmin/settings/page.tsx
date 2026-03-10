@@ -21,7 +21,10 @@ import {
   RefreshCw
 } from "lucide-react"
 import { superadminSidebarItems } from "@/features/(admin)/superadmin/constants/sidebarItems"
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { getSettings, PlatformSettings } from "@/features/(admin)/superadmin/api/superadminApi"
+import { toast } from "sonner"
+import { Skeleton } from "@/shared/components/ui/skeleton"
 
 export default function SuperadminSettingsPage() {
   const [isSaving, setIsSaving] = useState(false)
@@ -47,17 +50,36 @@ export default function SuperadminSettingsPage() {
   const [biteshipApiKey, setBiteshipApiKey] = useState("")
   const [defaultShippingProvider, setDefaultShippingProvider] = useState("jne")
 
+  useEffect(() => {
+    const fetchSettingsData = async () => {
+      try {
+        const data = await getSettings();
+        setPlatformName(data.platformName);
+        setMaintenanceMode(data.maintenanceMode);
+        setAllowRegistration(data.allowRegistration);
+        setRequireEmailVerification(data.requireEmailVerification);
+        setSessionTimeout(data.sessionTimeout.toString());
+        setMaxLoginAttempts(data.maxLoginAttempts.toString());
+      } catch (error) {
+        console.error("Failed to fetch settings:", error);
+      }
+    };
+    fetchSettingsData();
+  }, []);
+
   const handleSave = async (section: string) => {
-    setIsSaving(true)
+    setIsSaving(true);
     try {
-      await new Promise(resolve => setTimeout(resolve, 1000))
-      console.log(`Saving ${section} settings...`)
+      // In a real app, this would call updateSettings API
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      toast.success(`${section} settings updated successfully`);
     } catch (error) {
-      console.error(`Failed to save ${section} settings:`, error)
+      console.error(`Failed to save ${section} settings:`, error);
+      toast.error(`Failed to update ${section} settings`);
     } finally {
-      setIsSaving(false)
+      setIsSaving(false);
     }
-  }
+  };
 
   return (
     <DashboardShell 

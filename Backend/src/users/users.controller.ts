@@ -9,10 +9,14 @@ import {
   UploadedFiles,
   HttpCode,
   HttpStatus,
+  Query,
+  Param,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { UsersService } from './users.service';
 import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
+import { AdminGuard } from '../common/guards/admin.guard';
 import { GetUser } from '../common/decorators/get-user.decorator';
 import { User } from '@prisma/client';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -74,5 +78,23 @@ export class UsersController {
       updateUserProfileDto,
       files,
     );
+  }
+
+  // Admin Endpoints
+  @UseGuards(AdminGuard)
+  @Get('admin')
+  @HttpCode(HttpStatus.OK)
+  findAllAdmin(@Query() query: any) {
+    return this.usersService.findAllAdmin(query);
+  }
+
+  @UseGuards(AdminGuard)
+  @Patch('admin/:userId')
+  @HttpCode(HttpStatus.OK)
+  updateStatusAdmin(
+    @Param('userId', ParseIntPipe) userId: number,
+    @Body() data: any,
+  ) {
+    return this.usersService.updateStatusAdmin(userId, data);
   }
 }

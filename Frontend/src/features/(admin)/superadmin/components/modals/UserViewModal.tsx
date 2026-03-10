@@ -10,7 +10,8 @@ import {
 } from "@/shared/components/ui/dialog"
 import { Badge } from "@/shared/components/ui/badge"
 import { UserListItem } from "../../api/superadminApi"
-import { User, Mail, Phone, Store, Shield, Calendar } from "lucide-react"
+import { User, Mail, Phone, Store, Calendar } from "lucide-react"
+import Image from "next/image"
 
 interface UserViewModalProps {
   isOpen: boolean
@@ -82,9 +83,11 @@ export function UserViewModal({ isOpen, onClose, user }: UserViewModalProps) {
           <div className="flex items-start gap-4 p-4 bg-slate-50 dark:bg-slate-900/50 rounded-xl border border-slate-200 dark:border-slate-800">
             <div className="h-16 w-16 rounded-lg bg-sky-50 dark:bg-sky-500/10 border border-sky-100 dark:border-sky-900/30 flex items-center justify-center shrink-0">
               {user.profile?.avatar ? (
-                <img 
+                <Image 
                   src={user.profile.avatar} 
                   alt={user.email}
+                  width={64}
+                  height={64}
                   className="h-full w-full rounded-lg object-cover"
                 />
               ) : (

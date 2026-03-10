@@ -15,15 +15,15 @@ import { Button } from "@/shared/components/ui/button"
 import { SuperadminOrdersList } from "@/features/(admin)/superadmin/components/SuperadminOrdersList"
 import { superadminSidebarItems } from "@/features/(admin)/superadmin/constants/sidebarItems"
 import { useState, useEffect } from "react"
-import { getOrders, OrdersResponse } from "@/features/(admin)/superadmin/api/superadminApi"
+import { getOrders, OrdersResponse, OrderListItem } from "@/features/(admin)/superadmin/api/superadminApi"
 import { Skeleton } from "@/shared/components/ui/skeleton"
+import { exportToCsv } from "@/shared/utils/exportToCsv"
 
 export default function SuperadminOrdersPage() {
+  const [orders, setOrders] = useState<OrderListItem[]>([])
   const [searchQuery, setSearchQuery] = useState("")
   const [isLoading, setIsLoading] = useState(true)
   const [currentPage, setCurrentPage] = useState(1)
-  const [totalPages, setTotalPages] = useState(1)
-  const [total, setTotal] = useState(0)
   const [stats, setStats] = useState({
     totalGMV: 0,
     totalOrders: 0,
@@ -39,8 +39,7 @@ export default function SuperadminOrdersPage() {
         limit: 10,
         search: search || undefined,
       })
-      setTotalPages(response.meta.totalPages)
-      setTotal(response.meta.total)
+      setOrders(response.data)
       
       // Calculate stats from orders
       const totalGMV = response.data.reduce((sum, order) => sum + order.totalAmount, 0)
@@ -61,12 +60,24 @@ export default function SuperadminOrdersPage() {
 
   useEffect(() => {
     fetchOrders(currentPage, searchQuery)
-  }, [currentPage])
+  }, [currentPage, searchQuery])
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
     setCurrentPage(1)
     fetchOrders(1, searchQuery)
+  }
+  const handleExport = () => {
+    const dataToExport = orders.map(order => ({
+      ID: order.id,
+      OrderNumber: order.orderNumber,
+      Buyer: `${order.buyer?.firstName || ""} ${order.buyer?.lastName || ""}`,
+      Email: order.buyer?.email || "",
+      Amount: order.totalAmount,
+      Status: order.status,
+      CreatedAt: order.createdAt,
+    }))
+    exportToCsv(dataToExport, "reluv-orders-export")
   }
 
   return (
@@ -82,6 +93,7 @@ export default function SuperadminOrdersPage() {
           <Button 
             variant="outline" 
             className="rounded-xl border-slate-200 dark:border-slate-800 font-bold text-xs uppercase tracking-widest h-10 px-4 hover:bg-slate-50 dark:hover:bg-slate-900 transition-all border"
+            onClick={handleExport}
           >
             <Download className="mr-2 h-4 w-4" />
             Export Data
@@ -163,7 +175,7 @@ export default function SuperadminOrdersPage() {
           </div>
         )}
 
-        <div className="flex flex-col md:flex-row gap-4 items-center justify-between p-5 bg-slate-50/50 dark:bg-slate-900/50 rounded-2xl border border-slate-200 dark:border-slate-800">
+        <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
           <form onSubmit={handleSearch} className="relative w-full md:w-96">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
             <input 
@@ -174,18 +186,16 @@ export default function SuperadminOrdersPage() {
               className="w-full pl-11 h-11 rounded-xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 transition-all text-sm font-medium"
             />
           </form>
-          <div className="flex items-center space-x-3 w-full md:w-auto">
-            <Button 
-              variant="outline" 
-              className="flex-1 md:flex-none h-11 px-5 rounded-xl border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 font-bold text-xs uppercase tracking-widest hover:bg-slate-50 dark:hover:bg-slate-900 transition-all border"
-            >
-              <Filter className="mr-2 h-4 w-4" />
-              Filter
-            </Button>
-          </div>
+          <Button 
+            variant="outline" 
+            className="w-full md:w-auto h-11 px-5 rounded-xl border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 font-bold text-xs uppercase tracking-widest hover:bg-slate-50 dark:hover:bg-slate-900 transition-all border shadow-sm"
+          >
+            <Filter className="mr-2 h-4 w-4" />
+            Filter
+          </Button>
         </div>
 
-        <SuperadminOrdersList />
+        <SuperadminOrdersList orders={orders} />
       </div>
     </DashboardShell>
   )

@@ -16,6 +16,7 @@ import { useEffect, useState } from "react"
 import { getStores, updateStoreStatus, StoreListItem, StoresResponse } from "@/features/(admin)/superadmin/api/superadminApi"
 import { Skeleton } from "@/shared/components/ui/skeleton"
 import { superadminSidebarItems } from "@/features/(admin)/superadmin/constants/sidebarItems"
+import { exportToCsv } from "@/shared/utils/exportToCsv"
 
 export default function SuperadminStoresPage() {
   const [stores, setStores] = useState<StoreListItem[]>([])
@@ -82,6 +83,23 @@ export default function SuperadminStoresPage() {
     }
   }
 
+  const handleExport = () => {
+    const dataToExport = stores.map(store => ({
+      ID: store.id,
+      Name: store.name,
+      Slug: store.slug,
+      Owner: `${store.user?.firstName || ""} ${store.user?.lastName || ""}`,
+      Email: store.user?.email || "",
+      Status: store.isActive ? "Active" : "Inactive",
+      Verified: store.isVerified ? "Yes" : "No",
+      Products: store.totalProducts,
+      Sales: store.totalSales,
+      Rating: store.rating || 0,
+      CreatedAt: store.createdAt,
+    }))
+    exportToCsv(dataToExport, "reluv-stores-export")
+  }
+
   return (
     <DashboardShell 
       title="Stores" 
@@ -95,6 +113,7 @@ export default function SuperadminStoresPage() {
           <Button 
             variant="outline" 
             className="rounded-xl border-slate-200 dark:border-slate-800 font-bold text-xs uppercase tracking-widest h-10 px-4 hover:bg-slate-50 dark:hover:bg-slate-900 transition-all border"
+            onClick={handleExport}
           >
             <Download className="mr-2 h-4 w-4" />
             Export Data
@@ -174,15 +193,13 @@ export default function SuperadminStoresPage() {
               className="w-full pl-11 h-11 rounded-xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 transition-all text-sm font-medium shadow-sm"
             />
           </form>
-          <div className="flex items-center space-x-3 w-full md:w-auto">
-            <Button 
-              variant="outline" 
-              className="flex-1 md:flex-none h-11 px-5 rounded-xl border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 font-bold text-xs uppercase tracking-widest hover:bg-slate-50 dark:hover:bg-slate-900 transition-all border shadow-sm"
-            >
-              <Filter className="mr-2 h-4 w-4" />
-              Filter
-            </Button>
-          </div>
+          <Button 
+            variant="outline" 
+            className="w-full md:w-auto h-11 px-5 rounded-xl border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 font-bold text-xs uppercase tracking-widest hover:bg-slate-50 dark:hover:bg-slate-900 transition-all border shadow-sm"
+          >
+            <Filter className="mr-2 h-4 w-4" />
+            Filter
+          </Button>
         </div>
 
         {isLoading ? (

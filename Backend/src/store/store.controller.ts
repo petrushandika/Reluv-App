@@ -211,4 +211,22 @@ export class StoreController {
   findBySlug(@Param('slug') slug: string) {
     return this.storeService.findBySlug(slug);
   }
+
+  // Admin Endpoints
+  @UseGuards(JwtAuthGuard, AdminGuard)
+  @Get('admin')
+  @HttpCode(HttpStatus.OK)
+  findAllAdmin(@Query() query: any) {
+    return this.storeService.findAllAdmin(query);
+  }
+
+  @UseGuards(JwtAuthGuard, AdminGuard)
+  @Patch('admin/:storeId')
+  @HttpCode(HttpStatus.OK)
+  updateStatusAdmin(
+    @Param('storeId', ParseIntPipe) storeId: number,
+    @Body() data: any,
+  ) {
+    return this.storeService.updateStatusAdmin(storeId, data);
+  }
 }

@@ -17,6 +17,7 @@ import { useEffect, useState } from "react"
 import { getUsers, updateUserStatus, UserListItem, UsersResponse } from "@/features/(admin)/superadmin/api/superadminApi"
 import { Skeleton } from "@/shared/components/ui/skeleton"
 import { superadminSidebarItems } from "@/features/(admin)/superadmin/constants/sidebarItems"
+import { exportToCsv } from "@/shared/utils/exportToCsv"
 
 export default function SuperadminUsersPage() {
   const [users, setUsers] = useState<UserListItem[]>([])
@@ -83,6 +84,20 @@ export default function SuperadminUsersPage() {
     }
   }
 
+  const handleExport = () => {
+    const dataToExport = users.map(user => ({
+      ID: user.id,
+      FirstName: user.firstName,
+      LastName: user.lastName,
+      Email: user.email,
+      Role: user.role,
+      Status: user.isActive ? "Active" : "Inactive",
+      Verified: user.isVerified ? "Yes" : "No",
+      CreatedAt: user.createdAt,
+    }))
+    exportToCsv(dataToExport, "reluv-users-export")
+  }
+
   return (
     <DashboardShell 
       title="Users" 
@@ -96,6 +111,7 @@ export default function SuperadminUsersPage() {
           <Button 
             variant="outline" 
             className="rounded-xl border-slate-200 dark:border-slate-800 font-bold text-xs uppercase tracking-widest h-10 px-4 hover:bg-slate-50 dark:hover:bg-slate-900 transition-all border"
+            onClick={handleExport}
           >
             <Download className="mr-2 h-4 w-4" />
             Export Data
@@ -175,15 +191,13 @@ export default function SuperadminUsersPage() {
               className="w-full pl-11 h-11 rounded-xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 transition-all text-sm font-medium shadow-sm"
             />
           </form>
-          <div className="flex items-center space-x-3 w-full md:w-auto">
-            <Button 
-              variant="outline" 
-              className="flex-1 md:flex-none h-11 px-5 rounded-xl border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 font-bold text-xs uppercase tracking-widest hover:bg-slate-50 dark:hover:bg-slate-900 transition-all border shadow-sm"
-            >
-              <Filter className="mr-2 h-4 w-4" />
-              Filter
-            </Button>
-          </div>
+          <Button 
+            variant="outline" 
+            className="w-full md:w-auto h-11 px-5 rounded-xl border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 font-bold text-xs uppercase tracking-widest hover:bg-slate-50 dark:hover:bg-slate-900 transition-all border shadow-sm"
+          >
+            <Filter className="mr-2 h-4 w-4" />
+            Filter
+          </Button>
         </div>
 
         {isLoading ? (

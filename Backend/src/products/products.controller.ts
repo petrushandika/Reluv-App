@@ -18,6 +18,7 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { QueryProductDto } from './dto/query-product.dto';
 import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
+import { AdminGuard } from '../common/guards/admin.guard';
 import { GetUser } from '../common/decorators/get-user.decorator';
 import { User } from '@prisma/client';
 import { CreateVariantDto } from './dto/create-variant.dto';
@@ -117,5 +118,23 @@ export class ProductsController {
   findOneBySlug(@Param('slug') slug: string) {
     const decodedSlug = decodeURIComponent(slug);
     return this.productsService.findOneBySlug(decodedSlug);
+  }
+
+  // Admin Endpoints
+  @UseGuards(JwtAuthGuard, AdminGuard)
+  @Get('admin')
+  @HttpCode(HttpStatus.OK)
+  findAllAdmin(@Query() query: any) {
+    return this.productsService.findAllAdmin(query);
+  }
+
+  @UseGuards(JwtAuthGuard, AdminGuard)
+  @Patch('admin/:productId/status')
+  @HttpCode(HttpStatus.OK)
+  updateStatusAdmin(
+    @Param('productId', ParseIntPipe) productId: number,
+    @Body() data: any,
+  ) {
+    return this.productsService.updateStatusAdmin(productId, data);
   }
 }

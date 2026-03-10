@@ -14,6 +14,7 @@ import {
   Store,
   Eye,
 } from "lucide-react"
+import Image from "next/image"
 import { StoreListItem } from "../api/superadminApi"
 import { useState } from "react"
 import { StoreViewModal } from "./modals/StoreViewModal"
@@ -95,12 +96,12 @@ export function SuperadminStoresList({ stores, onStatusChange }: SuperadminStore
       <Table>
         <TableHeader className="bg-slate-50/50 dark:bg-slate-900/50 border-b border-slate-200 dark:border-slate-800">
           <TableRow className="hover:bg-transparent border-none">
-            <TableHead className="w-[80px] text-center text-[10px] font-bold uppercase tracking-widest text-slate-500 py-4">View</TableHead>
             <TableHead className="w-[200px] text-center text-[10px] font-bold uppercase tracking-widest text-slate-500 py-4">Store</TableHead>
             <TableHead className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-500">Owner</TableHead>
             <TableHead className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-500">Products</TableHead>
             <TableHead className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-500">Sales</TableHead>
             <TableHead className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-500">Rating</TableHead>
+            <TableHead className="w-[80px] text-center text-[10px] font-bold uppercase tracking-widest text-slate-500 py-4">View</TableHead>
             <TableHead className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-500">Status</TableHead>
             <TableHead className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-500 pr-6">Actions</TableHead>
           </TableRow>
@@ -108,7 +109,7 @@ export function SuperadminStoresList({ stores, onStatusChange }: SuperadminStore
         <TableBody>
           {stores.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={8} className="py-12 text-center text-center">
+              <TableCell colSpan={8} className="py-12 text-center">
                 <div className="flex flex-col items-center justify-center space-y-3">
                   <div className="h-12 w-12 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
                     <Store className="h-6 w-6 text-slate-400" />
@@ -123,23 +124,15 @@ export function SuperadminStoresList({ stores, onStatusChange }: SuperadminStore
                 key={store.id} 
                 className="border-slate-100 dark:border-slate-800/60 hover:bg-slate-50/50 dark:hover:bg-slate-900/50 transition-colors"
               >
-                <TableCell className="py-4 text-center">
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => handleView(store)}
-                    className="h-8 w-8 rounded-lg bg-sky-50 dark:bg-sky-500/10 text-sky-600 hover:text-sky-700 hover:bg-sky-100 dark:hover:bg-sky-500/20 transition-all mx-auto"
-                  >
-                    <Eye className="h-4 w-4" />
-                  </Button>
-                </TableCell>
                 <TableCell className="py-4">
                   <div className="flex items-center justify-center space-x-3">
                     <div className="h-10 w-10 rounded-lg bg-sky-50 dark:bg-sky-500/10 border border-sky-100 dark:border-sky-900/30 flex items-center justify-center shrink-0">
                       {store.profile?.avatar ? (
-                        <img 
+                        <Image 
                           src={store.profile.avatar} 
                           alt={store.name}
+                          width={40}
+                          height={40}
                           className="h-full w-full rounded-lg object-cover"
                         />
                       ) : (
@@ -184,6 +177,16 @@ export function SuperadminStoresList({ stores, onStatusChange }: SuperadminStore
                   <span className="text-xs font-bold text-slate-700 dark:text-slate-300">
                     {store.rating ? store.rating.toFixed(1) : "N/A"}
                   </span>
+                </TableCell>
+                <TableCell className="py-4 text-center">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => handleView(store)}
+                    className="h-8 w-8 rounded-lg bg-sky-50 dark:bg-sky-500/10 text-sky-600 hover:text-sky-700 hover:bg-sky-100 dark:hover:bg-sky-500/20 transition-all mx-auto"
+                  >
+                    <Eye className="h-4 w-4" />
+                  </Button>
                 </TableCell>
                 <TableCell className="text-center">
                   {getStatusBadge(store.isActive, store.isVerified)}

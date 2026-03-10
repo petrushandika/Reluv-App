@@ -43,7 +43,7 @@ export interface QueryStoresParams {
 export const getStores = async (
   params?: QueryStoresParams
 ): Promise<StoresResponse> => {
-  const response = await api.get<StoresResponse>("/store", { params });
+  const response = await api.get<StoresResponse>("/store/admin", { params });
   return response.data;
 };
 
@@ -260,6 +260,12 @@ export interface OrderListItem {
     firstName?: string;
     lastName?: string;
   };
+  buyer?: {
+    id: number;
+    email: string;
+    firstName?: string;
+    lastName?: string;
+  };
   store?: {
     id: number;
     name: string;
@@ -349,6 +355,21 @@ export const getAnalytics = async (
   params?: QueryAnalyticsParams
 ): Promise<AnalyticsData> => {
   const response = await api.get<AnalyticsData>("/admin/analytics", { params });
+  return response.data;
+};
+
+// Settings
+export interface PlatformSettings {
+  platformName: string;
+  maintenanceMode: boolean;
+  allowRegistration: boolean;
+  requireEmailVerification: boolean;
+  sessionTimeout: number;
+  maxLoginAttempts: number;
+}
+
+export const getSettings = async (): Promise<PlatformSettings> => {
+  const response = await api.get<PlatformSettings>("/admin/settings");
   return response.data;
 };
 

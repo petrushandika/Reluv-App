@@ -145,6 +145,73 @@ export class StoreService {
     };
   }
 
+  async findAllAdmin(query: any) {
+    const { page = 1, limit = 10, search, isActive, isVerified } = query;
+    const skip = (Number(page) - 1) * Number(limit);
+
+    const where: Prisma.StoreWhereInput = {
+      ...(search && {
+        OR: [
+          { name: { contains: search, mode: 'insensitive' } },
+          { slug: { contains: search, mode: 'insensitive' } },
+        ],
+      }),
+      ...(isActive !== undefined && { isActive: isActive === 'true' }),
+      ...(isVerified !== undefined && { isVerified: isVerified === 'true' }),
+    };
+
+    const [stores, total] = await this.prisma.$transaction([
+      this.prisma.store.findMany({
+        where,
+        skip,
+        take: Number(limit),
+        select: {
+          id: true,
+          name: true,
+          slug: true,
+          isActive: true,
+          isVerified: true,
+          totalProducts: true,
+          totalSales: true,
+          rating: true,
+          createdAt: true,
+          profile: {
+            select: { avatar: true, banner: true },
+          },
+          user: {
+            select: {
+              id: true,
+              email: true,
+              firstName: true,
+              lastName: true,
+            },
+          },
+        },
+        orderBy: {
+          createdAt: 'desc',
+        },
+      }),
+      this.prisma.store.count({ where }),
+    ]);
+
+    return {
+      data: stores,
+      meta: {
+        total,
+        page: Number(page),
+        limit: Number(limit),
+        totalPages: Math.ceil(total / Number(limit)),
+      },
+    };
+  }
+
+  async updateStatusAdmin(storeId: number, data: any) {
+    return this.prisma.store.update({
+      where: { id: storeId },
+      data,
+    });
+  }
+
   async findBySlug(slug: string) {
     const store = await this.prisma.store.findUnique({
       where: { slug },

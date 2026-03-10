@@ -8,12 +8,12 @@ import {
   Search, 
   Filter, 
   ShieldCheck, 
-  ShieldAlert,
   Package,
   CheckCircle2,
   XCircle,
   Store,
-  AlertCircle
+  AlertCircle,
+  Download
 } from "lucide-react"
 import { superadminSidebarItems } from "@/features/(admin)/superadmin/constants/sidebarItems"
 import { useState, useEffect } from "react"
@@ -21,6 +21,7 @@ import { ProductStatusModal } from "@/features/(admin)/superadmin/components/mod
 import { toast } from "sonner"
 import { getProducts, updateProductStatus, ProductListItem, ProductsResponse } from "@/features/(admin)/superadmin/api/superadminApi"
 import { Skeleton } from "@/shared/components/ui/skeleton"
+import { exportToCsv } from "@/shared/utils/exportToCsv"
 
 export default function SuperadminProductsPage() {
   const [products, setProducts] = useState<ProductListItem[]>([])
@@ -30,8 +31,6 @@ export default function SuperadminProductsPage() {
   const [selectedProduct, setSelectedProduct] = useState<ProductListItem | null>(null)
   const [actionType, setActionType] = useState<"approve" | "reject">("approve")
   const [currentPage, setCurrentPage] = useState(1)
-  const [totalPages, setTotalPages] = useState(1)
-  const [total, setTotal] = useState(0)
   const [stats, setStats] = useState({
     total: 0,
     pending: 0,
@@ -49,8 +48,6 @@ export default function SuperadminProductsPage() {
         status: "PENDING", // Show pending products for review
       })
       setProducts(response.data)
-      setTotalPages(response.meta.totalPages)
-      setTotal(response.meta.total)
       
       // Fetch all products for stats
       const allProducts = await getProducts({ limit: 1000 })
@@ -74,7 +71,7 @@ export default function SuperadminProductsPage() {
 
   useEffect(() => {
     fetchProducts(currentPage, searchQuery)
-  }, [currentPage])
+  }, [currentPage, searchQuery])
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
@@ -109,6 +106,20 @@ export default function SuperadminProductsPage() {
     }
   }
 
+  const handleExport = () => {
+    const dataToExport = products.map(product => ({
+      ID: product.id,
+      Name: product.name,
+      Slug: product.slug,
+      Price: product.price,
+      Status: product.status,
+      Category: product.category?.name || "N/A",
+      Store: product.store?.name || "N/A",
+      CreatedAt: product.createdAt,
+    }))
+    exportToCsv(dataToExport, "reluv-products-export")
+  }
+
   return (
     <DashboardShell 
       title="Products" 
@@ -119,6 +130,14 @@ export default function SuperadminProductsPage() {
       }
       actions={
         <div className="flex items-center gap-2 sm:gap-3 flex-wrap sm:flex-nowrap">
+          <Button 
+            variant="outline" 
+            className="rounded-xl border-slate-200 dark:border-slate-800 font-bold text-xs uppercase tracking-widest h-10 px-4 hover:bg-slate-50 dark:hover:bg-slate-900 transition-all border"
+            onClick={handleExport}
+          >
+            <Download className="mr-2 h-4 w-4" />
+            Export Data
+          </Button>
           <Button 
             variant="outline" 
             className="rounded-xl border-slate-200 dark:border-slate-800 font-bold text-xs uppercase tracking-widest h-10 px-4 hover:bg-slate-50 dark:hover:bg-slate-900 transition-all border"
@@ -190,7 +209,7 @@ export default function SuperadminProductsPage() {
           </Card>
         </div>
 
-        <div className="flex flex-col md:flex-row gap-4 items-center justify-between p-5 bg-slate-50/50 dark:bg-slate-900/50 rounded-2xl border border-slate-200 dark:border-slate-800">
+        <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
           <form onSubmit={handleSearch} className="relative w-full md:w-96">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
             <input 
@@ -201,15 +220,13 @@ export default function SuperadminProductsPage() {
               className="w-full pl-11 h-11 rounded-xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 transition-all text-sm font-medium"
             />
           </form>
-          <div className="flex items-center space-x-3 w-full md:w-auto">
-            <Button 
-              variant="outline" 
-              className="flex-1 md:flex-none h-11 px-5 rounded-xl border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 font-bold text-xs uppercase tracking-widest hover:bg-slate-50 dark:hover:bg-slate-900 transition-all border"
-            >
-              <Filter className="mr-2 h-4 w-4" />
-              Filter
-            </Button>
-          </div>
+          <Button 
+            variant="outline" 
+            className="w-full md:w-auto h-11 px-5 rounded-xl border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 font-bold text-xs uppercase tracking-widest hover:bg-slate-50 dark:hover:bg-slate-900 transition-all border shadow-sm"
+          >
+            <Filter className="mr-2 h-4 w-4" />
+            Filter
+          </Button>
         </div>
 
         {isLoading ? (
@@ -238,7 +255,7 @@ export default function SuperadminProductsPage() {
                 <div className="h-full w-full flex items-center justify-center text-slate-200 dark:text-slate-800">
                   <Package className="h-16 w-16 group-hover:scale-110 transition-transform duration-500" />
                 </div>
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="absolute inset-0 bg-linear-to-t from-slate-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
               </div>
               <CardContent className="p-5 space-y-4">
                 <div>

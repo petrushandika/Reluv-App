@@ -14,6 +14,7 @@ import {
   User,
   Eye,
 } from "lucide-react"
+import Image from "next/image"
 import { UserListItem } from "../api/superadminApi"
 import { useState } from "react"
 import { UserViewModal } from "./modals/UserViewModal"
@@ -128,11 +129,11 @@ export function SuperadminUsersList({ users, onStatusChange }: SuperadminUsersLi
       <Table>
         <TableHeader className="bg-slate-50/50 dark:bg-slate-900/50 border-b border-slate-200 dark:border-slate-800">
           <TableRow className="hover:bg-transparent border-none">
-            <TableHead className="w-[80px] text-center text-[10px] font-bold uppercase tracking-widest text-slate-500 py-4">View</TableHead>
             <TableHead className="w-[200px] text-center text-[10px] font-bold uppercase tracking-widest text-slate-500 py-4">User</TableHead>
             <TableHead className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-500">Contact</TableHead>
             <TableHead className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-500">Role</TableHead>
             <TableHead className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-500">Store</TableHead>
+            <TableHead className="w-[80px] text-center text-[10px] font-bold uppercase tracking-widest text-slate-500 py-4">View</TableHead>
             <TableHead className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-500">Status</TableHead>
             <TableHead className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-500">Joined</TableHead>
             <TableHead className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-500 pr-6">Actions</TableHead>
@@ -156,23 +157,15 @@ export function SuperadminUsersList({ users, onStatusChange }: SuperadminUsersLi
                 key={user.id} 
                 className="border-slate-100 dark:border-slate-800/60 hover:bg-slate-50/50 dark:hover:bg-slate-900/50 transition-colors"
               >
-                <TableCell className="py-4 text-center">
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => handleView(user)}
-                    className="h-8 w-8 rounded-lg bg-sky-50 dark:bg-sky-500/10 text-sky-600 hover:text-sky-700 hover:bg-sky-100 dark:hover:bg-sky-500/20 transition-all mx-auto"
-                  >
-                    <Eye className="h-4 w-4" />
-                  </Button>
-                </TableCell>
                 <TableCell className="py-4">
                   <div className="flex items-center justify-center space-x-3">
                     <div className="h-10 w-10 rounded-lg bg-sky-50 dark:bg-sky-500/10 border border-sky-100 dark:border-sky-900/30 flex items-center justify-center shrink-0">
                       {user.profile?.avatar ? (
-                        <img 
+                        <Image 
                           src={user.profile.avatar} 
                           alt={user.email}
+                          width={40}
+                          height={40}
                           className="h-full w-full rounded-lg object-cover"
                         />
                       ) : (
@@ -219,6 +212,16 @@ export function SuperadminUsersList({ users, onStatusChange }: SuperadminUsersLi
                   ) : (
                     <span className="text-xs font-bold text-slate-400">No store</span>
                   )}
+                </TableCell>
+                <TableCell className="py-4 text-center">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => handleView(user)}
+                    className="h-8 w-8 rounded-lg bg-sky-50 dark:bg-sky-500/10 text-sky-600 hover:text-sky-700 hover:bg-sky-100 dark:hover:bg-sky-500/20 transition-all mx-auto"
+                  >
+                    <Eye className="h-4 w-4" />
+                  </Button>
                 </TableCell>
                 <TableCell className="text-center">
                   {getStatusBadge(user.isActive, user.isVerified)}

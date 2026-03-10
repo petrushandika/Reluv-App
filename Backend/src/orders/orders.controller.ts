@@ -9,9 +9,12 @@ import {
   ValidationPipe,
   HttpCode,
   HttpStatus,
+  Query,
+  Patch,
 } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
+import { AdminGuard } from '../common/guards/admin.guard';
 import { GetUser } from '../common/decorators/get-user.decorator';
 import { User } from '@prisma/client';
 import { CreateOrderDto } from './dto/create-order.dto';
@@ -66,5 +69,23 @@ export class OrdersController {
     updateOrderDto: import('./dto/update-order.dto').UpdateOrderDto,
   ) {
     return this.ordersService.updateOrderStatus(id, user.id, updateOrderDto);
+  }
+
+  // Admin Endpoints
+  @UseGuards(AdminGuard)
+  @Get('admin')
+  @HttpCode(HttpStatus.OK)
+  findAllAdmin(@Query() query: any) {
+    return this.ordersService.findAllAdmin(query);
+  }
+
+  @UseGuards(AdminGuard)
+  @Patch('admin/:orderId')
+  @HttpCode(HttpStatus.OK)
+  updateStatusAdmin(
+    @Param('orderId', ParseIntPipe) orderId: number,
+    @Body() data: any,
+  ) {
+    return this.ordersService.updateStatusAdmin(orderId, data);
   }
 }

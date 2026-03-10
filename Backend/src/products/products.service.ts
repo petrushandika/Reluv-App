@@ -758,4 +758,71 @@ export class ProductsService {
       where: { id: variantId, productId: productId },
     });
   }
+
+  async findAllAdmin(query: any) {
+    const {
+      page = 1,
+      limit = 10,
+      search,
+      categoryId,
+      storeId,
+      isPublished,
+      isActive,
+    } = query;
+    const skip = (Number(page) - 1) * Number(limit);
+
+    const where: Prisma.ProductWhereInput = {
+      ...(search && {
+        OR: [
+          { name: { contains: search, mode: 'insensitive' } },
+          { slug: { contains: search, mode: 'insensitive' } },
+        ],
+      }),
+      ...(categoryId && { categoryId: Number(categoryId) }),
+      ...(storeId && { storeId: Number(storeId) }),
+      ...(isPublished !== undefined && { isPublished: isPublished === 'true' }),
+      ...(isActive !== undefined && { isActive: isActive === 'true' }),
+    };
+
+    const [products, total] = await this.prisma.$transaction([
+      this.prisma.product.findMany({
+        where,
+        skip,
+        take: Number(limit),
+        select: {
+          id: true,
+          name: true,
+          slug: true,
+          isPublished: true,
+          isActive: true,
+          createdAt: true,
+          category: { select: { name: true } },
+          store: { select: { name: true } },
+          variants: {
+            select: { price: true, stock: true },
+            orderBy: { price: 'asc' },
+          },
+        },
+        orderBy: { createdAt: 'desc' },
+      }),
+      this.prisma.product.count({ where }),
+    ]);
+
+    return {
+      data: products,
+      meta: {
+        total,
+        page: Number(page),
+        limit: Number(limit),
+        totalPages: Math.ceil(total / Number(limit)),
+      },
+    };
+  }
+
+  async updateStatusAdmin(productId: number, data: any) {
+    return this.prisma.product.update({
+      where: { id: productId },
+      data,
+    });
+  }
 }

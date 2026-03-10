@@ -17,41 +17,16 @@ import { cn } from "@/shared/lib/utils"
 import { useState } from "react"
 import { OrderViewModal } from "./modals/OrderViewModal"
 
-const orders = [
-  {
-    id: "ORD-001",
-    orderNumber: "ORD-20240118-001",
-    customer: "John Doe",
-    store: "Reluv Official",
-    totalAmount: 1250000,
-    status: "PAID",
-    createdAt: "2024-01-18T10:00:00Z",
-  },
-  {
-    id: "ORD-002",
-    orderNumber: "ORD-20240117-005",
-    customer: "Alice Smith",
-    store: "Vintage Hub",
-    totalAmount: 450000,
-    status: "SHIPPED",
-    createdAt: "2024-01-17T15:30:00Z",
-  },
-  {
-    id: "ORD-003",
-    orderNumber: "ORD-20240117-002",
-    customer: "Bob Knight",
-    store: "Reluv Official",
-    totalAmount: 2100000,
-    status: "DELIVERED",
-    createdAt: "2024-01-17T09:15:00Z",
-  },
-]
+interface SuperadminOrdersListProps {
+  orders: any[]
+  onStatusChange?: (orderId: number, status: string) => void
+}
 
-export function SuperadminOrdersList() {
-  const [selectedOrder, setSelectedOrder] = useState<typeof orders[0] | null>(null)
+export function SuperadminOrdersList({ orders, onStatusChange }: SuperadminOrdersListProps) {
+  const [selectedOrder, setSelectedOrder] = useState<any | null>(null)
   const [isViewModalOpen, setIsViewModalOpen] = useState(false)
 
-  const handleView = (order: typeof orders[0]) => {
+  const handleView = (order: any) => {
     setSelectedOrder(order)
     setIsViewModalOpen(true)
   }
@@ -63,6 +38,7 @@ export function SuperadminOrdersList() {
       case "SHIPPED": return "text-blue-600 border-blue-100 bg-blue-50 dark:bg-blue-500/10 dark:border-blue-900/30";
       case "DELIVERED": return "text-emerald-600 border-emerald-100 bg-emerald-50 dark:bg-emerald-500/10 dark:border-emerald-900/30";
       case "CANCELLED": return "text-rose-600 border-rose-100 bg-rose-50 dark:bg-rose-500/10 dark:border-rose-900/30";
+      case "COMPLETED": return "text-emerald-700 border-emerald-200 bg-emerald-100 dark:bg-emerald-500/20 dark:border-emerald-900/40";
       default: return "text-slate-500 border-slate-100 bg-slate-50 dark:bg-slate-800/50 dark:border-slate-700";
     }
   };
@@ -72,58 +48,65 @@ export function SuperadminOrdersList() {
       <Table>
         <TableHeader className="bg-slate-50/50 dark:bg-slate-900/50 border-b border-slate-200 dark:border-slate-800">
           <TableRow className="hover:bg-transparent border-none">
-            <TableHead className="w-[80px] text-center text-[10px] font-bold uppercase tracking-widest text-slate-500 py-4">View</TableHead>
             <TableHead className="w-[180px] text-center text-[10px] font-bold uppercase tracking-widest text-slate-500 py-4">Order ID</TableHead>
             <TableHead className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-500">Customer</TableHead>
-            <TableHead className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-500">Store</TableHead>
             <TableHead className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-500">Amount</TableHead>
+            <TableHead className="w-[80px] text-center text-[10px] font-bold uppercase tracking-widest text-slate-500 py-4">View</TableHead>
             <TableHead className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-500">Status</TableHead>
-            <TableHead className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-500 pr-6">Actions</TableHead>
+            <TableHead className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-500 pr-6">Date</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {orders.map((order) => (
-            <TableRow key={order.id} className="border-slate-100 dark:border-slate-800/60 hover:bg-slate-50/50 dark:hover:bg-slate-900/50 transition-colors">
-              <TableCell className="py-4 text-center">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => handleView(order)}
-                  className="h-8 w-8 rounded-lg bg-sky-50 dark:bg-sky-500/10 text-sky-600 hover:text-sky-700 hover:bg-sky-100 dark:hover:bg-sky-500/20 transition-all mx-auto"
-                >
-                  <Eye className="h-4 w-4" />
-                </Button>
-              </TableCell>
-              <TableCell className="py-4 text-center">
-                <span className="text-xs font-bold text-slate-900 dark:text-white">#{order.orderNumber}</span>
-              </TableCell>
-              <TableCell className="text-center">
-                <span className="text-xs font-bold text-slate-700 dark:text-slate-300">{order.customer}</span>
-              </TableCell>
-              <TableCell className="text-center">
-                <span className="text-xs font-bold text-slate-700 dark:text-slate-300">{order.store}</span>
-              </TableCell>
-              <TableCell className="text-center font-bold text-xs text-slate-900 dark:text-white">
-                Rp. {order.totalAmount.toLocaleString("id-ID")}
-              </TableCell>
-              <TableCell className="text-center">
-                <Badge 
-                  variant="outline" 
-                  className={cn(
-                    "font-bold text-[9px] uppercase tracking-[0.2em] px-2 py-1 rounded-full mx-auto block w-fit",
-                    getStatusColor(order.status)
-                  )}
-                >
-                  {order.status}
-                </Badge>
-              </TableCell>
-              <TableCell className="text-center pr-6">
-                <div className="flex items-center justify-center gap-2">
-                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">No Action</span>
-                </div>
+          {orders.length === 0 ? (
+            <TableRow>
+              <TableCell colSpan={6} className="py-12 text-center">
+                <p className="text-sm font-medium text-slate-500">No orders found</p>
               </TableCell>
             </TableRow>
-          ))}
+          ) : (
+            orders.map((order) => (
+              <TableRow key={order.id} className="border-slate-100 dark:border-slate-800/60 hover:bg-slate-50/50 dark:hover:bg-slate-900/50 transition-colors">
+                <TableCell className="py-4 text-center">
+                  <span className="text-xs font-bold text-slate-900 dark:text-white">#{order.orderNumber}</span>
+                </TableCell>
+                <TableCell className="text-center">
+                  <div className="flex flex-col">
+                    <span className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                      {order.buyer?.firstName} {order.buyer?.lastName}
+                    </span>
+                    <span className="text-[10px] text-slate-400">{order.buyer?.email}</span>
+                  </div>
+                </TableCell>
+                <TableCell className="text-center font-bold text-xs text-slate-900 dark:text-white">
+                  Rp. {order.totalAmount.toLocaleString("id-ID")}
+                </TableCell>
+                <TableCell className="py-4 text-center">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => handleView(order)}
+                    className="h-8 w-8 rounded-lg bg-sky-50 dark:bg-sky-500/10 text-sky-600 hover:text-sky-700 hover:bg-sky-100 dark:hover:bg-sky-500/20 transition-all mx-auto"
+                  >
+                    <Eye className="h-4 w-4" />
+                  </Button>
+                </TableCell>
+                <TableCell className="text-center">
+                  <Badge 
+                    variant="outline" 
+                    className={cn(
+                      "font-bold text-[9px] uppercase tracking-[0.2em] px-2 py-1 rounded-full mx-auto block w-fit",
+                      getStatusColor(order.status)
+                    )}
+                  >
+                    {order.status}
+                  </Badge>
+                </TableCell>
+                <TableCell className="text-center pr-6 text-xs text-slate-500">
+                  {new Date(order.createdAt).toLocaleDateString()}
+                </TableCell>
+              </TableRow>
+            ))
+          )}
         </TableBody>
       </Table>
 

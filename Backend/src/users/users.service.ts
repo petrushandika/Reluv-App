@@ -175,4 +175,70 @@ export class UsersService {
       } as any,
     });
   }
+
+  async findAllAdmin(query: any) {
+    const { page = 1, limit = 10, search, role, isActive, isVerified } = query;
+    const skip = (Number(page) - 1) * Number(limit);
+
+    const where: any = {
+      ...(search && {
+        OR: [
+          { email: { contains: search, mode: 'insensitive' } },
+          { firstName: { contains: search, mode: 'insensitive' } },
+          { lastName: { contains: search, mode: 'insensitive' } },
+        ],
+      }),
+      ...(role && { role }),
+      ...(isActive !== undefined && { isActive: isActive === 'true' }),
+      ...(isVerified !== undefined && { isVerified: isVerified === 'true' }),
+    };
+
+    const [users, total] = await this.prisma.$transaction([
+      this.prisma.user.findMany({
+        where,
+        skip,
+        take: Number(limit),
+        select: {
+          id: true,
+          email: true,
+          firstName: true,
+          lastName: true,
+          role: true,
+          isActive: true,
+          isVerified: true,
+          createdAt: true,
+          profile: { select: { avatar: true } },
+          store: { select: { id: true, name: true, slug: true } },
+        },
+        orderBy: { createdAt: 'desc' },
+      }),
+      this.prisma.user.count({ where }),
+    ]);
+
+    return {
+      data: users,
+      meta: {
+        total,
+        page: Number(page),
+        limit: Number(limit),
+        totalPages: Math.ceil(total / Number(limit)),
+      },
+    };
+  }
+
+  async updateStatusAdmin(userId: number, data: any) {
+    return this.prisma.user.update({
+      where: { id: userId },
+      data,
+      select: {
+        id: true,
+        email: true,
+        firstName: true,
+        lastName: true,
+        role: true,
+        isActive: true,
+        isVerified: true,
+      },
+    });
+  }
 }

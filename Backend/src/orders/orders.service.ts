@@ -678,4 +678,58 @@ export class OrdersService {
       return updatedOrder;
     });
   }
+
+  async findAllAdmin(query: any) {
+    const { page = 1, limit = 10, search, status } = query;
+    const skip = (Number(page) - 1) * Number(limit);
+
+    const where: any = {
+      ...(search && {
+        OR: [{ orderNumber: { contains: search, mode: 'insensitive' } }],
+      }),
+      ...(status && { status }),
+    };
+
+    const [orders, total] = await this.prisma.$transaction([
+      this.prisma.order.findMany({
+        where,
+        skip,
+        take: Number(limit),
+        select: {
+          id: true,
+          orderNumber: true,
+          totalAmount: true,
+          status: true,
+          createdAt: true,
+          buyer: {
+            select: {
+              id: true,
+              firstName: true,
+              lastName: true,
+              email: true,
+            },
+          },
+        },
+        orderBy: { createdAt: 'desc' },
+      }),
+      this.prisma.order.count({ where }),
+    ]);
+
+    return {
+      data: orders,
+      meta: {
+        total,
+        page: Number(page),
+        limit: Number(limit),
+        totalPages: Math.ceil(total / Number(limit)),
+      },
+    };
+  }
+
+  async updateStatusAdmin(orderId: number, data: any) {
+    return this.prisma.order.update({
+      where: { id: orderId },
+      data,
+    });
+  }
 }
