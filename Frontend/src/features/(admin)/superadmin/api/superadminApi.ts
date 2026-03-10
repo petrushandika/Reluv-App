@@ -135,6 +135,7 @@ export interface CreateCategoryDto {
 }
 
 export interface UpdateCategoryDto {
+  id?: number;
   name?: string;
   slug?: string;
   parentId?: number | null;

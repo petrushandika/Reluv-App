@@ -12,7 +12,6 @@ import {
   Package,
   Layers,
   Plus,
-  CheckCircle2,
 } from "lucide-react"
 import { useEffect, useState } from "react"
 import { 
@@ -90,8 +89,9 @@ export default function SuperadminCategoriesPage() {
 
   const handleSaveCategory = async (data: CreateCategoryDto | UpdateCategoryDto) => {
     try {
-      if (modalMode === "edit" && "id" in data) {
-        await updateCategory(data.id, data)
+      if (modalMode === "edit" && "id" in data && typeof data.id === 'number') {
+        const { id, ...updateData } = data as UpdateCategoryDto;
+        if (id) await updateCategory(id, updateData)
         toast.success("Category updated successfully")
       } else {
         await createCategory(data as CreateCategoryDto)
