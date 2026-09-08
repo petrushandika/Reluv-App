@@ -68,12 +68,12 @@ export function SuperadminOverview() {
                   <div className="space-y-1.5">
                     <p className="text-sm font-medium text-sky-500 flex items-center justify-between gap-4">
                       <span className="text-slate-400 font-medium uppercase text-[9px]">GMV</span>
-                      {`Rp. ${payload[0].value.toLocaleString("id-ID")}`}
+                      {`Rp. ${payload[0]?.value?.toLocaleString("id-ID")}`}
                     </p>
                     {payload[1] && (
                       <p className="text-sm font-medium text-emerald-500 flex items-center justify-between gap-4">
                         <span className="text-slate-400 font-medium uppercase text-[9px]">Users</span>
-                        {payload[1].value.toLocaleString("id-ID")}
+                        {payload[1]?.value?.toLocaleString("id-ID")}
                       </p>
                     )}
                   </div>

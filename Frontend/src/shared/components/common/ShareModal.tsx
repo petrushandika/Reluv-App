@@ -7,8 +7,8 @@ import {
   Mail,
   MessageCircle,
   Send,
-  Twitter,
-  Facebook,
+  MessageSquare,
+  Globe,
 } from "lucide-react";
 import { Product } from "@/features/(main)/products/types";
 import { toast } from "sonner";
@@ -51,14 +51,14 @@ const ShareModal = ({ isOpen, onClose, product }: ShareModalProps) => {
       color: "bg-sky-500",
     },
     {
-      name: "Facebook",
-      icon: <Facebook />,
+      name: "Globe",
+      icon: <Globe />,
       href: `https://www.facebook.com/sharer/sharer.php?u=${productUrl}`,
       color: "bg-blue-600",
     },
     {
-      name: "Twitter",
-      icon: <Twitter />,
+      name: "MessageSquare",
+      icon: <MessageSquare />,
       href: `https://twitter.com/intent/tweet?url=${productUrl}&text=${shareText}`,
       color: "bg-blue-400",
     },

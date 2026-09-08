@@ -2,9 +2,9 @@
 
 import React from "react";
 import {
-  Facebook,
-  Twitter,
-  Instagram,
+  Globe,
+  MessageSquare,
+  Camera,
   Mail,
   ShieldCheck,
   Truck,
@@ -117,19 +117,19 @@ const Footer = () => {
                 href="#"
                 className="p-2 border border-gray-200/50 dark:border-gray-700/50 rounded-full text-gray-500 dark:text-gray-400 hover:bg-sky-600/90 dark:hover:bg-sky-500/90 backdrop-blur-sm hover:text-white hover:border-sky-600/50 dark:hover:border-sky-500/50 transition-all duration-300 shadow-sm"
               >
-                <Facebook size={18} />
+                <Globe size={18} />
               </a>
               <a
                 href="#"
                 className="p-2 border border-gray-200/50 dark:border-gray-700/50 rounded-full text-gray-500 dark:text-gray-400 hover:bg-sky-600/90 dark:hover:bg-sky-500/90 backdrop-blur-sm hover:text-white hover:border-sky-600/50 dark:hover:border-sky-500/50 transition-all duration-300 shadow-sm"
               >
-                <Instagram size={18} />
+                <Camera size={18} />
               </a>
               <a
                 href="#"
                 className="p-2 border border-gray-200/50 dark:border-gray-700/50 rounded-full text-gray-500 dark:text-gray-400 hover:bg-sky-600/90 dark:hover:bg-sky-500/90 backdrop-blur-sm hover:text-white hover:border-sky-600/50 dark:hover:border-sky-500/50 transition-all duration-300 shadow-sm"
               >
-                <Twitter size={18} />
+                <MessageSquare size={18} />
               </a>
             </div>
           </div>
