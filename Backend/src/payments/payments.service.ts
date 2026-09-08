@@ -84,7 +84,7 @@ export class PaymentsService {
       });
 
       return transaction;
-    } catch (error) {
+    } catch {
       if (error instanceof Error) {
         throw new InternalServerErrorException(
           `Failed to create payment transaction: ${error.message}`,
@@ -162,7 +162,7 @@ export class PaymentsService {
       if (updatedOrder.status === 'PAID') {
         try {
           await this.shipmentsService.createShipment(updatedOrder.id);
-        } catch (error) {}
+        } catch {}
       }
     }
   }
